@@ -2,7 +2,6 @@ import React from 'react'
 import TopHeader from './TopHeader'
 import HeaderBottom from './HeaderBottom'
 import HeaderMenu from './HeaderMenu'
-import MobileMenuSidebar from './MobileMenuSidebar'
 
 export default function GuestLayoutHeader() {
     return (
@@ -17,7 +16,7 @@ export default function GuestLayoutHeader() {
             <HeaderMenu />
             {/* Header menu End */}
             {/* Mobile Menu sidebar Start */}
-            <MobileMenuSidebar />
+            {/* <MobileMenuSidebar /> */}
             {/* Mobile Menu sidebar End */}
         </header>
 

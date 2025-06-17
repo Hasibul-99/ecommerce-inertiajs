@@ -1,4 +1,20 @@
 import React from 'react'
+import { FiMenu } from "react-icons/fi";
+import { FiUser } from "react-icons/fi";
+import { FiHeart } from "react-icons/fi";
+import { FiShoppingBag } from "react-icons/fi";
+import { FiPhoneCall } from "react-icons/fi";
+import { FaWhatsapp } from "react-icons/fa6";
+import {
+    Sheet,
+    SheetContent,
+    SheetDescription,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from "@/components/ui/sheet"
+import MobileMenuSidebar from './MobileMenuSidebar'
+
 
 export default function TopHeader() {
     return (
@@ -11,13 +27,13 @@ export default function TopHeader() {
                             <ul className="mb-[0] p-[0] flex">
                                 <li className="list-inline-item transition-all duration-[0.3s] ease-in-out flex text-[13px] mr-[15px]">
                                     <a href="javascript:void(0)" className="mx-[5px] text-center flex items-center justify-center text-[15px]">
-                                        <i className="fi fi-rr-phone-call transition-all duration-[0.3s] ease-in-out text-[#777]" />
+                                        <FiPhoneCall className="transition-all duration-[0.3s] ease-in-out text-[#777]" />
                                     </a>
                                     +91 987 654 3210
                                 </li>
                                 <li className="list-inline-item transition-all duration-[0.3s] ease-in-out flex text-[13px]">
                                     <a href="javascript:void(0)" className="mx-[5px] text-center flex items-center justify-center text-[15px]">
-                                        <i className="fi fi-brands-whatsapp transition-all duration-[0.3s] ease-in-out text-[#777]" />
+                                        <FaWhatsapp className="transition-all duration-[0.3s] ease-in-out text-[#777]" />
                                     </a>
                                     +91 987 654 3210
                                 </li>
@@ -77,31 +93,45 @@ export default function TopHeader() {
                                 {/* Header User Start */}
                                 <a href="login.html" className="gi-header-btn gi-header-user mr-[30px] relative transition-all duration-[0.3s] ease-in-out relative flex text-[#4b5966] w-[auto] items-center">
                                     <div className="header-icon relative flex">
-                                        <i className="fi-rr-user text-[24px] leading-[17px]" />
+                                        <FiUser className="text-[24px] leading-[17px]" />
                                     </div>
                                 </a>
                                 {/* Header User End */}
                                 {/* Header Wishlist Start */}
                                 <a href="wishlist.html" className="gi-header-btn gi-wish-toggle mr-[30px] relative transition-all duration-[0.3s] ease-in-out relative flex text-[#4b5966] w-[auto] items-center">
                                     <div className="header-icon relative flex">
-                                        <i className="fi-rr-heart text-[24px] leading-[17px]" />
+                                        <FiHeart className="text-[24px] leading-[17px]" />
                                     </div>
                                     <span className="gi-header-count gi-wishlist-count w-[15px] h-[15px] text-[#fff] flex items-center justify-center rounded-[50%] text-[11px] absolute top-[-2px] right-[-6px] opacity-[0.8]">3</span>
                                 </a>
                                 {/* Header Wishlist End */}
                                 {/* Header Cart Start */}
-                                <a href="javascript:void(0)" className="gi-header-btn gi-cart-toggle mr-[30px] relative transition-all duration-[0.3s] ease-in-out relative flex text-[#4b5966] w-[auto] items-center">
+                                <a href="javascript:void(0)" className="gi-header-btn gi-cart-toggle mr-[30px] transition-all duration-[0.3s] ease-in-out relative flex text-[#4b5966] w-[auto] items-center">
                                     <div className="header-icon relative flex">
-                                        <i className="fi-rr-shopping-bag text-[24px] leading-[17px]" />
+                                        <FiShoppingBag className="text-[24px] leading-[17px]" />
                                         <span className="main-label-note-new" />
                                     </div>
                                     <span className="gi-header-count gi-cart-count  w-[15px] h-[15px] text-[#fff] flex items-center justify-center rounded-[50%] text-[11px] absolute top-[-2px] right-[-6px] opacity-[0.8]">3</span>
                                 </a>
                                 {/* Header Cart End */}
                                 {/* Header menu Start */}
-                                <a href="javascript:void(0)" className="gi-header-btn gi-site-menu-icon relative transition-all duration-[0.3s] ease-in-out relative flex text-[#4b5966] w-[auto] items-center">
-                                    <i className="fi-rr-menu-burger text-[24px] leading-[17px]" />
-                                </a>
+
+                                <Sheet>
+                                    <SheetTrigger asChild>
+                                        <div className="gi-header-btn gi-site-menu-icon relative transition-all duration-[0.3s] ease-in-out flex text-[#4b5966] w-[auto] items-center">
+                                            <FiMenu className="fi-rr-menu-burger text-[24px] leading-[17px]" />
+                                        </div>
+                                    </SheetTrigger>
+                                    <SheetContent side="left"> {/* This opens from the left */}
+                                        <SheetHeader>
+                                            <SheetTitle>My Menu</SheetTitle>
+                                            {/* <SheetDescription> */}
+                                                <MobileMenuSidebar />
+                                            {/* </SheetDescription> */}
+                                        </SheetHeader>
+                                        {/* Your content here */}
+                                    </SheetContent>
+                                </Sheet>
                                 {/* Header menu End */}
                             </div>
                         </div>
