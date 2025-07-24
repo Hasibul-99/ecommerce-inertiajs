@@ -15,9 +15,6 @@ export default function GuestLayoutHeader() {
             {/* Header menu */}
             <HeaderMenu />
             {/* Header menu End */}
-            {/* Mobile Menu sidebar Start */}
-            {/* <MobileMenuSidebar /> */}
-            {/* Mobile Menu sidebar End */}
         </header>
 
     )
