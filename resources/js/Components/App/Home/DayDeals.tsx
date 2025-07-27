@@ -1,6 +1,63 @@
 import React from 'react'
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
 
 export default function DayDeals() {
+    var settings = {
+        dots: false,
+        infinite: true,
+        arrows: false,
+        speed: 300,
+        slidesToShow: 5,
+        slidesToScroll: 5,
+        adaptiveHeight: true,
+        responsive: [
+            {
+                breakpoint: 1367,
+                settings: {
+                    slidesToShow: 5,
+                    slidesToScroll: 5,
+                }
+            },
+            {
+                breakpoint: 1200,
+                settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 3,
+                }
+            },
+            {
+                breakpoint: 992,
+                settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 3,
+                }
+            },
+            {
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 2,
+                }
+            },
+            {
+                breakpoint: 421,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                }
+            },
+            {
+                breakpoint: 0,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                }
+            }
+        ]
+    };
     return (
         <section className="gi-deal-section py-[40px] max-[767px]:py-[30px] wow fadeInUp" data-wow-duration="2s">
             <div className="flex flex-wrap justify-between items-center mx-auto min-[1600px]:max-w-[1600px] min-[1400px]:max-w-[1320px] min-[1200px]:max-w-[1140px] min-[992px]:max-w-[960px] min-[768px]:max-w-[720px] min-[576px]:max-w-[540px]">
@@ -15,7 +72,8 @@ export default function DayDeals() {
                                 <div id="dealend" className="dealend-timer max-[767px]:mt-[15px]" />
                             </div>
                             <div className="gi-deal-block mx-[-12px]" data-aos="fade-up" data-aos-duration={2000} data-aos-delay={300}>
-                                <div className="deal-slick-carousel flex gi-product-slider">
+                                {/* <div className="deal-slick-carousel flex gi-product-slider"> */}
+                                <Slider {...settings} className=" gi-product-slider">
                                     <div className="gi-product-content h-full px-[12px] flex">
                                         <div className="gi-product-inner transition-all duration-[0.3s] ease-in-out cursor-pointer flex flex-col overflow-hidden border-[1px] border-solid border-[#eee] rounded-[5px]">
                                             <div className="gi-pro-image-outer transition-all duration-[0.3s] delay-[0s] ease z-[11] relative">
@@ -370,7 +428,8 @@ export default function DayDeals() {
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </Slider>
+                                {/* </div> */}
                             </div>
                         </div>
                     </div>
