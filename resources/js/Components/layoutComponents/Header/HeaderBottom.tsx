@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from '@inertiajs/react'
 
 export default function HeaderBottom() {
     return (
@@ -9,7 +10,7 @@ export default function HeaderBottom() {
                         {/* Header Logo Start */}
                         <div className="self-center gi-header-logo max-[575px]:mb-[15px]">
                             <div className="header-logo text-left">
-                                <a href="index.html"><img src="assets/img/logo/logo.png" alt="Site Logo" className="w-[144px] max-[1199px]:w-[130px] max-[991px]:w-[120px] max-[767px]:w-[100px] " /></a>
+                                <Link href="/"><img src="assets/img/logo/logo.png" alt="Site Logo" className="w-[144px] max-[1199px]:w-[130px] max-[991px]:w-[120px] max-[767px]:w-[100px] " /></Link>
                             </div>
                         </div>
                         {/* Header Logo End */}
@@ -30,7 +31,7 @@ export default function HeaderBottom() {
                             <div className="gi-header-bottons flex justify-end">
                                 {/* Header User Start */}
                                 <div className="gi-acc-drop relative">
-                                    <a href="javascript:void(0)" className="gi-header-btn gi-header-user dropdown-toggle gi-user-toggle mr-[30px] transition-all duration-[0.3s] ease-in-out relative flex text-[#4b5966] w-[auto] items-center whitespace-nowrap" title="Account">
+                                    <Link href="/login" className="gi-header-btn gi-header-user dropdown-toggle gi-user-toggle mr-[30px] transition-all duration-[0.3s] ease-in-out relative flex text-[#4b5966] w-[auto] items-center whitespace-nowrap" title="Account">
                                         <div className="header-icon relative flex">
                                             <i className="fi-rr-user text-[24px] leading-[17px]" />
                                         </div>
@@ -38,16 +39,16 @@ export default function HeaderBottom() {
                                             <span className="gi-btn-title transition-all duration-[0.3s] ease-in-out text-[12px] leading-[1] text-[#777] mb-[6px] tracking-[0.6px] capitalize font-medium">Account</span>
                                             <span className="gi-btn-stitle transition-all duration-[0.3s] ease-in-out text-[13px] font-medium text-[#4b5966] leading-[14px] max-[1199px]:text-[11px] max-[1199px]:min-w-[48px]">Login</span>
                                         </div>
-                                    </a>
+                                    </Link>
                                     <ul className="gi-dropdown-menu min-w-[150px] py-[5px] transition-all duration-[0.3s] ease-in-out mt-[25px] absolute z-[16] text-left bg-[#fff] block opacity-0 invisible left-[0] right-[auto] border-[1px] border-solid border-[#eee] rounded-[5px]">
-                                        <li><a className="dropdown-item py-[10px] px-[20px] block w-full font-normal text-[13px] text-[#777] hover:bg-transparent hover:text-[#5caf90]" href="register.html">Register</a></li>
-                                        <li><a className="dropdown-item py-[10px] px-[20px] block w-full font-normal text-[13px] text-[#777] hover:bg-transparent hover:text-[#5caf90]" href="checkout.html">Checkout</a></li>
-                                        <li><a className="dropdown-item py-[10px] px-[20px] block w-full font-normal text-[13px] text-[#777] hover:bg-transparent hover:text-[#5caf90]" href="login.html">Login</a></li>
+                                        <li><Link className="dropdown-item py-[10px] px-[20px] block w-full font-normal text-[13px] text-[#777] hover:bg-transparent hover:text-[#5caf90]" href="/register">Register</Link></li>
+                                        <li><Link className="dropdown-item py-[10px] px-[20px] block w-full font-normal text-[13px] text-[#777] hover:bg-transparent hover:text-[#5caf90]" href="/checkout">Checkout</Link></li>
+                                        <li><Link className="dropdown-item py-[10px] px-[20px] block w-full font-normal text-[13px] text-[#777] hover:bg-transparent hover:text-[#5caf90]" href="/login">Login</Link></li>
                                     </ul>
                                 </div>
                                 {/* Header User End */}
                                 {/* Header wishlist Start */}
-                                <a href="wishlist.html" className="gi-header-btn gi-wish-toggle mr-[30px] transition-all duration-[0.3s] ease-in-out relative flex text-[#4b5966] w-[auto] items-center whitespace-nowrap" title="Wishlist">
+                                <Link href="/wishlist" className="gi-header-btn gi-wish-toggle mr-[30px] transition-all duration-[0.3s] ease-in-out relative flex text-[#4b5966] w-[auto] items-center whitespace-nowrap" title="Wishlist">
                                     <div className="header-icon relative flex">
                                         <i className="fi-rr-heart text-[24px] leading-[17px]" />
                                     </div>
@@ -55,10 +56,10 @@ export default function HeaderBottom() {
                                         <span className="gi-btn-title transition-all duration-[0.3s] ease-in-out text-[12px] leading-[1] text-[#777] mb-[6px] tracking-[0.6px] capitalize font-medium">Wishlist</span>
                                         <span className="gi-btn-stitle transition-all duration-[0.3s] ease-in-out text-[13px] font-medium text-[#4b5966] leading-[14px] max-[1199px]:text-[11px] max-[1199px]:min-w-[48px]"><b className="gi-wishlist-count">3</b>-items</span>
                                     </div>
-                                </a>
+                                </Link>
                                 {/* Header wishlist End */}
                                 {/* Header Cart Start */}
-                                <a href="javascript:void(0)" className="gi-header-btn gi-cart-toggle transition-all duration-[0.3s] ease-in-out relative flex text-[#4b5966] w-[auto] items-center whitespace-nowrap" title="Cart">
+                                <Link href="/cart" className="gi-header-btn gi-cart-toggle transition-all duration-[0.3s] ease-in-out relative flex text-[#4b5966] w-[auto] items-center whitespace-nowrap" title="Cart">
                                     <div className="header-icon relative flex">
                                         <i className="fi-rr-shopping-bag text-[24px] leading-[17px]" />
                                         <span className="main-label-note-new transition-all duration-[0.3s] ease-in-out h-[10px] w-[10px] m-auto bg-[#ec716d] rounded-[50%] cursor-default hidden absolute bottom-[15px] left-[0] right-[0] z-[3]" />
@@ -69,7 +70,7 @@ export default function HeaderBottom() {
                                             <b className="gi-cart-count">3</b>-items
                                         </span>
                                     </div>
-                                </a>
+                                </Link>
                                 {/* Header Cart End */}
                             </div>
                         </div>

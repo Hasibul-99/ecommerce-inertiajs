@@ -5,6 +5,7 @@ import { FiHeart } from "react-icons/fi";
 import { FiShoppingBag } from "react-icons/fi";
 import { FiPhoneCall } from "react-icons/fi";
 import { FaWhatsapp } from "react-icons/fa6";
+import { Link } from '@inertiajs/react';
 import {
     Sheet,
     SheetContent,
@@ -12,7 +13,7 @@ import {
     SheetHeader,
     SheetTitle,
     SheetTrigger,
-} from "@/components/ui/sheet"
+} from "@/Components/ui/sheet"
 import MobileMenuSidebar from './MobileMenuSidebar'
 
 
@@ -51,8 +52,8 @@ export default function TopHeader() {
                     {/* Header Top Language Currency */}
                     <div className="grow-[1] shrink-[0] basis-[0%] hidden min-[992px]:block">
                         <div className="header-top-right-inner flex justify-end">
-                            <a className="gi-help pl-[20px] text-[13px] text-[#777] tracking-[0.7px] font-normal hover:text-[#5caf90]" href="faq.html">Help?</a>
-                            <a className="gi-help pl-[20px] text-[13px] text-[#777] tracking-[0.7px] font-normal hover:text-[#5caf90]" href="track-order.html">Track Order?</a>
+                            <Link className="gi-help pl-[20px] text-[13px] text-[#777] tracking-[0.7px] font-normal hover:text-[#5caf90]" href="/faq">Help?</Link>
+                            <Link className="gi-help pl-[20px] text-[13px] text-[#777] tracking-[0.7px] font-normal hover:text-[#5caf90]" href="/track-order">Track Order?</Link>
                             {/* Language Start */}
                             <div className="header-top-lan-curr header-top-lan dropdown pl-[20px] flex flex-wrap relative">
                                 <button type="button" className="dropdown-toggle text-[13px] flex items-center p-[0] transition-all duration-[0.3s] ease delay-0 text-[#777] border-[0] tracking-[0.7px]">English
@@ -91,28 +92,28 @@ export default function TopHeader() {
                         <div className="gi-header-bottons flex justify-end">
                             <div className="right-icons flex flex-row">
                                 {/* Header User Start */}
-                                <a href="login.html" className="gi-header-btn gi-header-user mr-[30px] relative transition-all duration-[0.3s] ease-in-out relative flex text-[#4b5966] w-[auto] items-center">
+                                <Link href="/login" className="gi-header-btn gi-header-user mr-[30px] relative transition-all duration-[0.3s] ease-in-out relative flex text-[#4b5966] w-[auto] items-center">
                                     <div className="header-icon relative flex">
                                         <FiUser className="text-[24px] leading-[17px]" />
                                     </div>
-                                </a>
+                                </Link>
                                 {/* Header User End */}
                                 {/* Header Wishlist Start */}
-                                <a href="wishlist.html" className="gi-header-btn gi-wish-toggle mr-[30px] relative transition-all duration-[0.3s] ease-in-out relative flex text-[#4b5966] w-[auto] items-center">
+                                <Link href="/wishlist" className="gi-header-btn gi-wish-toggle mr-[30px] relative transition-all duration-[0.3s] ease-in-out relative flex text-[#4b5966] w-[auto] items-center">
                                     <div className="header-icon relative flex">
                                         <FiHeart className="text-[24px] leading-[17px]" />
                                     </div>
                                     <span className="gi-header-count gi-wishlist-count w-[15px] h-[15px] text-[#fff] flex items-center justify-center rounded-[50%] text-[11px] absolute top-[-2px] right-[-6px] opacity-[0.8]">3</span>
-                                </a>
+                                </Link>
                                 {/* Header Wishlist End */}
                                 {/* Header Cart Start */}
-                                <a href="javascript:void(0)" className="gi-header-btn gi-cart-toggle mr-[30px] transition-all duration-[0.3s] ease-in-out relative flex text-[#4b5966] w-[auto] items-center">
+                                <Link href="/cart" className="gi-header-btn gi-cart-toggle mr-[30px] transition-all duration-[0.3s] ease-in-out relative flex text-[#4b5966] w-[auto] items-center">
                                     <div className="header-icon relative flex">
                                         <FiShoppingBag className="text-[24px] leading-[17px]" />
                                         <span className="main-label-note-new" />
                                     </div>
                                     <span className="gi-header-count gi-cart-count  w-[15px] h-[15px] text-[#fff] flex items-center justify-center rounded-[50%] text-[11px] absolute top-[-2px] right-[-6px] opacity-[0.8]">3</span>
-                                </a>
+                                </Link>
                                 {/* Header Cart End */}
                                 {/* Header menu Start */}
 

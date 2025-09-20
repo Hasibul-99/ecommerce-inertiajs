@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from '@inertiajs/react'
 
 export default function Footer() {
     return (
@@ -9,12 +10,12 @@ export default function Footer() {
                         <div className="w-full flex flex-wrap">
                             <div className="min-[992px]:w-[25%] px-[12px] w-full gi-footer-cat wow fadeInUp">
                                 <div className="gi-footer-widget gi-footer-company flex flex-col">
-                                    <img src="assets/img/logo/logo.png" className="gi-footer-logo max-w-[144px] max-[767px]:max-w-[130px]  mb-[30px]" alt="footer logo" />
+                                    <Link href="/"><img src="assets/img/logo/logo.png" className="gi-footer-logo max-w-[144px] max-[767px]:max-w-[130px]  mb-[30px]" alt="footer logo" /></Link>
                                     <p className="gi-footer-detail max-w-[400px] mb-[30px] p-[0] text-[14px] leading-[27px] font-normal text-[#777] inline-block relative max-[1199px]:text-[14px]">Grabit is the biggest market of grocery products. Get your
                                         daily needs from our store.</p>
                                     <div className="gi-app-store mb-[30px] flex flex-row max-[1199px]:flex-col max-[991px]:flex-row max-[320px]:flex-col">
-                                        <a href="#" className="app-img"><img src="assets/img/app/android.png" className="adroid max-w-[140px] max-[1399px]:max-w-[120px]  mb-[15px] rounded-[5px] mr-[15px]" alt="apple" /></a>
-                                        <a href="#" className="app-img"><img src="assets/img/app/apple.png" className="apple max-w-[140px] max-[1399px]:max-w-[120px] mb-[15px] rounded-[5px]" alt="apple" /></a>
+                                        <Link href="#" className="app-img"><img src="assets/img/app/android.png" className="adroid max-w-[140px] max-[1399px]:max-w-[120px]  mb-[15px] rounded-[5px] mr-[15px]" alt="apple" /></Link>
+                                        <Link href="#" className="app-img"><img src="assets/img/app/apple.png" className="apple max-w-[140px] max-[1399px]:max-w-[120px] mb-[15px] rounded-[5px]" alt="apple" /></Link>
                                     </div>
                                 </div>
                             </div>
@@ -24,22 +25,22 @@ export default function Footer() {
                                     <div className="gi-footer-links gi-footer-dropdown">
                                         <ul className="align-itegi-center">
                                             <li className="gi-footer-link m-[0] leading-[1.5] border-[0] p-[0] font-normal text-[16px] text-[#5caf90] flex items-center mb-[16px]">
-                                                <a href="shop-left-sidebar-col-3.html" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">Dairy &amp; Milk</a>
+                                                <Link href="/shop" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">Dairy &amp; Milk</Link>
                                             </li>
                                             <li className="gi-footer-link m-[0] leading-[1.5] border-[0] p-[0] font-normal text-[16px] text-[#5caf90] flex items-center mb-[16px]">
-                                                <a href="shop-banner-left-sidebar-col-3.html" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">Snack &amp; Spice</a>
+                                                <Link href="/shop" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">Snack &amp; Spice</Link>
                                             </li>
                                             <li className="gi-footer-link m-[0] leading-[1.5] border-[0] p-[0] font-normal text-[16px] text-[#5caf90] flex items-center mb-[16px]">
-                                                <a href="shop-full-width-col-5.html" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">Fast Food</a>
+                                                <Link href="/shop" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">Fast Food</Link>
                                             </li>
                                             <li className="gi-footer-link m-[0] leading-[1.5] border-[0] p-[0] font-normal text-[16px] text-[#5caf90] flex items-center mb-[16px]">
-                                                <a href="shop-list-left-sidebar.html" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">Juice &amp; Drinks</a>
+                                                <Link href="/shop" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">Juice &amp; Drinks</Link>
                                             </li>
                                             <li className="gi-footer-link m-[0] leading-[1.5] border-[0] p-[0] font-normal text-[16px] text-[#5caf90] flex items-center mb-[16px]">
-                                                <a href="shop-list-full-col-2.html" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">Bakery</a>
+                                                <Link href="/shop" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">Bakery</Link>
                                             </li>
                                             <li className="gi-footer-link m-[0] leading-[1.5] border-[0] p-[0] font-normal text-[16px] text-[#5caf90] flex items-center">
-                                                <a href="shop-banner-right-sidebar-col-4.html" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">Seafood</a>
+                                                <Link href="/shop" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">Seafood</Link>
                                             </li>
                                         </ul>
                                     </div>
@@ -51,22 +52,22 @@ export default function Footer() {
                                     <div className="gi-footer-links gi-footer-dropdown">
                                         <ul className="align-itegi-center">
                                             <li className="gi-footer-link m-[0] leading-[1.5] border-[0] p-[0] font-normal text-[16px] text-[#5caf90] flex items-center mb-[16px]">
-                                                <a href="about-us.html" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">About us</a>
+                                                <Link href="/about" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">About us</Link>
                                             </li>
                                             <li className="gi-footer-link m-[0] leading-[1.5] border-[0] p-[0] font-normal text-[16px] text-[#5caf90] flex items-center mb-[16px]">
-                                                <a href="track-order.html" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">Delivery</a>
+                                                <Link href="/track-order" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">Delivery</Link>
                                             </li>
                                             <li className="gi-footer-link m-[0] leading-[1.5] border-[0] p-[0] font-normal text-[16px] text-[#5caf90] flex items-center mb-[16px]">
-                                                <a href="privacy-policy.html" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">Legal Notice</a>
+                                                <Link href="/privacy-policy" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">Legal Notice</Link>
                                             </li>
                                             <li className="gi-footer-link m-[0] leading-[1.5] border-[0] p-[0] font-normal text-[16px] text-[#5caf90] flex items-center mb-[16px]">
-                                                <a href="terms-condition.html" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">Terms &amp; conditions</a>
+                                                <Link href="/terms-conditions" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">Terms &amp; conditions</Link>
                                             </li>
                                             <li className="gi-footer-link m-[0] leading-[1.5] border-[0] p-[0] font-normal text-[16px] text-[#5caf90] flex items-center mb-[16px]">
-                                                <a href="checkout.html" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">Secure payment</a>
+                                                <Link href="/checkout" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">Secure payment</Link>
                                             </li>
                                             <li className="gi-footer-link m-[0] leading-[1.5] border-[0] p-[0] font-normal text-[16px] text-[#5caf90] flex items-center">
-                                                <a href="contact-us.html" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">Contact us</a>
+                                                <Link href="/contact" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">Contact us</Link>
                                             </li>
                                         </ul>
                                     </div>
@@ -78,22 +79,22 @@ export default function Footer() {
                                     <div className="gi-footer-links gi-footer-dropdown">
                                         <ul className="align-itegi-center">
                                             <li className="gi-footer-link m-[0] leading-[1.5] border-[0] p-[0] font-normal text-[16px] text-[#5caf90] flex items-center mb-[16px]">
-                                                <a href="register.html" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">Sign In</a>
+                                                <Link href="/login" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">Sign In</Link>
                                             </li>
                                             <li className="gi-footer-link m-[0] leading-[1.5] border-[0] p-[0] font-normal text-[16px] text-[#5caf90] flex items-center mb-[16px]">
-                                                <a href="cart.html" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">View Cart</a>
+                                                <Link href="/cart" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">View Cart</Link>
                                             </li>
                                             <li className="gi-footer-link m-[0] leading-[1.5] border-[0] p-[0] font-normal text-[16px] text-[#5caf90] flex items-center mb-[16px]">
-                                                <a href="privacy-policy.html" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">Return Policy</a>
+                                                <Link href="/return-policy" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">Return Policy</Link>
                                             </li>
                                             <li className="gi-footer-link m-[0] leading-[1.5] border-[0] p-[0] font-normal text-[16px] text-[#5caf90] flex items-center mb-[16px]">
-                                                <a href="#" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">Become a Vendor</a>
+                                                <Link href="#" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">Become a Vendor</Link>
                                             </li>
                                             <li className="gi-footer-link m-[0] leading-[1.5] border-[0] p-[0] font-normal text-[16px] text-[#5caf90] flex items-center mb-[16px]">
-                                                <a href="#" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">Affiliate Program</a>
+                                                <Link href="#" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">Affiliate Program</Link>
                                             </li>
                                             <li className="gi-footer-link m-[0] leading-[1.5] border-[0] p-[0] font-normal text-[16px] text-[#5caf90] flex items-center">
-                                                <a href="checkout.html" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">Payments</a>
+                                                <Link href="/checkout" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">Payments</Link>
                                             </li>
                                         </ul>
                                     </div>
@@ -115,13 +116,13 @@ export default function Footer() {
                                                     <span className="w-[25px] flex basis-auto grow-[0] shrink-[0]">
                                                         <i className="fi fi-brands-whatsapp leading-[0] text-[18px] h-[20px] text-[#5caf90] w-[auto]" />
                                                     </span>
-                                                    <a href="tel:+009876543210" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">+00 9876543210</a>
+                                                    <Link href="tel:+009876543210" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">+00 9876543210</Link>
                                                 </li>
                                                 <li className="gi-footer-link gi-foo-mail m-[0] leading-[1.5] border-[0] p-[0] font-normal text-[16px] text-[#5caf90] flex items-center mb-[16px]">
                                                     <span className="w-[25px] flex basis-auto grow-[0] shrink-[0]">
                                                         <i className="fi fi-rr-envelope leading-[0] text-[18px] h-[20px] text-[#5caf90] w-[auto]" />
                                                     </span>
-                                                    <a href="mailto:example@email.com" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">example@email.com</a>
+                                                    <Link href="mailto:example@email.com" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">example@email.com</Link>
                                                 </li>
                                             </ul>
                                         </div>
@@ -132,16 +133,16 @@ export default function Footer() {
                                         <div className="gi-footer-links gi-footer-dropdown">
                                             <ul className="align-itegi-center flex flex-wrap">
                                                 <li className="gi-footer-link pr-[5px]">
-                                                    <a href="#" className="h-[30px] w-[30px] bg-[#4b5966] rounded-[5px] capitalize flex items-center justify-center text-[15px]"><i className="gicon gi-facebook text-[16px] text-[#fff]" aria-hidden="true" /></a>
+                                                    <Link href="#" className="h-[30px] w-[30px] bg-[#4b5966] rounded-[5px] capitalize flex items-center justify-center text-[15px]"><i className="gicon gi-facebook text-[16px] text-[#fff]" aria-hidden="true" /></Link>
                                                 </li>
                                                 <li className="gi-footer-link pr-[5px]">
-                                                    <a href="#" className="h-[30px] w-[30px] bg-[#4b5966] rounded-[5px] capitalize flex items-center justify-center text-[15px]"><i className="gicon gi-twitter text-[16px] text-[#fff]" aria-hidden="true" /></a>
+                                                    <Link href="#" className="h-[30px] w-[30px] bg-[#4b5966] rounded-[5px] capitalize flex items-center justify-center text-[15px]"><i className="gicon gi-twitter text-[16px] text-[#fff]" aria-hidden="true" /></Link>
                                                 </li>
                                                 <li className="gi-footer-link pr-[5px]">
-                                                    <a href="#" className="h-[30px] w-[30px] bg-[#4b5966] rounded-[5px] capitalize flex items-center justify-center text-[15px]"><i className="gicon gi-linkedin text-[16px] text-[#fff]" aria-hidden="true" /></a>
+                                                    <Link href="#" className="h-[30px] w-[30px] bg-[#4b5966] rounded-[5px] capitalize flex items-center justify-center text-[15px]"><i className="gicon gi-linkedin text-[16px] text-[#fff]" aria-hidden="true" /></Link>
                                                 </li>
                                                 <li className="gi-footer-link pr-[5px]">
-                                                    <a href="#" className="h-[30px] w-[30px] bg-[#4b5966] rounded-[5px] capitalize flex items-center justify-center text-[15px]"><i className="gicon gi-instagram text-[16px] text-[#fff]" aria-hidden="true" /></a>
+                                                    <Link href="#" className="h-[30px] w-[30px] bg-[#4b5966] rounded-[5px] capitalize flex items-center justify-center text-[15px]"><i className="gicon gi-instagram text-[16px] text-[#fff]" aria-hidden="true" /></Link>
                                                 </li>
                                             </ul>
                                         </div>
@@ -159,7 +160,7 @@ export default function Footer() {
                                 <div className="footer-copy max-[991px]:mb-[15px]">
                                     <div className="footer-bottom-copy">
                                         <div className="gi-copy text-[#777] text-[13px] tracking-[1px] text-center font-light">Copyright ©
-                                            <a className="site-name text-[#5caf90]" href="index.html">Grabit</a>
+                                            <Link className="site-name text-[#5caf90]" href="/">Grabit</Link>
                                             all rights reserved. Powered by Grabit.</div>
                                     </div>
                                 </div>

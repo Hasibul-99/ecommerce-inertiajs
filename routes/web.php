@@ -34,6 +34,28 @@ Route::get('/products', function () {
     ]);
 });
 
+Route::get('/product/{id}', function ($id) {
+    return Inertia::render('Product/Detail', [
+        'productId' => $id
+    ]);
+})->name('product.detail');
+
+Route::get('/cart', function () {
+    return Inertia::render('Cart');
+})->name('cart');
+
+Route::get('/checkout', function () {
+    return Inertia::render('Checkout');
+})->name('checkout');
+
+Route::get('/wishlist', function () {
+    return Inertia::render('Wishlist');
+})->name('wishlist');
+
+Route::get('/compare', function () {
+    return Inertia::render('Compare');
+})->name('compare');
+
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
