@@ -4,12 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CheckoutRequest;
 use App\Models\Cart;
+use App\Models\Commission;
+use App\Models\InventoryReservation;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Address;
+use App\Models\ProductVariant;
+use App\Models\Vendor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Events\OrderPaid;
+use App\Events\OrderPlaced;
 use Inertia\Inertia;
 
 class CheckoutController extends Controller
@@ -21,7 +27,8 @@ class CheckoutController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        // Only require auth for processing checkout, not for starting checkout
+        $this->middleware('auth')->only(['process']);
     }
 
     /**
@@ -29,23 +36,30 @@ class CheckoutController extends Controller
      *
      * @return \Inertia\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $user = Auth::user();
-        $cart = Cart::where('user_id', $user->id)
-            ->with('items.product', 'items.variant')
-            ->first();
+        // Get cart based on user or session
+        $cart = $this->getCart($request);
 
         if (!$cart || $cart->items->isEmpty()) {
             return redirect()->route('cart')->with('error', 'Your cart is empty.');
         }
 
-        $addresses = $user->addresses;
+        // Create inventory reservations for each item in the cart
+        $reservationResults = $this->createInventoryReservations($cart);
+        
+        if (!$reservationResults['success']) {
+            return redirect()->route('cart')->with('error', $reservationResults['message']);
+        }
+        
+        // Get user addresses if authenticated
+        $addresses = Auth::check() ? Auth::user()->addresses : [];
 
         return Inertia::render('Checkout', [
-            'cart' => $cart,
+            'cart' => $cart->load('items.product', 'items.productVariant'),
             'addresses' => $addresses,
             'paymentMethods' => $this->getAvailablePaymentMethods(),
+            'reservation_id' => $reservationResults['reservation_id'],
         ]);
     }
 
@@ -59,11 +73,20 @@ class CheckoutController extends Controller
     {
         $user = Auth::user();
         $cart = Cart::where('user_id', $user->id)
-            ->with('items.product', 'items.variant')
+            ->with('items.product', 'items.productVariant')
             ->first();
 
         if (!$cart || $cart->items->isEmpty()) {
             return redirect()->route('cart')->with('error', 'Your cart is empty.');
+        }
+
+        // Verify inventory reservations are still valid
+        $reservations = InventoryReservation::where('reservation_id', $request->reservation_id)
+            ->where('expires_at', '>', now())
+            ->get();
+            
+        if ($reservations->isEmpty()) {
+            return redirect()->route('checkout')->with('error', 'Your checkout session has expired. Please try again.');
         }
 
         try {
@@ -72,30 +95,68 @@ class CheckoutController extends Controller
             // Create or update address
             $shippingAddress = $this->handleAddress($request, $user);
 
-            // Create order
+            // Create order with unique order number
+            $orderNumber = 'ORD-' . strtoupper(uniqid());
             $order = Order::create([
                 'user_id' => $user->id,
+                'order_number' => $orderNumber,
                 'shipping_address_id' => $shippingAddress->id,
                 'billing_address_id' => $request->same_billing_address ? $shippingAddress->id : null,
                 'payment_method' => $request->payment_method,
-                'subtotal_cents' => $cart->getSubtotalCents(),
-                'tax_cents' => $cart->getTaxCents(),
-                'shipping_cents' => $cart->getShippingCents(),
-                'total_cents' => $cart->getTotalCents(),
+                'subtotal_cents' => $cart->subtotal_cents,
+                'tax_cents' => $cart->tax_cents,
+                'shipping_cents' => $cart->shipping_cents ?? 0,
+                'total_cents' => $cart->total_cents,
                 'status' => 'pending',
+                'metadata' => [
+                    'ip_address' => $request->ip(),
+                    'user_agent' => $request->userAgent(),
+                ],
             ]);
 
-            // Create order items
+            // Create order items and calculate commissions
             foreach ($cart->items as $cartItem) {
-                OrderItem::create([
+                $variant = $cartItem->productVariant;
+                $product = $cartItem->product;
+                
+                // Create product snapshot for historical record
+                $productSnapshot = [
+                    'id' => $product->id,
+                    'title' => $product->title,
+                    'description' => $product->description,
+                    'variant' => [
+                        'id' => $variant->id,
+                        'name' => $variant->name,
+                        'sku' => $variant->sku,
+                    ],
+                ];
+                
+                // Create order item
+                $orderItem = OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $cartItem->product_id,
                     'product_variant_id' => $cartItem->product_variant_id,
-                    'product_name' => $cartItem->product->title,
+                    'product_name' => $product->title,
                     'quantity' => $cartItem->quantity,
                     'unit_price_cents' => $cartItem->price_cents,
                     'subtotal_cents' => $cartItem->quantity * $cartItem->price_cents,
+                    'tax_cents' => (int)($cartItem->quantity * $cartItem->price_cents * 0.1), // 10% tax
+                    'total_cents' => $cartItem->quantity * $cartItem->price_cents * 1.1, // Including tax
+                    'product_snapshot' => $productSnapshot,
                 ]);
+                
+                // Calculate and create commission if product has a vendor
+                if ($product->vendor_id) {
+                    $vendor = Vendor::find($product->vendor_id);
+                    $commissionRate = $vendor->commission_rate ?? config('marketplace.default_commission_rate', 0.1); // Default 10%
+                    
+                    Commission::create([
+                        'order_item_id' => $orderItem->id,
+                        'vendor_id' => $product->vendor_id,
+                        'amount_cents' => (int)($orderItem->subtotal_cents * $commissionRate),
+                        'rate' => $commissionRate,
+                    ]);
+                }
             }
 
             // Process payment
@@ -104,10 +165,23 @@ class CheckoutController extends Controller
             if (!$paymentResult['success']) {
                 throw new \Exception($paymentResult['message']);
             }
+            
+            // Update inventory - decrement stock for each variant
+            foreach ($cart->items as $cartItem) {
+                $variant = ProductVariant::find($cartItem->product_variant_id);
+                $variant->decrement('stock_quantity', $cartItem->quantity);
+            }
+            
+            // Remove inventory reservations
+            InventoryReservation::where('reservation_id', $request->reservation_id)->delete();
 
             // Clear the cart
             $cart->items()->delete();
             $cart->delete();
+            
+            // Dispatch events
+            event(new OrderPlaced($order));
+            event(new OrderPaid($order));
 
             DB::commit();
 
@@ -191,5 +265,90 @@ class CheckoutController extends Controller
             ['id' => 'paypal', 'name' => 'PayPal'],
             ['id' => 'bank_transfer', 'name' => 'Bank Transfer'],
         ];
+    }
+    
+    /**
+     * Get cart based on user or session.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \App\Models\Cart|null
+     */
+    protected function getCart(Request $request)
+    {
+        if (Auth::check()) {
+            return Cart::where('user_id', Auth::id())
+                ->with('items.product', 'items.productVariant')
+                ->first();
+        } else {
+            $cartToken = $request->header('X-Cart-Token');
+            
+            if ($cartToken) {
+                return Cart::where('session_id', $cartToken)
+                    ->with('items.product', 'items.productVariant')
+                    ->first();
+            }
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Create inventory reservations for each item in the cart.
+     *
+     * @param  \App\Models\Cart  $cart
+     * @return array
+     */
+    protected function createInventoryReservations(Cart $cart)
+    {
+        $reservationId = uniqid('res_');
+        $expiresAt = now()->addMinutes(15);
+        
+        try {
+            DB::beginTransaction();
+            
+            foreach ($cart->items as $cartItem) {
+                $variant = ProductVariant::lockForUpdate()->find($cartItem->product_variant_id);
+                
+                // Check if there's enough stock available
+                $reservedQuantity = InventoryReservation::where('product_variant_id', $variant->id)
+                    ->where('expires_at', '>', now())
+                    ->sum('quantity');
+                    
+                $availableStock = $variant->stock_quantity - $reservedQuantity;
+                
+                if ($availableStock < $cartItem->quantity) {
+                    DB::rollBack();
+                    return [
+                        'success' => false,
+                        'message' => "Sorry, there are only {$availableStock} units of {$cartItem->product->title} available."
+                    ];
+                }
+                
+                // Create reservation
+                InventoryReservation::create([
+                    'reservation_id' => $reservationId,
+                    'product_variant_id' => $variant->id,
+                    'cart_item_id' => $cartItem->id,
+                    'quantity' => $cartItem->quantity,
+                    'expires_at' => $expiresAt,
+                ]);
+            }
+            
+            DB::commit();
+            
+            return [
+                'success' => true,
+                'reservation_id' => $reservationId,
+                'expires_at' => $expiresAt,
+            ];
+            
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            return [
+                'success' => false,
+                'message' => 'Failed to reserve inventory: ' . $e->getMessage(),
+            ];
+        }
     }
 }
