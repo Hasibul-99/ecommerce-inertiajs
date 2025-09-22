@@ -19,12 +19,12 @@ class ProductUpdateRequest extends FormRequest
         $product = $this->route('product');
         
         // Admin can update any product
-        if (Auth::user()->hasRole('admin')) {
+        if (Auth::user()->hasPermissionTo('manage products')) {
             return true;
         }
         
         // Vendor can only update their own products
-        if (Auth::user()->hasRole('vendor') && Auth::user()->vendor) {
+        if (Auth::user()->hasPermissionTo('manage own products') && Auth::user()->vendor) {
             return $product->vendor_id === Auth::user()->vendor->id;
         }
         

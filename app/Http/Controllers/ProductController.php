@@ -53,7 +53,7 @@ class ProductController extends Controller
                 return $query->orderBy('created_at', 'desc');
             })
             ->paginate(12)
-            ->withQueryString();
+            ->appends($request->query());
 
         return Inertia::render('Products', [
             'products' => $products,

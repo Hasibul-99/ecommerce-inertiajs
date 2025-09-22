@@ -15,7 +15,7 @@ class ProductStoreRequest extends FormRequest
      */
     public function authorize()
     {
-        return Auth::check() && (Auth::user()->hasRole('admin') || Auth::user()->hasRole('vendor'));
+        return Auth::check() && (Auth::user()->hasPermissionTo('manage products') || Auth::user()->hasPermissionTo('manage own products'));
     }
 
     /**
@@ -32,7 +32,7 @@ class ProductStoreRequest extends FormRequest
         }
 
         // If user is a vendor, set the vendor_id to their vendor ID
-        if (Auth::user()->hasRole('vendor') && Auth::user()->vendor) {
+        if (Auth::user()->hasPermissionTo('manage own products') && Auth::user()->vendor) {
             $this->merge([
                 'vendor_id' => Auth::user()->vendor->id,
             ]);
