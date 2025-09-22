@@ -49,12 +49,29 @@ Route::get('/checkout', function () {
 })->name('checkout');
 
 Route::get('/wishlist', function () {
-    return Inertia::render('Wishlist');
+    return Inertia::render('Wishlist/Index');
 })->name('wishlist');
 
 Route::get('/compare', function () {
     return Inertia::render('Compare');
 })->name('compare');
+
+Route::get('/category', function () {
+    return Inertia::render('Category/Index');
+})->name('category');
+
+Route::get('/about-us', function () {
+    return Inertia::render('AboutUs/Index');
+})->name('about-us');
+
+Route::get('/contact-us', function () {
+    return Inertia::render('ContactUs/Index');
+})->name('contact-us');
+
+Route::post('/contact-us', function () {
+    // Handle contact form submission
+    return redirect()->back()->with('success', 'Your message has been sent!');
+})->name('contact.submit');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
