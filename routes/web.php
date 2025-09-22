@@ -98,8 +98,11 @@ Route::prefix('vendor')->middleware(['auth', 'role:vendor'])->name('vendor.')->g
 
 // Admin routes
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->group(function () {
-    Route::resource('vendors', VendorController::class);
+    Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
     Route::patch('/vendors/{vendor}/status', [VendorController::class, 'updateStatus'])->name('vendors.status');
+    Route::patch('/vendors/{vendor}/approve', [\App\Http\Controllers\Admin\DashboardController::class, 'updateVendorStatus'])->name('vendors.approve');
+    Route::patch('/payouts/{payout}/process', [\App\Http\Controllers\Admin\DashboardController::class, 'updatePayoutStatus'])->name('payouts.process');
+    Route::resource('vendors', VendorController::class);
 });
 
 Route::middleware('auth')->group(function () {
