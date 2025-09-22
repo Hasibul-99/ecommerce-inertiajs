@@ -59,6 +59,10 @@ Route::get('/dashboard', function () {
 // Product routes
 Route::resource('products', ProductController::class)->except(['index', 'show']);
 
+// Product image routes
+Route::post('/products/{product}/images', [\App\Http\Controllers\ProductImageController::class, 'store'])->name('products.images.store');
+Route::delete('/products/{product}/images/{mediaId}', [\App\Http\Controllers\ProductImageController::class, 'destroy'])->name('products.images.destroy');
+
 // Cart routes
 Route::post('/cart/add', [CartController::class, 'addItem'])->name('cart.add');
 Route::patch('/cart/{itemId}', [CartController::class, 'updateItem'])->name('cart.update');
