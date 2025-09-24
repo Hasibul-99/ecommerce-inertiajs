@@ -15,15 +15,29 @@ export const formatCurrency = (amount: number, currencyCode = 'USD'): string => 
  * Format a date string
  * @param dateString - The date string to format
  * @param options - Intl.DateTimeFormatOptions
+ * @param includeTime - Whether to include time in the formatted date
  * @returns Formatted date string
  */
-export const formatDate = (dateString: string, options: Intl.DateTimeFormatOptions = {}): string => {
+export const formatDate = (dateString: string, options: Intl.DateTimeFormatOptions = {}, includeTime = false): string => {
+  if (!dateString) return 'N/A';
+  
+  // Check if date is valid
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return 'Invalid Date';
+  
   const defaultOptions: Intl.DateTimeFormatOptions = {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
     ...options,
   };
+  
+  if (includeTime) {
+    defaultOptions.hour = '2-digit';
+    defaultOptions.minute = '2-digit';
+    defaultOptions.second = '2-digit';
+    defaultOptions.hour12 = true;
+  }
   
   return new Date(dateString).toLocaleDateString('en-US', defaultOptions);
 };

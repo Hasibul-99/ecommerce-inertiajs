@@ -110,6 +110,10 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->grou
     Route::post('/orders/{order}/update-status', [\App\Http\Controllers\Admin\OrderController::class, 'updateStatus'])->name('orders.update-status');
     Route::post('/orders/{order}/mark-as-paid', [\App\Http\Controllers\Admin\OrderController::class, 'markAsPaid'])->name('orders.mark-as-paid');
     
+    // Activity Logs
+    Route::get('/activity-logs', [\App\Http\Controllers\Admin\ActivityLogController::class, 'index'])->name('activity-logs.index');
+    Route::get('/activity-logs/{activityLog}', [\App\Http\Controllers\Admin\ActivityLogController::class, 'show'])->name('activity-logs.show');
+    
     Route::patch('/vendors/{vendor}/status', [VendorController::class, 'updateStatus'])->name('vendors.status');
     Route::patch('/vendors/{vendor}/approve', [\App\Http\Controllers\Admin\DashboardController::class, 'updateVendorStatus'])->name('vendors.approve');
     Route::patch('/payouts/{payout}/process', [\App\Http\Controllers\Admin\DashboardController::class, 'updatePayoutStatus'])->name('payouts.process');

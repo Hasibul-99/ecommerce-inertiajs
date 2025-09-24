@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -11,7 +12,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Product extends Model implements HasMedia
 {
-    use HasFactory, SoftDeletes, Searchable, InteractsWithMedia;
+    use HasFactory, SoftDeletes, Searchable, InteractsWithMedia, LogsActivity;
 
     /**
      * The attributes that are mass assignable.
