@@ -144,7 +144,7 @@ export default function Show({ auth, order }: OrderShowProps) {
                     <p><span className="font-medium">Subtotal:</span> {formatCurrency(order.subtotal_cents / 100)}</p>
                     <p><span className="font-medium">Shipping:</span> {formatCurrency(order.shipping_cents / 100)}</p>
                     <p><span className="font-medium">Tax:</span> {formatCurrency(order.tax_cents / 100)}</p>
-                    {order.discount_cents > 0 && (
+                    {order?.discount_cents && order.discount_cents > 0 && (
                       <p><span className="font-medium">Discount:</span> -{formatCurrency(order.discount_cents / 100)}</p>
                     )}
                     <p className="font-bold">

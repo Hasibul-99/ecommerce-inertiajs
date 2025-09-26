@@ -50,7 +50,7 @@ export default function Index({ auth, activityLogs, filters, eventTypes }: Props
   };
 
   const applyFilters = () => {
-    router.get(route('admin.activity-logs.index'), filterData as any, {
+    router.get(route('admin.activity-logs.index'), filterData, {
       preserveState: true,
       replace: true,
     });
@@ -63,7 +63,7 @@ export default function Index({ auth, activityLogs, filters, eventTypes }: Props
       from_date: '',
       to_date: '',
     });
-    router.get(route('admin.activity-logs.index'), {}, {
+    router.get(route('admin.activity-logs.index'), undefined, {
       preserveState: true,
       replace: true,
     });
@@ -89,7 +89,7 @@ export default function Index({ auth, activityLogs, filters, eventTypes }: Props
   };
 
   return (
-    <AdminLayout user={auth.user}>
+    <AdminLayout user={auth.user as User}>
       <Head title="Activity Logs" />
 
       <div className="py-12">

@@ -79,6 +79,14 @@ class Product extends Model implements HasMedia
     }
 
     /**
+     * Get the category that owns the product.
+     */
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    /**
      * Get the variants for the product.
      */
     public function variants()

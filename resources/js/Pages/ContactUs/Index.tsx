@@ -2,6 +2,7 @@ import React from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
 import GuestLayout from '@/Layouts/GuestLayout';
 import InputError from '@/Components/Core/InputError';
+import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaFacebookF, FaTwitter, FaInstagram, FaYoutube } from 'react-icons/fa';
 
 interface ContactFormData {
   name: string;
@@ -75,15 +76,15 @@ export default function ContactUs() {
                   <h4 className="text-[18px] font-medium text-[#4b5966] mb-[10px]">Contact Info</h4>
                   <ul className="p-0 m-0 list-none">
                     <li className="flex items-start mb-[10px]">
-                      <i className="fi-ts-marker mr-[10px] text-[#5caf90] mt-[3px]"></i>
+                      <FaMapMarkerAlt className="mr-[10px] text-[#5caf90] mt-[3px]" />
                       <p className="text-[14px] text-[#777] m-0">123 Main Street, Anytown, CA 12345</p>
                     </li>
                     <li className="flex items-start mb-[10px]">
-                      <i className="fi-ts-phone-call mr-[10px] text-[#5caf90] mt-[3px]"></i>
+                      <FaPhoneAlt className="mr-[10px] text-[#5caf90] mt-[3px]" />
                       <p className="text-[14px] text-[#777] m-0">+1 (555) 123-4567</p>
                     </li>
                     <li className="flex items-start mb-[10px]">
-                      <i className="fi-ts-envelope mr-[10px] text-[#5caf90] mt-[3px]"></i>
+                      <FaEnvelope className="mr-[10px] text-[#5caf90] mt-[3px]" />
                       <p className="text-[14px] text-[#777] m-0">info@grabit.com</p>
                     </li>
                   </ul>
@@ -91,10 +92,10 @@ export default function ContactUs() {
                 <div className="gi-contact-info-item">
                   <h4 className="text-[18px] font-medium text-[#4b5966] mb-[10px]">Follow Us</h4>
                   <ul className="gi-social flex p-0 m-0 list-none">
-                    <li className="mr-[10px]"><a href="#" className="w-[35px] h-[35px] flex items-center justify-center bg-[#f8f8fb] rounded-[5px] text-[#777] hover:bg-[#5caf90] hover:text-white transition-all duration-300"><i className="fi-brands-facebook"></i></a></li>
-                    <li className="mr-[10px]"><a href="#" className="w-[35px] h-[35px] flex items-center justify-center bg-[#f8f8fb] rounded-[5px] text-[#777] hover:bg-[#5caf90] hover:text-white transition-all duration-300"><i className="fi-brands-twitter"></i></a></li>
-                    <li className="mr-[10px]"><a href="#" className="w-[35px] h-[35px] flex items-center justify-center bg-[#f8f8fb] rounded-[5px] text-[#777] hover:bg-[#5caf90] hover:text-white transition-all duration-300"><i className="fi-brands-instagram"></i></a></li>
-                    <li className="mr-[10px]"><a href="#" className="w-[35px] h-[35px] flex items-center justify-center bg-[#f8f8fb] rounded-[5px] text-[#777] hover:bg-[#5caf90] hover:text-white transition-all duration-300"><i className="fi-brands-youtube"></i></a></li>
+                    <li className="mr-[10px]"><a href="#" className="w-[35px] h-[35px] flex items-center justify-center bg-[#f8f8fb] rounded-[5px] text-[#777] hover:bg-[#5caf90] hover:text-white transition-all duration-300"><FaFacebookF /></a></li>
+                    <li className="mr-[10px]"><a href="#" className="w-[35px] h-[35px] flex items-center justify-center bg-[#f8f8fb] rounded-[5px] text-[#777] hover:bg-[#5caf90] hover:text-white transition-all duration-300"><FaTwitter /></a></li>
+                    <li className="mr-[10px]"><a href="#" className="w-[35px] h-[35px] flex items-center justify-center bg-[#f8f8fb] rounded-[5px] text-[#777] hover:bg-[#5caf90] hover:text-white transition-all duration-300"><FaInstagram /></a></li>
+                    <li className="mr-[10px]"><a href="#" className="w-[35px] h-[35px] flex items-center justify-center bg-[#f8f8fb] rounded-[5px] text-[#777] hover:bg-[#5caf90] hover:text-white transition-all duration-300"><FaYoutube /></a></li>
                   </ul>
                 </div>
               </div>

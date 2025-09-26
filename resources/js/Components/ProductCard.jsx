@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link } from '@inertiajs/react';
+import { FiHeart, FiEye, FiShoppingCart } from 'react-icons/fi';
+import { FiRepeat } from 'react-icons/fi';
 
 const ProductCard = ({ product }) => {
   // Extract product data with defaults for missing values
@@ -77,27 +79,27 @@ const ProductCard = ({ product }) => {
                   className="gi-btn-group wishlist transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]" 
                   title="Wishlist"
                 >
-                  <i className="fi-rr-heart transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px] hover:text-white" />
+                  <FiHeart className="transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px] hover:text-white" />
                 </Link>
                 <Link 
                   href={`/products/${slug}`} 
                   className="gi-btn-group quickview transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]"
                 >
-                  <i className="fi-rr-eye transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px] hover:text-white" />
+                  <FiEye className="transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px] hover:text-white" />
                 </Link>
                 <Link 
                   href="#" 
                   className="gi-btn-group compare transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]" 
                   title="Compare"
                 >
-                  <i className="fi fi-rr-arrows-repeat transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px] hover:text-white" />
+                  <FiRepeat className="transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px] hover:text-white" />
                 </Link>
                 <Link 
                   href="#" 
                   title="Add To Cart" 
                   className="gi-btn-group add-to-cart transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]"
                 >
-                  <i className="fi-rr-shopping-basket transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px] hover:text-white" />
+                  <FiShoppingCart className="transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px] hover:text-white" />
                 </Link>
               </div>
             </div>
