@@ -8,6 +8,7 @@ import { Label } from '@/Components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/Components/ui/tabs';
 import { Separator } from '@/Components/ui/separator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select';
+import { Switch } from '@/Components/ui/switch';
 import { useState } from 'react';
 import { 
   FiSettings, 
@@ -246,7 +247,7 @@ export default function AdminSettings({ auth, settings }: Props) {
                         type="number"
                         step="0.01"
                         value={formData.tax_rate}
-                        onChange={(e) => handleInputChange('tax_rate', parseFloat(e.target.value) || 0)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('tax_rate', parseFloat(e.target.value) || 0)}
                         placeholder="0.00"
                       />
                     </div>
@@ -257,7 +258,7 @@ export default function AdminSettings({ auth, settings }: Props) {
                         type="number"
                         step="0.01"
                         value={formData.shipping_fee}
-                        onChange={(e) => handleInputChange('shipping_fee', parseFloat(e.target.value) || 0)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('shipping_fee', parseFloat(e.target.value) || 0)}
                         placeholder="0.00"
                       />
                     </div>
@@ -268,7 +269,7 @@ export default function AdminSettings({ auth, settings }: Props) {
                         type="number"
                         step="0.01"
                         value={formData.free_shipping_threshold}
-                        onChange={(e) => handleInputChange('free_shipping_threshold', parseFloat(e.target.value) || 0)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('free_shipping_threshold', parseFloat(e.target.value) || 0)}
                         placeholder="100.00"
                       />
                     </div>

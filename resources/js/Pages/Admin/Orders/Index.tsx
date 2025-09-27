@@ -230,14 +230,14 @@ export default function Index({ auth, orders, filters }: OrdersIndexProps) {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <Link
-                              href={route('admin.orders.show', order.id)}
+                              href={route('admin.orders.show', { id: order.id })}
                               className="text-indigo-600 hover:text-indigo-900"
                             >
                               View
                             </Link>
                             {order.payment_method === 'cod' && order.payment_status === 'unpaid' && (
                               <Link
-                                href={route('admin.orders.mark-as-paid', order.id)}
+                                href={route('admin.orders.mark-as-paid', { id: order.id })}
                                 method="post"
                                 as="button"
                                 className="ml-3 text-green-600 hover:text-green-900"

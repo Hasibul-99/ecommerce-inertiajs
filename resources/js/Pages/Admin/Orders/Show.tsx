@@ -31,12 +31,12 @@ export default function Show({ auth, order }: OrderShowProps) {
 
   const handleStatusUpdate = (e: React.FormEvent) => {
     e.preventDefault();
-    post(route('admin.orders.update-status', order.id));
+    post(route('admin.orders.update-status', { id: order.id }));
   };
 
   const handleMarkAsPaid = () => {
     if (confirm('Are you sure you want to mark this order as paid?')) {
-      post(route('admin.orders.mark-as-paid', order.id));
+      post(route('admin.orders.mark-as-paid', { id: order.id }));
     }
   };
 

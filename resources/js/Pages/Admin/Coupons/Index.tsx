@@ -8,22 +8,25 @@ import { Button } from '@/Components/ui/button';
 import { Input } from '@/Components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/Components/ui/dialog';
-import { Label } from '@/components/ui/label';
+import { Label } from '@/Components/ui/label';
 import { useState } from 'react';
 import { FiEdit, FiTrash2, FiPlus, FiPercent, FiDollarSign, FiCalendar, FiUsers, FiTag } from 'react-icons/fi';
 
 interface Coupon {
   id: number;
   code: string;
+  name: string;
+  description: string;
   type: 'percentage' | 'fixed';
   value: number;
   minimum_amount?: number;
   maximum_discount?: number;
   usage_limit?: number;
   used_count: number;
+  status: string;
   starts_at?: string;
   expires_at?: string;
-  is_active: boolean;
+  is_active?: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -65,7 +68,7 @@ export default function CouponsIndex({ auth, coupons }: Props) {
       code: 'SAVE10',
       name: 'Save $10',
       description: '$10 off on orders over $100',
-      type: 'fixed_amount',
+      type: 'fixed',
       value: 10,
       minimum_amount: 100,
       usage_limit: 500,
@@ -148,7 +151,8 @@ export default function CouponsIndex({ auth, coupons }: Props) {
         name: 'Admin User',
         email: 'admin@example.com',
         email_verified_at: new Date().toISOString(),
-        role: 'admin'
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
       }}
       header={<h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Coupon Management</h2>}
     >

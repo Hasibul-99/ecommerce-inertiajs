@@ -58,8 +58,9 @@ return [
      * The fully qualified class name of the model used for temporary uploads.
      *
      * This model is only used in Media Library Pro (https://medialibrary.pro)
+     * Since we're using the regular Media Library, this is commented out.
      */
-    'temporary_upload_model' => Spatie\MediaLibraryPro\Models\TemporaryUpload::class,
+    // 'temporary_upload_model' => Spatie\MediaLibraryPro\Models\TemporaryUpload::class,
 
     /*
      * When enabled, Media Library Pro will only process temporary uploads that were uploaded

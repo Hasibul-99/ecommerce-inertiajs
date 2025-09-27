@@ -9,13 +9,24 @@ import { Button } from '@/Components/ui/button';
 import { Input } from '@/Components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/Components/ui/dialog';
-import { Label } from '@/components/ui/label';
+import { Label } from '@/Components/ui/label';
 import { useState } from 'react';
 import { FiEdit, FiTrash2, FiPlus, FiEye, FiPackage, FiDollarSign, FiImage, FiStar } from 'react-icons/fi';
 
 
 
-interface ExtendedProduct extends Omit<Product, 'price_cents' | 'sale_price_cents' | 'title'> {
+interface SimpleCategory {
+  id: number;
+  name: string;
+  slug: string;
+}
+
+interface SimpleVendor {
+  id: number;
+  name: string;
+}
+
+interface ExtendedProduct extends Omit<Product, 'price_cents' | 'sale_price_cents'> {
   name: string;
   price: number;
   sale_price?: number;
@@ -23,8 +34,8 @@ interface ExtendedProduct extends Omit<Product, 'price_cents' | 'sale_price_cent
   sku: string;
   status: 'active' | 'inactive' | 'draft' | 'archived';
   featured: boolean;
-  category: Category;
-  vendor: Vendor;
+  category: SimpleCategory;
+  vendor: SimpleVendor;
   images: string[];
   variants: ProductVariant[];
 }
@@ -35,7 +46,7 @@ interface Props extends PageProps {
   vendors: Vendor[];
 }
 
-export default function ProductsIndex({ products, categories, vendors }: Props) {
+export default function ProductsIndex({ products, categories, vendors, auth }: Props) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedBrand, setSelectedBrand] = useState('all');
@@ -45,15 +56,23 @@ export default function ProductsIndex({ products, categories, vendors }: Props) 
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showVariantsDialog, setShowVariantsDialog] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<ExtendedProduct | null>(null);
+
+  // Mock brands data for demonstration
+  const brands = [
+    { id: 1, name: 'Organic Farms Co.' },
+    { id: 2, name: 'Fresh Valley' },
+    { id: 3, name: 'Premium Foods' }
+  ];
 
   // Mock data for demonstration
-  const mockProducts: Product[] = [
+  const mockProducts: ExtendedProduct[] = [
     {
       id: 1,
-      name: 'Premium Organic Almonds',
+      title: 'Premium Organic Almonds',
       slug: 'premium-organic-almonds',
       description: 'High-quality organic almonds sourced from California farms.',
+      name: 'Premium Organic Almonds',
       price: 24.99,
       sale_price: 19.99,
       stock: 150,
@@ -61,22 +80,24 @@ export default function ProductsIndex({ products, categories, vendors }: Props) 
       status: 'active',
       featured: true,
       category: { id: 1, name: 'Nuts & Seeds', slug: 'nuts-seeds' },
-      brand: { id: 1, name: 'Nature\'s Best', slug: 'natures-best' },
       vendor: { id: 1, name: 'Organic Farms Co.' },
       images: ['/images/almonds-1.jpg', '/images/almonds-2.jpg'],
       variants: [
-        { id: 1, name: '500g Pack', price: 19.99, stock: 75, sku: 'ALM-001-500' },
-        { id: 2, name: '1kg Pack', price: 35.99, stock: 50, sku: 'ALM-001-1000' },
-        { id: 3, name: '2kg Bulk', price: 65.99, stock: 25, sku: 'ALM-001-2000' }
+        { id: 1, name: '500g Pack', price_cents: 1999, stock_quantity: 75, sku: 'ALM-001-500', product_id: 1, sale_price_cents: undefined, weight_grams: undefined, dimensions: undefined, created_at: '2024-01-15T10:30:00Z', updated_at: '2024-01-20T14:45:00Z' },
+        { id: 2, name: '1kg Pack', price_cents: 3599, stock_quantity: 50, sku: 'ALM-001-1000', product_id: 1, sale_price_cents: undefined, weight_grams: undefined, dimensions: undefined, created_at: '2024-01-15T10:30:00Z', updated_at: '2024-01-20T14:45:00Z' },
+        { id: 3, name: '2kg Bulk', price_cents: 6599, stock_quantity: 25, sku: 'ALM-001-2000', product_id: 1, sale_price_cents: undefined, weight_grams: undefined, dimensions: undefined, created_at: '2024-01-15T10:30:00Z', updated_at: '2024-01-20T14:45:00Z' }
       ],
+      category_id: 1,
+      vendor_id: 1,
       created_at: '2024-01-15T10:30:00Z',
       updated_at: '2024-01-20T14:45:00Z'
     },
     {
       id: 2,
-      name: 'Fresh Strawberries',
+      title: 'Fresh Strawberries',
       slug: 'fresh-strawberries',
       description: 'Sweet and juicy strawberries, perfect for desserts and snacks.',
+      name: 'Fresh Strawberries',
       price: 8.99,
       stock: 200,
       sku: 'STR-001',
@@ -86,6 +107,8 @@ export default function ProductsIndex({ products, categories, vendors }: Props) 
       vendor: { id: 2, name: 'Fresh Produce Ltd.' },
       images: ['/images/strawberries-1.jpg'],
       variants: [],
+      category_id: 2,
+      vendor_id: 2,
       created_at: '2024-01-10T08:15:00Z',
       updated_at: '2024-01-18T16:20:00Z'
     }
@@ -101,22 +124,22 @@ export default function ProductsIndex({ products, categories, vendors }: Props) 
     setShowCreateDialog(false);
   };
 
-  const handleEditProduct = (product: Product) => {
+  const handleEditProduct = (product: ExtendedProduct) => {
     setSelectedProduct(product);
     setShowEditDialog(true);
   };
 
-  const handleDeleteProduct = (product: Product) => {
+  const handleDeleteProduct = (product: ExtendedProduct) => {
     setSelectedProduct(product);
     setShowDeleteDialog(true);
   };
 
-  const handleToggleFeatured = (product: Product) => {
+  const handleToggleFeatured = (product: ExtendedProduct) => {
     // Implement toggle featured logic
     console.log('Toggling featured for:', product.name);
   };
 
-  const handleViewVariants = (product: Product) => {
+  const handleViewVariants = (product: ExtendedProduct) => {
     setSelectedProduct(product);
     setShowVariantsDialog(true);
   };

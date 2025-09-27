@@ -7,7 +7,7 @@ import { Badge } from '@/Components/ui/badge';
 import { Button } from '@/Components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/Components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/Components/ui/tabs';
-import { Label } from '@/components/ui/label';
+import { Label } from '@/Components/ui/label';
 import { useState } from 'react';
 import { 
   FiEye, 

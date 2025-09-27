@@ -1,4 +1,4 @@
-export interface PageProps {
+export type PageProps<T = Record<string, any>> = {
   auth: {
     user: User;
   };
@@ -8,7 +8,7 @@ export interface PageProps {
     success?: boolean;
     error?: boolean;
   };
-}
+} & T;
 
 export interface PaginatedData<T> {
   data: T[];

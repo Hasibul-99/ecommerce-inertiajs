@@ -108,6 +108,7 @@ export interface Category {
   image_url?: string;
   created_at: string;
   updated_at: string;
+  parent?: Category;
 }
 
 export interface Vendor {

@@ -8,7 +8,7 @@ import { Button } from '@/Components/ui/button';
 import { Input } from '@/Components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/Components/ui/dialog';
-import { Label } from '@/components/ui/label';
+import { Label } from '@/Components/ui/label';
 import { useState } from 'react';
 import { 
   FiEdit, 
@@ -254,7 +254,7 @@ export default function RolesIndex({ auth, roles, permissions }: Props) {
                   <div className="ml-4">
                     <p className="text-sm font-medium text-purple-700">Total Users</p>
                     <p className="text-2xl font-bold text-purple-900">
-                      {mockRoles.reduce((sum, role) => sum + role.users_count, 0)}
+                      {mockRoles.reduce((sum, role) => sum + (role.users_count || 0), 0)}
                     </p>
                   </div>
                 </div>

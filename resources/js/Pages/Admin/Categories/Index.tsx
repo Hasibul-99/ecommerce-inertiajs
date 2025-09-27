@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/Components/ui/badge';
 import { Button } from '@/Components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/Components/ui/dialog';
-import { Label } from '@/components/ui/label';
+import { Label } from '@/Components/ui/label';
 import { useState } from 'react';
 import { FiEdit, FiTrash2, FiPlus, FiSearch, FiFilter, FiPackage, FiGrid, FiList } from 'react-icons/fi';
 

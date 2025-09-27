@@ -8,7 +8,7 @@ import { Button } from '@/Components/ui/button';
 import { Input } from '@/Components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/Components/ui/dialog';
-import { Label } from '@/components/ui/label';
+import { Label } from '@/Components/ui/label';
 import { useState } from 'react';
 import { 
   FiEdit, 
@@ -131,14 +131,14 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
     return variants[status as keyof typeof variants] || variants.inactive;
   };
 
-  const getRoleBadge = (role: string) => {
+  const getRoleBadge = (role?: string) => {
     const variants = {
       'Super Admin': 'bg-purple-100 text-purple-800',
       'Admin': 'bg-blue-100 text-blue-800',
       'Editor': 'bg-yellow-100 text-yellow-800',
       'User': 'bg-gray-100 text-gray-800'
     };
-    return variants[role as keyof typeof variants] || variants.User;
+    return variants[(role || 'User') as keyof typeof variants] || variants.User;
   };
 
   const formatDate = (dateString: string) => {

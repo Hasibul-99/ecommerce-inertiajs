@@ -316,7 +316,7 @@ export default function Index({ auth, activityLogs, filters, eventTypes }: Props
                               asChild
                               className="flex items-center gap-1"
                             >
-                              <Link href={route('admin.activity-logs.show', log.id)}>
+                              <Link href={route('admin.activity-logs.show', { id: log.id })}>
                                 <FiEye className="w-3 h-3" />
                                 View Details
                               </Link>
