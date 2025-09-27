@@ -62,6 +62,14 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [selectedUser, setSelectedUser] = useState<ExtendedUser | null>(null);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    password_confirmation: '',
+    role_id: '',
+    status: 'active' as 'active' | 'inactive' | 'suspended'
+  });
 
   // Mock data for demonstration
   const mockUsers: ExtendedUser[] = [
@@ -146,17 +154,78 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
   };
 
   const handleCreateUser = () => {
-    setShowCreateDialog(false);
+    router.post(route('admin.users.store'), formData, {
+      onSuccess: () => {
+        setShowCreateDialog(false);
+        setFormData({
+          name: '',
+          email: '',
+          password: '',
+          password_confirmation: '',
+          role_id: '',
+          status: 'active'
+        });
+      },
+      onError: (errors) => {
+        console.error('Error creating user:', errors);
+      }
+    });
   };
 
   const handleEditUser = (user: ExtendedUser) => {
     setSelectedUser(user);
+    setFormData({
+      name: user.name,
+      email: user.email,
+      password: '',
+      password_confirmation: '',
+      role_id: user.role || '',
+      status: user.status
+    });
     setShowEditDialog(true);
   };
 
+  const handleUpdateUser = () => {
+    if (!selectedUser) return;
+    
+    const updateData = {
+      name: formData.name,
+      email: formData.email,
+      role_id: formData.role_id,
+      status: formData.status,
+      ...(formData.password && {
+        password: formData.password,
+        password_confirmation: formData.password_confirmation
+      })
+    };
+
+    router.put(route('admin.users.update', selectedUser.id), updateData, {
+      onSuccess: () => {
+        setShowEditDialog(false);
+        setSelectedUser(null);
+        setFormData({
+          name: '',
+          email: '',
+          password: '',
+          password_confirmation: '',
+          role_id: '',
+          status: 'active'
+        });
+      },
+      onError: (errors) => {
+        console.error('Error updating user:', errors);
+      }
+    });
+  };
+
   const handleDeleteUser = (user: ExtendedUser) => {
-    setSelectedUser(user);
-    setShowDeleteDialog(true);
+    if (confirm(`Are you sure you want to delete user "${user.name}"?`)) {
+      router.delete(route('admin.users.destroy', user.id), {
+        onError: (errors) => {
+          console.error('Error deleting user:', errors);
+        }
+      });
+    }
   };
 
   const handleRoleAssignment = (userId: number, roleId: number) => {
@@ -211,6 +280,8 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
                         type="text"
                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                         placeholder="Enter full name"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       />
                     </div>
                     <div className="space-y-2">
@@ -219,13 +290,19 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
                         type="email"
                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                         placeholder="Enter email address"
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       />
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label>Role</Label>
-                      <select className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                      <select 
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        value={formData.role_id}
+                        onChange={(e) => setFormData({ ...formData, role_id: e.target.value })}
+                      >
                         <option value="">Select role</option>
                         {mockRoles.map((role) => (
                           <option key={role.id} value={role.name}>
@@ -236,7 +313,11 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
                     </div>
                     <div className="space-y-2">
                       <Label>Status</Label>
-                      <select className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                      <select 
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        value={formData.status}
+                        onChange={(e) => setFormData({ ...formData, status: e.target.value as 'active' | 'inactive' | 'suspended' })}
+                      >
                         <option value="active">Active</option>
                         <option value="inactive">Inactive</option>
                         <option value="suspended">Suspended</option>
@@ -249,6 +330,8 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
                       type="password"
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                       placeholder="Enter password"
+                      value={formData.password}
+                      onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                     />
                   </div>
                 </form>
@@ -511,7 +594,8 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
                       <input
                         type="text"
                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                        defaultValue={selectedUser.name}
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       />
                     </div>
                     <div className="space-y-2">
@@ -519,7 +603,8 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
                       <input
                         type="email"
                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                        defaultValue={selectedUser.email}
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       />
                     </div>
                   </div>
@@ -528,8 +613,8 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
                       <Label>Role Assignment</Label>
                       <select 
                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                        defaultValue={selectedUser.role}
-                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleRoleAssignment(selectedUser.id, parseInt(e.target.value))}
+                        value={formData.role_id}
+                        onChange={(e) => setFormData({ ...formData, role_id: e.target.value })}
                       >
                         {mockRoles.map((role) => (
                           <option key={role.id} value={role.name}>
@@ -542,7 +627,8 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
                       <Label>Status</Label>
                       <select 
                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                        defaultValue={selectedUser.status}
+                        value={formData.status}
+                        onChange={(e) => setFormData({ ...formData, status: e.target.value as 'active' | 'inactive' | 'suspended' })}
                       >
                         <option value="active">Active</option>
                         <option value="inactive">Inactive</option>
@@ -565,7 +651,7 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
               )}
               <DialogFooter>
                 <Button variant="outline" onClick={() => setShowEditDialog(false)}>Cancel</Button>
-                <Button>Update User</Button>
+                <Button onClick={handleUpdateUser}>Update User</Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>

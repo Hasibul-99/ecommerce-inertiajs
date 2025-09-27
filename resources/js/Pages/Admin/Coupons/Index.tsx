@@ -43,6 +43,18 @@ export default function CouponsIndex({ auth, coupons }: Props) {
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [selectedCoupon, setSelectedCoupon] = useState<Coupon | null>(null);
+  const [formData, setFormData] = useState({
+    code: '',
+    name: '',
+    description: '',
+    type: 'percentage' as 'percentage' | 'fixed',
+    value: 0,
+    minimum_amount: '',
+    maximum_discount: '',
+    usage_limit: '',
+    starts_at: '',
+    expires_at: ''
+  });
 
   // Mock data for demonstration
   const mockCoupons: Coupon[] = [
@@ -102,21 +114,88 @@ export default function CouponsIndex({ auth, coupons }: Props) {
   };
 
   const handleCreateCoupon = () => {
-    setShowCreateDialog(false);
+    router.post(route('admin.coupons.store'), formData, {
+      onSuccess: () => {
+        setShowCreateDialog(false);
+        setFormData({
+          code: '',
+          name: '',
+          description: '',
+          type: 'percentage',
+          value: 0,
+          minimum_amount: '',
+          maximum_discount: '',
+          usage_limit: '',
+          starts_at: '',
+          expires_at: ''
+        });
+      },
+      onError: (errors) => {
+        console.error('Error creating coupon:', errors);
+      }
+    });
   };
 
   const handleEditCoupon = (coupon: Coupon) => {
     setSelectedCoupon(coupon);
+    setFormData({
+      code: coupon.code,
+      name: coupon.name,
+      description: coupon.description,
+      type: coupon.type,
+      value: coupon.value,
+      minimum_amount: coupon.minimum_amount?.toString() || '',
+      maximum_discount: coupon.maximum_discount?.toString() || '',
+      usage_limit: coupon.usage_limit?.toString() || '',
+      starts_at: coupon.starts_at ? coupon.starts_at.split('T')[0] : '',
+      expires_at: coupon.expires_at ? coupon.expires_at.split('T')[0] : ''
+    });
     setShowEditDialog(true);
   };
 
+  const handleUpdateCoupon = () => {
+    if (!selectedCoupon) return;
+    
+    router.put(route('admin.coupons.update', selectedCoupon.id), formData, {
+      onSuccess: () => {
+        setShowEditDialog(false);
+        setSelectedCoupon(null);
+        setFormData({
+          code: '',
+          name: '',
+          description: '',
+          type: 'percentage',
+          value: 0,
+          minimum_amount: '',
+          maximum_discount: '',
+          usage_limit: '',
+          starts_at: '',
+          expires_at: ''
+        });
+      },
+      onError: (errors) => {
+        console.error('Error updating coupon:', errors);
+      }
+    });
+  };
+
   const handleDeleteCoupon = (coupon: Coupon) => {
-    setSelectedCoupon(coupon);
-    setShowDeleteDialog(true);
+    if (confirm(`Are you sure you want to delete coupon "${coupon.code}"?`)) {
+      router.delete(route('admin.coupons.destroy', coupon.id), {
+        onError: (errors) => {
+          console.error('Error deleting coupon:', errors);
+        }
+      });
+    }
   };
 
   const handleToggleStatus = (coupon: Coupon) => {
-    console.log('Toggling status for:', coupon.code);
+    const newStatus = coupon.status === 'active' ? 'inactive' : 'active';
+    router.patch(route('admin.coupons.toggle-status', coupon.id), { status: newStatus }, {
+      onError: (errors) => {
+        console.error('Error toggling coupon status:', errors);
+      }
+    });
   };
 
   const formatValue = (coupon: Coupon) => {
@@ -182,11 +261,19 @@ export default function CouponsIndex({ auth, coupons }: Props) {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label>Coupon Code</Label>
-                      <Input placeholder="Enter coupon code" />
+                      <Input 
+                        placeholder="Enter coupon code" 
+                        value={formData.code}
+                        onChange={(e) => setFormData({ ...formData, code: e.target.value })}
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label>Coupon Name</Label>
-                      <Input placeholder="Enter coupon name" />
+                      <Input 
+                        placeholder="Enter coupon name" 
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      />
                     </div>
                   </div>
                   <div className="space-y-2">
@@ -194,34 +281,71 @@ export default function CouponsIndex({ auth, coupons }: Props) {
                     <textarea 
                       className="w-full min-h-[80px] px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="Enter coupon description"
+                      value={formData.description}
+                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label>Discount Type</Label>
-                      <Select>
+                      <Select value={formData.type} onValueChange={(value) => setFormData({ ...formData, type: value as 'percentage' | 'fixed' })}>
                         <SelectTrigger>
                           <SelectValue placeholder="Select type" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="percentage">Percentage</SelectItem>
-                          <SelectItem value="fixed_amount">Fixed Amount</SelectItem>
+                          <SelectItem value="fixed">Fixed Amount</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                     <div className="space-y-2">
                       <Label>Discount Value</Label>
-                      <Input type="number" step="0.01" placeholder="0.00" />
+                      <Input 
+                        type="number" 
+                        step="0.01" 
+                        placeholder="0.00" 
+                        value={formData.value}
+                        onChange={(e) => setFormData({ ...formData, value: parseFloat(e.target.value) || 0 })}
+                      />
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label>Minimum Amount</Label>
-                      <Input type="number" step="0.01" placeholder="0.00" />
+                      <Input 
+                        type="number" 
+                        step="0.01" 
+                        placeholder="0.00" 
+                        value={formData.minimum_amount}
+                        onChange={(e) => setFormData({ ...formData, minimum_amount: e.target.value })}
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label>Usage Limit</Label>
-                      <Input type="number" placeholder="Unlimited" />
+                      <Input 
+                        type="number" 
+                        placeholder="Unlimited" 
+                        value={formData.usage_limit}
+                        onChange={(e) => setFormData({ ...formData, usage_limit: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Start Date</Label>
+                      <Input 
+                        type="date" 
+                        value={formData.starts_at}
+                        onChange={(e) => setFormData({ ...formData, starts_at: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>End Date</Label>
+                      <Input 
+                        type="date" 
+                        value={formData.expires_at}
+                        onChange={(e) => setFormData({ ...formData, expires_at: e.target.value })}
+                      />
                     </div>
                   </div>
                 </form>

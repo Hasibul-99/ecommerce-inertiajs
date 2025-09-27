@@ -116,6 +116,9 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->grou
     Route::resource('products', \App\Http\Controllers\Admin\ProductController::class);
     Route::patch('/products/bulk-update-status', [\App\Http\Controllers\Admin\ProductController::class, 'bulkUpdateStatus'])->name('products.bulk-update-status');
     
+    // Admin Product Variant Management
+    Route::resource('product-variants', \App\Http\Controllers\Admin\ProductVariantController::class);
+    
     // Admin Category Management
     Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
     

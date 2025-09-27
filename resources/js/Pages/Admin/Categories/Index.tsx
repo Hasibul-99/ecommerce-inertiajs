@@ -46,10 +46,15 @@ export default function CategoriesIndex({ auth, categories, filters }: Props) {
   };
 
   const handleCreate = () => {
-    // Handle create logic here
-    console.log('Creating category:', formData);
-    setShowCreateDialog(false);
-    setFormData({ name: '', parent_id: '' });
+    router.post(route('admin.categories.store'), formData, {
+      onSuccess: () => {
+        setShowCreateDialog(false);
+        setFormData({ name: '', parent_id: '' });
+      },
+      onError: (errors) => {
+        console.error('Error creating category:', errors);
+      }
+    });
   };
 
   const handleEdit = (category: BaseCategory) => {
@@ -62,17 +67,27 @@ export default function CategoriesIndex({ auth, categories, filters }: Props) {
   };
 
   const handleUpdate = () => {
-    // Handle update logic here
-    console.log('Updating category:', selectedCategory?.id, formData);
-    setShowEditDialog(false);
-    setSelectedCategory(null);
-    setFormData({ name: '', parent_id: '' });
+    if (!selectedCategory) return;
+    
+    router.put(route('admin.categories.update', selectedCategory.id), formData, {
+      onSuccess: () => {
+        setShowEditDialog(false);
+        setSelectedCategory(null);
+        setFormData({ name: '', parent_id: '' });
+      },
+      onError: (errors) => {
+        console.error('Error updating category:', errors);
+      }
+    });
   };
 
   const handleDelete = (category: BaseCategory) => {
     if (confirm(`Are you sure you want to delete "${category.name}"?`)) {
-      // Handle delete logic here
-      console.log('Deleting category:', category.id);
+      router.delete(route('admin.categories.destroy', category.id), {
+        onError: (errors) => {
+          console.error('Error deleting category:', errors);
+        }
+      });
     }
   };
 

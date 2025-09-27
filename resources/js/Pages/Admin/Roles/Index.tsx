@@ -54,6 +54,10 @@ export default function RolesIndex({ auth, roles, permissions }: Props) {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
   const [selectedPermissions, setSelectedPermissions] = useState<number[]>([]);
+  const [formData, setFormData] = useState({
+    name: '',
+    guard_name: 'web'
+  });
 
   // Mock data for demonstration
   const mockRoles: Role[] = [
@@ -108,18 +112,58 @@ export default function RolesIndex({ auth, roles, permissions }: Props) {
   };
 
   const handleCreateRole = () => {
-    setShowCreateDialog(false);
+    router.post(route('admin.roles.store'), {
+      ...formData,
+      permissions: selectedPermissions
+    }, {
+      onSuccess: () => {
+        setShowCreateDialog(false);
+        setFormData({ name: '', guard_name: 'web' });
+        setSelectedPermissions([]);
+      },
+      onError: (errors) => {
+        console.error('Error creating role:', errors);
+      }
+    });
   };
 
   const handleEditRole = (role: Role) => {
     setSelectedRole(role);
+    setFormData({
+      name: role.name,
+      guard_name: role.guard_name
+    });
     setSelectedPermissions(role.permissions.map(p => p.id));
     setShowEditDialog(true);
   };
 
+  const handleUpdateRole = () => {
+    if (!selectedRole) return;
+    
+    router.put(route('admin.roles.update', selectedRole.id), {
+      ...formData,
+      permissions: selectedPermissions
+    }, {
+      onSuccess: () => {
+        setShowEditDialog(false);
+        setSelectedRole(null);
+        setFormData({ name: '', guard_name: 'web' });
+        setSelectedPermissions([]);
+      },
+      onError: (errors) => {
+        console.error('Error updating role:', errors);
+      }
+    });
+  };
+
   const handleDeleteRole = (role: Role) => {
-    setSelectedRole(role);
-    setShowDeleteDialog(true);
+    if (confirm(`Are you sure you want to delete role "${role.name}"?`)) {
+      router.delete(route('admin.roles.destroy', role.id), {
+        onError: (errors) => {
+          console.error('Error deleting role:', errors);
+        }
+      });
+    }
   };
 
   const handlePermissionToggle = (permissionId: number) => {
@@ -185,6 +229,8 @@ export default function RolesIndex({ auth, roles, permissions }: Props) {
                       type="text"
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                       placeholder="Enter role name"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     />
                   </div>
                   <div className="space-y-2">
@@ -423,7 +469,8 @@ export default function RolesIndex({ auth, roles, permissions }: Props) {
                      <input
                        type="text"
                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                       defaultValue={selectedRole.name}
+                       value={formData.name}
+                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                      />
                    </div>
                    <div className="space-y-2">
@@ -449,7 +496,7 @@ export default function RolesIndex({ auth, roles, permissions }: Props) {
               )}
               <DialogFooter>
                 <Button variant="outline" onClick={() => setShowEditDialog(false)}>Cancel</Button>
-                <Button>Update Role</Button>
+                <Button onClick={handleUpdateRole}>Update Role</Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>

@@ -8,7 +8,7 @@ import { Badge } from '@/Components/ui/badge';
 import { Button } from '@/Components/ui/button';
 import { Input } from '@/Components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/Components/ui/dialog';
+
 import { Label } from '@/Components/ui/label';
 import { useState } from 'react';
 import { FiEdit, FiTrash2, FiPlus, FiEye, FiPackage, FiDollarSign, FiImage, FiStar } from 'react-icons/fi';
@@ -52,11 +52,6 @@ export default function ProductsIndex({ products, categories, vendors, auth }: P
   const [selectedBrand, setSelectedBrand] = useState('all');
   const [selectedVendor, setSelectedVendor] = useState('all');
   const [selectedStatus, setSelectedStatus] = useState('all');
-  const [showCreateDialog, setShowCreateDialog] = useState(false);
-  const [showEditDialog, setShowEditDialog] = useState(false);
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const [showVariantsDialog, setShowVariantsDialog] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<ExtendedProduct | null>(null);
 
   // Mock brands data for demonstration
   const brands = [
@@ -120,18 +115,25 @@ export default function ProductsIndex({ products, categories, vendors, auth }: P
   };
 
   const handleCreateProduct = () => {
-    // Implement create logic
-    setShowCreateDialog(false);
+    router.visit(route('admin.products.create'));
   };
 
   const handleEditProduct = (product: ExtendedProduct) => {
-    setSelectedProduct(product);
-    setShowEditDialog(true);
+    router.visit(route('admin.products.edit', product.id));
   };
 
   const handleDeleteProduct = (product: ExtendedProduct) => {
-    setSelectedProduct(product);
-    setShowDeleteDialog(true);
+    if (confirm(`Are you sure you want to delete "${product.name}"? This action cannot be undone.`)) {
+      router.delete(route('admin.products.destroy', product.id), {
+        onSuccess: () => {
+          // Product deleted successfully, page will reload automatically
+        },
+        onError: (errors) => {
+          console.error('Error deleting product:', errors);
+          alert('Failed to delete product. Please try again.');
+        }
+      });
+    }
   };
 
   const handleToggleFeatured = (product: ExtendedProduct) => {
@@ -140,8 +142,8 @@ export default function ProductsIndex({ products, categories, vendors, auth }: P
   };
 
   const handleViewVariants = (product: ExtendedProduct) => {
-    setSelectedProduct(product);
-    setShowVariantsDialog(true);
+    // Navigate to product variants page or show variants in a separate view
+    console.log('Viewing variants for:', product.name);
   };
 
   const formatPrice = (price: number) => {
@@ -234,57 +236,10 @@ export default function ProductsIndex({ products, categories, vendors, auth }: P
               <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Products</h1>
               <p className="text-gray-600 dark:text-gray-400">Manage your product catalog and inventory</p>
             </div>
-            <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
-              <DialogTrigger asChild>
-                <Button className="flex items-center gap-2">
+                <Button className="flex items-center gap-2" onClick={handleCreateProduct}>
                   <FiPlus className="w-4 h-4" />
                   Add Product
                 </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-2xl">
-                <DialogHeader>
-                  <DialogTitle>Create New Product</DialogTitle>
-                  <DialogDescription>Add a new product to your catalog</DialogDescription>
-                </DialogHeader>
-                <form className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label>Product Name</Label>
-                      <Input placeholder="Enter product name" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>SKU</Label>
-                      <Input placeholder="Enter SKU" />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Description</Label>
-                    <textarea 
-                      className="w-full min-h-[100px] px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Enter product description"
-                    />
-                  </div>
-                  <div className="grid grid-cols-3 gap-4">
-                    <div className="space-y-2">
-                      <Label>Price</Label>
-                      <Input type="number" step="0.01" placeholder="0.00" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Sale Price</Label>
-                      <Input type="number" step="0.01" placeholder="0.00" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Stock</Label>
-                      <Input type="number" placeholder="0" />
-                    </div>
-                  </div>
-                </form>
-                <DialogFooter>
-                  <Button variant="outline" onClick={() => setShowCreateDialog(false)}>Cancel</Button>
-                  <Button onClick={handleCreateProduct}>Create Product</Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
           </div>
 
           {/* Filters */}
