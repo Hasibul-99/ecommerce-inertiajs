@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from '@inertiajs/react';
-import { User } from '@/types';
+import { User } from '@/types/index';
 import {
   FiHome,
   FiShoppingBag,
@@ -58,7 +58,7 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
                 Orders
               </Link>
               <Link
-                href="#"
+                href={route('admin.products.index')}
                 className="flex items-center px-4 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-200"
               >
                 <FiShoppingBag className="w-5 h-5 mr-3 text-gray-500" />
@@ -72,21 +72,21 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
                 Vendors
               </Link>
               <Link
-                href="#"
+                href={route('admin.categories.index')}
                 className="flex items-center px-4 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-200"
               >
                 <FiPackage className="w-5 h-5 mr-3 text-gray-500" />
                 Categories
               </Link>
               <Link
-                href="#"
+                href={route('admin.transactions.index')}
                 className="flex items-center px-4 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-200"
               >
                 <FiDollarSign className="w-5 h-5 mr-3 text-gray-500" />
                 Transactions
               </Link>
               <Link
-                href="#"
+                href={route('admin.settings.index')}
                 className="flex items-center px-4 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-200"
               >
                 <FiSettings className="w-5 h-5 mr-3 text-gray-500" />

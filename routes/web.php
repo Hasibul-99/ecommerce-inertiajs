@@ -56,6 +56,10 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+// SEO Routes
+Route::get('/sitemap.xml', [\App\Http\Controllers\SeoController::class, 'sitemap'])->name('sitemap');
+Route::get('/robots.txt', [\App\Http\Controllers\SeoController::class, 'robots'])->name('robots');
+
 // Product routes
 Route::resource('products', ProductController::class)->except(['index', 'show']);
 
@@ -103,6 +107,29 @@ Route::prefix('vendor')->middleware(['auth', 'role:vendor'])->name('vendor.')->g
 // Admin routes
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+    
+    // Admin User Management
+    Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
+    Route::patch('/users/{user}/toggle-verification', [\App\Http\Controllers\Admin\UserController::class, 'toggleVerification'])->name('users.toggle-verification');
+    
+    // Admin Product Management
+    Route::resource('products', \App\Http\Controllers\Admin\ProductController::class);
+    Route::patch('/products/bulk-update-status', [\App\Http\Controllers\Admin\ProductController::class, 'bulkUpdateStatus'])->name('products.bulk-update-status');
+    
+    // Admin Category Management
+    Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
+    
+    // Admin Coupon Management
+    Route::resource('coupons', \App\Http\Controllers\Admin\CouponController::class);
+    Route::patch('/coupons/{coupon}/toggle-status', [\App\Http\Controllers\Admin\CouponController::class, 'toggleStatus'])->name('coupons.toggle-status');
+    Route::patch('/coupons/bulk-update-status', [\App\Http\Controllers\Admin\CouponController::class, 'bulkUpdateStatus'])->name('coupons.bulk-update-status');
+    
+    // Admin Role & Permission Management
+    Route::resource('roles', \App\Http\Controllers\Admin\RoleController::class);
+    Route::get('/permissions', [\App\Http\Controllers\Admin\RoleController::class, 'permissions'])->name('permissions.index');
+    Route::post('/permissions', [\App\Http\Controllers\Admin\RoleController::class, 'storePermission'])->name('permissions.store');
+    Route::patch('/permissions/{permission}', [\App\Http\Controllers\Admin\RoleController::class, 'updatePermission'])->name('permissions.update');
+    Route::delete('/permissions/{permission}', [\App\Http\Controllers\Admin\RoleController::class, 'destroyPermission'])->name('permissions.destroy');
     
     // Admin Order Management
     Route::get('/orders', [\App\Http\Controllers\Admin\OrderController::class, 'index'])->name('orders.index');

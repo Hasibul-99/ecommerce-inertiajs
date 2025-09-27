@@ -1,6 +1,7 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import AdminLayout from '@/Layouts/AdminLayout';
 import { Head, Link, router } from '@inertiajs/react';
-import { PageProps } from '@/types';
+import { PageProps, User } from '@/types/index';
+import { Product, ProductVariant, Category, Vendor } from '@/types/models';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table';
 import { Badge } from '@/Components/ui/badge';
@@ -8,48 +9,14 @@ import { Button } from '@/Components/ui/button';
 import { Input } from '@/Components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/Components/ui/dialog';
-import { Label } from '@/Components/ui/label';
+import { Label } from '@/components/ui/label';
 import { useState } from 'react';
 import { FiEdit, FiTrash2, FiPlus, FiEye, FiPackage, FiDollarSign, FiImage, FiStar } from 'react-icons/fi';
 
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  email_verified_at?: string | null;
-  role?: string;
-}
 
-interface Category {
-  id: number;
-  name: string;
-  slug: string;
-}
 
-interface Brand {
-  id: number;
+interface ExtendedProduct extends Omit<Product, 'price_cents' | 'sale_price_cents' | 'title'> {
   name: string;
-  slug: string;
-}
-
-interface Vendor {
-  id: number;
-  name: string;
-}
-
-interface ProductVariant {
-  id: number;
-  name: string;
-  price: number;
-  stock: number;
-  sku: string;
-}
-
-interface Product {
-  id: number;
-  name: string;
-  slug: string;
-  description: string;
   price: number;
   sale_price?: number;
   stock: number;
@@ -57,25 +24,18 @@ interface Product {
   status: 'active' | 'inactive' | 'draft' | 'archived';
   featured: boolean;
   category: Category;
-  brand?: Brand;
   vendor: Vendor;
   images: string[];
   variants: ProductVariant[];
-  created_at: string;
-  updated_at: string;
 }
 
 interface Props extends PageProps {
-  auth: {
-    user: User;
-  };
-  products: Product[];
+  products: ExtendedProduct[];
   categories: Category[];
-  brands: Brand[];
   vendors: Vendor[];
 }
 
-export default function ProductsIndex({ auth, products, categories, brands, vendors }: Props) {
+export default function ProductsIndex({ products, categories, vendors }: Props) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedBrand, setSelectedBrand] = useState('all');
@@ -179,20 +139,72 @@ export default function ProductsIndex({ auth, products, categories, brands, vend
   };
 
   return (
-    <AuthenticatedLayout
-      user={{
-        id: 1,
-        name: 'Admin User',
-        email: 'admin@example.com',
-        email_verified_at: new Date().toISOString(),
-        role: 'admin'
-      }}
+    <AdminLayout
+      user={auth.user}
       header={<h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Product Management</h2>}
     >
       <Head title="Product Management" />
 
       <div className="py-12">
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+          {/* Header with Statistics */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Total Products</CardTitle>
+                <FiPackage className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{mockProducts.length}</div>
+                <p className="text-xs text-muted-foreground">
+                  Active products in catalog
+                </p>
+              </CardContent>
+            </Card>
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Low Stock</CardTitle>
+                <FiPackage className="h-4 w-4 text-red-500" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-red-600">
+                  {mockProducts.filter(p => p.stock < 10).length}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Products below 10 units
+                </p>
+              </CardContent>
+            </Card>
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Featured</CardTitle>
+                <FiStar className="h-4 w-4 text-yellow-500" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {mockProducts.filter(p => p.featured).length}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Featured products
+                </p>
+              </CardContent>
+            </Card>
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Total Value</CardTitle>
+                <FiDollarSign className="h-4 w-4 text-green-500" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {formatPrice(mockProducts.reduce((sum, p) => sum + (p.price * p.stock), 0))}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Total inventory value
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
           {/* Header */}
           <div className="flex justify-between items-center">
             <div>
@@ -461,6 +473,6 @@ export default function ProductsIndex({ auth, products, categories, brands, vend
           </Card>
         </div>
       </div>
-    </AuthenticatedLayout>
+    </AdminLayout>
   );
 }

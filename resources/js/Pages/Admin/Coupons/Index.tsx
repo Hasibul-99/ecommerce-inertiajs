@@ -1,6 +1,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router } from '@inertiajs/react';
-import { PageProps } from '@/types';
+import { PageProps, User } from '@/types/index';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table';
 import { Badge } from '@/Components/ui/badge';
@@ -8,40 +8,27 @@ import { Button } from '@/Components/ui/button';
 import { Input } from '@/Components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/Components/ui/dialog';
-import { Label } from '@/Components/ui/label';
+import { Label } from '@/components/ui/label';
 import { useState } from 'react';
 import { FiEdit, FiTrash2, FiPlus, FiPercent, FiDollarSign, FiCalendar, FiUsers, FiTag } from 'react-icons/fi';
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  email_verified_at?: string | null;
-  role?: string;
-}
 
 interface Coupon {
   id: number;
   code: string;
-  name: string;
-  description?: string;
-  type: 'percentage' | 'fixed_amount';
+  type: 'percentage' | 'fixed';
   value: number;
   minimum_amount?: number;
   maximum_discount?: number;
   usage_limit?: number;
   used_count: number;
-  status: 'active' | 'inactive' | 'expired';
-  starts_at: string;
+  starts_at?: string;
   expires_at?: string;
+  is_active: boolean;
   created_at: string;
   updated_at: string;
 }
 
 interface Props extends PageProps {
-  auth: {
-    user: User;
-  };
   coupons: Coupon[];
 }
 

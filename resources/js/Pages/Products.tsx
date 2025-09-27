@@ -44,25 +44,25 @@ export default function Products() {
                                 {/* Select Bar Start */}
                                 <div className="gi-select-bar mt-[-5px] mx-[-5px] mb-[25px] flex flex-wrap justify-end ">
                                     <span className="gi-select-btn m-[5px] px-[10px] border-[1px] border-solid border-[#eee] rounded-[5px] text-[#777] text-[14px] flex items-center capitalize">Clothes
-                                        <a className="gi-select-cancel ml-[15px] text-[#ff8585] text-[18px] transition-all duration-[0.3s] ease-in-out" href="javascript:void(0)">×</a>
+                                        <a className="gi-select-cancel ml-[15px] text-[#ff8585] text-[18px] transition-all duration-[0.3s] ease-in-out" onClick={(e) => e.preventDefault()}>×</a>
                                     </span>
                                     <span className="gi-select-btn m-[5px] px-[10px] border-[1px] border-solid border-[#eee] rounded-[5px] text-[#777] text-[14px] flex items-center capitalize">Fruits
-                                        <a className="gi-select-cancel ml-[15px] text-[#ff8585] text-[18px] transition-all duration-[0.3s] ease-in-out" href="javascript:void(0)">×</a>
+                                        <a className="gi-select-cancel ml-[15px] text-[#ff8585] text-[18px] transition-all duration-[0.3s] ease-in-out" onClick={(e) => e.preventDefault()}>×</a>
                                     </span>
                                     <span className="gi-select-btn m-[5px] px-[10px] border-[1px] border-solid border-[#eee] rounded-[5px] text-[#777] text-[14px] flex items-center capitalize">Snacks
-                                        <a className="gi-select-cancel ml-[15px] text-[#ff8585] text-[18px] transition-all duration-[0.3s] ease-in-out" href="javascript:void(0)">×</a>
+                                        <a className="gi-select-cancel ml-[15px] text-[#ff8585] text-[18px] transition-all duration-[0.3s] ease-in-out" onClick={(e) => e.preventDefault()}>×</a>
                                     </span>
                                     <span className="gi-select-btn m-[5px] px-[10px] border-[1px] border-solid border-[#eee] rounded-[5px] text-[#777] text-[14px] flex items-center capitalize">Dairy
-                                        <a className="gi-select-cancel ml-[15px] text-[#ff8585] text-[18px] transition-all duration-[0.3s] ease-in-out" href="javascript:void(0)">×</a>
+                                        <a className="gi-select-cancel ml-[15px] text-[#ff8585] text-[18px] transition-all duration-[0.3s] ease-in-out" onClick={(e) => e.preventDefault()}>×</a>
                                     </span>
                                     <span className="gi-select-btn m-[5px] px-[10px] border-[1px] border-solid border-[#eee] rounded-[5px] text-[#777] text-[14px] flex items-center capitalize">perfume
-                                        <a className="gi-select-cancel ml-[15px] text-[#ff8585] text-[18px] transition-all duration-[0.3s] ease-in-out" href="javascript:void(0)">×</a>
+                                        <a className="gi-select-cancel ml-[15px] text-[#ff8585] text-[18px] transition-all duration-[0.3s] ease-in-out" onClick={(e) => e.preventDefault()}>×</a>
                                     </span>
                                     <span className="gi-select-btn m-[5px] px-[10px] border-[1px] border-solid border-[#eee] rounded-[5px] text-[#777] text-[14px] flex items-center capitalize">jewelry
-                                        <a className="gi-select-cancel ml-[15px] text-[#ff8585] text-[18px] transition-all duration-[0.3s] ease-in-out" href="javascript:void(0)">×</a>
+                                        <a className="gi-select-cancel ml-[15px] text-[#ff8585] text-[18px] transition-all duration-[0.3s] ease-in-out" onClick={(e) => e.preventDefault()}>×</a>
                                     </span>
                                     <span className="gi-select-btn gi-select-btn-clear m-[5px] p-[0] border-[1px] border-solid border-[#eee] rounded-[5px] text-[#777] text-[14px] flex items-center capitalize">
-                                        <a className="gi-select-clear transition-all duration-[0.3s] ease-in-out h-full m-[0] py-[3px] px-[10px] text-[14px] flex items-center bg-[#4b5966] text-[#fff] rounded-[5px] hover:bg-[#5caf90] hover:text-[#fff]" href="javascript:void(0)">Clear All</a>
+                                        <a className="gi-select-clear transition-all duration-[0.3s] ease-in-out h-full m-[0] py-[3px] px-[10px] text-[14px] flex items-center bg-[#4b5966] text-[#fff] rounded-[5px] hover:bg-[#5caf90] hover:text-[#fff]" onClick={(e) => e.preventDefault()}>Clear All</a>
                                     </span>
                                 </div>
                                 {/* Select Bar End */}
@@ -89,13 +89,13 @@ export default function Products() {
                                                                     <a className="gi-btn-group wishlist transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]" title="Wishlist">
                                                                         <FiHeart className="transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
                                                                     </a>
-                                                                    <a href="javascript:void(0)" className="gi-btn-group modal-toggle quickview transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]">
+                                                                    <a onClick={(e) => e.preventDefault()} className="gi-btn-group modal-toggle quickview transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]">
                                                                         <FiEye className="transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
                                                                     </a>
-                                                                    <a href="javascript:void(0)" className="gi-btn-group compare transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]" title="Compare">
+                                                                    <a onClick={(e) => e.preventDefault()} className="gi-btn-group compare transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]" title="Compare">
                                                                         <FiRepeat className="transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
                                                                     </a>
-                                                                    <a href="javascript:void(0)" title="Add To Cart" className="gi-btn-group add-to-cart transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]">
+                                                                    <a onClick={(e) => e.preventDefault()} title="Add To Cart" className="gi-btn-group add-to-cart transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]">
                                                                         <FiShoppingCart className="transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
                                                                     </a>
                                                                 </div>
@@ -153,7 +153,7 @@ export default function Products() {
                                                     <li>
                                                         <div className="gi-sidebar-block-item py-[15px] relative flex flex-row">
                                                             <input type="checkbox" className="w-full h-[calc(100% - 5px)] absolute opacity-[0] cursor-pointer z-[9] top-[50%] translate-y-[-50%]" defaultChecked />
-                                                            <a href="javascript:void(0)" className="w-full text-[#777] text-[14px] mt-[0] leading-[20px] font-normal capitalize cursor-pointer flex justify-between pl-[30px]">
+                                                            <a onClick={(e) => e.preventDefault()} className="w-full text-[#777] text-[14px] mt-[0] leading-[20px] font-normal capitalize cursor-pointer flex justify-between pl-[30px]">
                                                                 <span className="flex"><GiCupcake className="w-[20px] h-[20px] mr-[7px] text-[17px]" />Dairy &amp; Bakery</span>
                                                             </a>
                                                             <span className="checked absolute top-[50%] left-[0] h-[18px] w-[18px] bg-[#fff] border-[1px] border-solid border-[#eee] transition-all duration-[300ms] linear translate-y-[-50%] rounded-[5px] overflow-hidden" />
@@ -162,7 +162,7 @@ export default function Products() {
                                                     <li>
                                                         <div className="gi-sidebar-block-item py-[15px] relative flex flex-row">
                                                             <input type="checkbox" className="w-full h-[calc(100% - 5px)] absolute opacity-[0] cursor-pointer z-[9] top-[50%] translate-y-[-50%]" />
-                                                            <a href="javascript:void(0)" className="w-full text-[#777] text-[14px] mt-[0] leading-[20px] font-normal capitalize cursor-pointer flex justify-between pl-[30px]">
+                                                            <a onClick={(e) => e.preventDefault()} className="w-full text-[#777] text-[14px] mt-[0] leading-[20px] font-normal capitalize cursor-pointer flex justify-between pl-[30px]">
                                                                 <span className="flex"><GiFruitBowl className="w-[20px] h-[20px] mr-[7px] text-[17px]" />Fruits &amp; Vegetable</span>
                                                             </a>
                                                             <span className="checked absolute top-[50%] left-[0] h-[18px] w-[18px] bg-[#fff] border-[1px] border-solid border-[#eee] transition-all duration-[300ms] linear translate-y-[-50%] rounded-[5px] overflow-hidden" />
@@ -171,7 +171,7 @@ export default function Products() {
                                                     <li>
                                                         <div className="gi-sidebar-block-item py-[15px] relative flex flex-row">
                                                             <input type="checkbox" className="w-full h-[calc(100% - 5px)] absolute opacity-[0] cursor-pointer z-[9] top-[50%] translate-y-[-50%]" />
-                                                            <a href="javascript:void(0)" className="w-full text-[#777] text-[14px] mt-[0] leading-[20px] font-normal capitalize cursor-pointer flex justify-between pl-[30px]">
+                                                            <a onClick={(e) => e.preventDefault()} className="w-full text-[#777] text-[14px] mt-[0] leading-[20px] font-normal capitalize cursor-pointer flex justify-between pl-[30px]">
                                                                 <span className="flex"><GiPopcorn className="w-[20px] h-[20px] mr-[7px] text-[17px]" />Snack &amp; Spice</span>
                                                             </a>
                                                             <span className="checked absolute top-[50%] left-[0] h-[18px] w-[18px] bg-[#fff] border-[1px] border-solid border-[#eee] transition-all duration-[300ms] linear translate-y-[-50%] rounded-[5px] overflow-hidden" />
@@ -180,7 +180,7 @@ export default function Products() {
                                                     <li>
                                                         <div className="gi-sidebar-block-item py-[15px] relative flex flex-row">
                                                             <input type="checkbox" className="w-full h-[calc(100% - 5px)] absolute opacity-[0] cursor-pointer z-[9] top-[50%] translate-y-[-50%]" />
-                                                            <a href="javascript:void(0)" className="w-full text-[#777] text-[14px] mt-[0] leading-[20px] font-normal capitalize cursor-pointer flex justify-between pl-[30px]">
+                                                            <a onClick={(e) => e.preventDefault()} className="w-full text-[#777] text-[14px] mt-[0] leading-[20px] font-normal capitalize cursor-pointer flex justify-between pl-[30px]">
                                                                 <span className="flex"><GiDrinkMe className="w-[20px] h-[20px] mr-[7px] text-[17px]" />Juice &amp; Drinks</span>
                                                             </a>
                                                             <span className="checked absolute top-[50%] left-[0] h-[18px] w-[18px] bg-[#fff] border-[1px] border-solid border-[#eee] transition-all duration-[300ms] linear translate-y-[-50%] rounded-[5px] overflow-hidden" />

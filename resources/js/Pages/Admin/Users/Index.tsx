@@ -1,26 +1,34 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import AdminLayout from '@/Layouts/AdminLayout';
 import { Head, Link, router } from '@inertiajs/react';
-import { PageProps } from '@/types';
-import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
+import { PageProps, User } from '@/types/index';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/Components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table';
 import { Badge } from '@/Components/ui/badge';
 import { Button } from '@/Components/ui/button';
 import { Input } from '@/Components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/Components/ui/dialog';
-import { Label } from '@/Components/ui/label';
+import { Label } from '@/components/ui/label';
 import { useState } from 'react';
-import { FiEdit, FiTrash2, FiPlus, FiSearch, FiFilter } from 'react-icons/fi';
+import { 
+  FiEdit, 
+  FiTrash2, 
+  FiPlus, 
+  FiSearch, 
+  FiFilter, 
+  FiUsers, 
+  FiUserCheck, 
+  FiUserX, 
+  FiShield, 
+  FiMail, 
+  FiCalendar,
+  FiActivity,
+  FiSettings,
+  FiKey
+} from 'react-icons/fi';
 
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  email_verified_at: string | null;
-  role: string;
+interface ExtendedUser extends User {
   status: 'active' | 'inactive' | 'suspended';
-  created_at: string;
-  updated_at: string;
 }
 
 interface Role {
@@ -32,7 +40,7 @@ interface Role {
 
 interface Props extends PageProps {
   users: {
-    data: User[];
+    data: ExtendedUser[];
     current_page: number;
     last_page: number;
     per_page: number;
@@ -50,9 +58,51 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
   const [searchTerm, setSearchTerm] = useState(filters.search || '');
   const [selectedRole, setSelectedRole] = useState(filters.role || '');
   const [selectedStatus, setSelectedStatus] = useState(filters.status || '');
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [showEditDialog, setShowEditDialog] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<ExtendedUser | null>(null);
+
+  // Mock data for demonstration
+  const mockUsers: ExtendedUser[] = [
+    {
+      id: 1,
+      name: 'John Doe',
+      email: 'john@example.com',
+      email_verified_at: '2024-01-01T10:00:00Z',
+      role: 'Admin',
+      status: 'active',
+      created_at: '2024-01-01T10:00:00Z',
+      updated_at: '2024-01-01T10:00:00Z'
+    },
+    {
+      id: 2,
+      name: 'Jane Smith',
+      email: 'jane@example.com',
+      email_verified_at: '2024-01-02T10:00:00Z',
+      role: 'Editor',
+      status: 'active',
+      created_at: '2024-01-02T10:00:00Z',
+      updated_at: '2024-01-02T10:00:00Z'
+    },
+    {
+      id: 3,
+      name: 'Bob Johnson',
+      email: 'bob@example.com',
+      email_verified_at: undefined,
+      role: 'User',
+      status: 'inactive',
+      created_at: '2024-01-03T10:00:00Z',
+      updated_at: '2024-01-03T10:00:00Z'
+    }
+  ];
+
+  const mockRoles: Role[] = [
+    { id: 1, name: 'super_admin', display_name: 'Super Admin', description: 'Full system access' },
+    { id: 2, name: 'admin', display_name: 'Admin', description: 'Administrative access' },
+    { id: 3, name: 'editor', display_name: 'Editor', description: 'Content management' },
+    { id: 4, name: 'user', display_name: 'User', description: 'Basic user access' }
+  ];
 
   const handleSearch = () => {
     router.get(route('admin.users.index'), {
@@ -65,179 +115,276 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
     });
   };
 
-  const handleClearFilters = () => {
+  const clearFilters = () => {
     setSearchTerm('');
     setSelectedRole('');
     setSelectedStatus('');
-    router.get(route('admin.users.index'), {}, {
-      preserveState: true,
-      replace: true,
-    });
+    router.get(route('admin.users.index'));
   };
 
   const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'active':
-        return <Badge className="bg-green-100 text-green-800">Active</Badge>;
-      case 'inactive':
-        return <Badge className="bg-gray-100 text-gray-800">Inactive</Badge>;
-      case 'suspended':
-        return <Badge className="bg-red-100 text-red-800">Suspended</Badge>;
-      default:
-        return <Badge variant="outline">{status}</Badge>;
-    }
+    const variants = {
+      active: 'bg-green-100 text-green-800',
+      inactive: 'bg-gray-100 text-gray-800',
+      suspended: 'bg-red-100 text-red-800'
+    };
+    return variants[status as keyof typeof variants] || variants.inactive;
   };
 
   const getRoleBadge = (role: string) => {
-    switch (role) {
-      case 'admin':
-        return <Badge className="bg-purple-100 text-purple-800">Admin</Badge>;
-      case 'vendor':
-        return <Badge className="bg-blue-100 text-blue-800">Vendor</Badge>;
-      case 'customer':
-        return <Badge className="bg-emerald-100 text-emerald-800">Customer</Badge>;
-      default:
-        return <Badge variant="outline">{role}</Badge>;
-    }
+    const variants = {
+      'Super Admin': 'bg-purple-100 text-purple-800',
+      'Admin': 'bg-blue-100 text-blue-800',
+      'Editor': 'bg-yellow-100 text-yellow-800',
+      'User': 'bg-gray-100 text-gray-800'
+    };
+    return variants[role as keyof typeof variants] || variants.User;
   };
 
-  const handleDeleteUser = (userId: number) => {
-    if (confirm('Are you sure you want to delete this user?')) {
-      router.delete(route('admin.users.destroy', userId));
-    }
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString();
+  };
+
+  const handleCreateUser = () => {
+    setShowCreateDialog(false);
+  };
+
+  const handleEditUser = (user: ExtendedUser) => {
+    setSelectedUser(user);
+    setShowEditDialog(true);
+  };
+
+  const handleDeleteUser = (user: ExtendedUser) => {
+    setSelectedUser(user);
+    setShowDeleteDialog(true);
+  };
+
+  const handleRoleAssignment = (userId: number, roleId: number) => {
+    console.log('Assigning role', roleId, 'to user', userId);
   };
 
   return (
-    <AuthenticatedLayout
+    <AdminLayout
       user={auth.user}
-      header={<h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">User Management</h2>}
+      header={
+        <div className="flex items-center justify-between">
+          <h2 className="font-semibold text-xl text-gray-800 leading-tight flex items-center gap-2">
+            <FiUsers className="h-6 w-6" />
+            Users Management
+          </h2>
+        </div>
+      }
     >
-      <Head title="User Management" />
+      <Head title="Users Management" />
 
       <div className="py-12">
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-          {/* Header with Create Button */}
+          {/* Header */}
           <div className="flex justify-between items-center">
             <div>
-              <h3 className="text-lg font-medium text-gray-900">Users</h3>
-              <p className="text-sm text-gray-600">Manage system users, roles, and permissions</p>
+              <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                <FiUsers className="h-8 w-8" />
+                Users Management
+              </h1>
+              <p className="text-gray-600 mt-1">Manage users and assign roles</p>
             </div>
-            <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
+            <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
               <DialogTrigger asChild>
-                <Button>
-                  <FiPlus className="mr-2 h-4 w-4" />
+                <Button className="flex items-center gap-2">
+                  <FiPlus className="w-4 h-4" />
                   Create User
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
+              <DialogContent className="max-w-2xl">
                 <DialogHeader>
-                  <DialogTitle>Create New User</DialogTitle>
-                  <DialogDescription>
-                    Add a new user to the system with appropriate role and permissions.
-                  </DialogDescription>
+                  <DialogTitle className="flex items-center gap-2">
+                    <FiUsers className="h-5 w-5" />
+                    Create New User
+                  </DialogTitle>
+                  <DialogDescription>Create a new user and assign role</DialogDescription>
                 </DialogHeader>
                 <form className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="name">Name</Label>
-                      <Input placeholder="Enter full name" />
+                      <Label>Name</Label>
+                      <input
+                        type="text"
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        placeholder="Enter full name"
+                      />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="email">Email</Label>
-                      <Input type="email" placeholder="Enter email address" />
+                      <Label>Email</Label>
+                      <input
+                        type="email"
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        placeholder="Enter email address"
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Role</Label>
+                      <select className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                        <option value="">Select role</option>
+                        {mockRoles.map((role) => (
+                          <option key={role.id} value={role.name}>
+                            {role.display_name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Status</Label>
+                      <select className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                        <option value="suspended">Suspended</option>
+                      </select>
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="role">Role</Label>
-                    <Select>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a role" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {roles.map((role) => (
-                          <SelectItem key={role.id} value={role.name}>
-                            {role.display_name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="password">Password</Label>
-                    <Input type="password" placeholder="Enter password" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="password_confirmation">Confirm Password</Label>
-                    <Input type="password" placeholder="Confirm password" />
+                    <Label>Password</Label>
+                    <input
+                      type="password"
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                      placeholder="Enter password"
+                    />
                   </div>
                 </form>
                 <DialogFooter>
-                  <Button variant="outline" onClick={() => setIsCreateModalOpen(false)}>
-                    Cancel
-                  </Button>
-                  <Button type="submit">Create User</Button>
+                  <Button variant="outline" onClick={() => setShowCreateDialog(false)}>Cancel</Button>
+                  <Button onClick={handleCreateUser}>Create User</Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
           </div>
 
-          {/* Filters */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">Filters</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-wrap gap-4 items-end">
-                <div className="flex-1 min-w-[200px]">
-                  <Label htmlFor="search">Search</Label>
-                  <div className="relative">
-                    <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                    <Input
-                      placeholder="Search by name or email..."
-                      value={searchTerm}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
-                      className="pl-10"
-                    />
+          {/* Enhanced Stats Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+              <CardContent className="p-6">
+                <div className="flex items-center">
+                  <div className="p-2 bg-blue-100 rounded-lg">
+                    <FiUsers className="w-6 h-6 text-blue-600" />
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-blue-700">Total Users</p>
+                    <p className="text-2xl font-bold text-blue-900">{mockUsers.length}</p>
                   </div>
                 </div>
-                <div className="min-w-[150px]">
-                  <Label htmlFor="role-filter">Role</Label>
-                  <Select value={selectedRole} onValueChange={setSelectedRole}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="All roles" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="">All roles</SelectItem>
-                      {roles.map((role) => (
-                        <SelectItem key={role.id} value={role.name}>
-                          {role.display_name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200">
+              <CardContent className="p-6">
+                <div className="flex items-center">
+                  <div className="p-2 bg-green-100 rounded-lg">
+                    <FiUserCheck className="w-6 h-6 text-green-600" />
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-green-700">Active Users</p>
+                    <p className="text-2xl font-bold text-green-900">
+                      {mockUsers.filter(user => user.status === 'active').length}
+                    </p>
+                  </div>
                 </div>
-                <div className="min-w-[150px]">
-                  <Label htmlFor="status-filter">Status</Label>
-                  <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="All statuses" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="">All statuses</SelectItem>
-                      <SelectItem value="active">Active</SelectItem>
-                      <SelectItem value="inactive">Inactive</SelectItem>
-                      <SelectItem value="suspended">Suspended</SelectItem>
-                    </SelectContent>
-                  </Select>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-gradient-to-br from-yellow-50 to-yellow-100 border-yellow-200">
+              <CardContent className="p-6">
+                <div className="flex items-center">
+                  <div className="p-2 bg-yellow-100 rounded-lg">
+                    <FiMail className="w-6 h-6 text-yellow-600" />
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-yellow-700">Verified</p>
+                    <p className="text-2xl font-bold text-yellow-900">
+                      {mockUsers.filter(user => user.email_verified_at).length}
+                    </p>
+                  </div>
                 </div>
-                <div className="flex gap-2">
-                  <Button onClick={handleSearch}>
-                    <FiFilter className="mr-2 h-4 w-4" />
-                    Apply
-                  </Button>
-                  <Button variant="outline" onClick={handleClearFilters}>
-                    Clear
-                  </Button>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-gradient-to-br from-red-50 to-red-100 border-red-200">
+              <CardContent className="p-6">
+                <div className="flex items-center">
+                  <div className="p-2 bg-red-100 rounded-lg">
+                    <FiUserX className="w-6 h-6 text-red-600" />
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-red-700">Suspended</p>
+                    <p className="text-2xl font-bold text-red-900">
+                      {mockUsers.filter(user => user.status === 'suspended').length}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Search and Filters */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <FiSearch className="h-5 w-5" />
+                Search & Filter
+              </CardTitle>
+              <CardDescription>Find users and filter by role or status</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="space-y-2">
+                  <Label>Search</Label>
+                  <input
+                    type="text"
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    placeholder="Search users..."
+                    value={searchTerm}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Role</Label>
+                  <select 
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    value={selectedRole}
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedRole(e.target.value)}
+                  >
+                    <option value="">All Roles</option>
+                    {mockRoles.map((role) => (
+                      <option key={role.id} value={role.name}>
+                        {role.display_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Status</Label>
+                  <select 
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    value={selectedStatus}
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedStatus(e.target.value)}
+                  >
+                    <option value="">All Status</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                    <option value="suspended">Suspended</option>
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <Label>&nbsp;</Label>
+                  <div className="flex gap-2">
+                    <Button onClick={handleSearch} className="flex items-center gap-2">
+                      <FiSearch className="h-4 w-4" />
+                      Search
+                    </Button>
+                    <Button variant="outline" onClick={clearFilters}>
+                      Clear
+                    </Button>
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -245,13 +392,19 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
 
           {/* Users Table */}
           <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <FiUsers className="h-5 w-5" />
+                Users Management
+              </CardTitle>
+              <CardDescription>Manage users and their role assignments</CardDescription>
+            </CardHeader>
             <CardContent className="p-0">
               <div className="rounded-md border">
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Email</TableHead>
+                      <TableHead>User</TableHead>
                       <TableHead>Role</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead>Email Verified</TableHead>
@@ -260,40 +413,65 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {users.data && users.data.length > 0 ? (
-                      users.data.map((user) => (
+                    {mockUsers && mockUsers.length > 0 ? (
+                      mockUsers.map((user) => (
                         <TableRow key={user.id}>
-                          <TableCell className="font-medium">{user.name}</TableCell>
-                          <TableCell>{user.email}</TableCell>
-                          <TableCell>{getRoleBadge(user.role)}</TableCell>
-                          <TableCell>{getStatusBadge(user.status)}</TableCell>
                           <TableCell>
-                            {user.email_verified_at ? (
-                              <Badge className="bg-green-100 text-green-800">Verified</Badge>
-                            ) : (
-                              <Badge className="bg-yellow-100 text-yellow-800">Unverified</Badge>
-                            )}
+                            <div className="flex items-center space-x-3">
+                              <div className="p-2 bg-blue-100 rounded-full">
+                                <FiUsers className="w-4 h-4 text-blue-600" />
+                              </div>
+                              <div>
+                                <div className="font-medium text-gray-900">{user.name}</div>
+                                <div className="text-sm text-gray-500">{user.email}</div>
+                              </div>
+                            </div>
                           </TableCell>
-                          <TableCell>{new Date(user.created_at).toLocaleDateString()}</TableCell>
                           <TableCell>
-                            <div className="flex space-x-2">
+                            <Badge className={getRoleBadge(user.role)}>
+                              {user.role}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <Badge className={getStatusBadge(user.status)}>
+                              {user.status}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              {user.email_verified_at ? (
+                                <>
+                                  <FiUserCheck className="h-4 w-4 text-green-500" />
+                                  <span className="text-sm text-green-600">Verified</span>
+                                </>
+                              ) : (
+                                <>
+                                  <FiUserX className="h-4 w-4 text-red-500" />
+                                  <span className="text-sm text-red-600">Unverified</span>
+                                </>
+                              )}
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <span className="text-sm text-gray-500">{formatDate(user.created_at)}</span>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center space-x-2">
                               <Button
+                                variant="ghost"
                                 size="sm"
-                                variant="outline"
-                                onClick={() => {
-                                  setSelectedUser(user);
-                                  setIsEditModalOpen(true);
-                                }}
+                                onClick={() => handleEditUser(user)}
+                                className="flex items-center gap-1"
                               >
-                                <FiEdit className="h-4 w-4" />
+                                <FiEdit className="w-4 h-4" />
                               </Button>
                               <Button
+                                variant="ghost"
                                 size="sm"
-                                variant="outline"
-                                onClick={() => handleDeleteUser(user.id)}
-                                className="text-red-600 hover:text-red-700"
+                                onClick={() => handleDeleteUser(user)}
+                                className="text-red-600 hover:text-red-700 flex items-center gap-1"
                               >
-                                <FiTrash2 className="h-4 w-4" />
+                                <FiTrash2 className="w-4 h-4" />
                               </Button>
                             </div>
                           </TableCell>
@@ -301,8 +479,11 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
                       ))
                     ) : (
                       <TableRow>
-                        <TableCell colSpan={7} className="text-center py-4">
-                          No users found.
+                        <TableCell colSpan={6} className="text-center py-8">
+                          <div className="flex flex-col items-center space-y-2">
+                            <FiUsers className="w-12 h-12 text-gray-400" />
+                            <p className="text-gray-500">No users found</p>
+                          </div>
                         </TableCell>
                       </TableRow>
                     )}
@@ -312,92 +493,116 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
             </CardContent>
           </Card>
 
-          {/* Pagination */}
-          {users.last_page > 1 && (
-            <div className="flex justify-between items-center">
-              <div className="text-sm text-gray-700">
-                Showing {((users.current_page - 1) * users.per_page) + 1} to {Math.min(users.current_page * users.per_page, users.total)} of {users.total} results
-              </div>
-              <div className="flex space-x-2">
-                {users.current_page > 1 && (
-                  <Button variant="outline" asChild>
-                    <Link href={route('admin.users.index', { ...filters, page: users.current_page - 1 })}>
-                      Previous
-                    </Link>
-                  </Button>
-                )}
-                {users.current_page < users.last_page && (
-                  <Button variant="outline" asChild>
-                    <Link href={route('admin.users.index', { ...filters, page: users.current_page + 1 })}>
-                      Next
-                    </Link>
-                  </Button>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Edit User Modal */}
-          <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-            <DialogContent className="sm:max-w-[425px]">
+          {/* Edit User Dialog */}
+          <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
+            <DialogContent className="max-w-2xl">
               <DialogHeader>
-                <DialogTitle>Edit User</DialogTitle>
-                <DialogDescription>
-                  Update user information and permissions.
-                </DialogDescription>
+                <DialogTitle className="flex items-center gap-2">
+                  <FiEdit className="h-5 w-5" />
+                  Edit User
+                </DialogTitle>
+                <DialogDescription>Update user information and role assignment</DialogDescription>
               </DialogHeader>
               {selectedUser && (
                 <form className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="edit-name">Name</Label>
-                      <Input defaultValue={selectedUser.name} />
+                      <Label>Name</Label>
+                      <input
+                        type="text"
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        defaultValue={selectedUser.name}
+                      />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="edit-email">Email</Label>
-                      <Input type="email" defaultValue={selectedUser.email} />
+                      <Label>Email</Label>
+                      <input
+                        type="email"
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        defaultValue={selectedUser.email}
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Role Assignment</Label>
+                      <select 
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        defaultValue={selectedUser.role}
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleRoleAssignment(selectedUser.id, parseInt(e.target.value))}
+                      >
+                        {mockRoles.map((role) => (
+                          <option key={role.id} value={role.name}>
+                            {role.display_name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Status</Label>
+                      <select 
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        defaultValue={selectedUser.status}
+                      >
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                        <option value="suspended">Suspended</option>
+                      </select>
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="edit-role">Role</Label>
-                    <Select defaultValue={selectedUser.role}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {roles.map((role) => (
-                          <SelectItem key={role.id} value={role.name}>
-                            {role.display_name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="edit-status">Status</Label>
-                    <Select defaultValue={selectedUser.status}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="active">Active</SelectItem>
-                        <SelectItem value="inactive">Inactive</SelectItem>
-                        <SelectItem value="suspended">Suspended</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Label>Role Permissions Preview</Label>
+                    <div className="p-4 bg-gray-50 rounded-md">
+                      <p className="text-sm text-gray-600 mb-2">Current role permissions:</p>
+                      <div className="flex flex-wrap gap-2">
+                        <Badge variant="outline">Manage Products</Badge>
+                        <Badge variant="outline">View Orders</Badge>
+                        <Badge variant="outline">Manage Categories</Badge>
+                      </div>
+                    </div>
                   </div>
                 </form>
               )}
               <DialogFooter>
-                <Button variant="outline" onClick={() => setIsEditModalOpen(false)}>
-                  Cancel
-                </Button>
-                <Button type="submit">Update User</Button>
+                <Button variant="outline" onClick={() => setShowEditDialog(false)}>Cancel</Button>
+                <Button>Update User</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+
+          {/* Delete User Dialog */}
+          <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  <FiTrash2 className="h-5 w-5 text-red-600" />
+                  Delete User
+                </DialogTitle>
+                <DialogDescription>
+                  Are you sure you want to delete this user? This action cannot be undone.
+                </DialogDescription>
+              </DialogHeader>
+              {selectedUser && (
+                <div className="py-4">
+                  <p className="text-sm text-gray-600">
+                    User: <span className="font-medium">{selectedUser.name}</span>
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    Email: <span className="font-medium">{selectedUser.email}</span>
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    Role: <span className="font-medium">{selectedUser.role}</span>
+                  </p>
+                </div>
+              )}
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setShowDeleteDialog(false)}>Cancel</Button>
+                <Button variant="destructive" onClick={() => setShowDeleteDialog(false)}>Delete User</Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
         </div>
       </div>
-    </AuthenticatedLayout>
+    </AdminLayout>
   );
 }

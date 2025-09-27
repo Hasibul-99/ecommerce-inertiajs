@@ -3,6 +3,19 @@ import { Head, Link } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { PageProps, User } from '@/types';
 import { formatDate } from '@/utils';
+import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
+import { Badge } from '@/Components/ui/badge';
+import { Button } from '@/Components/ui/button';
+import { 
+  FiActivity, 
+  FiUser, 
+  FiMonitor, 
+  FiClock, 
+  FiDatabase, 
+  FiGlobe, 
+  FiArrowLeft,
+  FiInfo
+} from 'react-icons/fi';
 
 interface ActivityLog {
   id: number;
@@ -27,15 +40,15 @@ export default function Show({ auth, activityLog }: Props) {
   const getEventLabel = (event: string) => {
     switch (event) {
       case 'created':
-        return <span className="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">Created</span>;
+        return <Badge className="bg-green-100 text-green-800 hover:bg-green-100">Created</Badge>;
       case 'updated':
-        return <span className="px-2 py-1 text-xs font-semibold text-blue-800 bg-blue-100 rounded-full">Updated</span>;
+        return <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">Updated</Badge>;
       case 'deleted':
-        return <span className="px-2 py-1 text-xs font-semibold text-red-800 bg-red-100 rounded-full">Deleted</span>;
+        return <Badge className="bg-red-100 text-red-800 hover:bg-red-100">Deleted</Badge>;
       case 'restored':
-        return <span className="px-2 py-1 text-xs font-semibold text-purple-800 bg-purple-100 rounded-full">Restored</span>;
+        return <Badge className="bg-purple-100 text-purple-800 hover:bg-purple-100">Restored</Badge>;
       default:
-        return <span className="px-2 py-1 text-xs font-semibold text-gray-800 bg-gray-100 rounded-full">{event}</span>;
+        return <Badge variant="outline">{event}</Badge>;
     }
   };
 
@@ -56,89 +69,129 @@ export default function Show({ auth, activityLog }: Props) {
   };
 
   return (
-    <AdminLayout user={auth.user}>
+    <AdminLayout 
+      user={auth.user}
+      header={<h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Activity Log Details</h2>}
+    >
       <Head title={`Activity Log #${activityLog.id}`} />
 
       <div className="py-12">
-        <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-          <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-            <div className="p-6 text-gray-900">
-              <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-semibold">Activity Log Details</h1>
-                <Link
-                  href={route('admin.activity-logs.index')}
-                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-                >
-                  Back to Logs
-                </Link>
-              </div>
+        <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+          {/* Header */}
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-3">
+              <FiActivity className="w-6 h-6 text-indigo-600" />
+              <h1 className="text-2xl font-bold text-gray-900">Activity Log #{activityLog.id}</h1>
+            </div>
+            <Button variant="outline" asChild className="flex items-center gap-2">
+              <Link href={route('admin.activity-logs.index')}>
+                <FiArrowLeft className="w-4 h-4" />
+                Back to Logs
+              </Link>
+            </Button>
+          </div>
 
-              <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-                <div className="px-4 py-5 sm:px-6">
-                  <h3 className="text-lg leading-6 font-medium text-gray-900">
+          {/* Main Content */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Primary Information */}
+            <div className="lg:col-span-2">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <FiInfo className="w-5 h-5" />
                     Log Information
-                  </h3>
-                  <p className="mt-1 max-w-2xl text-sm text-gray-500">
-                    Details about this activity log entry.
-                  </p>
-                </div>
-                <div className="border-t border-gray-200">
-                  <dl>
-                    <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                      <dt className="text-sm font-medium text-gray-500">ID</dt>
-                      <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{activityLog.id}</dd>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-500">Date & Time</label>
+                      <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
+                        <FiClock className="w-4 h-4 text-gray-400" />
+                        <span className="text-sm font-medium">{formatDate(activityLog.created_at, {}, true)}</span>
+                      </div>
                     </div>
-                    <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                      <dt className="text-sm font-medium text-gray-500">Date & Time</dt>
-                      <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{formatDate(activityLog.created_at, {}, true)}</dd>
-                    </div>
-                    <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                      <dt className="text-sm font-medium text-gray-500">User</dt>
-                      <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-500">User</label>
+                      <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
                         {activityLog.user ? (
-                          <span>{activityLog.user.name} ({activityLog.user.email})</span>
+                          <>
+                            <FiUser className="w-4 h-4 text-gray-400" />
+                            <div>
+                              <div className="text-sm font-medium">{activityLog.user.name}</div>
+                              <div className="text-xs text-gray-500">{activityLog.user.email}</div>
+                            </div>
+                          </>
                         ) : (
-                          <span className="text-gray-400">System</span>
+                          <>
+                            <FiMonitor className="w-4 h-4 text-gray-400" />
+                            <span className="text-sm text-gray-500">System</span>
+                          </>
                         )}
-                      </dd>
+                      </div>
                     </div>
-                    <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                      <dt className="text-sm font-medium text-gray-500">Event</dt>
-                      <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-500">Event</label>
+                      <div className="p-3 bg-gray-50 rounded-lg">
                         {getEventLabel(activityLog.event)}
-                      </dd>
+                      </div>
                     </div>
-                    <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                      <dt className="text-sm font-medium text-gray-500">Event Type</dt>
-                      <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{activityLog.event_type}</dd>
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-500">Event Type</label>
+                      <div className="p-3 bg-gray-50 rounded-lg">
+                        <Badge variant="outline">{activityLog.event_type}</Badge>
+                      </div>
                     </div>
-                    <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                      <dt className="text-sm font-medium text-gray-500">Model</dt>
-                      <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                        {getModelName(activityLog.loggable_type)} #{activityLog.loggable_id}
-                      </dd>
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-500">Model</label>
+                      <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
+                        <FiDatabase className="w-4 h-4 text-gray-400" />
+                        <span className="text-sm font-medium">
+                          {getModelName(activityLog.loggable_type)} #{activityLog.loggable_id}
+                        </span>
+                      </div>
                     </div>
-                    <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                      <dt className="text-sm font-medium text-gray-500">IP Address</dt>
-                      <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{activityLog.ip_address || 'N/A'}</dd>
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-500">IP Address</label>
+                      <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
+                        <FiGlobe className="w-4 h-4 text-gray-400" />
+                        <code className="text-sm bg-white px-2 py-1 rounded border">
+                          {activityLog.ip_address || 'N/A'}
+                        </code>
+                      </div>
                     </div>
-                    <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                      <dt className="text-sm font-medium text-gray-500">User Agent</dt>
-                      <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                        <div className="max-w-full overflow-x-auto">
-                          <code className="text-xs">{activityLog.user_agent || 'N/A'}</code>
-                        </div>
-                      </dd>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-500">User Agent</label>
+                    <div className="p-3 bg-gray-50 rounded-lg">
+                      <code className="text-xs break-all">
+                        {activityLog.user_agent || 'N/A'}
+                      </code>
                     </div>
-                    <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                      <dt className="text-sm font-medium text-gray-500">Properties</dt>
-                      <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                        {renderProperties(activityLog.properties)}
-                      </dd>
-                    </div>
-                  </dl>
-                </div>
-              </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Properties */}
+            <div>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <FiDatabase className="w-5 h-5" />
+                    Properties
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {renderProperties(activityLog.properties)}
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>

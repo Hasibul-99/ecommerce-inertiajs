@@ -4,6 +4,22 @@ import AdminLayout from '@/Layouts/AdminLayout';
 import { PageProps, User } from '@/types';
 import Pagination from '@/Components/Pagination';
 import { formatDate } from '@/utils';
+import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table';
+import { Badge } from '@/Components/ui/badge';
+import { Button } from '@/Components/ui/button';
+import { 
+  FiActivity, 
+  FiUser, 
+  FiClock, 
+  FiEye, 
+  FiFilter, 
+  FiSearch,
+  FiMonitor,
+  FiShield,
+  FiDatabase,
+  FiRefreshCw
+} from 'react-icons/fi';
 
 interface ActivityLog {
   id: number;
@@ -89,27 +105,105 @@ export default function Index({ auth, activityLogs, filters, eventTypes }: Props
   };
 
   return (
-    <AdminLayout user={auth.user as User}>
+    <AdminLayout 
+      user={auth.user}
+      header={<h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Activity Logs</h2>}
+    >
       <Head title="Activity Logs" />
 
       <div className="py-12">
-        <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-          <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-            <div className="p-6 text-gray-900">
-              <h1 className="text-2xl font-semibold mb-6">Activity Logs</h1>
+        <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+          {/* Statistics Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Total Activities</p>
+                    <p className="text-2xl font-bold text-gray-900">{activityLogs.data?.length || 0}</p>
+                  </div>
+                  <div className="p-3 bg-blue-100 rounded-full">
+                    <FiActivity className="w-6 h-6 text-blue-600" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">User Actions</p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      {activityLogs.data?.filter(log => log.user_id).length || 0}
+                    </p>
+                  </div>
+                  <div className="p-3 bg-green-100 rounded-full">
+                    <FiUser className="w-6 h-6 text-green-600" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">System Events</p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      {activityLogs.data?.filter(log => !log.user_id).length || 0}
+                    </p>
+                  </div>
+                  <div className="p-3 bg-purple-100 rounded-full">
+                    <FiMonitor className="w-6 h-6 text-purple-600" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Today's Logs</p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      {activityLogs.data?.filter(log => 
+                        new Date(log.created_at).toDateString() === new Date().toDateString()
+                      ).length || 0}
+                    </p>
+                  </div>
+                  <div className="p-3 bg-orange-100 rounded-full">
+                    <FiClock className="w-6 h-6 text-orange-600" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Main Content */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <FiActivity className="w-5 h-5" />
+                Activity Logs
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
               {/* Filters */}
-              <div className="mb-6 bg-gray-50 p-4 rounded-lg">
-                <h2 className="text-lg font-medium mb-3">Filters</h2>
+              <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+                <h3 className="text-lg font-medium mb-3 flex items-center gap-2">
+                  <FiFilter className="w-4 h-4" />
+                  Filters
+                </h3>
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                   <div>
-                    <label htmlFor="event_type" className="block text-sm font-medium text-gray-700">Event Type</label>
+                    <label htmlFor="event_type" className="block text-sm font-medium text-gray-700 mb-1">Event Type</label>
                     <select
                       id="event_type"
                       name="event_type"
                       value={filterData.event_type}
                       onChange={handleFilterChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                      className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                     >
                       <option value="">All Types</option>
                       {eventTypes.map((type) => (
@@ -118,125 +212,135 @@ export default function Index({ auth, activityLogs, filters, eventTypes }: Props
                     </select>
                   </div>
                   <div>
-                    <label htmlFor="from_date" className="block text-sm font-medium text-gray-700">From Date</label>
+                    <label htmlFor="from_date" className="block text-sm font-medium text-gray-700 mb-1">From Date</label>
                     <input
                       type="date"
                       id="from_date"
                       name="from_date"
                       value={filterData.from_date}
                       onChange={handleFilterChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                      className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                     />
                   </div>
                   <div>
-                    <label htmlFor="to_date" className="block text-sm font-medium text-gray-700">To Date</label>
+                    <label htmlFor="to_date" className="block text-sm font-medium text-gray-700 mb-1">To Date</label>
                     <input
                       type="date"
                       id="to_date"
                       name="to_date"
                       value={filterData.to_date}
                       onChange={handleFilterChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                      className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                     />
                   </div>
                   <div className="flex items-end space-x-2">
-                    <button
+                    <Button
                       onClick={applyFilters}
-                      className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                      className="flex items-center gap-2"
                     >
+                      <FiSearch className="w-4 h-4" />
                       Apply
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       onClick={resetFilters}
-                      className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                      variant="outline"
+                      className="flex items-center gap-2"
                     >
+                      <FiRefreshCw className="w-4 h-4" />
                       Reset
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </div>
 
               {/* Activity Logs Table */}
               <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Date & Time
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        User
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Event
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Type
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Model
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        IP Address
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Date & Time</TableHead>
+                      <TableHead>User</TableHead>
+                      <TableHead>Event</TableHead>
+                      <TableHead>Type</TableHead>
+                      <TableHead>Model</TableHead>
+                      <TableHead>IP Address</TableHead>
+                      <TableHead>Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
                     {activityLogs.data.length > 0 ? (
                       activityLogs.data.map((log) => (
-                        <tr key={log.id}>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {formatDate(log.created_at, {}, true)}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <TableRow key={log.id}>
+                          <TableCell>
+                            <div className="flex items-center gap-2 text-sm">
+                              <FiClock className="w-3 h-3 text-gray-400" />
+                              {formatDate(log.created_at, {}, true)}
+                            </div>
+                          </TableCell>
+                          <TableCell>
                             {log.user ? (
-                              <span>{log.user.name}</span>
+                              <div className="flex items-center gap-2">
+                                <FiUser className="w-3 h-3 text-gray-400" />
+                                <span className="font-medium">{log.user.name}</span>
+                              </div>
                             ) : (
-                              <span className="text-gray-400">System</span>
+                              <div className="flex items-center gap-2">
+                                <FiMonitor className="w-3 h-3 text-gray-400" />
+                                <span className="text-gray-500">System</span>
+                              </div>
                             )}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          </TableCell>
+                          <TableCell>
                             {getEventLabel(log.event)}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {log.event_type}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {getModelName(log.loggable_type)} #{log.loggable_id}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {log.ip_address || 'N/A'}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <Link
-                              href={route('admin.activity-logs.show', log.id)}
-                              className="text-indigo-600 hover:text-indigo-900"
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant="outline">{log.event_type}</Badge>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              <FiDatabase className="w-3 h-3 text-gray-400" />
+                              <span className="text-sm">
+                                {getModelName(log.loggable_type)} #{log.loggable_id}
+                              </span>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <code className="text-xs bg-gray-100 px-2 py-1 rounded">
+                              {log.ip_address || 'N/A'}
+                            </code>
+                          </TableCell>
+                          <TableCell>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              asChild
+                              className="flex items-center gap-1"
                             >
-                              View Details
-                            </Link>
-                          </td>
-                        </tr>
+                              <Link href={route('admin.activity-logs.show', log.id)}>
+                                <FiEye className="w-3 h-3" />
+                                View Details
+                              </Link>
+                            </Button>
+                          </TableCell>
+                        </TableRow>
                       ))
                     ) : (
-                      <tr>
-                        <td colSpan={7} className="px-6 py-4 text-center text-gray-500">
+                      <TableRow>
+                        <TableCell colSpan={7} className="text-center py-8 text-gray-500">
                           No activity logs found
-                        </td>
-                      </tr>
+                        </TableCell>
+                      </TableRow>
                     )}
-                  </tbody>
-                </table>
+                  </TableBody>
+                </Table>
               </div>
 
               {/* Pagination */}
               <div className="mt-6">
                 <Pagination links={activityLogs.links} />
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </AdminLayout>

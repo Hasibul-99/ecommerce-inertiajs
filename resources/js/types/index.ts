@@ -1,14 +1,6 @@
 export interface PageProps {
   auth: {
-    user: {
-      id: number;
-      name: string;
-      email: string;
-      role?: string;
-      email_verified_at?: string;
-      created_at: string;
-      updated_at: string;
-    };
+    user: User;
   };
   errors: Record<string, string>;
   flash?: {
