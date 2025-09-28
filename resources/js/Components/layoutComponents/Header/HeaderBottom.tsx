@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from '@inertiajs/react'
+import { FiSearch, FiUser, FiHeart, FiShoppingBag } from 'react-icons/fi'
 
 export default function HeaderBottom() {
     return (
@@ -20,7 +21,7 @@ export default function HeaderBottom() {
                                 <form className="gi-search-group-form relative flex border-[1px] border-solid border-[#eee] items-center rounded-[5px]" action="#">
                                     <input className="form-control gi-search-bar block w-full min-h-[50px] h-[50px] max-[991px]:h-[40px] max-[991px]:min-h-[40px] px-[15px] text-[13px] font-normal leading-[1] text-[#777] bg-transparent outline-[0] border-[0] tracking-[0.6px]" placeholder="Search Products..." type="text" />
                                     <button type="submit" className="search_submit relative flex items-center justify-center w-[48px] h-[40px] basis-[48px]">
-                                        <i className="fi-rr-search text-[#4b5966] h-[18px] w-[18px] transition-all duration-[0.3s] ease-in-out" />
+                                        <FiSearch className="text-[#4b5966] h-[18px] w-[18px] transition-all duration-[0.3s] ease-in-out" />
                                     </button>
                                 </form>
                             </div>
@@ -33,7 +34,7 @@ export default function HeaderBottom() {
                                 <div className="gi-acc-drop relative">
                                     <Link href="/login" className="gi-header-btn gi-header-user dropdown-toggle gi-user-toggle mr-[30px] transition-all duration-[0.3s] ease-in-out relative flex text-[#4b5966] w-[auto] items-center whitespace-nowrap" title="Account">
                                         <div className="header-icon relative flex">
-                                            <i className="fi-rr-user text-[24px] leading-[17px]" />
+                                            <FiUser className="text-[24px] leading-[17px]" />
                                         </div>
                                         <div className="gi-btn-desc flex flex-col uppercase ml-[10px]">
                                             <span className="gi-btn-title transition-all duration-[0.3s] ease-in-out text-[12px] leading-[1] text-[#777] mb-[6px] tracking-[0.6px] capitalize font-medium">Account</span>
@@ -50,7 +51,7 @@ export default function HeaderBottom() {
                                 {/* Header wishlist Start */}
                                 <Link href="/wishlist" className="gi-header-btn gi-wish-toggle mr-[30px] transition-all duration-[0.3s] ease-in-out relative flex text-[#4b5966] w-[auto] items-center whitespace-nowrap" title="Wishlist">
                                     <div className="header-icon relative flex">
-                                        <i className="fi-rr-heart text-[24px] leading-[17px]" />
+                                        <FiHeart className="text-[24px] leading-[17px]" />
                                     </div>
                                     <div className="gi-btn-desc flex flex-col uppercase ml-[10px]">
                                         <span className="gi-btn-title transition-all duration-[0.3s] ease-in-out text-[12px] leading-[1] text-[#777] mb-[6px] tracking-[0.6px] capitalize font-medium">Wishlist</span>
@@ -61,7 +62,7 @@ export default function HeaderBottom() {
                                 {/* Header Cart Start */}
                                 <Link href="/cart" className="gi-header-btn gi-cart-toggle transition-all duration-[0.3s] ease-in-out relative flex text-[#4b5966] w-[auto] items-center whitespace-nowrap" title="Cart">
                                     <div className="header-icon relative flex">
-                                        <i className="fi-rr-shopping-bag text-[24px] leading-[17px]" />
+                                        <FiShoppingBag className="text-[24px] leading-[17px]" />
                                         <span className="main-label-note-new transition-all duration-[0.3s] ease-in-out h-[10px] w-[10px] m-auto bg-[#ec716d] rounded-[50%] cursor-default hidden absolute bottom-[15px] left-[0] right-[0] z-[3]" />
                                     </div>
                                     <div className="gi-btn-desc flex flex-col uppercase ml-[10px]">

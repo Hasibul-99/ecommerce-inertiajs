@@ -56,8 +56,16 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+// SEO Routes
+Route::get('/sitemap.xml', [\App\Http\Controllers\SeoController::class, 'sitemap'])->name('sitemap');
+Route::get('/robots.txt', [\App\Http\Controllers\SeoController::class, 'robots'])->name('robots');
+
 // Product routes
 Route::resource('products', ProductController::class)->except(['index', 'show']);
+
+// Product image routes
+Route::post('/products/{product}/images', [\App\Http\Controllers\ProductImageController::class, 'store'])->name('products.images.store');
+Route::delete('/products/{product}/images/{mediaId}', [\App\Http\Controllers\ProductImageController::class, 'destroy'])->name('products.images.destroy');
 
 // Cart routes
 Route::post('/cart/add', [CartController::class, 'addItem'])->name('cart.add');
@@ -98,9 +106,49 @@ Route::prefix('vendor')->middleware(['auth', 'role:vendor'])->name('vendor.')->g
 
 // Admin routes
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->group(function () {
-    Route::resource('vendors', VendorController::class);
+    Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+    
+    // Admin User Management
+    Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
+    Route::patch('/users/{user}/toggle-verification', [\App\Http\Controllers\Admin\UserController::class, 'toggleVerification'])->name('users.toggle-verification');
+    
+    // Admin Product Management
+    Route::resource('products', \App\Http\Controllers\Admin\ProductController::class);
+    Route::patch('/products/bulk-update-status', [\App\Http\Controllers\Admin\ProductController::class, 'bulkUpdateStatus'])->name('products.bulk-update-status');
+    
+    // Admin Product Variant Management
+    Route::resource('product-variants', \App\Http\Controllers\Admin\ProductVariantController::class);
+    
+    // Admin Category Management
+    Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
+    
+    // Admin Coupon Management
+    Route::resource('coupons', \App\Http\Controllers\Admin\CouponController::class);
+    Route::patch('/coupons/{coupon}/toggle-status', [\App\Http\Controllers\Admin\CouponController::class, 'toggleStatus'])->name('coupons.toggle-status');
+    Route::patch('/coupons/bulk-update-status', [\App\Http\Controllers\Admin\CouponController::class, 'bulkUpdateStatus'])->name('coupons.bulk-update-status');
+    
+    // Admin Role & Permission Management
+    Route::resource('roles', \App\Http\Controllers\Admin\RoleController::class);
+    Route::get('/permissions', [\App\Http\Controllers\Admin\RoleController::class, 'permissions'])->name('permissions.index');
+    Route::post('/permissions', [\App\Http\Controllers\Admin\RoleController::class, 'storePermission'])->name('permissions.store');
+    Route::patch('/permissions/{permission}', [\App\Http\Controllers\Admin\RoleController::class, 'updatePermission'])->name('permissions.update');
+    Route::delete('/permissions/{permission}', [\App\Http\Controllers\Admin\RoleController::class, 'destroyPermission'])->name('permissions.destroy');
+    
+    // Admin Order Management
+    Route::get('/orders', [\App\Http\Controllers\Admin\OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [\App\Http\Controllers\Admin\OrderController::class, 'show'])->name('orders.show');
+    Route::post('/orders/{order}/update-status', [\App\Http\Controllers\Admin\OrderController::class, 'updateStatus'])->name('orders.update-status');
+    Route::post('/orders/{order}/mark-as-paid', [\App\Http\Controllers\Admin\OrderController::class, 'markAsPaid'])->name('orders.mark-as-paid');
+    
+    // Activity Logs
+    Route::get('/activity-logs', [\App\Http\Controllers\Admin\ActivityLogController::class, 'index'])->name('activity-logs.index');
+    Route::get('/activity-logs/{activityLog}', [\App\Http\Controllers\Admin\ActivityLogController::class, 'show'])->name('activity-logs.show');
+    
     Route::patch('/vendors/{vendor}/status', [VendorController::class, 'updateStatus'])->name('vendors.status');
-});
+    Route::patch('/vendors/{vendor}/approve', [\App\Http\Controllers\Admin\DashboardController::class, 'updateVendorStatus'])->name('vendors.approve');
+    Route::patch('/payouts/{payout}/process', [\App\Http\Controllers\Admin\DashboardController::class, 'updatePayoutStatus'])->name('payouts.process');
+    Route::resource('vendors', VendorController::class);
+}); 
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
 import GuestLayout from '@/Layouts/GuestLayout';
+import { FaTruck, FaSeedling, FaPercent, FaDonate } from 'react-icons/fa';
 
 interface ServiceItem {
   id: number;
@@ -16,27 +17,42 @@ export default function AboutUs() {
       id: 1, 
       title: 'Free Shipping', 
       description: 'Free shipping on all US order or order above $200', 
-      icon: 'fi-ts-truck-moving' 
+      icon: 'FaTruck' 
     },
     { 
       id: 2, 
       title: '24X7 Support', 
       description: 'Contact us 24 hours a day, 7 days a week', 
-      icon: 'fi-ts-hand-holding-seeding' 
+      icon: 'FaSeedling' 
     },
     { 
       id: 3, 
       title: '30 Days Return', 
       description: 'Simply return it within 30 days for an exchange', 
-      icon: 'fi-ts-badge-percent' 
+      icon: 'FaPercent' 
     },
     { 
       id: 4, 
       title: 'Payment Secure', 
       description: 'Contact us 24 hours a day, 7 days a week', 
-      icon: 'fi-ts-donate' 
+      icon: 'FaDonate' 
     },
   ];
+
+  const iconMap = (iconName: string) => {
+    switch (iconName) {
+      case 'FaTruck':
+        return <FaTruck className="text-[40px] text-[#5caf90] leading-[0]" />;
+      case 'FaSeedling':
+        return <FaSeedling className="text-[40px] text-[#5caf90] leading-[0]" />;
+      case 'FaPercent':
+        return <FaPercent className="text-[40px] text-[#5caf90] leading-[0]" />;
+      case 'FaDonate':
+        return <FaDonate className="text-[40px] text-[#5caf90] leading-[0]" />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <GuestLayout>
@@ -119,7 +135,7 @@ export default function AboutUs() {
               <div key={service.id} className="py-[12px] px-[12px] min-[992px]:w-[25%] min-[576px]:w-[50%] w-full">
                 <div className="gi-ser-inner p-[30px] transition-all duration-[0.3s] ease delay-[0s] cursor-pointer border-[1px] border-solid border-[#eee] h-full flex items-center justify-center flex-col text-center nh-[#fff] rounded-[5px]">
                   <div className="gi-service-image mb-[15px]">
-                    <i className={`${service.icon} text-[40px] text-[#5caf90] leading-[0]`}></i>
+                    {iconMap(service.icon)}
                   </div>
                   <div className="gi-service-desc">
                     <h3 className="mb-[10px] text-[18px] font-medium text-[#4b5966] tracking-[0.6px] font-Poppins leading-[1.2] max-[575px]:text-[16px]">{service.title}</h3>

@@ -1,4 +1,6 @@
 import React, { Fragment } from 'react'
+import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from 'react-icons/fa'
+import { Link } from '@inertiajs/react'
 
 export default function MobileMenuSidebar() {
     return (
@@ -7,7 +9,7 @@ export default function MobileMenuSidebar() {
                 <div className="gi-menu-content">
                     <ul>
                         <li className="dropdown relative drop-list">
-                            <a href="javascript:void(0)" className="dropdown-arrow mb-[12px] p-[12px] block capitalize text-[#777] border-[1px] border-solid border-[#eee] rounded-[5px] text-[15px] font-medium">Home</a>
+                            <a onClick={(e) => e.preventDefault()} className="dropdown-arrow mb-[12px] p-[12px] block capitalize text-[#777] border-[1px] border-solid border-[#eee] rounded-[5px] text-[15px] font-medium cursor-pointer">Home</a>
                             <ul className="sub-menu w-full min-w-[auto] p-0 mb-[10px] static hidden visible transition-none opacity-[1]">
                                 <li><a href="index.html" className="mb-[0] pl-[15px] py-[12px] pr-[0] capitalize block text-[14px] font-normal text-[#777]">Grocery</a></li>
                                 <li><a href="demo-2.html" className="mb-[0] pl-[15px] py-[12px] pr-[0] capitalize block text-[14px] font-normal text-[#777]">Fashion</a></li>
@@ -15,10 +17,10 @@ export default function MobileMenuSidebar() {
                             </ul>
                         </li>
                         <li className="relative">
-                            <a href="javascript:void(0)" className="dropdown-arrow mb-[12px] p-[12px] block capitalize text-[#777] border-[1px] border-solid border-[#eee] rounded-[5px] text-[15px] font-medium">Categories</a>
+                            <a onClick={(e) => e.preventDefault()} className="dropdown-arrow mb-[12px] p-[12px] block capitalize text-[#777] border-[1px] border-solid border-[#eee] rounded-[5px] text-[15px] font-medium cursor-pointer">Categories</a>
                             <ul className="sub-menu w-full min-w-[auto] p-0 mb-[10px] static hidden visible transition-none opacity-[1]">
                                 <li className="relative">
-                                    <a href="javascript:void(0)" className="mb-[0] pl-[15px] pr-[0] py-[12px] capitalize block text-[14px] font-normal text-[#777]">Classic Variation</a>
+                                    <a onClick={(e) => e.preventDefault()} className="mb-[0] pl-[15px] pr-[0] py-[12px] capitalize block text-[14px] font-normal text-[#777] cursor-pointer">Classic Variation</a>
                                     <ul className="sub-menu w-full min-w-[auto] p-0 mb-[10px] static hidden visible transition-none opacity-[1]">
                                         <li><a href="shop-left-sidebar-col-3.html" className="pl-[30px] py-[12px] block text-[14px] text-[#999] font-normal">Left sidebar 3 column</a></li>
                                         <li><a href="shop-left-sidebar-col-4.html" className="pl-[30px] py-[12px] block text-[14px] text-[#999] font-normal">Left sidebar 4 column</a></li>
@@ -28,7 +30,7 @@ export default function MobileMenuSidebar() {
                                     </ul>
                                 </li>
                                 <li className="relative">
-                                    <a href="javascript:void(0)" className="mb-[0] pl-[15px] pr-[0] py-[12px] capitalize block text-[14px] font-normal text-[#777]">Classic Variation</a>
+                                    <a onClick={(e) => e.preventDefault()} className="mb-[0] pl-[15px] pr-[0] py-[12px] capitalize block text-[14px] font-normal text-[#777] cursor-pointer">Classic Variation</a>
                                     <ul className="sub-menu w-full min-w-[auto] p-0 mb-[10px] static hidden visible transition-none opacity-[1]">
                                         <li><a href="shop-banner-left-sidebar-col-3.html" className="pl-[30px] py-[12px] block text-[14px] text-[#999] font-normal">Banner left sidebar 3 column</a></li>
                                         <li><a href="shop-banner-left-sidebar-col-4.html" className="pl-[30px] py-[12px] block text-[14px] text-[#999] font-normal">Banner left sidebar 4 column</a></li>
@@ -38,7 +40,7 @@ export default function MobileMenuSidebar() {
                                     </ul>
                                 </li>
                                 <li className="relative">
-                                    <a href="javascript:void(0)" className="mb-[0] pl-[15px] pr-[0] py-[12px] capitalize block text-[14px] font-normal text-[#777]">Columns Variation</a>
+                                    <a onClick={(e) => e.preventDefault()} className="mb-[0] pl-[15px] pr-[0] py-[12px] capitalize block text-[14px] font-normal text-[#777] cursor-pointer">Columns Variation</a>
                                     <ul className="sub-menu w-full min-w-[auto] p-0 mb-[10px] static hidden visible transition-none opacity-[1]">
                                         <li><a href="shop-full-width-col-3.html" className="pl-[30px] py-[12px] block text-[14px] text-[#999] font-normal">3 Columns full width</a></li>
                                         <li><a href="shop-full-width-col-4.html" className="pl-[30px] py-[12px] block text-[14px] text-[#999] font-normal">4 Columns full width</a></li>
@@ -48,7 +50,7 @@ export default function MobileMenuSidebar() {
                                     </ul>
                                 </li>
                                 <li className="relative">
-                                    <a href="javascript:void(0)" className="mb-[0] pl-[15px] pr-[0] py-[12px] capitalize block text-[14px] font-normal text-[#777]">List Variation</a>
+                                    <a onClick={(e) => e.preventDefault()} className="mb-[0] pl-[15px] pr-[0] py-[12px] capitalize block text-[14px] font-normal text-[#777] cursor-pointer">List Variation</a>
                                     <ul className="sub-menu w-full min-w-[auto] p-0 mb-[10px] static hidden visible transition-none opacity-[1]">
                                         <li><a href="shop-list-left-sidebar.html" className="pl-[30px] py-[12px] block text-[14px] text-[#999] font-normal">Shop left sidebar</a></li>
                                         <li><a href="shop-list-right-sidebar.html" className="pl-[30px] py-[12px] block text-[14px] text-[#999] font-normal">Shop right sidebar</a></li>
@@ -60,17 +62,17 @@ export default function MobileMenuSidebar() {
                             </ul>
                         </li>
                         <li className="relative">
-                            <a href="javascript:void(0)" className="dropdown-arrow mb-[12px] p-[12px] block capitalize text-[#777] border-[1px] border-solid border-[#eee] rounded-[5px] text-[15px] font-medium">Products</a>
+                            <a onClick={(e) => e.preventDefault()} className="dropdown-arrow mb-[12px] p-[12px] block capitalize text-[#777] border-[1px] border-solid border-[#eee] rounded-[5px] text-[15px] font-medium cursor-pointer">Products</a>
                             <ul className="sub-menu w-full min-w-[auto] p-0 mb-[10px] static hidden visible transition-none opacity-[1]">
                                 <li className="relative">
-                                    <a href="javascript:void(0)" className="mb-[0] pl-[15px] pr-[0] py-[12px] capitalize block text-[14px] font-normal text-[#777]">Product page</a>
+                                    <a onClick={(e) => e.preventDefault()} className="mb-[0] pl-[15px] pr-[0] py-[12px] capitalize block text-[14px] font-normal text-[#777] cursor-pointer">Product page</a>
                                     <ul className="sub-menu w-full min-w-[auto] p-0 mb-[10px] static hidden visible transition-none opacity-[1]">
                                         <li><a href="product-left-sidebar.html" className="pl-[30px] py-[12px] block text-[14px] text-[#999] font-normal">Product left sidebar</a></li>
                                         <li><a href="product-right-sidebar.html" className="pl-[30px] py-[12px] block text-[14px] text-[#999] font-normal">Product right sidebar</a></li>
                                     </ul>
                                 </li>
                                 <li className="relative">
-                                    <a href="javascript:void(0)" className="mb-[0] pl-[15px] pr-[0] py-[12px] capitalize block text-[14px] font-normal text-[#777]">Product accordion</a>
+                                    <a onClick={(e) => e.preventDefault()} className="mb-[0] pl-[15px] pr-[0] py-[12px] capitalize block text-[14px] font-normal text-[#777] cursor-pointer">Product accordion</a>
                                     <ul className="sub-menu w-full min-w-[auto] p-0 mb-[10px] static hidden visible transition-none opacity-[1]">
                                         <li><a href="product-accordion-left-sidebar.html" className="pl-[30px] py-[12px] block text-[14px] text-[#999] font-normal">left sidebar</a></li>
                                         <li><a href="product-accordion-right-sidebar.html" className="pl-[30px] py-[12px] block text-[14px] text-[#999] font-normal">right sidebar</a></li>
@@ -81,7 +83,7 @@ export default function MobileMenuSidebar() {
                             </ul>
                         </li>
                         <li className="dropdown relative">
-                            <a href="javascript:void(0)" className="dropdown-arrow mb-[12px] p-[12px] block capitalize text-[#777] border-[1px] border-solid border-[#eee] rounded-[5px] text-[15px] font-medium">Blog</a>
+                            <a onClick={(e) => e.preventDefault()} className="dropdown-arrow mb-[12px] p-[12px] block capitalize text-[#777] border-[1px] border-solid border-[#eee] rounded-[5px] text-[15px] font-medium cursor-pointer">Blog</a>
                             <ul className="sub-menu w-full min-w-[auto] p-0 mb-[10px] static hidden visible transition-none opacity-[1]">
                                 <li><a href="blog-left-sidebar.html" className="mb-[0] pl-[15px] pr-[0] py-[12px] capitalize block text-[14px] font-normal text-[#777]">Blog left sidebar</a></li>
                                 <li><a href="blog-right-sidebar.html" className="mb-[0] pl-[15px] pr-[0] py-[12px] capitalize block text-[14px] font-normal text-[#777]">Blog right sidebar</a></li>
@@ -92,19 +94,19 @@ export default function MobileMenuSidebar() {
                             </ul>
                         </li>
                         <li className="relative">
-                            <a href="javascript:void(0)" className="dropdown-arrow p-[12px] block capitalize text-[#777] border-[1px] border-solid border-[#eee] rounded-[5px] text-[15px] font-medium">Others</a>
+                            <a onClick={(e) => e.preventDefault()} className="dropdown-arrow p-[12px] block capitalize text-[#777] border-[1px] border-solid border-[#eee] rounded-[5px] text-[15px] font-medium cursor-pointer">Others</a>
                             <ul className="sub-menu w-full min-w-[auto] p-0 mb-[10px] static hidden visible transition-none opacity-[1]">
-                                <li><a href="about-us.html" className="mb-[0] pl-[15px] pr-[0] py-[12px] capitalize block text-[14px] font-normal text-[#777]">About Us</a></li>
-                                <li><a href="contact-us.html" className="mb-[0] pl-[15px] pr-[0] py-[12px] capitalize block text-[14px] font-normal text-[#777]">Contact Us</a></li>
-                                <li><a href="cart.html" className="mb-[0] pl-[15px] pr-[0] py-[12px] capitalize block text-[14px] font-normal text-[#777]">Cart</a></li>
-                                <li><a href="checkout.html" className="mb-[0] pl-[15px] pr-[0] py-[12px] capitalize block text-[14px] font-normal text-[#777]">Checkout</a></li>
-                                <li><a href="compare.html" className="mb-[0] pl-[15px] pr-[0] py-[12px] capitalize block text-[14px] font-normal text-[#777]">Compare</a></li>
-                                <li><a href="faq.html" className="mb-[0] pl-[15px] pr-[0] py-[12px] capitalize block text-[14px] font-normal text-[#777]">FAQ</a></li>
-                                <li><a href="login.html" className="mb-[0] pl-[15px] pr-[0] py-[12px] capitalize block text-[14px] font-normal text-[#777]">Login</a></li>
-                                <li><a href="register.html" className="mb-[0] pl-[15px] pr-[0] py-[12px] capitalize block text-[14px] font-normal text-[#777]">Register</a></li>
-                                <li><a href="track-order.html" className="mb-[0] pl-[15px] pr-[0] py-[12px] capitalize block text-[14px] font-normal text-[#777]">Track Order</a></li>
-                                <li><a href="terms-condition.html" className="mb-[0] pl-[15px] pr-[0] py-[12px] capitalize block text-[14px] font-normal text-[#777]">Terms Condition</a></li>
-                                <li><a href="privacy-policy.html" className="mb-[0] pl-[15px] pr-[0] py-[12px] capitalize block text-[14px] font-normal text-[#777]">Privacy Policy</a></li>
+                                <li><Link href="/about-us" className="mb-[0] pl-[15px] pr-[0] py-[12px] capitalize block text-[14px] font-normal text-[#777]">About Us</Link></li>
+                                <li><Link href="/contact-us" className="mb-[0] pl-[15px] pr-[0] py-[12px] capitalize block text-[14px] font-normal text-[#777]">Contact Us</Link></li>
+                                <li><Link href="/cart" className="mb-[0] pl-[15px] pr-[0] py-[12px] capitalize block text-[14px] font-normal text-[#777]">Cart</Link></li>
+                                <li><Link href="/checkout" className="mb-[0] pl-[15px] pr-[0] py-[12px] capitalize block text-[14px] font-normal text-[#777]">Checkout</Link></li>
+                                <li><Link href="/compare" className="mb-[0] pl-[15px] pr-[0] py-[12px] capitalize block text-[14px] font-normal text-[#777]">Compare</Link></li>
+                                <li><Link href="/faq" className="mb-[0] pl-[15px] pr-[0] py-[12px] capitalize block text-[14px] font-normal text-[#777]">FAQ</Link></li>
+                                <li><Link href="/login" className="mb-[0] pl-[15px] pr-[0] py-[12px] capitalize block text-[14px] font-normal text-[#777]">Login</Link></li>
+                                <li><Link href="/register" className="mb-[0] pl-[15px] pr-[0] py-[12px] capitalize block text-[14px] font-normal text-[#777]">Register</Link></li>
+                                <li><Link href="/track-order" className="mb-[0] pl-[15px] pr-[0] py-[12px] capitalize block text-[14px] font-normal text-[#777]">Track Order</Link></li>
+                                <li><Link href="/terms-condition" className="mb-[0] pl-[15px] pr-[0] py-[12px] capitalize block text-[14px] font-normal text-[#777]">Terms Condition</Link></li>
+                                <li><Link href="/privacy-policy" className="mb-[0] pl-[15px] pr-[0] py-[12px] capitalize block text-[14px] font-normal text-[#777]">Privacy Policy</Link></li>
                             </ul>
                         </li>
                     </ul>
@@ -115,16 +117,16 @@ export default function MobileMenuSidebar() {
                         <div className="header-top-social">
                             <ul className="flex flex-row justify-center">
                                 <li className="list-inline-item h-[30px] w-[30px] flex items-center justify-center bg-[#4b5966] rounded-[5px] mr-[15px]">
-                                    <a href="#"><i className="gicon gi-facebook text-[#fff]" /></a>
+                                    <button className="bg-transparent border-0 p-0"><FaFacebook className="text-[#fff]" /></button>
                                 </li>
                                 <li className="list-inline-item h-[30px] w-[30px] flex items-center justify-center bg-[#4b5966] rounded-[5px] mr-[15px]">
-                                    <a href="#"><i className="gicon gi-twitter text-[#fff]" /></a>
+                                    <button className="bg-transparent border-0 p-0"><FaTwitter className="text-[#fff]" /></button>
                                 </li>
                                 <li className="list-inline-item h-[30px] w-[30px] flex items-center justify-center bg-[#4b5966] rounded-[5px] mr-[15px]">
-                                    <a href="#"><i className="gicon gi-instagram text-[#fff]" /></a>
+                                    <button className="bg-transparent border-0 p-0"><FaInstagram className="text-[#fff]" /></button>
                                 </li>
                                 <li className="list-inline-item h-[30px] w-[30px] flex items-center justify-center bg-[#4b5966] rounded-[5px]">
-                                    <a href="#"><i className="gicon gi-linkedin text-[#fff]" /></a>
+                                    <button className="bg-transparent border-0 p-0"><FaLinkedin className="text-[#fff]" /></button>
                                 </li>
                             </ul>
                         </div>

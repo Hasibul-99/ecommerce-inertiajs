@@ -275,9 +275,9 @@ const ProductDetail: React.FC = () => {
                 <div className="mt-4">
                   <span className="text-gray-700 font-medium mr-2">Share:</span>
                   <div className="inline-flex items-center">
-                    <a href="#" className="text-gray-500 hover:text-emerald-600 mr-3">
+                    <button className="text-gray-500 hover:text-emerald-600 mr-3 bg-transparent border-0 p-0">
                       <FiShare2 />
-                    </a>
+                    </button>
                   </div>
                 </div>
               </div>

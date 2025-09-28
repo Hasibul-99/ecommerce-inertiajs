@@ -1,5 +1,7 @@
 import React from 'react'
 import { Link } from '@inertiajs/react'
+import { FiMapPin, FiMail } from 'react-icons/fi'
+import { FaWhatsapp, FaFacebook, FaTwitter, FaLinkedin, FaInstagram } from 'react-icons/fa'
 
 export default function Footer() {
     return (
@@ -108,19 +110,19 @@ export default function Footer() {
                                             <ul className="align-itegi-center">
                                                 <li className="gi-footer-link gi-foo-location m-[0] leading-[1.5] border-[0] p-[0] font-normal text-[16px] text-[#5caf90] flex items-center mb-[16px]">
                                                     <span className="w-[25px] flex basis-auto grow-[0] shrink-[0]">
-                                                        <i className="fi fi-rr-marker location leading-[0] text-[18px] mt-[5px] h-[25px] text-[#5caf90] w-[auto]" />
+                                                        <FiMapPin className="leading-[0] text-[18px] mt-[5px] h-[25px] text-[#5caf90] w-[auto]" />
                                                     </span>
                                                     <p className="m-[0] text-[14px] font-normal text-[#777]">2548 Broaddus Maple Court, Madisonville KY 4783, USA.</p>
                                                 </li>
                                                 <li className="gi-footer-link gi-foo-call m-[0] leading-[1.5] border-[0] p-[0] font-normal text-[16px] text-[#5caf90] flex items-center mb-[16px]">
                                                     <span className="w-[25px] flex basis-auto grow-[0] shrink-[0]">
-                                                        <i className="fi fi-brands-whatsapp leading-[0] text-[18px] h-[20px] text-[#5caf90] w-[auto]" />
+                                                        <FaWhatsapp className="leading-[0] text-[18px] h-[20px] text-[#5caf90] w-[auto]" />
                                                     </span>
                                                     <Link href="tel:+009876543210" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">+00 9876543210</Link>
                                                 </li>
                                                 <li className="gi-footer-link gi-foo-mail m-[0] leading-[1.5] border-[0] p-[0] font-normal text-[16px] text-[#5caf90] flex items-center mb-[16px]">
                                                     <span className="w-[25px] flex basis-auto grow-[0] shrink-[0]">
-                                                        <i className="fi fi-rr-envelope leading-[0] text-[18px] h-[20px] text-[#5caf90] w-[auto]" />
+                                                        <FiMail className="leading-[0] text-[18px] h-[20px] text-[#5caf90] w-[auto]" />
                                                     </span>
                                                     <Link href="mailto:example@email.com" className="transition-all duration-[0.3s] ease-in-out text-[14px] leading-[20px] p-[0] text-[#777] mb-[0] inline-block relative break-all tracking-[0] font-normal hover:text-[#5caf90] hover:opacity-[1]">example@email.com</Link>
                                                 </li>
@@ -133,16 +135,16 @@ export default function Footer() {
                                         <div className="gi-footer-links gi-footer-dropdown">
                                             <ul className="align-itegi-center flex flex-wrap">
                                                 <li className="gi-footer-link pr-[5px]">
-                                                    <Link href="#" className="h-[30px] w-[30px] bg-[#4b5966] rounded-[5px] capitalize flex items-center justify-center text-[15px]"><i className="gicon gi-facebook text-[16px] text-[#fff]" aria-hidden="true" /></Link>
+                                                    <Link href="#" className="h-[30px] w-[30px] bg-[#4b5966] rounded-[5px] capitalize flex items-center justify-center text-[15px]"><FaFacebook className="text-[16px] text-[#fff]" aria-hidden="true" /></Link>
                                                 </li>
                                                 <li className="gi-footer-link pr-[5px]">
-                                                    <Link href="#" className="h-[30px] w-[30px] bg-[#4b5966] rounded-[5px] capitalize flex items-center justify-center text-[15px]"><i className="gicon gi-twitter text-[16px] text-[#fff]" aria-hidden="true" /></Link>
+                                                    <Link href="#" className="h-[30px] w-[30px] bg-[#4b5966] rounded-[5px] capitalize flex items-center justify-center text-[15px]"><FaTwitter className="text-[16px] text-[#fff]" aria-hidden="true" /></Link>
                                                 </li>
                                                 <li className="gi-footer-link pr-[5px]">
-                                                    <Link href="#" className="h-[30px] w-[30px] bg-[#4b5966] rounded-[5px] capitalize flex items-center justify-center text-[15px]"><i className="gicon gi-linkedin text-[16px] text-[#fff]" aria-hidden="true" /></Link>
+                                                    <Link href="#" className="h-[30px] w-[30px] bg-[#4b5966] rounded-[5px] capitalize flex items-center justify-center text-[15px]"><FaLinkedin className="text-[16px] text-[#fff]" aria-hidden="true" /></Link>
                                                 </li>
                                                 <li className="gi-footer-link pr-[5px]">
-                                                    <Link href="#" className="h-[30px] w-[30px] bg-[#4b5966] rounded-[5px] capitalize flex items-center justify-center text-[15px]"><i className="gicon gi-instagram text-[16px] text-[#fff]" aria-hidden="true" /></Link>
+                                                    <Link href="#" className="h-[30px] w-[30px] bg-[#4b5966] rounded-[5px] capitalize flex items-center justify-center text-[15px]"><FaInstagram className="text-[16px] text-[#fff]" aria-hidden="true" /></Link>
                                                 </li>
                                             </ul>
                                         </div>

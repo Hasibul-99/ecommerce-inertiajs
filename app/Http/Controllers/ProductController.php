@@ -29,31 +29,64 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $products = Product::with(['category', 'images'])
-            ->where('status', 'published')
-            ->when($request->category, function ($query, $category) {
-                return $query->whereHas('category', function ($q) use ($category) {
-                    $q->where('slug', $category);
-                });
-            })
-            ->when($request->search, function ($query, $search) {
-                return $query->where('title', 'like', "%{$search}%");
-            })
-            ->when($request->sort, function ($query, $sort) {
-                if ($sort === 'price_asc') {
-                    return $query->orderBy('base_price_cents', 'asc');
-                } elseif ($sort === 'price_desc') {
-                    return $query->orderBy('base_price_cents', 'desc');
-                } elseif ($sort === 'newest') {
+        // If search query is provided, use Meilisearch
+        if ($request->has('q')) {
+            $searchResults = Product::search($request->q)
+                ->when($request->category, function ($query, $category) {
+                    return $query->where('category.slug', $category);
+                })
+                ->get();
+                
+            // Get the IDs from search results
+            $productIds = $searchResults->pluck('id')->toArray();
+            
+            // Query the database with these IDs to get full product data with relationships
+            $products = Product::with(['category', 'media'])
+                ->whereIn('id', $productIds)
+                ->where('status', 'published')
+                ->when($request->sort, function ($query, $sort) {
+                    if ($sort === 'price_asc') {
+                        return $query->orderBy('base_price_cents', 'asc');
+                    } elseif ($sort === 'price_desc') {
+                        return $query->orderBy('base_price_cents', 'desc');
+                    } elseif ($sort === 'newest') {
+                        return $query->orderBy('created_at', 'desc');
+                    } else {
+                        return $query->orderBy('created_at', 'desc');
+                    }
+                }, function ($query) {
                     return $query->orderBy('created_at', 'desc');
-                } else {
+                })
+                ->paginate(12)
+                ->appends($request->query());
+        } else {
+            // Regular database query without search
+            $products = Product::with(['category', 'media'])
+                ->where('status', 'published')
+                ->when($request->category, function ($query, $category) {
+                    return $query->whereHas('category', function ($q) use ($category) {
+                        $q->where('slug', $category);
+                    });
+                })
+                ->when($request->search, function ($query, $search) {
+                    return $query->where('title', 'like', "%{$search}%");
+                })
+                ->when($request->sort, function ($query, $sort) {
+                    if ($sort === 'price_asc') {
+                        return $query->orderBy('base_price_cents', 'asc');
+                    } elseif ($sort === 'price_desc') {
+                        return $query->orderBy('base_price_cents', 'desc');
+                    } elseif ($sort === 'newest') {
+                        return $query->orderBy('created_at', 'desc');
+                    } else {
+                        return $query->orderBy('created_at', 'desc');
+                    }
+                }, function ($query) {
                     return $query->orderBy('created_at', 'desc');
-                }
-            }, function ($query) {
-                return $query->orderBy('created_at', 'desc');
-            })
-            ->paginate(12)
-            ->appends($request->query());
+                })
+                ->paginate(12)
+                ->appends($request->query());
+        }
 
         return Inertia::render('Products', [
             'products' => $products,

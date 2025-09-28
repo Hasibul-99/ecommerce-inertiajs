@@ -2,13 +2,17 @@
 
 namespace App\Models;
 
+use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Scout\Searchable;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Product extends Model
+class Product extends Model implements HasMedia
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, Searchable, InteractsWithMedia, LogsActivity;
 
     /**
      * The attributes that are mass assignable.
@@ -75,6 +79,14 @@ class Product extends Model
     }
 
     /**
+     * Get the category that owns the product.
+     */
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    /**
      * Get the variants for the product.
      */
     public function variants()
@@ -96,6 +108,49 @@ class Product extends Model
     public function tags()
     {
         return $this->belongsToMany(ProductTag::class, 'product_tag');
+    }
+    
+    /**
+     * Get the indexable data array for the model.
+     *
+     * @return array
+     */
+    public function toSearchableArray()
+    {
+        $array = $this->toArray();
+        
+        // Include the vendor name in the searchable array
+        $array['vendor_name'] = $this->vendor ? $this->vendor->name : null;
+        
+        // Include the category name in the searchable array
+        $array['category_name'] = $this->category ? $this->category->name : null;
+        
+        // Only include the fields we want to search
+        return [
+            'id' => $array['id'],
+            'title' => $array['title'],
+            'description' => $array['description'],
+            'vendor_name' => $array['vendor_name'],
+            'category_name' => $array['category_name'],
+        ];
+    }
+    
+    /**
+     * Register media collections for the model.
+     */
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('images')
+            ->useDisk('public')
+            ->registerMediaConversions(function () {
+                $this->addMediaConversion('thumb')
+                    ->width(200)
+                    ->height(200);
+                    
+                $this->addMediaConversion('medium')
+                    ->width(800)
+                    ->height(800);
+            });
     }
 
     /**

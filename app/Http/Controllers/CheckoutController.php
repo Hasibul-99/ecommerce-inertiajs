@@ -238,19 +238,33 @@ class CheckoutController extends Controller
      */
     protected function processPayment(CheckoutRequest $request, Order $order)
     {
-        // This is a placeholder for actual payment processing
-        // In a real application, you would integrate with a payment gateway
-        
-        // For now, we'll simulate a successful payment
-        $order->update([
-            'payment_status' => 'paid',
-            'status' => 'processing',
-        ]);
-
-        return [
-            'success' => true,
-            'message' => 'Payment processed successfully',
-        ];
+        // Handle different payment methods
+        if ($request->payment_method === 'cod') {
+            // For Cash on Delivery, mark as unpaid but order is still valid
+            $order->update([
+                'payment_method' => 'cod',
+                'payment_status' => 'unpaid',
+                'status' => 'pending',
+            ]);
+            
+            return [
+                'success' => true,
+                'message' => 'Order placed successfully with Cash on Delivery',
+            ];
+        } else {
+            // For other payment methods (placeholder for actual payment processing)
+            // In a real application, you would integrate with a payment gateway
+            $order->update([
+                'payment_method' => $request->payment_method,
+                'payment_status' => 'paid',
+                'status' => 'processing',
+            ]);
+            
+            return [
+                'success' => true,
+                'message' => 'Payment processed successfully',
+            ];
+        }
     }
 
     /**
@@ -264,6 +278,7 @@ class CheckoutController extends Controller
             ['id' => 'credit_card', 'name' => 'Credit Card'],
             ['id' => 'paypal', 'name' => 'PayPal'],
             ['id' => 'bank_transfer', 'name' => 'Bank Transfer'],
+            ['id' => 'cod', 'name' => 'Cash on Delivery'],
         ];
     }
     

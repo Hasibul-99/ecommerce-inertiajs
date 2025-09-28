@@ -1,6 +1,9 @@
 import Guest from '@/Layouts/GuestLayout'
 import { Head } from '@inertiajs/react'
 import React from 'react'
+import { FiGrid, FiList, FiHeart, FiEye, FiRepeat, FiShoppingCart, FiChevronRight } from 'react-icons/fi'
+import { FaStar } from 'react-icons/fa'
+import { GiCupcake, GiFruitBowl, GiPopcorn, GiDrinkMe } from 'react-icons/gi'
 
 export default function Products() {
     return (
@@ -16,10 +19,10 @@ export default function Products() {
                                     <div className="min-[768px]:w-[50%] w-full gi-grid-list">
                                         <div className="gi-gl-btn ml-[5px] flex items-center flex-row">
                                             <button type="button" className="grid-btn btn-grid-50 h-[40px] w-[40px] border-[0] rounded-[0] flex items-center justify-center flex-row active">
-                                                <i className="fi fi-rr-apps text-[20px] text-[#4b5966] leading-[0]" />
+                                                <FiGrid className="text-[20px] text-[#4b5966] leading-[0]" />
                                             </button>
                                             <button type="button" className="grid-btn btn-list-50 h-[40px] w-[40px] border-[0] rounded-[0] flex items-center justify-center flex-row">
-                                                <i className="fi fi-rr-list text-[20px] text-[#4b5966] leading-[0]" />
+                                                <FiList className="text-[20px] text-[#4b5966] leading-[0]" />
                                             </button>
                                         </div>
                                     </div>
@@ -41,25 +44,25 @@ export default function Products() {
                                 {/* Select Bar Start */}
                                 <div className="gi-select-bar mt-[-5px] mx-[-5px] mb-[25px] flex flex-wrap justify-end ">
                                     <span className="gi-select-btn m-[5px] px-[10px] border-[1px] border-solid border-[#eee] rounded-[5px] text-[#777] text-[14px] flex items-center capitalize">Clothes
-                                        <a className="gi-select-cancel ml-[15px] text-[#ff8585] text-[18px] transition-all duration-[0.3s] ease-in-out" href="javascript:void(0)">×</a>
+                                        <a className="gi-select-cancel ml-[15px] text-[#ff8585] text-[18px] transition-all duration-[0.3s] ease-in-out" onClick={(e) => e.preventDefault()}>×</a>
                                     </span>
                                     <span className="gi-select-btn m-[5px] px-[10px] border-[1px] border-solid border-[#eee] rounded-[5px] text-[#777] text-[14px] flex items-center capitalize">Fruits
-                                        <a className="gi-select-cancel ml-[15px] text-[#ff8585] text-[18px] transition-all duration-[0.3s] ease-in-out" href="javascript:void(0)">×</a>
+                                        <a className="gi-select-cancel ml-[15px] text-[#ff8585] text-[18px] transition-all duration-[0.3s] ease-in-out" onClick={(e) => e.preventDefault()}>×</a>
                                     </span>
                                     <span className="gi-select-btn m-[5px] px-[10px] border-[1px] border-solid border-[#eee] rounded-[5px] text-[#777] text-[14px] flex items-center capitalize">Snacks
-                                        <a className="gi-select-cancel ml-[15px] text-[#ff8585] text-[18px] transition-all duration-[0.3s] ease-in-out" href="javascript:void(0)">×</a>
+                                        <a className="gi-select-cancel ml-[15px] text-[#ff8585] text-[18px] transition-all duration-[0.3s] ease-in-out" onClick={(e) => e.preventDefault()}>×</a>
                                     </span>
                                     <span className="gi-select-btn m-[5px] px-[10px] border-[1px] border-solid border-[#eee] rounded-[5px] text-[#777] text-[14px] flex items-center capitalize">Dairy
-                                        <a className="gi-select-cancel ml-[15px] text-[#ff8585] text-[18px] transition-all duration-[0.3s] ease-in-out" href="javascript:void(0)">×</a>
+                                        <a className="gi-select-cancel ml-[15px] text-[#ff8585] text-[18px] transition-all duration-[0.3s] ease-in-out" onClick={(e) => e.preventDefault()}>×</a>
                                     </span>
                                     <span className="gi-select-btn m-[5px] px-[10px] border-[1px] border-solid border-[#eee] rounded-[5px] text-[#777] text-[14px] flex items-center capitalize">perfume
-                                        <a className="gi-select-cancel ml-[15px] text-[#ff8585] text-[18px] transition-all duration-[0.3s] ease-in-out" href="javascript:void(0)">×</a>
+                                        <a className="gi-select-cancel ml-[15px] text-[#ff8585] text-[18px] transition-all duration-[0.3s] ease-in-out" onClick={(e) => e.preventDefault()}>×</a>
                                     </span>
                                     <span className="gi-select-btn m-[5px] px-[10px] border-[1px] border-solid border-[#eee] rounded-[5px] text-[#777] text-[14px] flex items-center capitalize">jewelry
-                                        <a className="gi-select-cancel ml-[15px] text-[#ff8585] text-[18px] transition-all duration-[0.3s] ease-in-out" href="javascript:void(0)">×</a>
+                                        <a className="gi-select-cancel ml-[15px] text-[#ff8585] text-[18px] transition-all duration-[0.3s] ease-in-out" onClick={(e) => e.preventDefault()}>×</a>
                                     </span>
                                     <span className="gi-select-btn gi-select-btn-clear m-[5px] p-[0] border-[1px] border-solid border-[#eee] rounded-[5px] text-[#777] text-[14px] flex items-center capitalize">
-                                        <a className="gi-select-clear transition-all duration-[0.3s] ease-in-out h-full m-[0] py-[3px] px-[10px] text-[14px] flex items-center bg-[#4b5966] text-[#fff] rounded-[5px] hover:bg-[#5caf90] hover:text-[#fff]" href="javascript:void(0)">Clear All</a>
+                                        <a className="gi-select-clear transition-all duration-[0.3s] ease-in-out h-full m-[0] py-[3px] px-[10px] text-[14px] flex items-center bg-[#4b5966] text-[#fff] rounded-[5px] hover:bg-[#5caf90] hover:text-[#fff]" onClick={(e) => e.preventDefault()}>Clear All</a>
                                     </span>
                                 </div>
                                 {/* Select Bar End */}
@@ -84,672 +87,36 @@ export default function Products() {
                                                                 </span>
                                                                 <div className="gi-pro-actions transition-all duration-[0.3s] ease-in-out absolute z-[9] left-[0] right-[0] bottom-[-10px] max-[991px]:opacity-[1] max-[991px]:bottom-[10px] flex flex-row items-center justify-center my-[0] mx-auto opacity-[0]">
                                                                     <a className="gi-btn-group wishlist transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]" title="Wishlist">
-                                                                        <i className="fi-rr-heart transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
+                                                                        <FiHeart className="transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
                                                                     </a>
-                                                                    <a href="javascript:void(0)" className="gi-btn-group modal-toggle quickview transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]">
-                                                                        <i className="fi-rr-eye transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
+                                                                    <a onClick={(e) => e.preventDefault()} className="gi-btn-group modal-toggle quickview transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]">
+                                                                        <FiEye className="transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
                                                                     </a>
-                                                                    <a href="javascript:void(0)" className="gi-btn-group compare transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]" title="Compare">
-                                                                        <i className="fi fi-rr-arrows-repeat transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
+                                                                    <a onClick={(e) => e.preventDefault()} className="gi-btn-group compare transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]" title="Compare">
+                                                                        <FiRepeat className="transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
                                                                     </a>
-                                                                    <a href="javascript:void(0)" title="Add To Cart" className="gi-btn-group add-to-cart transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]">
-                                                                        <i className="fi-rr-shopping-basket transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div className="gi-pro-content h-full p-[20px] relative z-[10] flex flex-col text-left border-t-[1px] border-solid border-[#eee]">
-                                                            <a href="shop-left-sidebar-col-3.html">
-                                                                <h6 className="gi-pro-stitle mb-[10px] font-normal text-[#999] text-[13px] capitalize font-manrope tracking-[0.01rem] leading-[1.2]">Dried Fruits</h6>
-                                                            </a>
-                                                            <h5 className="gi-pro-title h-full mb-[10px] text-[16px] tracking-[0.01rem] font-normal leading-[1.2]">
-                                                                <a href="product-left-sidebar.html" className="text-[#4b5966] block text-[14px] leading-[22px] font-normal tracking-[0.85px] capitalize font-Poppins">Dates Value Pack Pouch</a>
-                                                            </h5>
-                                                            <p className="gi-info text-[15px] leading-[28px] font-light tracking-[0.02rem] mb-[16px] hidden">Contrary to popular belief, Lorem Ipsum is not simply
-                                                                random text. It has roots in a piece of classical Latin literature
-                                                                from 45 BC, making it over 2000 years old.</p>
-                                                            <div className="gi-pro-rat-price mt-[5px] mb-[0] flex flex-col">
-                                                                <span className="gi-pro-rating mb-[10px] opacity-[0.7] relative">
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star inline-block text-[#777] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star inline-block text-[#777] float-left text-[14px] mr-[3px]" />
-                                                                </span>
-                                                                <span className="gi-price text-[18px] flex items-center justify-left text-[#4b5966] tracking-[0.4px]">
-                                                                    <span className="new-price text-[#4b5966] font-bold text-[14px] mr-[7px] tracking-[0.02rem]">$78.00</span>
-                                                                    <span className="old-price text-[14px] text-[#777] tracking-[0.02rem] line-through">$85.00</span>
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="min-[1200px]:w-[25%] min-[992px]:w-[33.33%] min-[768px]:w-[50%] min-[576px]:w-[50%] max-[420px]:w-full px-[12px] gi-product-box max-[575px]:w-[50%] max-[575px]:mx-auto pro-gl-content">
-                                                <div className="gi-product-content pb-[24px] h-full flex">
-                                                    <div className="gi-product-inner transition-all duration-[0.3s] ease-in-out cursor-pointer flex flex-col overflow-hidden border-[1px] border-solid border-[#eee] rounded-[5px]">
-                                                        <div className="gi-pro-image-outer transition-all duration-[0.3s] ease delay-[0s] z-[11] relative">
-                                                            <div className="gi-pro-image overflow-hidden">
-                                                                <a href="product-left-sidebar.html" className="image relative block overflow-hidden pointer-events-none transition-all duration-[0.3s] ease-in-out">
-                                                                    <span className="label veg max-[991px]:hidden">
-                                                                        <span className="dot" />
-                                                                    </span>
-                                                                    <img className="main-image max-w-full z-[1] transition-all duration-[0.3s] ease delay-[0s]" src="assets/img/product-images/1_1.jpg" alt="Product" />
-                                                                    <img className="hover-image absolute z-[2] top-[0] left-[0] opacity-[0] max-w-full transition-all duration-[0.3s] ease delay-[0s]" src="assets/img/product-images/1_2.jpg" alt="Product" />
-                                                                </a>
-                                                                <div className="gi-pro-actions transition-all duration-[0.3s] ease-in-out absolute z-[9] left-[0] right-[0] bottom-[-10px] max-[991px]:opacity-[1] max-[991px]:bottom-[10px] flex flex-row items-center justify-center my-[0] mx-auto opacity-[0]">
-                                                                    <a className="gi-btn-group wishlist transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]" title="Wishlist">
-                                                                        <i className="fi-rr-heart transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                    <a href="javascript:void(0)" className="gi-btn-group modal-toggle quickview transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]">
-                                                                        <i className="fi-rr-eye transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                    <a href="javascript:void(0)" className="gi-btn-group compare transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]" title="Compare">
-                                                                        <i className="fi fi-rr-arrows-repeat transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                    <a href="javascript:void(0)" title="Add To Cart" className="gi-btn-group add-to-cart transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]">
-                                                                        <i className="fi-rr-shopping-basket transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
+                                                                    <a onClick={(e) => e.preventDefault()} title="Add To Cart" className="gi-btn-group add-to-cart transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]">
+                                                                        <FiShoppingCart className="transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
                                                                     </a>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div className="gi-pro-content h-full p-[20px] relative z-[10] flex flex-col text-left border-t-[1px] border-solid border-[#eee]">
-                                                            <a href="shop-left-sidebar-col-3.html">
-                                                                <h6 className="gi-pro-stitle mb-[10px] font-normal text-[#999] text-[13px] capitalize font-manrope tracking-[0.01rem] leading-[1.2]">chips &amp; fries</h6>
-                                                            </a>
-                                                            <h5 className="gi-pro-title h-full mb-[10px] text-[16px] tracking-[0.01rem] font-normal leading-[1.2]">
-                                                                <a href="product-left-sidebar.html" className="text-[#4b5966] block text-[14px] leading-[22px] font-normal tracking-[0.85px] capitalize font-Poppins">Crunchy Triangle Chips Snacks</a>
-                                                            </h5>
-                                                            <p className="gi-info text-[15px] leading-[28px] font-light tracking-[0.02rem] mb-[16px] hidden">Contrary to popular belief, Lorem Ipsum is not simply
-                                                                random text. It has roots in a piece of classical Latin literature
-                                                                from 45 BC, making it over 2000 years old.</p>
-                                                            <div className="gi-pro-rat-price mt-[5px] mb-[0] flex flex-col">
-                                                                <span className="gi-pro-rating mb-[10px] opacity-[0.7] relative">
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star inline-block text-[#777] float-left text-[14px] mr-[3px]" />
+                                                        <div className="gi-pro-content p-[20px] border-t-[1px] border-solid border-[#eee]">
+                                                            <h5 className="gi-pro-title mb-[10px] text-[16px] leading-[1.2]"><a href="product-left-sidebar.html" className="text-[#4b5966] capitalize leading-[1.2] font-medium text-[16px] hover:text-[#5caf90] transition-all duration-[0.3s] ease-in-out">Fresh organic villa farm lomon 500gm pack</a></h5>
+                                                            <div className="gi-pro-rat-price mt-[5px] mb-[8px] flex items-center justify-between">
+                                                                <span className="gi-pro-rating flex">
+                                                                    <FaStar className="inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
+                                                                    <FaStar className="inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
+                                                                    <FaStar className="inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
+                                                                    <FaStar className="inline-block text-[#777] float-left text-[14px] mr-[3px]" />
+                                                                    <FaStar className="inline-block text-[#777] float-left text-[14px] mr-[3px]" />
                                                                 </span>
-                                                                <span className="gi-price text-[18px] flex items-center justify-left text-[#4b5966] tracking-[0.4px]">
-                                                                    <span className="new-price text-[#4b5966] font-bold text-[14px] mr-[7px] tracking-[0.02rem]">$59.00</span>
-                                                                    <span className="old-price text-[14px] text-[#777] tracking-[0.02rem] line-through">$87.00</span>
+                                                                <span className="gi-price">
+                                                                    <span className="new-price text-[#4b5966] font-bold text-[16px] mr-[7px]">$25.00</span>
+                                                                    <span className="old-price text-[14px] text-[#777] line-through">$35.00</span>
                                                                 </span>
                                                             </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="min-[1200px]:w-[25%] min-[992px]:w-[33.33%] min-[768px]:w-[50%] min-[576px]:w-[50%] max-[420px]:w-full px-[12px] gi-product-box max-[575px]:w-[50%] max-[575px]:mx-auto pro-gl-content">
-                                                <div className="gi-product-content pb-[24px] h-full flex">
-                                                    <div className="gi-product-inner transition-all duration-[0.3s] ease-in-out cursor-pointer flex flex-col overflow-hidden border-[1px] border-solid border-[#eee] rounded-[5px]">
-                                                        <div className="gi-pro-image-outer transition-all duration-[0.3s] ease delay-[0s] z-[11] relative">
-                                                            <div className="gi-pro-image overflow-hidden">
-                                                                <a href="product-left-sidebar.html" className="image relative block overflow-hidden pointer-events-none transition-all duration-[0.3s] ease-in-out">
-                                                                    <span className="label veg max-[991px]:hidden">
-                                                                        <span className="dot" />
-                                                                    </span>
-                                                                    <img className="main-image max-w-full z-[1] transition-all duration-[0.3s] ease delay-[0s]" src="assets/img/product-images/3_1.jpg" alt="Product" />
-                                                                    <img className="hover-image absolute z-[2] top-[0] left-[0] opacity-[0] max-w-full transition-all duration-[0.3s] ease delay-[0s]" src="assets/img/product-images/3_2.jpg" alt="Product" />
-                                                                </a>
-                                                                <span className="flags flex flex-col p-[0] uppercase absolute top-[10px] right-[10px] z-[2]">
-                                                                    <span className="sale py-[5px] px-[10px] text-[11px] font-medium leading-[12px] text-left uppercase flex items-center bg-[#ff7070] text-[#fff] tracking-[0.5px] relative rounded-[5px]">Sale</span>
-                                                                </span>
-                                                                <div className="gi-pro-actions transition-all duration-[0.3s] ease-in-out absolute z-[9] left-[0] right-[0] bottom-[-10px] max-[991px]:opacity-[1] max-[991px]:bottom-[10px] flex flex-row items-center justify-center my-[0] mx-auto opacity-[0]">
-                                                                    <a className="gi-btn-group wishlist transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]" title="Wishlist">
-                                                                        <i className="fi-rr-heart transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                    <a href="javascript:void(0)" className="gi-btn-group modal-toggle quickview transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]">
-                                                                        <i className="fi-rr-eye transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                    <a href="javascript:void(0)" className="gi-btn-group compare transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]" title="Compare">
-                                                                        <i className="fi fi-rr-arrows-repeat transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                    <a href="javascript:void(0)" title="Add To Cart" className="gi-btn-group add-to-cart transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]">
-                                                                        <i className="fi-rr-shopping-basket transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div className="gi-pro-content h-full p-[20px] relative z-[10] flex flex-col text-left border-t-[1px] border-solid border-[#eee]">
-                                                            <a href="shop-left-sidebar-col-3.html">
-                                                                <h6 className="gi-pro-stitle mb-[10px] font-normal text-[#999] text-[13px] capitalize font-manrope tracking-[0.01rem] leading-[1.2]">Dried Fruits</h6>
-                                                            </a>
-                                                            <h5 className="gi-pro-title h-full mb-[10px] text-[16px] tracking-[0.01rem] font-normal leading-[1.2]">
-                                                                <a href="product-left-sidebar.html" className="text-[#4b5966] block text-[14px] leading-[22px] font-normal tracking-[0.85px] capitalize font-Poppins">Californian Almonds Value Pack</a>
-                                                            </h5>
-                                                            <p className="gi-info text-[15px] leading-[28px] font-light tracking-[0.02rem] mb-[16px] hidden">Contrary to popular belief, Lorem Ipsum is not simply
-                                                                random text. It has roots in a piece of classical Latin literature
-                                                                from 45 BC, making it over 2000 years old.</p>
-                                                            <div className="gi-pro-rat-price mt-[5px] mb-[0] flex flex-col">
-                                                                <span className="gi-pro-rating mb-[10px] opacity-[0.7] relative">
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star inline-block text-[#777] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star inline-block text-[#777] float-left text-[14px] mr-[3px]" />
-                                                                </span>
-                                                                <span className="gi-price text-[18px] flex items-center justify-left text-[#4b5966] tracking-[0.4px]">
-                                                                    <span className="new-price text-[#4b5966] font-bold text-[14px] mr-[7px] tracking-[0.02rem]">$58.00</span>
-                                                                    <span className="old-price text-[14px] text-[#777] tracking-[0.02rem] line-through">$65.00</span>
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="min-[1200px]:w-[25%] min-[992px]:w-[33.33%] min-[768px]:w-[50%] min-[576px]:w-[50%] max-[420px]:w-full px-[12px] gi-product-box max-[575px]:w-[50%] max-[575px]:mx-auto pro-gl-content">
-                                                <div className="gi-product-content pb-[24px] h-full flex">
-                                                    <div className="gi-product-inner transition-all duration-[0.3s] ease-in-out cursor-pointer flex flex-col overflow-hidden border-[1px] border-solid border-[#eee] rounded-[5px]">
-                                                        <div className="gi-pro-image-outer transition-all duration-[0.3s] ease delay-[0s] z-[11] relative">
-                                                            <div className="gi-pro-image overflow-hidden">
-                                                                <a href="product-left-sidebar.html" className="image relative block overflow-hidden pointer-events-none transition-all duration-[0.3s] ease-in-out">
-                                                                    <span className="label veg max-[991px]:hidden">
-                                                                        <span className="dot" />
-                                                                    </span>
-                                                                    <img className="main-image max-w-full z-[1] transition-all duration-[0.3s] ease delay-[0s]" src="assets/img/product-images/4_1.jpg" alt="Product" />
-                                                                    <img className="hover-image absolute z-[2] top-[0] left-[0] opacity-[0] max-w-full transition-all duration-[0.3s] ease delay-[0s]" src="assets/img/product-images/4_2.jpg" alt="Product" />
-                                                                </a>
-                                                                <span className="flags flex flex-col p-[0] uppercase absolute top-[10px] right-[10px] z-[2]">
-                                                                    <span className="new py-[5px] px-[10px] text-[11px] font-medium leading-[12px] text-left uppercase flex items-center bg-[#5caf90] text-[#fff] tracking-[0.5px] relative rounded-[5px]">New</span>
-                                                                </span>
-                                                                <div className="gi-pro-actions transition-all duration-[0.3s] ease-in-out absolute z-[9] left-[0] right-[0] bottom-[-10px] max-[991px]:opacity-[1] max-[991px]:bottom-[10px] flex flex-row items-center justify-center my-[0] mx-auto opacity-[0]">
-                                                                    <a className="gi-btn-group wishlist transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]" title="Wishlist">
-                                                                        <i className="fi-rr-heart transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                    <a href="javascript:void(0)" className="gi-btn-group modal-toggle quickview transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]">
-                                                                        <i className="fi-rr-eye transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                    <a href="javascript:void(0)" className="gi-btn-group compare transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]" title="Compare">
-                                                                        <i className="fi fi-rr-arrows-repeat transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                    <a href="javascript:void(0)" title="Add To Cart" className="gi-btn-group add-to-cart transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]">
-                                                                        <i className="fi-rr-shopping-basket transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div className="gi-pro-content h-full p-[20px] relative z-[10] flex flex-col text-left border-t-[1px] border-solid border-[#eee]">
-                                                            <a href="shop-left-sidebar-col-3.html">
-                                                                <h6 className="gi-pro-stitle mb-[10px] font-normal text-[#999] text-[13px] capitalize font-manrope tracking-[0.01rem] leading-[1.2]">Foods</h6>
-                                                            </a>
-                                                            <h5 className="gi-pro-title h-full mb-[10px] text-[16px] tracking-[0.01rem] font-normal leading-[1.2]">
-                                                                <a href="product-left-sidebar.html" className="text-[#4b5966] block text-[14px] leading-[22px] font-normal tracking-[0.85px] capitalize font-Poppins">Banana Chips Snacks &amp; Spices</a>
-                                                            </h5>
-                                                            <p className="gi-info text-[15px] leading-[28px] font-light tracking-[0.02rem] mb-[16px] hidden">Contrary to popular belief, Lorem Ipsum is not simply
-                                                                random text. It has roots in a piece of classical Latin literature
-                                                                from 45 BC, making it over 2000 years old.</p>
-                                                            <div className="gi-pro-rat-price mt-[5px] mb-[0] flex flex-col">
-                                                                <span className="gi-pro-rating mb-[10px] opacity-[0.7] relative">
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star inline-block text-[#777] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star inline-block text-[#777] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star inline-block text-[#777] float-left text-[14px] mr-[3px]" />
-                                                                </span>
-                                                                <span className="gi-price text-[18px] flex items-center justify-left text-[#4b5966] tracking-[0.4px]">
-                                                                    <span className="new-price text-[#4b5966] font-bold text-[14px] mr-[7px] tracking-[0.02rem]">$45.00</span>
-                                                                    <span className="old-price text-[14px] text-[#777] tracking-[0.02rem] line-through">$50.00</span>
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="min-[1200px]:w-[25%] min-[992px]:w-[33.33%] min-[768px]:w-[50%] min-[576px]:w-[50%] max-[420px]:w-full px-[12px] gi-product-box max-[575px]:w-[50%] max-[575px]:mx-auto pro-gl-content">
-                                                <div className="gi-product-content pb-[24px] h-full flex">
-                                                    <div className="gi-product-inner transition-all duration-[0.3s] ease-in-out cursor-pointer flex flex-col overflow-hidden border-[1px] border-solid border-[#eee] rounded-[5px]">
-                                                        <div className="gi-pro-image-outer transition-all duration-[0.3s] ease delay-[0s] z-[11] relative">
-                                                            <div className="gi-pro-image overflow-hidden">
-                                                                <a href="product-left-sidebar.html" className="image relative block overflow-hidden pointer-events-none transition-all duration-[0.3s] ease-in-out">
-                                                                    <span className="label veg max-[991px]:hidden">
-                                                                        <span className="dot" />
-                                                                    </span>
-                                                                    <img className="main-image max-w-full z-[1] transition-all duration-[0.3s] ease delay-[0s]" src="assets/img/product-images/5_1.jpg" alt="Product" />
-                                                                    <img className="hover-image absolute z-[2] top-[0] left-[0] opacity-[0] max-w-full transition-all duration-[0.3s] ease delay-[0s]" src="assets/img/product-images/5_2.jpg" alt="Product" />
-                                                                </a>
-                                                                <span className="flags flex flex-col p-[0] uppercase absolute top-[10px] right-[10px] z-[2]">
-                                                                    <span className="new py-[5px] px-[10px] text-[11px] font-medium leading-[12px] text-left uppercase flex items-center bg-[#5caf90] text-[#fff] tracking-[0.5px] relative rounded-[5px]">New</span>
-                                                                </span>
-                                                                <div className="gi-pro-actions transition-all duration-[0.3s] ease-in-out absolute z-[9] left-[0] right-[0] bottom-[-10px] max-[991px]:opacity-[1] max-[991px]:bottom-[10px] flex flex-row items-center justify-center my-[0] mx-auto opacity-[0]">
-                                                                    <a className="gi-btn-group wishlist transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]" title="Wishlist">
-                                                                        <i className="fi-rr-heart transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                    <a href="javascript:void(0)" className="gi-btn-group modal-toggle quickview transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]">
-                                                                        <i className="fi-rr-eye transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                    <a href="javascript:void(0)" className="gi-btn-group compare transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]" title="Compare">
-                                                                        <i className="fi fi-rr-arrows-repeat transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                    <a href="javascript:void(0)" title="Add To Cart" className="gi-btn-group add-to-cart transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]">
-                                                                        <i className="fi-rr-shopping-basket transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div className="gi-pro-content h-full p-[20px] relative z-[10] flex flex-col text-left border-t-[1px] border-solid border-[#eee]">
-                                                            <a href="shop-left-sidebar-col-3.html">
-                                                                <h6 className="gi-pro-stitle mb-[10px] font-normal text-[#999] text-[13px] capitalize font-manrope tracking-[0.01rem] leading-[1.2]">Snacks</h6>
-                                                            </a>
-                                                            <h5 className="gi-pro-title h-full mb-[10px] text-[16px] tracking-[0.01rem] font-normal leading-[1.2]">
-                                                                <a href="product-left-sidebar.html" className="text-[#4b5966] block text-[14px] leading-[22px] font-normal tracking-[0.85px] capitalize font-Poppins">Berry &amp;
-                                                                    Graps Mix Snack</a></h5>
-                                                            <p className="gi-info text-[15px] leading-[28px] font-light tracking-[0.02rem] mb-[16px] hidden">Contrary to popular belief, Lorem Ipsum is not simply
-                                                                random text. It has roots in a piece of classical Latin literature
-                                                                from 45 BC, making it over 2000 years old.</p>
-                                                            <div className="gi-pro-rat-price mt-[5px] mb-[0] flex flex-col">
-                                                                <span className="gi-pro-rating mb-[10px] opacity-[0.7] relative">
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                </span>
-                                                                <span className="gi-price text-[18px] flex items-center justify-left text-[#4b5966] tracking-[0.4px]">
-                                                                    <span className="new-price text-[#4b5966] font-bold text-[14px] mr-[7px] tracking-[0.02rem]">$25.00</span>
-                                                                    <span className="old-price text-[14px] text-[#777] tracking-[0.02rem] line-through">$35.00</span>
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="min-[1200px]:w-[25%] min-[992px]:w-[33.33%] min-[768px]:w-[50%] min-[576px]:w-[50%] max-[420px]:w-full px-[12px] gi-product-box max-[575px]:w-[50%] max-[575px]:mx-auto pro-gl-content">
-                                                <div className="gi-product-content pb-[24px] h-full flex">
-                                                    <div className="gi-product-inner transition-all duration-[0.3s] ease-in-out cursor-pointer flex flex-col overflow-hidden border-[1px] border-solid border-[#eee] rounded-[5px]">
-                                                        <div className="gi-pro-image-outer transition-all duration-[0.3s] ease delay-[0s] z-[11] relative">
-                                                            <div className="gi-pro-image overflow-hidden">
-                                                                <a href="product-left-sidebar.html" className="image relative block overflow-hidden pointer-events-none transition-all duration-[0.3s] ease-in-out">
-                                                                    <span className="label veg max-[991px]:hidden">
-                                                                        <span className="dot" />
-                                                                    </span>
-                                                                    <img className="main-image max-w-full z-[1] transition-all duration-[0.3s] ease delay-[0s]" src="assets/img/product-images/6_1.jpg" alt="Product" />
-                                                                    <img className="hover-image absolute z-[2] top-[0] left-[0] opacity-[0] max-w-full transition-all duration-[0.3s] ease delay-[0s]" src="assets/img/product-images/6_2.jpg" alt="Product" />
-                                                                </a>
-                                                                <span className="flags flex flex-col p-[0] uppercase absolute top-[10px] right-[10px] z-[2]">
-                                                                    <span className="sale py-[5px] px-[10px] text-[11px] font-medium leading-[12px] text-left uppercase flex items-center bg-[#ff7070] text-[#fff] tracking-[0.5px] relative rounded-[5px]">Sale</span>
-                                                                </span>
-                                                                <div className="gi-pro-actions transition-all duration-[0.3s] ease-in-out absolute z-[9] left-[0] right-[0] bottom-[-10px] max-[991px]:opacity-[1] max-[991px]:bottom-[10px] flex flex-row items-center justify-center my-[0] mx-auto opacity-[0]">
-                                                                    <a className="gi-btn-group wishlist transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]" title="Wishlist">
-                                                                        <i className="fi-rr-heart transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                    <a href="javascript:void(0)" className="gi-btn-group modal-toggle quickview transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]">
-                                                                        <i className="fi-rr-eye transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                    <a href="javascript:void(0)" className="gi-btn-group compare transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]" title="Compare">
-                                                                        <i className="fi fi-rr-arrows-repeat transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                    <a href="javascript:void(0)" title="Add To Cart" className="gi-btn-group add-to-cart transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]">
-                                                                        <i className="fi-rr-shopping-basket transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div className="gi-pro-content h-full p-[20px] relative z-[10] flex flex-col text-left border-t-[1px] border-solid border-[#eee]">
-                                                            <a href="shop-left-sidebar-col-3.html">
-                                                                <h6 className="gi-pro-stitle mb-[10px] font-normal text-[#999] text-[13px] capitalize font-manrope tracking-[0.01rem] leading-[1.2]">Dried Fruits</h6>
-                                                            </a>
-                                                            <h5 className="gi-pro-title h-full mb-[10px] text-[16px] tracking-[0.01rem] font-normal leading-[1.2]">
-                                                                <a href="product-left-sidebar.html" className="text-[#4b5966] block text-[14px] leading-[22px] font-normal tracking-[0.85px] capitalize font-Poppins">Mixed Nuts
-                                                                    Seeds &amp; Berries Pack</a></h5>
-                                                            <p className="gi-info text-[15px] leading-[28px] font-light tracking-[0.02rem] mb-[16px] hidden">Contrary to popular belief, Lorem Ipsum is not simply
-                                                                random text. It has roots in a piece of classical Latin literature
-                                                                from 45 BC, making it over 2000 years old.</p>
-                                                            <div className="gi-pro-rat-price mt-[5px] mb-[0] flex flex-col">
-                                                                <span className="gi-pro-rating mb-[10px] opacity-[0.7] relative">
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star inline-block text-[#777] float-left text-[14px] mr-[3px]" />
-                                                                </span>
-                                                                <span className="gi-price text-[18px] flex items-center justify-left text-[#4b5966] tracking-[0.4px]">
-                                                                    <span className="new-price text-[#4b5966] font-bold text-[14px] mr-[7px] tracking-[0.02rem]">$45.00</span>
-                                                                    <span className="old-price text-[14px] text-[#777] tracking-[0.02rem] line-through">$56.00</span>
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="min-[1200px]:w-[25%] min-[992px]:w-[33.33%] min-[768px]:w-[50%] min-[576px]:w-[50%] max-[420px]:w-full px-[12px] gi-product-box max-[575px]:w-[50%] max-[575px]:mx-auto pro-gl-content">
-                                                <div className="gi-product-content pb-[24px] h-full flex">
-                                                    <div className="gi-product-inner transition-all duration-[0.3s] ease-in-out cursor-pointer flex flex-col overflow-hidden border-[1px] border-solid border-[#eee] rounded-[5px]">
-                                                        <div className="gi-pro-image-outer transition-all duration-[0.3s] ease delay-[0s] z-[11] relative">
-                                                            <div className="gi-pro-image overflow-hidden">
-                                                                <a href="product-left-sidebar.html" className="image relative block overflow-hidden pointer-events-none transition-all duration-[0.3s] ease-in-out">
-                                                                    <span className="label veg max-[991px]:hidden">
-                                                                        <span className="dot" />
-                                                                    </span>
-                                                                    <img className="main-image max-w-full z-[1] transition-all duration-[0.3s] ease delay-[0s]" src="assets/img/product-images/7_1.jpg" alt="Product" />
-                                                                    <img className="hover-image absolute z-[2] top-[0] left-[0] opacity-[0] max-w-full transition-all duration-[0.3s] ease delay-[0s]" src="assets/img/product-images/7_2.jpg" alt="Product" />
-                                                                </a>
-                                                                <div className="gi-pro-actions transition-all duration-[0.3s] ease-in-out absolute z-[9] left-[0] right-[0] bottom-[-10px] max-[991px]:opacity-[1] max-[991px]:bottom-[10px] flex flex-row items-center justify-center my-[0] mx-auto opacity-[0]">
-                                                                    <a className="gi-btn-group wishlist transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]" title="Wishlist">
-                                                                        <i className="fi-rr-heart transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                    <a href="javascript:void(0)" className="gi-btn-group modal-toggle quickview transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]">
-                                                                        <i className="fi-rr-eye transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                    <a href="javascript:void(0)" className="gi-btn-group compare transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]" title="Compare">
-                                                                        <i className="fi fi-rr-arrows-repeat transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                    <a href="javascript:void(0)" title="Add To Cart" className="gi-btn-group add-to-cart transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]">
-                                                                        <i className="fi-rr-shopping-basket transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div className="gi-pro-content h-full p-[20px] relative z-[10] flex flex-col text-left border-t-[1px] border-solid border-[#eee]">
-                                                            <a href="shop-left-sidebar-col-3.html">
-                                                                <h6 className="gi-pro-stitle mb-[10px] font-normal text-[#999] text-[13px] capitalize font-manrope tracking-[0.01rem] leading-[1.2]">Foods</h6>
-                                                            </a>
-                                                            <h5 className="gi-pro-title h-full mb-[10px] text-[16px] tracking-[0.01rem] font-normal leading-[1.2]">
-                                                                <a href="product-left-sidebar.html" className="text-[#4b5966] block text-[14px] leading-[22px] font-normal tracking-[0.85px] capitalize font-Poppins">Mixed Nuts
-                                                                    &amp; Almonds Dry Fruits</a></h5>
-                                                            <p className="gi-info text-[15px] leading-[28px] font-light tracking-[0.02rem] mb-[16px] hidden">Contrary to popular belief, Lorem Ipsum is not simply
-                                                                random text. It has roots in a piece of classical Latin literature
-                                                                from 45 BC, making it over 2000 years old.</p>
-                                                            <div className="gi-pro-rat-price mt-[5px] mb-[0] flex flex-col">
-                                                                <span className="gi-pro-rating mb-[10px] opacity-[0.7] relative">
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star inline-block text-[#777] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star inline-block text-[#777] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star inline-block text-[#777] float-left text-[14px] mr-[3px]" />
-                                                                </span>
-                                                                <span className="gi-price text-[18px] flex items-center justify-left text-[#4b5966] tracking-[0.4px]">
-                                                                    <span className="new-price text-[#4b5966] font-bold text-[14px] mr-[7px] tracking-[0.02rem]">$49.00</span>
-                                                                    <span className="old-price text-[14px] text-[#777] tracking-[0.02rem] line-through">$65.00</span>
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="min-[1200px]:w-[25%] min-[992px]:w-[33.33%] min-[768px]:w-[50%] min-[576px]:w-[50%] max-[420px]:w-full px-[12px] gi-product-box max-[575px]:w-[50%] max-[575px]:mx-auto pro-gl-content">
-                                                <div className="gi-product-content pb-[24px] h-full flex">
-                                                    <div className="gi-product-inner transition-all duration-[0.3s] ease-in-out cursor-pointer flex flex-col overflow-hidden border-[1px] border-solid border-[#eee] rounded-[5px]">
-                                                        <div className="gi-pro-image-outer transition-all duration-[0.3s] ease delay-[0s] z-[11] relative">
-                                                            <div className="gi-pro-image overflow-hidden">
-                                                                <a href="product-left-sidebar.html" className="image relative block overflow-hidden pointer-events-none transition-all duration-[0.3s] ease-in-out">
-                                                                    <span className="label veg max-[991px]:hidden">
-                                                                        <span className="dot" />
-                                                                    </span>
-                                                                    <img className="main-image max-w-full z-[1] transition-all duration-[0.3s] ease delay-[0s]" src="assets/img/product-images/8_1.jpg" alt="Product" />
-                                                                    <img className="hover-image absolute z-[2] top-[0] left-[0] opacity-[0] max-w-full transition-all duration-[0.3s] ease delay-[0s]" src="assets/img/product-images/8_2.jpg" alt="Product" />
-                                                                </a>
-                                                                <div className="gi-pro-actions transition-all duration-[0.3s] ease-in-out absolute z-[9] left-[0] right-[0] bottom-[-10px] max-[991px]:opacity-[1] max-[991px]:bottom-[10px] flex flex-row items-center justify-center my-[0] mx-auto opacity-[0]">
-                                                                    <a className="gi-btn-group wishlist transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]" title="Wishlist">
-                                                                        <i className="fi-rr-heart transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                    <a href="javascript:void(0)" className="gi-btn-group modal-toggle quickview transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]">
-                                                                        <i className="fi-rr-eye transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                    <a href="javascript:void(0)" className="gi-btn-group compare transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]" title="Compare">
-                                                                        <i className="fi fi-rr-arrows-repeat transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                    <a href="javascript:void(0)" title="Add To Cart" className="gi-btn-group add-to-cart transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]">
-                                                                        <i className="fi-rr-shopping-basket transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div className="gi-pro-content h-full p-[20px] relative z-[10] flex flex-col text-left border-t-[1px] border-solid border-[#eee]">
-                                                            <a href="shop-left-sidebar-col-3.html">
-                                                                <h6 className="gi-pro-stitle mb-[10px] font-normal text-[#999] text-[13px] capitalize font-manrope tracking-[0.01rem] leading-[1.2]">Snacks</h6>
-                                                            </a>
-                                                            <h5 className="gi-pro-title h-full mb-[10px] text-[16px] tracking-[0.01rem] font-normal leading-[1.2]">
-                                                                <a href="product-left-sidebar.html" className="text-[#4b5966] block text-[14px] leading-[22px] font-normal tracking-[0.85px] capitalize font-Poppins">Smoked
-                                                                    Honey Spiced Nuts</a></h5>
-                                                            <p className="gi-info text-[15px] leading-[28px] font-light tracking-[0.02rem] mb-[16px] hidden">Contrary to popular belief, Lorem Ipsum is not simply
-                                                                random text. It has roots in a piece of classical Latin literature
-                                                                from 45 BC, making it over 2000 years old.</p>
-                                                            <div className="gi-pro-rat-price mt-[5px] mb-[0] flex flex-col">
-                                                                <span className="gi-pro-rating mb-[10px] opacity-[0.7] relative">
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star inline-block text-[#777] float-left text-[14px] mr-[3px]" />
-                                                                </span>
-                                                                <span className="gi-price text-[18px] flex items-center justify-left text-[#4b5966] tracking-[0.4px]">
-                                                                    <span className="new-price text-[#4b5966] font-bold text-[14px] mr-[7px] tracking-[0.02rem]">$32.00</span>
-                                                                    <span className="old-price text-[14px] text-[#777] tracking-[0.02rem] line-through">$45.00</span>
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="min-[1200px]:w-[25%] min-[992px]:w-[33.33%] min-[768px]:w-[50%] min-[576px]:w-[50%] max-[420px]:w-full px-[12px] gi-product-box max-[575px]:w-[50%] max-[575px]:mx-auto pro-gl-content">
-                                                <div className="gi-product-content pb-[24px] h-full flex">
-                                                    <div className="gi-product-inner transition-all duration-[0.3s] ease-in-out cursor-pointer flex flex-col overflow-hidden border-[1px] border-solid border-[#eee] rounded-[5px]">
-                                                        <div className="gi-pro-image-outer transition-all duration-[0.3s] ease delay-[0s] z-[11] relative">
-                                                            <div className="gi-pro-image overflow-hidden">
-                                                                <a href="product-left-sidebar.html" className="image relative block overflow-hidden pointer-events-none transition-all duration-[0.3s] ease-in-out">
-                                                                    <span className="label veg max-[991px]:hidden">
-                                                                        <span className="dot" />
-                                                                    </span>
-                                                                    <img className="main-image max-w-full z-[1] transition-all duration-[0.3s] ease delay-[0s]" src="assets/img/product-images/2_1.jpg" alt="Product" />
-                                                                    <img className="hover-image absolute z-[2] top-[0] left-[0] opacity-[0] max-w-full transition-all duration-[0.3s] ease delay-[0s]" src="assets/img/product-images/2_2.jpg" alt="Product" />
-                                                                </a>
-                                                                <span className="flags flex flex-col p-[0] uppercase absolute top-[10px] right-[10px] z-[2]">
-                                                                    <span className="sale py-[5px] px-[10px] text-[11px] font-medium leading-[12px] text-left uppercase flex items-center bg-[#ff7070] text-[#fff] tracking-[0.5px] relative rounded-[5px]">Sale</span>
-                                                                </span>
-                                                                <div className="gi-pro-actions transition-all duration-[0.3s] ease-in-out absolute z-[9] left-[0] right-[0] bottom-[-10px] max-[991px]:opacity-[1] max-[991px]:bottom-[10px] flex flex-row items-center justify-center my-[0] mx-auto opacity-[0]">
-                                                                    <a className="gi-btn-group wishlist transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]" title="Wishlist">
-                                                                        <i className="fi-rr-heart transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                    <a href="javascript:void(0)" className="gi-btn-group modal-toggle quickview transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]">
-                                                                        <i className="fi-rr-eye transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                    <a href="javascript:void(0)" className="gi-btn-group compare transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]" title="Compare">
-                                                                        <i className="fi fi-rr-arrows-repeat transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                    <a href="javascript:void(0)" title="Add To Cart" className="gi-btn-group add-to-cart transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]">
-                                                                        <i className="fi-rr-shopping-basket transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div className="gi-pro-content h-full p-[20px] relative z-[10] flex flex-col text-left border-t-[1px] border-solid border-[#eee]">
-                                                            <a href="shop-left-sidebar-col-3.html">
-                                                                <h6 className="gi-pro-stitle mb-[10px] font-normal text-[#999] text-[13px] capitalize font-manrope tracking-[0.01rem] leading-[1.2]">Dried Fruits</h6>
-                                                            </a>
-                                                            <h5 className="gi-pro-title h-full mb-[10px] text-[16px] tracking-[0.01rem] font-normal leading-[1.2]">
-                                                                <a href="product-left-sidebar.html" className="text-[#4b5966] block text-[14px] leading-[22px] font-normal tracking-[0.85px] capitalize font-Poppins">Dates Value
-                                                                    Pack Pouch</a></h5>
-                                                            <p className="gi-info text-[15px] leading-[28px] font-light tracking-[0.02rem] mb-[16px] hidden">Contrary to popular belief, Lorem Ipsum is not simply
-                                                                random text. It has roots in a piece of classical Latin literature
-                                                                from 45 BC, making it over 2000 years old.</p>
-                                                            <div className="gi-pro-rat-price mt-[5px] mb-[0] flex flex-col">
-                                                                <span className="gi-pro-rating mb-[10px] opacity-[0.7] relative">
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star inline-block text-[#777] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star inline-block text-[#777] float-left text-[14px] mr-[3px]" />
-                                                                </span>
-                                                                <span className="gi-price text-[18px] flex items-center justify-left text-[#4b5966] tracking-[0.4px]">
-                                                                    <span className="new-price text-[#4b5966] font-bold text-[14px] mr-[7px] tracking-[0.02rem]">$78.00</span>
-                                                                    <span className="old-price text-[14px] text-[#777] tracking-[0.02rem] line-through">$85.00</span>
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="min-[1200px]:w-[25%] min-[992px]:w-[33.33%] min-[768px]:w-[50%] min-[576px]:w-[50%] max-[420px]:w-full px-[12px] gi-product-box max-[575px]:w-[50%] max-[575px]:mx-auto pro-gl-content">
-                                                <div className="gi-product-content pb-[24px] h-full flex">
-                                                    <div className="gi-product-inner transition-all duration-[0.3s] ease-in-out cursor-pointer flex flex-col overflow-hidden border-[1px] border-solid border-[#eee] rounded-[5px]">
-                                                        <div className="gi-pro-image-outer transition-all duration-[0.3s] ease delay-[0s] z-[11] relative">
-                                                            <div className="gi-pro-image overflow-hidden">
-                                                                <a href="product-left-sidebar.html" className="image relative block overflow-hidden pointer-events-none transition-all duration-[0.3s] ease-in-out">
-                                                                    <span className="label veg max-[991px]:hidden">
-                                                                        <span className="dot" />
-                                                                    </span>
-                                                                    <img className="main-image max-w-full z-[1] transition-all duration-[0.3s] ease delay-[0s]" src="assets/img/product-images/3_1.jpg" alt="Product" />
-                                                                    <img className="hover-image absolute z-[2] top-[0] left-[0] opacity-[0] max-w-full transition-all duration-[0.3s] ease delay-[0s]" src="assets/img/product-images/3_2.jpg" alt="Product" />
-                                                                </a>
-                                                                <span className="flags flex flex-col p-[0] uppercase absolute top-[10px] right-[10px] z-[2]">
-                                                                    <span className="sale py-[5px] px-[10px] text-[11px] font-medium leading-[12px] text-left uppercase flex items-center bg-[#ff7070] text-[#fff] tracking-[0.5px] relative rounded-[5px]">Sale</span>
-                                                                </span>
-                                                                <div className="gi-pro-actions transition-all duration-[0.3s] ease-in-out absolute z-[9] left-[0] right-[0] bottom-[-10px] max-[991px]:opacity-[1] max-[991px]:bottom-[10px] flex flex-row items-center justify-center my-[0] mx-auto opacity-[0]">
-                                                                    <a className="gi-btn-group wishlist transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]" title="Wishlist">
-                                                                        <i className="fi-rr-heart transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                    <a href="javascript:void(0)" className="gi-btn-group modal-toggle quickview transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]">
-                                                                        <i className="fi-rr-eye transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                    <a href="javascript:void(0)" className="gi-btn-group compare transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]" title="Compare">
-                                                                        <i className="fi fi-rr-arrows-repeat transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                    <a href="javascript:void(0)" title="Add To Cart" className="gi-btn-group add-to-cart transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]">
-                                                                        <i className="fi-rr-shopping-basket transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div className="gi-pro-content h-full p-[20px] relative z-[10] flex flex-col text-left border-t-[1px] border-solid border-[#eee]">
-                                                            <a href="shop-left-sidebar-col-3.html">
-                                                                <h6 className="gi-pro-stitle mb-[10px] font-normal text-[#999] text-[13px] capitalize font-manrope tracking-[0.01rem] leading-[1.2]">Dried Fruits</h6>
-                                                            </a>
-                                                            <h5 className="gi-pro-title h-full mb-[10px] text-[16px] tracking-[0.01rem] font-normal leading-[1.2]">
-                                                                <a href="product-left-sidebar.html" className="text-[#4b5966] block text-[14px] leading-[22px] font-normal tracking-[0.85px] capitalize font-Poppins">Californian Almonds Value Pack</a>
-                                                            </h5>
-                                                            <p className="gi-info text-[15px] leading-[28px] font-light tracking-[0.02rem] mb-[16px] hidden">Contrary to popular belief, Lorem Ipsum is not simply
-                                                                random text. It has roots in a piece of classical Latin literature
-                                                                from 45 BC, making it over 2000 years old.</p>
-                                                            <div className="gi-pro-rat-price mt-[5px] mb-[0] flex flex-col">
-                                                                <span className="gi-pro-rating mb-[10px] opacity-[0.7] relative">
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star inline-block text-[#777] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star inline-block text-[#777] float-left text-[14px] mr-[3px]" />
-                                                                </span>
-                                                                <span className="gi-price text-[18px] flex items-center justify-left text-[#4b5966] tracking-[0.4px]">
-                                                                    <span className="new-price text-[#4b5966] font-bold text-[14px] mr-[7px] tracking-[0.02rem]">$58.00</span>
-                                                                    <span className="old-price text-[14px] text-[#777] tracking-[0.02rem] line-through">$65.00</span>
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="min-[1200px]:w-[25%] min-[992px]:w-[33.33%] min-[768px]:w-[50%] min-[576px]:w-[50%] max-[420px]:w-full px-[12px] gi-product-box max-[575px]:w-[50%] max-[575px]:mx-auto pro-gl-content">
-                                                <div className="gi-product-content pb-[24px] h-full flex">
-                                                    <div className="gi-product-inner transition-all duration-[0.3s] ease-in-out cursor-pointer flex flex-col overflow-hidden border-[1px] border-solid border-[#eee] rounded-[5px]">
-                                                        <div className="gi-pro-image-outer transition-all duration-[0.3s] ease delay-[0s] z-[11] relative">
-                                                            <div className="gi-pro-image overflow-hidden">
-                                                                <a href="product-left-sidebar.html" className="image relative block overflow-hidden pointer-events-none transition-all duration-[0.3s] ease-in-out">
-                                                                    <span className="label veg max-[991px]:hidden">
-                                                                        <span className="dot" />
-                                                                    </span>
-                                                                    <img className="main-image max-w-full z-[1] transition-all duration-[0.3s] ease delay-[0s]" src="assets/img/product-images/6_1.jpg" alt="Product" />
-                                                                    <img className="hover-image absolute z-[2] top-[0] left-[0] opacity-[0] max-w-full transition-all duration-[0.3s] ease delay-[0s]" src="assets/img/product-images/6_2.jpg" alt="Product" />
-                                                                </a>
-                                                                <span className="flags flex flex-col p-[0] uppercase absolute top-[10px] right-[10px] z-[2]">
-                                                                    <span className="sale py-[5px] px-[10px] text-[11px] font-medium leading-[12px] text-left uppercase flex items-center bg-[#ff7070] text-[#fff] tracking-[0.5px] relative rounded-[5px]">Sale</span>
-                                                                </span>
-                                                                <div className="gi-pro-actions transition-all duration-[0.3s] ease-in-out absolute z-[9] left-[0] right-[0] bottom-[-10px] max-[991px]:opacity-[1] max-[991px]:bottom-[10px] flex flex-row items-center justify-center my-[0] mx-auto opacity-[0]">
-                                                                    <a className="gi-btn-group wishlist transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]" title="Wishlist">
-                                                                        <i className="fi-rr-heart transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                    <a href="javascript:void(0)" className="gi-btn-group modal-toggle quickview transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]">
-                                                                        <i className="fi-rr-eye transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                    <a href="javascript:void(0)" className="gi-btn-group compare transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]" title="Compare">
-                                                                        <i className="fi fi-rr-arrows-repeat transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                    <a href="javascript:void(0)" title="Add To Cart" className="gi-btn-group add-to-cart transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]">
-                                                                        <i className="fi-rr-shopping-basket transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div className="gi-pro-content h-full p-[20px] relative z-[10] flex flex-col text-left border-t-[1px] border-solid border-[#eee]">
-                                                            <a href="shop-left-sidebar-col-3.html">
-                                                                <h6 className="gi-pro-stitle mb-[10px] font-normal text-[#999] text-[13px] capitalize font-manrope tracking-[0.01rem] leading-[1.2]">Dried Fruits</h6>
-                                                            </a>
-                                                            <h5 className="gi-pro-title h-full mb-[10px] text-[16px] tracking-[0.01rem] font-normal leading-[1.2]">
-                                                                <a href="product-left-sidebar.html" className="text-[#4b5966] block text-[14px] leading-[22px] font-normal tracking-[0.85px] capitalize font-Poppins">Mixed Nuts
-                                                                    Seeds &amp; Berries Pack</a></h5>
-                                                            <p className="gi-info text-[15px] leading-[28px] font-light tracking-[0.02rem] mb-[16px] hidden">Contrary to popular belief, Lorem Ipsum is not simply
-                                                                random text. It has roots in a piece of classical Latin literature
-                                                                from 45 BC, making it over 2000 years old.</p>
-                                                            <div className="gi-pro-rat-price mt-[5px] mb-[0] flex flex-col">
-                                                                <span className="gi-pro-rating mb-[10px] opacity-[0.7] relative">
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star inline-block text-[#777] float-left text-[14px] mr-[3px]" />
-                                                                </span>
-                                                                <span className="gi-price text-[18px] flex items-center justify-left text-[#4b5966] tracking-[0.4px]">
-                                                                    <span className="new-price text-[#4b5966] font-bold text-[14px] mr-[7px] tracking-[0.02rem]">$45.00</span>
-                                                                    <span className="old-price text-[14px] text-[#777] tracking-[0.02rem] line-through">$56.00</span>
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="min-[1200px]:w-[25%] min-[992px]:w-[33.33%] min-[768px]:w-[50%] min-[576px]:w-[50%] max-[420px]:w-full px-[12px] gi-product-box max-[575px]:w-[50%] max-[575px]:mx-auto pro-gl-content">
-                                                <div className="gi-product-content pb-[24px] h-full flex">
-                                                    <div className="gi-product-inner transition-all duration-[0.3s] ease-in-out cursor-pointer flex flex-col overflow-hidden border-[1px] border-solid border-[#eee] rounded-[5px]">
-                                                        <div className="gi-pro-image-outer transition-all duration-[0.3s] ease delay-[0s] z-[11] relative">
-                                                            <div className="gi-pro-image overflow-hidden">
-                                                                <a href="product-left-sidebar.html" className="image relative block overflow-hidden pointer-events-none transition-all duration-[0.3s] ease-in-out">
-                                                                    <span className="label veg max-[991px]:hidden">
-                                                                        <span className="dot" />
-                                                                    </span>
-                                                                    <img className="main-image max-w-full z-[1] transition-all duration-[0.3s] ease delay-[0s]" src="assets/img/product-images/2_1.jpg" alt="Product" />
-                                                                    <img className="hover-image absolute z-[2] top-[0] left-[0] opacity-[0] max-w-full transition-all duration-[0.3s] ease delay-[0s]" src="assets/img/product-images/2_2.jpg" alt="Product" />
-                                                                </a>
-                                                                <span className="flags flex flex-col p-[0] uppercase absolute top-[10px] right-[10px] z-[2]">
-                                                                    <span className="sale py-[5px] px-[10px] text-[11px] font-medium leading-[12px] text-left uppercase flex items-center bg-[#ff7070] text-[#fff] tracking-[0.5px] relative rounded-[5px]">Sale</span>
-                                                                </span>
-                                                                <div className="gi-pro-actions transition-all duration-[0.3s] ease-in-out absolute z-[9] left-[0] right-[0] bottom-[-10px] max-[991px]:opacity-[1] max-[991px]:bottom-[10px] flex flex-row items-center justify-center my-[0] mx-auto opacity-[0]">
-                                                                    <a className="gi-btn-group wishlist transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]" title="Wishlist">
-                                                                        <i className="fi-rr-heart transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                    <a href="javascript:void(0)" className="gi-btn-group modal-toggle quickview transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]">
-                                                                        <i className="fi-rr-eye transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                    <a href="javascript:void(0)" className="gi-btn-group compare transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]" title="Compare">
-                                                                        <i className="fi fi-rr-arrows-repeat transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                    <a href="javascript:void(0)" title="Add To Cart" className="gi-btn-group add-to-cart transition-all duration-[0.3s] ease-in-out w-[30px] h-[30px] mx-[2px] flex items-center justify-center text-[#fff] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:bg-[#5caf90]">
-                                                                        <i className="fi-rr-shopping-basket transition-all duration-[0.3s] ease-in-out text-[#777] leading-[10px]" />
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div className="gi-pro-content h-full p-[20px] relative z-[10] flex flex-col text-left border-t-[1px] border-solid border-[#eee]">
-                                                            <a href="shop-left-sidebar-col-3.html">
-                                                                <h6 className="gi-pro-stitle mb-[10px] font-normal text-[#999] text-[13px] capitalize font-manrope tracking-[0.01rem] leading-[1.2]">Dried Fruits</h6>
-                                                            </a>
-                                                            <h5 className="gi-pro-title h-full mb-[10px] text-[16px] tracking-[0.01rem] font-normal leading-[1.2]">
-                                                                <a href="product-left-sidebar.html" className="text-[#4b5966] block text-[14px] leading-[22px] font-normal tracking-[0.85px] capitalize font-Poppins">Dates Value Pack Pouch</a>
-                                                            </h5>
-                                                            <p className="gi-info text-[15px] leading-[28px] font-light tracking-[0.02rem] mb-[16px] hidden">Contrary to popular belief, Lorem Ipsum is not simply
-                                                                random text. It has roots in a piece of classical Latin literature
-                                                                from 45 BC, making it over 2000 years old.</p>
-                                                            <div className="gi-pro-rat-price mt-[5px] mb-[0] flex flex-col">
-                                                                <span className="gi-pro-rating mb-[10px] opacity-[0.7] relative">
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star inline-block text-[#777] float-left text-[14px] mr-[3px]" />
-                                                                    <i className="gicon gi-star inline-block text-[#777] float-left text-[14px] mr-[3px]" />
-                                                                </span>
-                                                                <span className="gi-price text-[18px] flex items-center justify-left text-[#4b5966] tracking-[0.4px]">
-                                                                    <span className="new-price text-[#4b5966] font-bold text-[14px] mr-[7px] tracking-[0.02rem]">$78.00</span>
-                                                                    <span className="old-price text-[14px] text-[#777] tracking-[0.02rem] line-through">$85.00</span>
-                                                                </span>
-                                                            </div>
+                                                            <p className="gi-pro-desc mb-[15px] text-[#777] text-[14px] leading-[20px] max-[1199px]:mb-[10px]">Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -765,7 +132,7 @@ export default function Products() {
                                             <li className="inline-block float-left mr-[5px]"><a className="transition-all duration-[0.3s] ease-in-out w-[32px] h-[32px] font-light text-[#777] leading-[32px] bg-[#eee] flex text-center align-top text-[16px] justify-center items-center rounded-[5px] hover:text-[#fff] hover:bg-[#5caf90]" href="#">3</a></li>
                                             <li className="inline-block float-left mr-[5px]"><span className="w-[20px] text-[#777] block text-center text-[14px] tracking-[0.02rem] max-[575px]:mb-[10px]">...</span></li>
                                             <li className="inline-block float-left mr-[5px]"><a className="transition-all duration-[0.3s] ease-in-out w-[32px] h-[32px] font-light text-[#777] leading-[32px] bg-[#eee] flex text-center align-top text-[16px] justify-center items-center rounded-[5px] hover:text-[#fff] hover:bg-[#5caf90]" href="#">8</a></li>
-                                            <li className="inline-block float-left"><a className="next w-auto px-[13px] text-[#fff] bg-[#5caf90] leading-[30px] h-[32px] bg-[#eee] flex text-center align-top text-[16px] justify-center items-center rounded-[5px]" href="#">Next <i className="gicon gi-angle-right ml-[10px] transition-all duration-[0.3s] ease-in-out text-[#fff]" /></a></li>
+                                            <li className="inline-block float-left"><a className="next w-auto px-[13px] text-[#fff] bg-[#5caf90] leading-[30px] h-[32px] bg-[#eee] flex text-center align-top text-[16px] justify-center items-center rounded-[5px]" href="#">Next <FiChevronRight className="ml-[10px] transition-all duration-[0.3s] ease-in-out text-[#fff]" /></a></li>
                                         </ul>
                                     </div>
                                     {/* Pagination End */}
@@ -786,8 +153,8 @@ export default function Products() {
                                                     <li>
                                                         <div className="gi-sidebar-block-item py-[15px] relative flex flex-row">
                                                             <input type="checkbox" className="w-full h-[calc(100% - 5px)] absolute opacity-[0] cursor-pointer z-[9] top-[50%] translate-y-[-50%]" defaultChecked />
-                                                            <a href="javascript:void(0)" className="w-full text-[#777] text-[14px] mt-[0] leading-[20px] font-normal capitalize cursor-pointer flex justify-between pl-[30px]">
-                                                                <span className="flex"><i className="fi-rr-cupcake w-[20px] h-[20px] mr-[7px] text-[17px]" />Dairy &amp; Bakery</span>
+                                                            <a onClick={(e) => e.preventDefault()} className="w-full text-[#777] text-[14px] mt-[0] leading-[20px] font-normal capitalize cursor-pointer flex justify-between pl-[30px]">
+                                                                <span className="flex"><GiCupcake className="w-[20px] h-[20px] mr-[7px] text-[17px]" />Dairy &amp; Bakery</span>
                                                             </a>
                                                             <span className="checked absolute top-[50%] left-[0] h-[18px] w-[18px] bg-[#fff] border-[1px] border-solid border-[#eee] transition-all duration-[300ms] linear translate-y-[-50%] rounded-[5px] overflow-hidden" />
                                                         </div>
@@ -795,8 +162,8 @@ export default function Products() {
                                                     <li>
                                                         <div className="gi-sidebar-block-item py-[15px] relative flex flex-row">
                                                             <input type="checkbox" className="w-full h-[calc(100% - 5px)] absolute opacity-[0] cursor-pointer z-[9] top-[50%] translate-y-[-50%]" />
-                                                            <a href="javascript:void(0)" className="w-full text-[#777] text-[14px] mt-[0] leading-[20px] font-normal capitalize cursor-pointer flex justify-between pl-[30px]">
-                                                                <span className="flex"><i className="fi fi-rs-apple-whole w-[20px] h-[20px] mr-[7px] text-[17px]" />Fruits &amp; Vegetable</span>
+                                                            <a onClick={(e) => e.preventDefault()} className="w-full text-[#777] text-[14px] mt-[0] leading-[20px] font-normal capitalize cursor-pointer flex justify-between pl-[30px]">
+                                                                <span className="flex"><GiFruitBowl className="w-[20px] h-[20px] mr-[7px] text-[17px]" />Fruits &amp; Vegetable</span>
                                                             </a>
                                                             <span className="checked absolute top-[50%] left-[0] h-[18px] w-[18px] bg-[#fff] border-[1px] border-solid border-[#eee] transition-all duration-[300ms] linear translate-y-[-50%] rounded-[5px] overflow-hidden" />
                                                         </div>
@@ -804,8 +171,8 @@ export default function Products() {
                                                     <li>
                                                         <div className="gi-sidebar-block-item py-[15px] relative flex flex-row">
                                                             <input type="checkbox" className="w-full h-[calc(100% - 5px)] absolute opacity-[0] cursor-pointer z-[9] top-[50%] translate-y-[-50%]" />
-                                                            <a href="javascript:void(0)" className="w-full text-[#777] text-[14px] mt-[0] leading-[20px] font-normal capitalize cursor-pointer flex justify-between pl-[30px]">
-                                                                <span className="flex"><i className="fi fi-rr-popcorn w-[20px] h-[20px] mr-[7px] text-[17px]" />Snack &amp; Spice</span>
+                                                            <a onClick={(e) => e.preventDefault()} className="w-full text-[#777] text-[14px] mt-[0] leading-[20px] font-normal capitalize cursor-pointer flex justify-between pl-[30px]">
+                                                                <span className="flex"><GiPopcorn className="w-[20px] h-[20px] mr-[7px] text-[17px]" />Snack &amp; Spice</span>
                                                             </a>
                                                             <span className="checked absolute top-[50%] left-[0] h-[18px] w-[18px] bg-[#fff] border-[1px] border-solid border-[#eee] transition-all duration-[300ms] linear translate-y-[-50%] rounded-[5px] overflow-hidden" />
                                                         </div>
@@ -813,8 +180,8 @@ export default function Products() {
                                                     <li>
                                                         <div className="gi-sidebar-block-item py-[15px] relative flex flex-row">
                                                             <input type="checkbox" className="w-full h-[calc(100% - 5px)] absolute opacity-[0] cursor-pointer z-[9] top-[50%] translate-y-[-50%]" />
-                                                            <a href="javascript:void(0)" className="w-full text-[#777] text-[14px] mt-[0] leading-[20px] font-normal capitalize cursor-pointer flex justify-between pl-[30px]">
-                                                                <span className="flex"><i className="fi fi-rr-drink-alt w-[20px] h-[20px] mr-[7px] text-[17px]" />Juice &amp; Drinks</span>
+                                                            <a onClick={(e) => e.preventDefault()} className="w-full text-[#777] text-[14px] mt-[0] leading-[20px] font-normal capitalize cursor-pointer flex justify-between pl-[30px]">
+                                                                <span className="flex"><GiDrinkMe className="w-[20px] h-[20px] mr-[7px] text-[17px]" />Juice &amp; Drinks</span>
                                                             </a>
                                                             <span className="checked absolute top-[50%] left-[0] h-[18px] w-[18px] bg-[#fff] border-[1px] border-solid border-[#eee] transition-all duration-[300ms] linear translate-y-[-50%] rounded-[5px] overflow-hidden" />
                                                         </div>
@@ -831,35 +198,35 @@ export default function Products() {
                                                 <ul>
                                                     <li>
                                                         <div className="gi-sidebar-block-item py-[15px] relative flex flex-row">
-                                                            <input type="checkbox" defaultValue className="w-full h-[calc(100% - 5px)] absolute opacity-[0] cursor-pointer z-[9] top-[50%] translate-y-[-50%]" defaultChecked />
+                                                            <input type="checkbox" className="w-full h-[calc(100% - 5px)] absolute opacity-[0] cursor-pointer z-[9] top-[50%] translate-y-[-50%]" defaultChecked />
                                                             <a href="#" className="w-full text-[#777] text-[14px] mt-[0] leading-[20px] font-normal capitalize cursor-pointer flex justify-between pl-[30px]">500gm Pack</a>
                                                             <span className="checked absolute top-[50%] left-[0] h-[18px] w-[18px] bg-[#fff] border-[1px] border-solid border-[#eee] transition-all duration-[300ms] linear translate-y-[-50%] rounded-[5px] overflow-hidden" />
                                                         </div>
                                                     </li>
                                                     <li>
                                                         <div className="gi-sidebar-block-item py-[15px] relative flex flex-row">
-                                                            <input type="checkbox" defaultValue className="w-full h-[calc(100% - 5px)] absolute opacity-[0] cursor-pointer z-[9] top-[50%] translate-y-[-50%]" />
+                                                            <input type="checkbox" className="w-full h-[calc(100% - 5px)] absolute opacity-[0] cursor-pointer z-[9] top-[50%] translate-y-[-50%]" />
                                                             <a href="#" className="w-full text-[#777] text-[14px] mt-[0] leading-[20px] font-normal capitalize cursor-pointer flex justify-between pl-[30px]">1kg Pack</a>
                                                             <span className="checked absolute top-[50%] left-[0] h-[18px] w-[18px] bg-[#fff] border-[1px] border-solid border-[#eee] transition-all duration-[300ms] linear translate-y-[-50%] rounded-[5px] overflow-hidden" />
                                                         </div>
                                                     </li>
                                                     <li>
                                                         <div className="gi-sidebar-block-item py-[15px] relative flex flex-row">
-                                                            <input type="checkbox" defaultValue className="w-full h-[calc(100% - 5px)] absolute opacity-[0] cursor-pointer z-[9] top-[50%] translate-y-[-50%]" />
+                                                            <input type="checkbox" className="w-full h-[calc(100% - 5px)] absolute opacity-[0] cursor-pointer z-[9] top-[50%] translate-y-[-50%]" />
                                                             <a href="#" className="w-full text-[#777] text-[14px] mt-[0] leading-[20px] font-normal capitalize cursor-pointer flex justify-between pl-[30px]">2kg Pack</a>
                                                             <span className="checked absolute top-[50%] left-[0] h-[18px] w-[18px] bg-[#fff] border-[1px] border-solid border-[#eee] transition-all duration-[300ms] linear translate-y-[-50%] rounded-[5px] overflow-hidden" />
                                                         </div>
                                                     </li>
                                                     <li>
                                                         <div className="gi-sidebar-block-item py-[15px] relative flex flex-row">
-                                                            <input type="checkbox" defaultValue className="w-full h-[calc(100% - 5px)] absolute opacity-[0] cursor-pointer z-[9] top-[50%] translate-y-[-50%]" />
+                                                            <input type="checkbox" className="w-full h-[calc(100% - 5px)] absolute opacity-[0] cursor-pointer z-[9] top-[50%] translate-y-[-50%]" />
                                                             <a href="#" className="w-full text-[#777] text-[14px] mt-[0] leading-[20px] font-normal capitalize cursor-pointer flex justify-between pl-[30px]">5kg Pack</a>
                                                             <span className="checked absolute top-[50%] left-[0] h-[18px] w-[18px] bg-[#fff] border-[1px] border-solid border-[#eee] transition-all duration-[300ms] linear translate-y-[-50%] rounded-[5px] overflow-hidden" />
                                                         </div>
                                                     </li>
                                                     <li>
                                                         <div className="gi-sidebar-block-item py-[15px] relative flex flex-row">
-                                                            <input type="checkbox" defaultValue className="w-full h-[calc(100% - 5px)] absolute opacity-[0] cursor-pointer z-[9] top-[50%] translate-y-[-50%]" />
+                                                            <input type="checkbox" className="w-full h-[calc(100% - 5px)] absolute opacity-[0] cursor-pointer z-[9] top-[50%] translate-y-[-50%]" />
                                                             <a href="#" className="w-full text-[#777] text-[14px] mt-[0] leading-[20px] font-normal capitalize cursor-pointer flex justify-between pl-[30px]">10kg Pack</a>
                                                             <span className="checked absolute top-[50%] left-[0] h-[18px] w-[18px] bg-[#fff] border-[1px] border-solid border-[#eee] transition-all duration-[300ms] linear translate-y-[-50%] rounded-[5px] overflow-hidden" />
                                                         </div>
@@ -876,91 +243,91 @@ export default function Products() {
                                                 <ul className="w-full flex flex-wrap flex-row">
                                                     <li className="mr-[10px]">
                                                         <div className="gi-sidebar-block-item py-[5px] border-[0] flex flex-row relative">
-                                                            <input type="checkbox" defaultValue className="w-[20px] h-[20px] absolute opacity-[0] cursor-pointer z-[9] top-[50%] left-[0] translate-y-[-50%]" />
+                                                            <input type="checkbox" className="w-[20px] h-[20px] absolute opacity-[0] cursor-pointer z-[9] top-[50%] left-[0] translate-y-[-50%]" />
                                                             <span className="gi-clr-block transition-all duration-[0.3s] ease-in-out w-[22px] h-[22px] rounded-[50%] opacity-[0.7] bg-transparent cursor-pointer tracking-[0.02rem]" style={{ backgroundColor: '#c4d6f9' }} />
                                                             <span className="checked w-[20px] h-[20px] bg-transparent border-[0] absolute top-[50%] left-[0] transition-all duration-[300ms] linear translate-y-[-50%] rounded-[5px] overflow-hidden" />
                                                         </div>
                                                     </li>
                                                     <li className="mr-[10px]">
                                                         <div className="gi-sidebar-block-item py-[5px] border-[0] flex flex-row relative">
-                                                            <input type="checkbox" defaultValue className="w-[20px] h-[20px] absolute opacity-[0] cursor-pointer z-[9] top-[50%] left-[0] translate-y-[-50%]" />
+                                                            <input type="checkbox" className="w-[20px] h-[20px] absolute opacity-[0] cursor-pointer z-[9] top-[50%] left-[0] translate-y-[-50%]" />
                                                             <span className="gi-clr-block transition-all duration-[0.3s] ease-in-out w-[22px] h-[22px] rounded-[50%] opacity-[0.7] bg-transparent cursor-pointer tracking-[0.02rem]" style={{ backgroundColor: '#ff748b' }} />
                                                             <span className="checked w-[20px] h-[20px] bg-transparent border-[0] absolute top-[50%] left-[0] transition-all duration-[300ms] linear translate-y-[-50%] rounded-[5px] overflow-hidden" />
                                                         </div>
                                                     </li>
                                                     <li className="mr-[10px]">
                                                         <div className="gi-sidebar-block-item py-[5px] border-[0] flex flex-row relative">
-                                                            <input type="checkbox" defaultValue className="w-[20px] h-[20px] absolute opacity-[0] cursor-pointer z-[9] top-[50%] left-[0] translate-y-[-50%]" />
+                                                            <input type="checkbox" className="w-[20px] h-[20px] absolute opacity-[0] cursor-pointer z-[9] top-[50%] left-[0] translate-y-[-50%]" />
                                                             <span className="gi-clr-block transition-all duration-[0.3s] ease-in-out w-[22px] h-[22px] rounded-[50%] opacity-[0.7] bg-transparent cursor-pointer tracking-[0.02rem]" style={{ backgroundColor: '#000000' }} />
                                                             <span className="checked w-[20px] h-[20px] bg-transparent border-[0] absolute top-[50%] left-[0] transition-all duration-[300ms] linear translate-y-[-50%] rounded-[5px] overflow-hidden" />
                                                         </div>
                                                     </li>
                                                     <li className="active mr-[10px]">
                                                         <div className="gi-sidebar-block-item py-[5px] border-[0] flex flex-row relative">
-                                                            <input type="checkbox" defaultValue className="w-[20px] h-[20px] absolute opacity-[0] cursor-pointer z-[9] top-[50%] left-[0] translate-y-[-50%]" />
+                                                            <input type="checkbox" className="w-[20px] h-[20px] absolute opacity-[0] cursor-pointer z-[9] top-[50%] left-[0] translate-y-[-50%]" />
                                                             <span className="gi-clr-block transition-all duration-[0.3s] ease-in-out w-[22px] h-[22px] rounded-[50%] opacity-[0.7] bg-transparent cursor-pointer tracking-[0.02rem]" style={{ backgroundColor: '#2bff4a' }} />
                                                             <span className="checked w-[20px] h-[20px] bg-transparent border-[0] absolute top-[50%] left-[0] transition-all duration-[300ms] linear translate-y-[-50%] rounded-[5px] overflow-hidden" />
                                                         </div>
                                                     </li>
                                                     <li className="mr-[10px]">
                                                         <div className="gi-sidebar-block-item py-[5px] border-[0] flex flex-row relative">
-                                                            <input type="checkbox" defaultValue className="w-[20px] h-[20px] absolute opacity-[0] cursor-pointer z-[9] top-[50%] left-[0] translate-y-[-50%]" />
+                                                            <input type="checkbox" className="w-[20px] h-[20px] absolute opacity-[0] cursor-pointer z-[9] top-[50%] left-[0] translate-y-[-50%]" />
                                                             <span className="gi-clr-block transition-all duration-[0.3s] ease-in-out w-[22px] h-[22px] rounded-[50%] opacity-[0.7] bg-transparent cursor-pointer tracking-[0.02rem]" style={{ backgroundColor: '#ff7c5e' }} />
                                                             <span className="checked w-[20px] h-[20px] bg-transparent border-[0] absolute top-[50%] left-[0] transition-all duration-[300ms] linear translate-y-[-50%] rounded-[5px] overflow-hidden" />
                                                         </div>
                                                     </li>
                                                     <li className="mr-[10px]">
                                                         <div className="gi-sidebar-block-item py-[5px] border-[0] flex flex-row relative">
-                                                            <input type="checkbox" defaultValue className="w-[20px] h-[20px] absolute opacity-[0] cursor-pointer z-[9] top-[50%] left-[0] translate-y-[-50%]" />
+                                                            <input type="checkbox" className="w-[20px] h-[20px] absolute opacity-[0] cursor-pointer z-[9] top-[50%] left-[0] translate-y-[-50%]" />
                                                             <span className="gi-clr-block transition-all duration-[0.3s] ease-in-out w-[22px] h-[22px] rounded-[50%] opacity-[0.7] bg-transparent cursor-pointer tracking-[0.02rem]" style={{ backgroundColor: '#f155ff' }} />
                                                             <span className="checked w-[20px] h-[20px] bg-transparent border-[0] absolute top-[50%] left-[0] transition-all duration-[300ms] linear translate-y-[-50%] rounded-[5px] overflow-hidden" />
                                                         </div>
                                                     </li>
                                                     <li className="mr-[10px]">
                                                         <div className="gi-sidebar-block-item py-[5px] border-[0] flex flex-row relative">
-                                                            <input type="checkbox" defaultValue className="w-[20px] h-[20px] absolute opacity-[0] cursor-pointer z-[9] top-[50%] left-[0] translate-y-[-50%]" />
+                                                            <input type="checkbox" className="w-[20px] h-[20px] absolute opacity-[0] cursor-pointer z-[9] top-[50%] left-[0] translate-y-[-50%]" />
                                                             <span className="gi-clr-block transition-all duration-[0.3s] ease-in-out w-[22px] h-[22px] rounded-[50%] opacity-[0.7] bg-transparent cursor-pointer tracking-[0.02rem]" style={{ backgroundColor: '#ffef00' }} />
                                                             <span className="checked w-[20px] h-[20px] bg-transparent border-[0] absolute top-[50%] left-[0] transition-all duration-[300ms] linear translate-y-[-50%] rounded-[5px] overflow-hidden" />
                                                         </div>
                                                     </li>
                                                     <li className="mr-[10px]">
                                                         <div className="gi-sidebar-block-item py-[5px] border-[0] flex flex-row relative">
-                                                            <input type="checkbox" defaultValue className="w-[20px] h-[20px] absolute opacity-[0] cursor-pointer z-[9] top-[50%] left-[0] translate-y-[-50%]" />
+                                                            <input type="checkbox" className="w-[20px] h-[20px] absolute opacity-[0] cursor-pointer z-[9] top-[50%] left-[0] translate-y-[-50%]" />
                                                             <span className="gi-clr-block transition-all duration-[0.3s] ease-in-out w-[22px] h-[22px] rounded-[50%] opacity-[0.7] bg-transparent cursor-pointer tracking-[0.02rem]" style={{ backgroundColor: '#c89fff' }} />
                                                             <span className="checked w-[20px] h-[20px] bg-transparent border-[0] absolute top-[50%] left-[0] transition-all duration-[300ms] linear translate-y-[-50%] rounded-[5px] overflow-hidden" />
                                                         </div>
                                                     </li>
                                                     <li className="mr-[10px]">
                                                         <div className="gi-sidebar-block-item py-[5px] border-[0] flex flex-row relative">
-                                                            <input type="checkbox" defaultValue className="w-[20px] h-[20px] absolute opacity-[0] cursor-pointer z-[9] top-[50%] left-[0] translate-y-[-50%]" />
+                                                            <input type="checkbox" className="w-[20px] h-[20px] absolute opacity-[0] cursor-pointer z-[9] top-[50%] left-[0] translate-y-[-50%]" />
                                                             <span className="gi-clr-block transition-all duration-[0.3s] ease-in-out w-[22px] h-[22px] rounded-[50%] opacity-[0.7] bg-transparent cursor-pointer tracking-[0.02rem]" style={{ backgroundColor: '#7bfffa' }} />
                                                             <span className="checked w-[20px] h-[20px] bg-transparent border-[0] absolute top-[50%] left-[0] transition-all duration-[300ms] linear translate-y-[-50%] rounded-[5px] overflow-hidden" />
                                                         </div>
                                                     </li>
                                                     <li className="mr-[10px]">
                                                         <div className="gi-sidebar-block-item py-[5px] border-[0] flex flex-row relative">
-                                                            <input type="checkbox" defaultValue className="w-[20px] h-[20px] absolute opacity-[0] cursor-pointer z-[9] top-[50%] left-[0] translate-y-[-50%]" />
+                                                            <input type="checkbox" className="w-[20px] h-[20px] absolute opacity-[0] cursor-pointer z-[9] top-[50%] left-[0] translate-y-[-50%]" />
                                                             <span className="gi-clr-block transition-all duration-[0.3s] ease-in-out w-[22px] h-[22px] rounded-[50%] opacity-[0.7] bg-transparent cursor-pointer tracking-[0.02rem]" style={{ backgroundColor: '#56ffc1' }} />
                                                             <span className="checked w-[20px] h-[20px] bg-transparent border-[0] absolute top-[50%] left-[0] transition-all duration-[300ms] linear translate-y-[-50%] rounded-[5px] overflow-hidden" />
                                                         </div>
                                                     </li>
                                                     <li className="mr-[10px]">
                                                         <div className="gi-sidebar-block-item py-[5px] border-[0] flex flex-row relative">
-                                                            <input type="checkbox" defaultValue className="w-[20px] h-[20px] absolute opacity-[0] cursor-pointer z-[9] top-[50%] left-[0] translate-y-[-50%]" />
+                                                            <input type="checkbox" className="w-[20px] h-[20px] absolute opacity-[0] cursor-pointer z-[9] top-[50%] left-[0] translate-y-[-50%]" />
                                                             <span className="gi-clr-block transition-all duration-[0.3s] ease-in-out w-[22px] h-[22px] rounded-[50%] opacity-[0.7] bg-transparent cursor-pointer tracking-[0.02rem]" style={{ backgroundColor: '#ffdb9f' }} />
                                                             <span className="checked w-[20px] h-[20px] bg-transparent border-[0] absolute top-[50%] left-[0] transition-all duration-[300ms] linear translate-y-[-50%] rounded-[5px] overflow-hidden" />
                                                         </div>
                                                     </li>
                                                     <li className="mr-[10px]">
                                                         <div className="gi-sidebar-block-item py-[5px] border-[0] flex flex-row relative">
-                                                            <input type="checkbox" defaultValue className="w-[20px] h-[20px] absolute opacity-[0] cursor-pointer z-[9] top-[50%] left-[0] translate-y-[-50%]" />
+                                                            <input type="checkbox" className="w-[20px] h-[20px] absolute opacity-[0] cursor-pointer z-[9] top-[50%] left-[0] translate-y-[-50%]" />
                                                             <span className="gi-clr-block transition-all duration-[0.3s] ease-in-out w-[22px] h-[22px] rounded-[50%] opacity-[0.7] bg-transparent cursor-pointer tracking-[0.02rem]" style={{ backgroundColor: '#9f9f9f' }} />
                                                             <span className="checked w-[20px] h-[20px] bg-transparent border-[0] absolute top-[50%] left-[0] transition-all duration-[300ms] linear translate-y-[-50%] rounded-[5px] overflow-hidden" />
                                                         </div>
                                                     </li>
                                                     <li className="mr-[10px]">
                                                         <div className="gi-sidebar-block-item py-[5px] border-[0] flex flex-row relative">
-                                                            <input type="checkbox" defaultValue className="w-[20px] h-[20px] absolute opacity-[0] cursor-pointer z-[9] top-[50%] left-[0] translate-y-[-50%]" />
+                                                            <input type="checkbox" className="w-[20px] h-[20px] absolute opacity-[0] cursor-pointer z-[9] top-[50%] left-[0] translate-y-[-50%]" />
                                                             <span className="gi-clr-block transition-all duration-[0.3s] ease-in-out w-[22px] h-[22px] rounded-[50%] opacity-[0.7] bg-transparent cursor-pointer tracking-[0.02rem]" style={{ backgroundColor: '#6556ff' }} />
                                                             <span className="checked w-[20px] h-[20px] bg-transparent border-[0] absolute top-[50%] left-[0] transition-all duration-[300ms] linear translate-y-[-50%] rounded-[5px] overflow-hidden" />
                                                         </div>

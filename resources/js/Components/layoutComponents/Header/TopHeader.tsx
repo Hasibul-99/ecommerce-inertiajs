@@ -1,9 +1,5 @@
 import React from 'react'
-import { FiMenu } from "react-icons/fi";
-import { FiUser } from "react-icons/fi";
-import { FiHeart } from "react-icons/fi";
-import { FiShoppingBag } from "react-icons/fi";
-import { FiPhoneCall } from "react-icons/fi";
+import { FiMenu, FiUser, FiHeart, FiShoppingBag, FiPhoneCall, FiChevronDown } from "react-icons/fi";
 import { FaWhatsapp } from "react-icons/fa6";
 import { Link } from '@inertiajs/react';
 import {
@@ -27,15 +23,15 @@ export default function TopHeader() {
                         <div className="header-top-social">
                             <ul className="mb-[0] p-[0] flex">
                                 <li className="list-inline-item transition-all duration-[0.3s] ease-in-out flex text-[13px] mr-[15px]">
-                                    <a href="javascript:void(0)" className="mx-[5px] text-center flex items-center justify-center text-[15px]">
+                                    <button className="mx-[5px] text-center flex items-center justify-center text-[15px] bg-transparent border-0">
                                         <FiPhoneCall className="transition-all duration-[0.3s] ease-in-out text-[#777]" />
-                                    </a>
+                                    </button>
                                     +91 987 654 3210
                                 </li>
                                 <li className="list-inline-item transition-all duration-[0.3s] ease-in-out flex text-[13px]">
-                                    <a href="javascript:void(0)" className="mx-[5px] text-center flex items-center justify-center text-[15px]">
+                                    <button className="mx-[5px] text-center flex items-center justify-center text-[15px] bg-transparent border-0">
                                         <FaWhatsapp className="transition-all duration-[0.3s] ease-in-out text-[#777]" />
-                                    </a>
+                                    </button>
                                     +91 987 654 3210
                                 </li>
                             </ul>
@@ -57,14 +53,14 @@ export default function TopHeader() {
                             {/* Language Start */}
                             <div className="header-top-lan-curr header-top-lan dropdown pl-[20px] flex flex-wrap relative">
                                 <button type="button" className="dropdown-toggle text-[13px] flex items-center p-[0] transition-all duration-[0.3s] ease delay-0 text-[#777] border-[0] tracking-[0.7px]">English
-                                    <i className="fi-rr-angle-small-down text-[14px] ml-[5px] text-[#777] transition-all duration-[0.3s] ease delay-0 flex" />
+                                    <FiChevronDown className="text-[14px] ml-[5px] text-[#777] transition-all duration-[0.3s] ease delay-0 flex" />
                                 </button>
                                 <ul className="hidden dropdown-menu absolute top-[32px] left-[auto] right-[0] min-w-[130px] truncate px-[10px] bg-[#fff] z-[1] rounded-[5px] border-[1px] border-solid border-[#eee]">
                                     <li className="active border-b-[1px] border-solid border-[#eee] leading-[1.5] py-[5px]">
-                                        <a className="dropdown-item p-[7px] text-[14px] bg-transparent" href="#">English</a>
+                                        <button className="dropdown-item p-[7px] text-[14px] bg-transparent w-full text-left">English</button>
                                     </li>
                                     <li className="leading-[1.5] py-[5px]">
-                                        <a className="dropdown-item p-[7px] text-[14px] bg-transparent" href="#">Italiano</a>
+                                        <button className="dropdown-item p-[7px] text-[14px] bg-transparent w-full text-left">Italiano</button>
                                     </li>
                                 </ul>
                             </div>
@@ -72,14 +68,14 @@ export default function TopHeader() {
                             {/* Currency Start */}
                             <div className="header-top-lan-curr header-top-curr dropdown pl-[20px] flex flex-wrap relative">
                                 <button type="button" className="dropdown-toggle text-[13px] flex items-center p-[0] transition-all duration-[0.3s] ease delay-0 text-[#777] border-[0] tracking-[0.7px]">Dollar
-                                    <i className="fi-rr-angle-small-down text-[14px] ml-[5px] text-[#777] transition-all duration-[0.3s] ease delay-0 flex" />
+                                    <FiChevronDown className="text-[14px] ml-[5px] text-[#777] transition-all duration-[0.3s] ease delay-0 flex" />
                                 </button>
                                 <ul className="hidden dropdown-menu absolute top-[32px] left-[auto] right-[0] min-w-[130px] truncate px-[10px] bg-[#fff] z-[1] rounded-[5px] border-[1px] border-solid border-[#eee]">
                                     <li className="active border-b-[1px] border-solid border-[#eee] leading-[1.5] py-[5px]">
-                                        <a className="dropdown-item p-[7px] text-[14px] bg-transparent" href="#">USD $</a>
+                                        <button className="dropdown-item p-[7px] text-[14px] bg-transparent w-full text-left">USD $</button>
                                     </li>
                                     <li className="leading-[1.5] py-[5px]">
-                                        <a className="dropdown-item p-[7px] text-[14px] bg-transparent" href="#">EUR €</a>
+                                        <button className="dropdown-item p-[7px] text-[14px] bg-transparent w-full text-left">EUR €</button>
                                     </li>
                                 </ul>
                             </div>
