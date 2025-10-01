@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductTag;
 use App\Models\ProductVariant;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
@@ -72,10 +73,12 @@ class ProductController extends Controller
     {
         $categories = Category::all();
         $vendors = Vendor::with('user')->get();
+        $tags = ProductTag::all();
 
         return Inertia::render('Admin/Products/Create', [
             'categories' => $categories,
             'vendors' => $vendors,
+            'tags' => $tags,
         ]);
     }
 
@@ -95,6 +98,8 @@ class ProductController extends Controller
             'base_price_cents' => 'required|integer|min:0',
             'currency' => 'required|string|max:3',
             'status' => 'required|in:draft,published,archived',
+            'tag_ids' => 'nullable|array',
+            'tag_ids.*' => 'exists:product_tags,id',
             'variants' => 'nullable|array',
             'variants.*.title' => 'required|string|max:255',
             'variants.*.price_cents' => 'required|integer|min:0',
@@ -116,6 +121,11 @@ class ProductController extends Controller
             'status' => $request->status,
             'published_at' => $request->status === 'published' ? now() : null,
         ]);
+
+        // Attach tags if provided
+        if ($request->tag_ids) {
+            $product->tags()->attach($request->tag_ids);
+        }
 
         // Create variants if provided
         if ($request->variants) {
@@ -160,14 +170,16 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $product->load(['variants']);
+        $product->load(['variants', 'tags']);
         $categories = Category::all();
         $vendors = Vendor::with('user')->get();
+        $tags = ProductTag::all();
 
         return Inertia::render('Admin/Products/Edit', [
             'product' => $product,
             'categories' => $categories,
             'vendors' => $vendors,
+            'tags' => $tags,
         ]);
     }
 
@@ -188,6 +200,8 @@ class ProductController extends Controller
             'base_price_cents' => 'required|integer|min:0',
             'currency' => 'required|string|max:3',
             'status' => 'required|in:draft,published,archived',
+            'tag_ids' => 'nullable|array',
+            'tag_ids.*' => 'exists:product_tags,id',
             'variants' => 'nullable|array',
             'variants.*.id' => 'nullable|exists:product_variants,id',
             'variants.*.title' => 'required|string|max:255',
@@ -210,6 +224,11 @@ class ProductController extends Controller
             'status' => $request->status,
             'published_at' => $request->status === 'published' && !$product->published_at ? now() : $product->published_at,
         ]);
+
+        // Sync tags
+        if ($request->has('tag_ids')) {
+            $product->tags()->sync($request->tag_ids ?? []);
+        }
 
         // Update variants
         if ($request->variants) {

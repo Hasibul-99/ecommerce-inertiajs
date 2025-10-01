@@ -7,6 +7,7 @@ import { Label } from '@/Components/ui/label';
 import { Textarea } from '@/Components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
+import Checkbox from '@/Components/Core/Checkbox';
 import { Plus, Trash2 } from 'lucide-react';
 import { PageProps } from '@/types';
 
@@ -45,23 +46,32 @@ interface Product {
     variants: ProductVariant[];
 }
 
+interface ProductTag {
+    id: number;
+    name: string;
+    slug: string;
+}
+
 interface Props extends PageProps {
     categories: Category[];
     vendors: Vendor[];
+    tags: ProductTag[];
 }
 
-export default function Create({ categories, vendors, auth }: Props) {
+export default function Create({ categories, vendors, tags, auth }: Props) {
     const [variants, setVariants] = useState<ProductVariant[]>([]);
 
     const { data, setData, post, processing, errors } = useForm({
         vendor_id: '',
         category_id: '',
         title: '',
+        slug: '',
         description: '',
         base_price_cents: 0,
         currency: 'USD',
         status: 'draft',
         variants: [] as ProductVariant[],
+        tag_ids: [] as number[],
     });
 
     const addVariant = () => {
@@ -126,6 +136,19 @@ export default function Create({ categories, vendors, auth }: Props) {
                                                     className={errors.title ? 'border-red-500' : ''}
                                                 />
                                                 {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
+                                            </div>
+
+                                            <div>
+                                                <Label htmlFor="slug">Product Slug</Label>
+                                                <Input
+                                                    id="slug"
+                                                    type="text"
+                                                    value={data.slug}
+                                                    onChange={(e) => setData('slug', e.target.value)}
+                                                    className={errors.slug ? 'border-red-500' : ''}
+                                                    placeholder="product-slug-url"
+                                                />
+                                                {errors.slug && <p className="text-red-500 text-sm mt-1">{errors.slug}</p>}
                                             </div>
 
                                             <div>
@@ -219,6 +242,40 @@ export default function Create({ categories, vendors, auth }: Props) {
                                                         <SelectItem value="archived">Archived</SelectItem>
                                                     </SelectContent>
                                                 </Select>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+
+                                    <Card>
+                                        <CardHeader>
+                                            <CardTitle>Product Tags</CardTitle>
+                                        </CardHeader>
+                                        <CardContent>
+                                            <div className="space-y-2">
+                                                <Label>Select Tags</Label>
+                                                <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto">
+                                                    {tags.map((tag) => (
+                                                        <div key={tag.id} className="flex items-center space-x-2">
+                                                            <Checkbox
+                                                                id={`tag-${tag.id}`}
+                                                                checked={data.tag_ids.includes(tag.id)}
+                                                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                                                    if (e.target.checked) {
+                                                                        setData('tag_ids', [...data.tag_ids, tag.id]);
+                                                                    } else {
+                                                                        setData('tag_ids', data.tag_ids.filter(id => id !== tag.id));
+                                                                    }
+                                                                }}
+                                                            />
+                                                            <Label htmlFor={`tag-${tag.id}`} className="text-sm font-normal cursor-pointer">
+                                                                {tag.name}
+                                                            </Label>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                                {tags.length === 0 && (
+                                                    <p className="text-gray-500 text-sm">No tags available. Create tags first.</p>
+                                                )}
                                             </div>
                                         </CardContent>
                                     </Card>

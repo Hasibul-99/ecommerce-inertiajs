@@ -101,6 +101,7 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
         { name: 'Products', href: route('admin.products.index'), icon: FiShoppingBag },
         { name: 'Product Variants', href: route('admin.product-variants.index'), icon: FiPackage },
         { name: 'Categories', href: route('admin.categories.index'), icon: FiGrid },
+        { name: 'Tags', href: route('admin.tags.index'), icon: FiTag },
         { name: 'Coupons', href: route('admin.coupons.index'), icon: FiGift },
         { name: 'Reviews', href: '#', icon: FiStar },
       ]

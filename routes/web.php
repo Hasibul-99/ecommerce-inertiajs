@@ -1,5 +1,15 @@
 <?php
 
+use App\Http\Controllers\Admin\ActivityLogController;
+use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\CouponController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Admin\ProductVariantController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\TagController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VendorController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
@@ -8,11 +18,12 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductImageController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Vendor\DashboardController;
+use App\Http\Controllers\SeoController;
+use App\Http\Controllers\Vendor\DashboardController as VendorDashboardController;
 use App\Http\Controllers\WebhookController;
 use App\Http\Controllers\WishlistController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -27,133 +38,204 @@ use Inertia\Inertia;
 |
 */
 
+/*
+|--------------------------------------------------------------------------
+| Public Routes
+|--------------------------------------------------------------------------
+*/
+
+// Home & Info Pages
 Route::get('/', [HomeController::class, 'index'])->name('home');
-
-Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-
-Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.detail');
-
-Route::get('/cart', [CartController::class, 'index'])->name('cart');
-
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
-Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
-
-Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist');
-
-Route::get('/compare', function () {
-    return Inertia::render('Compare');
-})->name('compare');
-
-Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
-Route::get('/category/{slug}', [CategoryController::class, 'show'])->name('category.show');
-
 Route::get('/about-us', [HomeController::class, 'aboutUs'])->name('about-us');
-
 Route::get('/contact-us', [HomeController::class, 'contactUs'])->name('contact-us');
 Route::post('/contact-us', [HomeController::class, 'submitContactForm'])->name('contact.submit');
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
 // SEO Routes
-Route::get('/sitemap.xml', [\App\Http\Controllers\SeoController::class, 'sitemap'])->name('sitemap');
-Route::get('/robots.txt', [\App\Http\Controllers\SeoController::class, 'robots'])->name('robots');
+Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('sitemap');
+Route::get('/robots.txt', [SeoController::class, 'robots'])->name('robots');
 
-// Product routes
-Route::resource('products', ProductController::class)->except(['index', 'show']);
-
-// Product image routes
-Route::post('/products/{product}/images', [\App\Http\Controllers\ProductImageController::class, 'store'])->name('products.images.store');
-Route::delete('/products/{product}/images/{mediaId}', [\App\Http\Controllers\ProductImageController::class, 'destroy'])->name('products.images.destroy');
-
-// Cart routes
-Route::post('/cart/add', [CartController::class, 'addItem'])->name('cart.add');
-Route::patch('/cart/{itemId}', [CartController::class, 'updateItem'])->name('cart.update');
-Route::delete('/cart/{itemId}', [CartController::class, 'removeItem'])->name('cart.remove');
-Route::delete('/cart', [CartController::class, 'clear'])->name('cart.clear');
-
-// Wishlist routes
-Route::post('/wishlist/add', [WishlistController::class, 'addItem'])->name('wishlist.add');
-Route::delete('/wishlist/{productId}', [WishlistController::class, 'removeItem'])->name('wishlist.remove');
-Route::delete('/wishlist', [WishlistController::class, 'clear'])->name('wishlist.clear');
-Route::post('/wishlist/{productId}/move-to-cart', [WishlistController::class, 'moveToCart'])->name('wishlist.move-to-cart');
-
-// Order routes
-Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
-Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
-Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
-Route::post('/orders/{order}/return', [OrderController::class, 'requestReturn'])->name('orders.return');
-Route::get('/orders/{order}/track', [OrderController::class, 'track'])->name('orders.track');
-Route::get('/orders/{order}/invoice', [OrderController::class, 'invoice'])->name('orders.invoice');
-
-// Payment routes
-Route::get('/payment/{order}', [PaymentController::class, 'show'])->name('payment.show');
-Route::post('/payment/{order}', [PaymentController::class, 'process'])->name('payment.process');
-
-// Webhook routes
-Route::post('/webhooks/payment', [WebhookController::class, 'handlePaymentWebhook'])->name('webhooks.payment');
-Route::post('/webhooks/shipping', [WebhookController::class, 'handleShippingWebhook'])->name('webhooks.shipping');
-
-// Vendor routes
-Route::prefix('vendor')->middleware(['auth', 'role:vendor'])->name('vendor.')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/products', [DashboardController::class, 'products'])->name('products');
-    Route::get('/orders', [DashboardController::class, 'orders'])->name('orders');
-    Route::get('/settings', [DashboardController::class, 'settings'])->name('settings');
-    Route::patch('/settings', [DashboardController::class, 'updateSettings'])->name('settings.update');
+// Product Routes (Public)
+Route::controller(ProductController::class)->group(function () {
+    Route::get('/products', 'index')->name('products.index');
+    Route::get('/product/{id}', 'show')->name('product.detail');
 });
 
-// Admin routes
-Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->group(function () {
-    Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+// Category Routes (Public)
+Route::controller(CategoryController::class)->group(function () {
+    Route::get('/categories', 'index')->name('categories.index');
+    Route::get('/category/{slug}', 'show')->name('category.show');
+});
+
+// Shopping Cart & Wishlist (Public Access)
+Route::get('/cart', [CartController::class, 'index'])->name('cart');
+Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist');
+
+// Compare Page
+Route::get('/compare', fn() => Inertia::render('Compare'))->name('compare');
+
+/*
+|--------------------------------------------------------------------------
+| Webhook Routes (No CSRF Protection)
+|--------------------------------------------------------------------------
+*/
+Route::prefix('webhooks')->name('webhooks.')->withoutMiddleware('csrf')->group(function () {
+    Route::post('/payment', [WebhookController::class, 'handlePaymentWebhook'])->name('payment');
+    Route::post('/shipping', [WebhookController::class, 'handleShippingWebhook'])->name('shipping');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Authenticated Routes
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'verified'])->group(function () {
     
-    // Admin User Management
-    Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
-    Route::patch('/users/{user}/toggle-verification', [\App\Http\Controllers\Admin\UserController::class, 'toggleVerification'])->name('users.toggle-verification');
+    // Dashboard
+    Route::get('/dashboard', fn() => Inertia::render('Dashboard'))->name('dashboard');
     
-    // Admin Product Management
-    Route::resource('products', \App\Http\Controllers\Admin\ProductController::class);
-    Route::patch('/products/bulk-update-status', [\App\Http\Controllers\Admin\ProductController::class, 'bulkUpdateStatus'])->name('products.bulk-update-status');
+    // Profile Management
+    Route::controller(ProfileController::class)->prefix('profile')->name('profile.')->group(function () {
+        Route::get('/', 'edit')->name('edit');
+        Route::patch('/', 'update')->name('update');
+        Route::delete('/', 'destroy')->name('destroy');
+    });
     
-    // Admin Product Variant Management
-    Route::resource('product-variants', \App\Http\Controllers\Admin\ProductVariantController::class);
+    // Product Management (Authenticated)
+    Route::resource('products', ProductController::class)->except(['index', 'show']);
     
-    // Admin Category Management
-    Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
+    // Product Image Management
+    Route::controller(ProductImageController::class)->prefix('products/{product}/images')->name('products.images.')->group(function () {
+        Route::post('/', 'store')->name('store');
+        Route::delete('/{mediaId}', 'destroy')->name('destroy');
+    });
     
-    // Admin Coupon Management
-    Route::resource('coupons', \App\Http\Controllers\Admin\CouponController::class);
-    Route::patch('/coupons/{coupon}/toggle-status', [\App\Http\Controllers\Admin\CouponController::class, 'toggleStatus'])->name('coupons.toggle-status');
-    Route::patch('/coupons/bulk-update-status', [\App\Http\Controllers\Admin\CouponController::class, 'bulkUpdateStatus'])->name('coupons.bulk-update-status');
+    // Cart Management
+    Route::controller(CartController::class)->prefix('cart')->name('cart.')->group(function () {
+        Route::post('/add', 'addItem')->name('add');
+        Route::patch('/{itemId}', 'updateItem')->name('update');
+        Route::delete('/{itemId}', 'removeItem')->name('remove');
+        Route::delete('/', 'clear')->name('clear');
+    });
     
-    // Admin Role & Permission Management
-    Route::resource('roles', \App\Http\Controllers\Admin\RoleController::class);
-    Route::get('/permissions', [\App\Http\Controllers\Admin\RoleController::class, 'permissions'])->name('permissions.index');
-    Route::post('/permissions', [\App\Http\Controllers\Admin\RoleController::class, 'storePermission'])->name('permissions.store');
-    Route::patch('/permissions/{permission}', [\App\Http\Controllers\Admin\RoleController::class, 'updatePermission'])->name('permissions.update');
-    Route::delete('/permissions/{permission}', [\App\Http\Controllers\Admin\RoleController::class, 'destroyPermission'])->name('permissions.destroy');
+    // Wishlist Management
+    Route::controller(WishlistController::class)->prefix('wishlist')->name('wishlist.')->group(function () {
+        Route::post('/add', 'addItem')->name('add');
+        Route::delete('/{productId}', 'removeItem')->name('remove');
+        Route::delete('/', 'clear')->name('clear');
+        Route::post('/{productId}/move-to-cart', 'moveToCart')->name('move-to-cart');
+    });
     
-    // Admin Order Management
-    Route::get('/orders', [\App\Http\Controllers\Admin\OrderController::class, 'index'])->name('orders.index');
-    Route::get('/orders/{order}', [\App\Http\Controllers\Admin\OrderController::class, 'show'])->name('orders.show');
-    Route::post('/orders/{order}/update-status', [\App\Http\Controllers\Admin\OrderController::class, 'updateStatus'])->name('orders.update-status');
-    Route::post('/orders/{order}/mark-as-paid', [\App\Http\Controllers\Admin\OrderController::class, 'markAsPaid'])->name('orders.mark-as-paid');
+    // Checkout Process
+    Route::controller(CheckoutController::class)->prefix('checkout')->name('checkout')->group(function () {
+        Route::get('/', 'index');
+        Route::post('/', 'process')->name('.process');
+    });
+    
+    // Order Management
+    Route::controller(OrderController::class)->prefix('orders')->name('orders.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/{order}', 'show')->name('show');
+        Route::get('/{order}/track', 'track')->name('track');
+        Route::get('/{order}/invoice', 'invoice')->name('invoice');
+        Route::post('/{order}/cancel', 'cancel')->name('cancel');
+        Route::post('/{order}/return', 'requestReturn')->name('return');
+    });
+    
+    // Payment Processing
+    Route::controller(PaymentController::class)->prefix('payment')->name('payment.')->group(function () {
+        Route::get('/{order}', 'show')->name('show');
+        Route::post('/{order}', 'process')->name('process');
+    });
+});
+
+/*
+|--------------------------------------------------------------------------
+| Vendor Routes
+|--------------------------------------------------------------------------
+*/
+Route::prefix('vendor')->middleware(['auth', 'verified', 'role:vendor'])->name('vendor.')->group(function () {
+    Route::controller(VendorDashboardController::class)->group(function () {
+        Route::get('/dashboard', 'index')->name('dashboard');
+        Route::get('/products', 'products')->name('products');
+        Route::get('/orders', 'orders')->name('orders');
+        Route::get('/settings', 'settings')->name('settings');
+        Route::patch('/settings', 'updateSettings')->name('settings.update');
+    });
+});
+
+/*
+|--------------------------------------------------------------------------
+| Admin Routes
+|--------------------------------------------------------------------------
+*/
+Route::prefix('admin')->middleware(['auth', 'verified', 'role:admin|super-admin'])->name('admin.')->group(function () {
+    
+    // Admin Dashboard
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+    
+    // User Management
+    Route::resource('users', UserController::class);
+    Route::patch('/users/{user}/toggle-verification', [UserController::class, 'toggleVerification'])->name('users.toggle-verification');
+    
+    // Product Management
+    Route::resource('products', AdminProductController::class);
+    Route::patch('/products/bulk-update-status', [AdminProductController::class, 'bulkUpdateStatus'])->name('products.bulk-update-status');
+    
+    // Product Variant Management
+    Route::resource('product-variants', ProductVariantController::class);
+    
+    // Category Management
+    Route::resource('categories', AdminCategoryController::class);
+    
+    // Tag Management
+    Route::resource('tags', TagController::class);
+    
+    // Coupon Management
+    Route::resource('coupons', CouponController::class);
+    Route::controller(CouponController::class)->prefix('coupons')->name('coupons.')->group(function () {
+        Route::patch('/{coupon}/toggle-status', 'toggleStatus')->name('toggle-status');
+        Route::patch('/bulk-update-status', 'bulkUpdateStatus')->name('bulk-update-status');
+    });
+    
+    // Role & Permission Management
+    Route::resource('roles', RoleController::class);
+    Route::controller(RoleController::class)->group(function () {
+        Route::get('/permissions', 'permissions')->name('permissions.index');
+        Route::post('/permissions', 'storePermission')->name('permissions.store');
+        Route::patch('/permissions/{permission}', 'updatePermission')->name('permissions.update');
+        Route::delete('/permissions/{permission}', 'destroyPermission')->name('permissions.destroy');
+    });
+    
+    // Order Management
+    Route::controller(AdminOrderController::class)->prefix('orders')->name('orders.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/{order}', 'show')->name('show');
+        Route::post('/{order}/update-status', 'updateStatus')->name('update-status');
+        Route::post('/{order}/mark-as-paid', 'markAsPaid')->name('mark-as-paid');
+    });
     
     // Activity Logs
-    Route::get('/activity-logs', [\App\Http\Controllers\Admin\ActivityLogController::class, 'index'])->name('activity-logs.index');
-    Route::get('/activity-logs/{activityLog}', [\App\Http\Controllers\Admin\ActivityLogController::class, 'show'])->name('activity-logs.show');
+    Route::controller(ActivityLogController::class)->prefix('activity-logs')->name('activity-logs.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/{activityLog}', 'show')->name('show');
+    });
     
-    Route::patch('/vendors/{vendor}/status', [VendorController::class, 'updateStatus'])->name('vendors.status');
-    Route::patch('/vendors/{vendor}/approve', [\App\Http\Controllers\Admin\DashboardController::class, 'updateVendorStatus'])->name('vendors.approve');
-    Route::patch('/payouts/{payout}/process', [\App\Http\Controllers\Admin\DashboardController::class, 'updatePayoutStatus'])->name('payouts.process');
+    // Vendor Management
     Route::resource('vendors', VendorController::class);
-}); 
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::controller(VendorController::class)->prefix('vendors')->name('vendors.')->group(function () {
+        Route::patch('/{vendor}/status', 'updateStatus')->name('status');
+    });
+    
+    // Vendor & Payout Status Updates (from DashboardController)
+    Route::controller(AdminDashboardController::class)->group(function () {
+        Route::patch('/vendors/{vendor}/approve', 'updateVendorStatus')->name('vendors.approve');
+        Route::patch('/payouts/{payout}/process', 'updatePayoutStatus')->name('payouts.process');
+    });
 });
 
+/*
+|--------------------------------------------------------------------------
+| Auth Routes
+|--------------------------------------------------------------------------
+*/
 require __DIR__.'/auth.php';
