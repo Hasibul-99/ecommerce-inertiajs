@@ -29,13 +29,14 @@ import {
 
 interface ExtendedUser extends User {
   status: 'active' | 'inactive' | 'suspended';
+  roles?: Role[];
 }
 
 interface Role {
   id: number;
   name: string;
-  display_name: string;
-  description: string;
+  display_name?: string;
+  description?: string;
 }
 
 interface Props extends PageProps {
@@ -45,6 +46,11 @@ interface Props extends PageProps {
     last_page: number;
     per_page: number;
     total: number;
+    links: Array<{
+      url: string | null;
+      label: string;
+      active: boolean;
+    }>;
   };
   roles: Role[];
   filters: {
@@ -71,46 +77,8 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
     status: 'active' as 'active' | 'inactive' | 'suspended'
   });
 
-  // Mock data for demonstration
-  const mockUsers: ExtendedUser[] = [
-    {
-      id: 1,
-      name: 'John Doe',
-      email: 'john@example.com',
-      email_verified_at: '2024-01-01T10:00:00Z',
-      role: 'Admin',
-      status: 'active',
-      created_at: '2024-01-01T10:00:00Z',
-      updated_at: '2024-01-01T10:00:00Z'
-    },
-    {
-      id: 2,
-      name: 'Jane Smith',
-      email: 'jane@example.com',
-      email_verified_at: '2024-01-02T10:00:00Z',
-      role: 'Editor',
-      status: 'active',
-      created_at: '2024-01-02T10:00:00Z',
-      updated_at: '2024-01-02T10:00:00Z'
-    },
-    {
-      id: 3,
-      name: 'Bob Johnson',
-      email: 'bob@example.com',
-      email_verified_at: undefined,
-      role: 'User',
-      status: 'inactive',
-      created_at: '2024-01-03T10:00:00Z',
-      updated_at: '2024-01-03T10:00:00Z'
-    }
-  ];
-
-  const mockRoles: Role[] = [
-    { id: 1, name: 'super_admin', display_name: 'Super Admin', description: 'Full system access' },
-    { id: 2, name: 'admin', display_name: 'Admin', description: 'Administrative access' },
-    { id: 3, name: 'editor', display_name: 'Editor', description: 'Content management' },
-    { id: 4, name: 'user', display_name: 'User', description: 'Basic user access' }
-  ];
+  // Use actual users data from the backend
+  const displayUsers = users?.data || [];
 
   const handleSearch = () => {
     router.get(route('admin.users.index'), {
@@ -139,14 +107,15 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
     return variants[status as keyof typeof variants] || variants.inactive;
   };
 
-  const getRoleBadge = (role?: string) => {
+  const getRoleBadge = (userRoles?: Role[]) => {
+    const roleName = userRoles && userRoles.length > 0 ? userRoles[0].name : 'user';
     const variants = {
-      'Super Admin': 'bg-purple-100 text-purple-800',
-      'Admin': 'bg-blue-100 text-blue-800',
-      'Editor': 'bg-yellow-100 text-yellow-800',
-      'User': 'bg-gray-100 text-gray-800'
+      'super-admin': 'bg-purple-100 text-purple-800',
+      'admin': 'bg-blue-100 text-blue-800',
+      'editor': 'bg-yellow-100 text-yellow-800',
+      'user': 'bg-gray-100 text-gray-800'
     };
-    return variants[(role || 'User') as keyof typeof variants] || variants.User;
+    return variants[roleName as keyof typeof variants] || variants.user;
   };
 
   const formatDate = (dateString: string) => {
@@ -304,9 +273,9 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
                         onChange={(e) => setFormData({ ...formData, role_id: e.target.value })}
                       >
                         <option value="">Select role</option>
-                        {mockRoles.map((role) => (
+                        {roles.map((role) => (
                           <option key={role.id} value={role.name}>
-                            {role.display_name}
+                            {role.display_name || role.name}
                           </option>
                         ))}
                       </select>
@@ -353,7 +322,7 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
                   </div>
                   <div className="ml-4">
                     <p className="text-sm font-medium text-blue-700">Total Users</p>
-                    <p className="text-2xl font-bold text-blue-900">{mockUsers.length}</p>
+                    <p className="text-2xl font-bold text-blue-900">{displayUsers.length}</p>
                   </div>
                 </div>
               </CardContent>
@@ -368,7 +337,7 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
                   <div className="ml-4">
                     <p className="text-sm font-medium text-green-700">Active Users</p>
                     <p className="text-2xl font-bold text-green-900">
-                      {mockUsers.filter(user => user.status === 'active').length}
+                      {displayUsers.filter((user: ExtendedUser) => user.status === 'active').length}
                     </p>
                   </div>
                 </div>
@@ -384,7 +353,7 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
                   <div className="ml-4">
                     <p className="text-sm font-medium text-yellow-700">Verified</p>
                     <p className="text-2xl font-bold text-yellow-900">
-                      {mockUsers.filter(user => user.email_verified_at).length}
+                      {displayUsers.filter((user: ExtendedUser) => user.email_verified_at).length}
                     </p>
                   </div>
                 </div>
@@ -400,7 +369,7 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
                   <div className="ml-4">
                     <p className="text-sm font-medium text-red-700">Suspended</p>
                     <p className="text-2xl font-bold text-red-900">
-                      {mockUsers.filter(user => user.status === 'suspended').length}
+                      {displayUsers.filter((user: ExtendedUser) => user.status === 'suspended').length}
                     </p>
                   </div>
                 </div>
@@ -437,9 +406,9 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
                     onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedRole(e.target.value)}
                   >
                     <option value="">All Roles</option>
-                    {mockRoles.map((role) => (
+                    {roles.map((role) => (
                       <option key={role.id} value={role.name}>
-                        {role.display_name}
+                        {role.display_name || role.name}
                       </option>
                     ))}
                   </select>
@@ -496,8 +465,8 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {mockUsers && mockUsers.length > 0 ? (
-                      mockUsers.map((user) => (
+                    {displayUsers && displayUsers.length > 0 ? (
+                      displayUsers.map((user) => (
                         <TableRow key={user.id}>
                           <TableCell>
                             <div className="flex items-center space-x-3">
@@ -511,8 +480,8 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
                             </div>
                           </TableCell>
                           <TableCell>
-                            <Badge className={getRoleBadge(user.role)}>
-                              {user.role}
+                            <Badge className={getRoleBadge(user.roles)}>
+                              {user.roles && user.roles.length > 0 ? user.roles[0].display_name || user.roles[0].name : 'User'}
                             </Badge>
                           </TableCell>
                           <TableCell>
@@ -616,9 +585,9 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
                         value={formData.role_id}
                         onChange={(e) => setFormData({ ...formData, role_id: e.target.value })}
                       >
-                        {mockRoles.map((role) => (
+                        {roles.map((role) => (
                           <option key={role.id} value={role.name}>
-                            {role.display_name}
+                            {role.display_name || role.name}
                           </option>
                         ))}
                       </select>

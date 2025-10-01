@@ -41,7 +41,18 @@ interface ExtendedProduct extends Omit<Product, 'price_cents' | 'sale_price_cent
 }
 
 interface Props extends PageProps {
-  products: ExtendedProduct[];
+  products: {
+    data: ExtendedProduct[];
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    total: number;
+    links: Array<{
+      url: string | null;
+      label: string;
+      active: boolean;
+    }>;
+  };
   categories: Category[];
   vendors: Vendor[];
 }
@@ -60,54 +71,8 @@ export default function ProductsIndex({ products, categories, vendors, auth }: P
     { id: 3, name: 'Premium Foods' }
   ];
 
-  // Mock data for demonstration
-  const mockProducts: ExtendedProduct[] = [
-    {
-      id: 1,
-      title: 'Premium Organic Almonds',
-      slug: 'premium-organic-almonds',
-      description: 'High-quality organic almonds sourced from California farms.',
-      name: 'Premium Organic Almonds',
-      price: 24.99,
-      sale_price: 19.99,
-      stock: 150,
-      sku: 'ALM-001',
-      status: 'active',
-      featured: true,
-      category: { id: 1, name: 'Nuts & Seeds', slug: 'nuts-seeds' },
-      vendor: { id: 1, name: 'Organic Farms Co.' },
-      images: ['/images/almonds-1.jpg', '/images/almonds-2.jpg'],
-      variants: [
-        { id: 1, name: '500g Pack', price_cents: 1999, stock_quantity: 75, sku: 'ALM-001-500', product_id: 1, sale_price_cents: undefined, weight_grams: undefined, dimensions: undefined, created_at: '2024-01-15T10:30:00Z', updated_at: '2024-01-20T14:45:00Z' },
-        { id: 2, name: '1kg Pack', price_cents: 3599, stock_quantity: 50, sku: 'ALM-001-1000', product_id: 1, sale_price_cents: undefined, weight_grams: undefined, dimensions: undefined, created_at: '2024-01-15T10:30:00Z', updated_at: '2024-01-20T14:45:00Z' },
-        { id: 3, name: '2kg Bulk', price_cents: 6599, stock_quantity: 25, sku: 'ALM-001-2000', product_id: 1, sale_price_cents: undefined, weight_grams: undefined, dimensions: undefined, created_at: '2024-01-15T10:30:00Z', updated_at: '2024-01-20T14:45:00Z' }
-      ],
-      category_id: 1,
-      vendor_id: 1,
-      created_at: '2024-01-15T10:30:00Z',
-      updated_at: '2024-01-20T14:45:00Z'
-    },
-    {
-      id: 2,
-      title: 'Fresh Strawberries',
-      slug: 'fresh-strawberries',
-      description: 'Sweet and juicy strawberries, perfect for desserts and snacks.',
-      name: 'Fresh Strawberries',
-      price: 8.99,
-      stock: 200,
-      sku: 'STR-001',
-      status: 'active',
-      featured: false,
-      category: { id: 2, name: 'Fresh Fruits', slug: 'fresh-fruits' },
-      vendor: { id: 2, name: 'Fresh Produce Ltd.' },
-      images: ['/images/strawberries-1.jpg'],
-      variants: [],
-      category_id: 2,
-      vendor_id: 2,
-      created_at: '2024-01-10T08:15:00Z',
-      updated_at: '2024-01-18T16:20:00Z'
-    }
-  ];
+  // Use actual products data from the backend
+  const displayProducts = products?.data || [];
 
   const handleSearch = () => {
     // Implement search logic
@@ -180,7 +145,7 @@ export default function ProductsIndex({ products, categories, vendors, auth }: P
                 <FiPackage className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{mockProducts.length}</div>
+                <div className="text-2xl font-bold">{displayProducts.length}</div>
                 <p className="text-xs text-muted-foreground">
                   Active products in catalog
                 </p>
@@ -193,7 +158,7 @@ export default function ProductsIndex({ products, categories, vendors, auth }: P
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-red-600">
-                  {mockProducts.filter(p => p.stock < 10).length}
+                  {displayProducts.filter(p => p.stock < 10).length}
                 </div>
                 <p className="text-xs text-muted-foreground">
                   Products below 10 units
@@ -207,7 +172,7 @@ export default function ProductsIndex({ products, categories, vendors, auth }: P
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {mockProducts.filter(p => p.featured).length}
+                  {displayProducts.filter(p => p.featured).length}
                 </div>
                 <p className="text-xs text-muted-foreground">
                   Featured products
@@ -221,7 +186,7 @@ export default function ProductsIndex({ products, categories, vendors, auth }: P
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {formatPrice(mockProducts.reduce((sum, p) => sum + (p.price * p.stock), 0))}
+                  {formatPrice(displayProducts.reduce((sum, p) => sum + (p.price * p.stock), 0))}
                 </div>
                 <p className="text-xs text-muted-foreground">
                   Total inventory value
@@ -251,7 +216,7 @@ export default function ProductsIndex({ products, categories, vendors, auth }: P
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
                 <div className="space-y-2">
                   <Label>Search</Label>
                   <Input
@@ -356,8 +321,8 @@ export default function ProductsIndex({ products, categories, vendors, auth }: P
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {mockProducts && mockProducts.length > 0 ? (
-                      mockProducts.map((product) => (
+                    {displayProducts && displayProducts.length > 0 ? (
+                      displayProducts.map((product) => (
                         <TableRow key={product.id}>
                           <TableCell>
                             <div className="flex items-center space-x-3">
@@ -449,6 +414,28 @@ export default function ProductsIndex({ products, categories, vendors, auth }: P
               </div>
             </CardContent>
           </Card>
+
+          {/* Pagination */}
+          {products && products.links && products.links.length > 3 && (
+            <div className="flex justify-center mt-6">
+              <div className="flex space-x-1">
+                {products.links.map((link, index) => (
+                  <Button
+                    key={index}
+                    variant={link.active ? "default" : "outline"}
+                    size="sm"
+                    disabled={!link.url}
+                    onClick={() => {
+                      if (link.url) {
+                        router.visit(link.url);
+                      }
+                    }}
+                    dangerouslySetInnerHTML={{ __html: link.label }}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </AdminLayout>

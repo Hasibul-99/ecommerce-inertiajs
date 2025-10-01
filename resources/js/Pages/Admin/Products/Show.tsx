@@ -97,7 +97,7 @@ export default function Show({ auth, product }: Props) {
                                     {getStatusBadge(product.status)}
                                 </div>
                                 <div className="flex space-x-2">
-                                    <Link href={route('admin.products.edit', { id: product.id })}>
+                                    <Link href={route('admin.products.edit', product.id)}>
                                         <Button className="bg-blue-600 hover:bg-blue-700 text-white">
                                             <Edit className="w-4 h-4 mr-2" />
                                             Edit

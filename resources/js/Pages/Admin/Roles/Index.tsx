@@ -43,12 +43,19 @@ interface Role {
 }
 
 interface Props extends PageProps {
-  roles: Role[];
+  roles: {
+    data: Role[];
+    links: any[];
+    meta: any;
+  };
   permissions: Permission[];
+  filters: {
+    search?: string;
+  };
 }
 
-export default function RolesIndex({ auth, roles, permissions }: Props) {
-  const [searchTerm, setSearchTerm] = useState('');
+export default function RolesIndex({ auth, roles, permissions, filters }: Props) {
+  const [searchTerm, setSearchTerm] = useState(filters?.search || '');
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -59,53 +66,8 @@ export default function RolesIndex({ auth, roles, permissions }: Props) {
     guard_name: 'web'
   });
 
-  // Mock data for demonstration
-  const mockRoles: Role[] = [
-    {
-      id: 1,
-      name: 'Super Admin',
-      guard_name: 'web',
-      permissions: [
-        { id: 1, name: 'manage_users', guard_name: 'web', created_at: '2024-01-01T10:00:00Z', updated_at: '2024-01-01T10:00:00Z' },
-        { id: 2, name: 'manage_products', guard_name: 'web', created_at: '2024-01-01T10:00:00Z', updated_at: '2024-01-01T10:00:00Z' },
-        { id: 3, name: 'manage_orders', guard_name: 'web', created_at: '2024-01-01T10:00:00Z', updated_at: '2024-01-01T10:00:00Z' }
-      ],
-      users_count: 2,
-      created_at: '2024-01-01T10:00:00Z',
-      updated_at: '2024-01-01T10:00:00Z'
-    },
-    {
-      id: 2,
-      name: 'Admin',
-      guard_name: 'web',
-      permissions: [
-        { id: 2, name: 'manage_products', guard_name: 'web', created_at: '2024-01-01T10:00:00Z', updated_at: '2024-01-01T10:00:00Z' },
-        { id: 3, name: 'manage_orders', guard_name: 'web', created_at: '2024-01-01T10:00:00Z', updated_at: '2024-01-01T10:00:00Z' }
-      ],
-      users_count: 5,
-      created_at: '2024-01-01T10:00:00Z',
-      updated_at: '2024-01-01T10:00:00Z'
-    },
-    {
-      id: 3,
-      name: 'Editor',
-      guard_name: 'web',
-      permissions: [
-        { id: 2, name: 'manage_products', guard_name: 'web', created_at: '2024-01-01T10:00:00Z', updated_at: '2024-01-01T10:00:00Z' }
-      ],
-      users_count: 8,
-      created_at: '2024-01-01T10:00:00Z',
-      updated_at: '2024-01-01T10:00:00Z'
-    }
-  ];
-
-  const mockPermissions: Permission[] = [
-    { id: 1, name: 'manage_users', guard_name: 'web', created_at: '2024-01-01T10:00:00Z', updated_at: '2024-01-01T10:00:00Z' },
-    { id: 2, name: 'manage_products', guard_name: 'web', created_at: '2024-01-01T10:00:00Z', updated_at: '2024-01-01T10:00:00Z' },
-    { id: 3, name: 'manage_orders', guard_name: 'web', created_at: '2024-01-01T10:00:00Z', updated_at: '2024-01-01T10:00:00Z' },
-    { id: 4, name: 'manage_coupons', guard_name: 'web', created_at: '2024-01-01T10:00:00Z', updated_at: '2024-01-01T10:00:00Z' },
-    { id: 5, name: 'view_reports', guard_name: 'web', created_at: '2024-01-01T10:00:00Z', updated_at: '2024-01-01T10:00:00Z' }
-  ];
+  // Use actual data from backend
+  const displayRoles = roles?.data || [];
 
   const handleSearch = () => {
     console.log('Searching for:', searchTerm);
@@ -236,7 +198,7 @@ export default function RolesIndex({ auth, roles, permissions }: Props) {
                   <div className="space-y-2">
                     <Label>Permissions</Label>
                     <div className="grid grid-cols-2 gap-4 max-h-60 overflow-y-auto border rounded-md p-4">
-                      {mockPermissions.map((permission) => (
+                      {permissions?.map((permission) => (
                         <div key={permission.id} className="flex items-center space-x-2">
                           <input
                             type="checkbox"
@@ -271,7 +233,7 @@ export default function RolesIndex({ auth, roles, permissions }: Props) {
                   </div>
                   <div className="ml-4">
                     <p className="text-sm font-medium text-blue-700">Total Roles</p>
-                    <p className="text-2xl font-bold text-blue-900">{mockRoles.length}</p>
+                    <p className="text-2xl font-bold text-blue-900">{displayRoles.length}</p>
                   </div>
                 </div>
               </CardContent>
@@ -285,7 +247,7 @@ export default function RolesIndex({ auth, roles, permissions }: Props) {
                   </div>
                   <div className="ml-4">
                     <p className="text-sm font-medium text-green-700">Permissions</p>
-                    <p className="text-2xl font-bold text-green-900">{mockPermissions.length}</p>
+                    <p className="text-2xl font-bold text-green-900">{permissions?.length || 0}</p>
                   </div>
                 </div>
               </CardContent>
@@ -300,7 +262,7 @@ export default function RolesIndex({ auth, roles, permissions }: Props) {
                   <div className="ml-4">
                     <p className="text-sm font-medium text-purple-700">Total Users</p>
                     <p className="text-2xl font-bold text-purple-900">
-                      {mockRoles.reduce((sum, role) => sum + (role.users_count || 0), 0)}
+                      {displayRoles.reduce((sum, role) => sum + (role.users_count || 0), 0)}
                     </p>
                   </div>
                 </div>
@@ -315,7 +277,7 @@ export default function RolesIndex({ auth, roles, permissions }: Props) {
                   </div>
                   <div className="ml-4">
                     <p className="text-sm font-medium text-orange-700">Active Roles</p>
-                    <p className="text-2xl font-bold text-orange-900">{mockRoles.length}</p>
+                    <p className="text-2xl font-bold text-orange-900">{displayRoles.length}</p>
                   </div>
                 </div>
               </CardContent>
@@ -377,8 +339,8 @@ export default function RolesIndex({ auth, roles, permissions }: Props) {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {mockRoles && mockRoles.length > 0 ? (
-                      mockRoles.map((role) => (
+                    {displayRoles && displayRoles.length > 0 ? (
+                      displayRoles.map((role) => (
                         <TableRow key={role.id}>
                           <TableCell>
                             <div className="flex items-center space-x-3">
@@ -476,7 +438,7 @@ export default function RolesIndex({ auth, roles, permissions }: Props) {
                    <div className="space-y-2">
                      <Label>Permissions</Label>
                      <div className="grid grid-cols-2 gap-4 max-h-60 overflow-y-auto border rounded-md p-4">
-                       {mockPermissions.map((permission) => (
+                       {permissions?.map((permission) => (
                          <div key={permission.id} className="flex items-center space-x-2">
                            <input
                              type="checkbox"

@@ -105,7 +105,7 @@ export default function Edit({ product, categories, vendors, tags, auth }: Props
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        put(route('admin.products.update', { id: product.id }));
+        put(route('admin.products.update', product.id));
     };
 
     return (

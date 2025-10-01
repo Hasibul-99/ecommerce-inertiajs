@@ -109,7 +109,7 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
     users: {
       title: 'User Management',
       items: [
-        { name: 'Customers', href: '#', icon: FiUsers },
+        { name: 'Users', href: route('admin.users.index'), icon: FiUsers },
         { name: 'Vendors', href: route('admin.vendors.index'), icon: FiTruck },
         { name: 'Roles & Permissions', href: route('admin.roles.index'), icon: FiShield },
       ]
