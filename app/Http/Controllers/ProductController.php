@@ -274,8 +274,50 @@ class ProductController extends Controller
             $wishlistCount = \App\Models\Wishlist::where('user_id', auth()->id())->count();
         }
 
+        // Format product data for frontend
+        $formattedProduct = [
+            'id' => $product->id,
+            'title' => $product->title,
+            'slug' => $product->slug,
+            'description' => $product->description,
+            'base_price_cents' => $product->base_price_cents,
+            'status' => $product->status,
+            'images' => $product->getMedia('images')->map(function ($media) {
+                return [
+                    'id' => $media->id,
+                    'url' => $media->getUrl(),
+                    'thumb' => $media->getUrl('thumb'),
+                ];
+            })->toArray(),
+            'variants' => $product->variants->map(function ($variant) {
+                return [
+                    'id' => $variant->id,
+                    'sku' => $variant->sku,
+                    'price_cents' => $variant->price_cents,
+                    'stock_quantity' => $variant->stock_quantity,
+                    'is_default' => $variant->is_default,
+                    'attributes' => $variant->attributes ?? [],
+                ];
+            })->toArray(),
+            'category' => $product->category ? [
+                'id' => $product->category->id,
+                'name' => $product->category->name,
+                'slug' => $product->category->slug,
+            ] : null,
+            'vendor' => $product->vendor ? [
+                'id' => $product->vendor->id,
+                'business_name' => $product->vendor->business_name,
+            ] : null,
+            'tags' => $product->tags->map(function ($tag) {
+                return [
+                    'id' => $tag->id,
+                    'name' => $tag->name,
+                ];
+            })->toArray(),
+        ];
+
         return Inertia::render('Product/Show', [
-            'product' => $product,
+            'product' => $formattedProduct,
             'relatedProducts' => $relatedProducts,
             'reviews' => $reviews,
             'reviewsSummary' => [
