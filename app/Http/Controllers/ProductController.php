@@ -184,28 +184,33 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        $product = Product::with(['category', 'images', 'variants.attributes', 'vendor', 'tags'])
+        $product = Product::with(['category', 'variants', 'vendor', 'tags', 'reviews.user'])
             ->where('id', $id)
             ->orWhere('slug', $id)
             ->firstOrFail();
 
         // Get related products from the same category
-        $relatedProducts = Product::with(['images'])
+        $relatedProducts = Product::with(['variants'])
             ->where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
-            ->where('status', 'active')
-            ->where('stock', '>', 0)
+            ->where('status', 'published')
+            ->whereHas('variants', function ($query) {
+                $query->where('stock_quantity', '>', 0);
+            })
             ->limit(4)
             ->get()
             ->map(function ($relatedProduct) {
+                $minPrice = $relatedProduct->variants->min('price_cents');
+                $totalStock = $relatedProduct->variants->sum('stock_quantity');
+
                 return [
                     'id' => $relatedProduct->id,
-                    'name' => $relatedProduct->name,
+                    'name' => $relatedProduct->title,
                     'slug' => $relatedProduct->slug,
-                    'price' => $relatedProduct->price,
-                    'old_price' => $relatedProduct->compare_price,
-                    'image' => $relatedProduct->images->first()?->url ?? null,
-                    'in_stock' => $relatedProduct->stock > 0,
+                    'price' => $minPrice ?? $relatedProduct->base_price_cents,
+                    'old_price' => null,
+                    'image' => $relatedProduct->getMedia('images')->first()?->getUrl() ?? null,
+                    'in_stock' => $totalStock > 0,
                 ];
             });
 
