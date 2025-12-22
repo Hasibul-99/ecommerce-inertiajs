@@ -139,8 +139,8 @@ class ProductController extends Controller
                 ];
             });
 
-        // Get tags for filter (assuming you have a Tag model)
-        $tags = \App\Models\Tag::all()->map(function ($tag) {
+        // Get tags for filter
+        $tags = \App\Models\ProductTag::all()->map(function ($tag) {
             return [
                 'id' => $tag->id,
                 'name' => $tag->name,
