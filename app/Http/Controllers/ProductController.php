@@ -290,13 +290,26 @@ class ProductController extends Controller
                 ];
             })->toArray(),
             'variants' => $product->variants->map(function ($variant) {
+                // Convert attributes object to array format for frontend
+                $attributes = [];
+                if ($variant->attributes) {
+                    if (is_array($variant->attributes)) {
+                        foreach ($variant->attributes as $key => $value) {
+                            $attributes[] = [
+                                'name' => ucfirst($key),
+                                'value' => $value,
+                            ];
+                        }
+                    }
+                }
+
                 return [
                     'id' => $variant->id,
                     'sku' => $variant->sku,
                     'price_cents' => $variant->price_cents,
                     'stock_quantity' => $variant->stock_quantity,
                     'is_default' => $variant->is_default,
-                    'attributes' => $variant->attributes ?? [],
+                    'attributes' => $attributes,
                 ];
             })->toArray(),
             'category' => $product->category ? [
