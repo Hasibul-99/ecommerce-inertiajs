@@ -45,7 +45,7 @@ interface ProductsPageProps extends PageProps {
     };
     categories?: Category[];
     tags?: Tag[];
-    filters: {
+    filters?: {
         search?: string;
         category?: string;
         tags?: string[];
@@ -62,7 +62,7 @@ export default function ProductsIndex({
     products,
     categories = [],
     tags = [],
-    filters,
+    filters = {},
     cartCount = 0,
     wishlistCount = 0
 }: ProductsPageProps) {
