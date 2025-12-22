@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OrderDelivered;
+use App\Events\OrderShipped;
+use App\Events\PaymentFailed;
 use App\Models\Order;
 use App\Models\Payment;
 use Illuminate\Http\Request;
@@ -17,37 +20,19 @@ class WebhookController extends Controller
      */
     public function handlePaymentWebhook(Request $request)
     {
-        // Verify webhook signature
-        // In a real application, you would verify the webhook signature from the payment gateway
-        // For example, for Stripe: $this->verifyStripeSignature($request);
-
         // Log the webhook payload for debugging
         Log::info('Payment webhook received', ['payload' => $request->all()]);
 
         try {
-            // Process the webhook based on the event type
-            $eventType = $request->input('type');
-            $paymentId = $request->input('data.payment_id');
+            // Use Stripe payment service to handle webhook
+            $paymentService = new \App\Services\StripePaymentService();
+            $result = $paymentService->handleWebhook($request->all());
 
-            switch ($eventType) {
-                case 'payment_intent.succeeded':
-                    $this->handlePaymentSucceeded($paymentId, $request->all());
-                    break;
-
-                case 'payment_intent.payment_failed':
-                    $this->handlePaymentFailed($paymentId, $request->all());
-                    break;
-
-                case 'charge.refunded':
-                    $this->handleRefund($paymentId, $request->all());
-                    break;
-
-                default:
-                    // Ignore other event types
-                    break;
+            if ($result['success']) {
+                return response()->json(['status' => 'success']);
+            } else {
+                return response()->json(['status' => 'error', 'message' => $result['message']], 400);
             }
-
-            return response()->json(['status' => 'success']);
         } catch (\Exception $e) {
             Log::error('Error processing payment webhook', [
                 'error' => $e->getMessage(),
@@ -94,12 +79,18 @@ class WebhookController extends Controller
                         'shipping_carrier' => $request->input('carrier'),
                         'status' => 'shipped',
                     ]);
+
+                    // Dispatch order shipped event
+                    event(new OrderShipped($order));
                     break;
 
                 case 'tracking.updated':
                     // Update order status based on shipping status
                     if ($status === 'delivered') {
                         $order->update(['status' => 'delivered']);
+
+                        // Dispatch order delivered event
+                        event(new OrderDelivered($order));
                     } elseif ($status === 'returned') {
                         $order->update(['status' => 'returned']);
                     }
@@ -180,6 +171,10 @@ class WebhookController extends Controller
         $order->update([
             'payment_status' => 'failed',
         ]);
+
+        // Dispatch payment failed event
+        $failureReason = $payload['failure_message'] ?? 'Payment processing failed';
+        event(new PaymentFailed($order, $failureReason));
     }
 
     /**

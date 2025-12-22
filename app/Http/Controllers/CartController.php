@@ -21,10 +21,76 @@ class CartController extends Controller
     public function index()
     {
         $cart = $this->getCart();
+        $cart->load(['items.product.images', 'items.productVariant']);
 
-        return Inertia::render('Cart', [
-            'cart' => $cart->load('items.product', 'items.productVariant'),
+        // Format cart data for frontend
+        $formattedCart = [
+            'id' => $cart->id,
+            'items' => $cart->items->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'product_id' => $item->product_id,
+                    'product_variant_id' => $item->product_variant_id,
+                    'quantity' => $item->quantity,
+                    'price' => $item->price_cents ?? ($item->productVariant->price_cents ?? $item->product->price),
+                    'product' => [
+                        'id' => $item->product->id,
+                        'name' => $item->product->name,
+                        'slug' => $item->product->slug,
+                        'image' => $item->product->images->first()?->url ?? null,
+                        'stock' => $item->productVariant ? $item->productVariant->stock : $item->product->stock,
+                    ],
+                    'variant' => $item->productVariant ? [
+                        'id' => $item->productVariant->id,
+                        'sku' => $item->productVariant->sku,
+                        'attributes' => $item->productVariant->attributes ?? [],
+                    ] : null,
+                ];
+            }),
+            'subtotal' => $cart->subtotal_cents ?? $this->calculateSubtotal($cart),
+            'tax' => $cart->tax_cents ?? $this->calculateTax($cart),
+            'total' => $cart->total_cents ?? $this->calculateTotal($cart),
+        ];
+
+        // Get wishlist count
+        $wishlistCount = 0;
+        if (auth()->check()) {
+            $wishlistCount = \App\Models\Wishlist::where('user_id', auth()->id())->count();
+        }
+
+        return Inertia::render('Cart/Index', [
+            'cart' => $formattedCart,
+            'cartCount' => $cart->items->count(),
+            'wishlistCount' => $wishlistCount,
         ]);
+    }
+
+    /**
+     * Calculate subtotal for cart
+     */
+    private function calculateSubtotal($cart)
+    {
+        return $cart->items->sum(function ($item) {
+            $price = $item->price_cents ?? ($item->productVariant->price_cents ?? $item->product->price);
+            return $price * $item->quantity;
+        });
+    }
+
+    /**
+     * Calculate tax for cart
+     */
+    private function calculateTax($cart)
+    {
+        $subtotal = $this->calculateSubtotal($cart);
+        return (int)($subtotal * 0.1); // 10% tax
+    }
+
+    /**
+     * Calculate total for cart
+     */
+    private function calculateTotal($cart)
+    {
+        return $this->calculateSubtotal($cart) + $this->calculateTax($cart);
     }
 
     /**

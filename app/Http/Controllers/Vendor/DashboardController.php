@@ -42,32 +42,73 @@ class DashboardController extends Controller
         ->with(['items.product', 'user'])
         ->latest()
         ->take(5)
-        ->get();
+        ->get()
+        ->map(function ($order) {
+            return [
+                'id' => $order->id,
+                'order_number' => $order->order_number,
+                'status' => $order->status,
+                'total_cents' => $order->total_cents,
+                'created_at' => $order->created_at->toISOString(),
+                'customer_name' => $order->user->name,
+                'items_count' => $order->items->count(),
+            ];
+        });
 
         // Get sales statistics
         $totalSales = Order::whereHas('items.product', function ($query) use ($vendor) {
             $query->where('vendor_id', $vendor->id);
         })
-        ->where('status', 'completed')
+        ->whereIn('status', ['processing', 'shipped', 'delivered'])
         ->sum('total_cents');
+
+        // Calculate total earnings (commission-based)
+        $totalEarnings = \App\Models\Commission::where('vendor_id', $vendor->id)
+            ->sum('amount_cents');
 
         // Get product statistics
         $totalProducts = Product::where('vendor_id', $vendor->id)->count();
         $publishedProducts = Product::where('vendor_id', $vendor->id)
-            ->where('status', 'published')
+            ->where('status', 'active')
             ->count();
 
+        // Get recent product performance
+        $topProducts = Product::where('vendor_id', $vendor->id)
+            ->withCount(['orderItems' => function ($query) {
+                $query->whereHas('order', function ($q) {
+                    $q->whereIn('status', ['processing', 'shipped', 'delivered']);
+                });
+            }])
+            ->orderBy('order_items_count', 'desc')
+            ->take(5)
+            ->get()
+            ->map(function ($product) {
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'sales_count' => $product->order_items_count,
+                    'price' => $product->price,
+                ];
+            });
+
         return Inertia::render('Vendor/Dashboard', [
-            'vendor' => $vendor,
+            'vendor' => [
+                'id' => $vendor->id,
+                'business_name' => $vendor->business_name,
+                'status' => $vendor->status,
+                'commission_rate' => $vendor->commission_rate ?? 0.1,
+            ],
             'recentOrders' => $recentOrders,
+            'topProducts' => $topProducts,
             'stats' => [
-                'totalSales' => $totalSales / 100, // Convert to dollars
-                'totalProducts' => $totalProducts,
-                'publishedProducts' => $publishedProducts,
-                'pendingOrders' => Order::whereHas('items.product', function ($query) use ($vendor) {
+                'total_sales_cents' => $totalSales,
+                'total_earnings_cents' => $totalEarnings,
+                'total_products' => $totalProducts,
+                'published_products' => $publishedProducts,
+                'pending_orders' => Order::whereHas('items.product', function ($query) use ($vendor) {
                     $query->where('vendor_id', $vendor->id);
                 })
-                ->where('status', 'processing')
+                ->where('status', 'pending')
                 ->count(),
             ],
         ]);
@@ -89,8 +130,9 @@ class DashboardController extends Controller
         }
 
         $products = Product::where('vendor_id', $vendor->id)
+            ->with(['images', 'category'])
             ->when($request->search, function ($query, $search) {
-                return $query->where('title', 'like', "%{$search}%");
+                return $query->where('name', 'like', "%{$search}%");
             })
             ->when($request->status, function ($query, $status) {
                 return $query->where('status', $status);
@@ -99,9 +141,31 @@ class DashboardController extends Controller
             ->paginate(10)
             ->withQueryString();
 
+        // Format products for frontend
+        $formattedProducts = $products->through(function ($product) {
+            return [
+                'id' => $product->id,
+                'name' => $product->name,
+                'slug' => $product->slug,
+                'price' => $product->price,
+                'stock' => $product->stock,
+                'status' => $product->status,
+                'category' => $product->category ? $product->category->name : null,
+                'image' => $product->images->first()?->url ?? null,
+                'created_at' => $product->created_at->toISOString(),
+            ];
+        });
+
         return Inertia::render('Vendor/Products', [
-            'products' => $products,
-            'filters' => $request->only(['search', 'status']),
+            'products' => $formattedProducts,
+            'filters' => [
+                'search' => $request->search ?? '',
+                'status' => $request->status ?? 'all',
+            ],
+            'vendor' => [
+                'id' => $vendor->id,
+                'business_name' => $vendor->business_name,
+            ],
         ]);
     }
 
@@ -131,9 +195,36 @@ class DashboardController extends Controller
         ->paginate(10)
         ->withQueryString();
 
+        // Format orders for frontend
+        $formattedOrders = $orders->through(function ($order) use ($vendor) {
+            // Get only items for this vendor's products
+            $vendorItems = $order->items->filter(function ($item) use ($vendor) {
+                return $item->product->vendor_id == $vendor->id;
+            });
+
+            return [
+                'id' => $order->id,
+                'order_number' => $order->order_number,
+                'status' => $order->status,
+                'payment_status' => $order->payment_status,
+                'total_cents' => $order->total_cents,
+                'created_at' => $order->created_at->toISOString(),
+                'customer_name' => $order->user->name,
+                'customer_email' => $order->user->email,
+                'vendor_items_count' => $vendorItems->count(),
+                'vendor_items_total_cents' => $vendorItems->sum('subtotal_cents'),
+            ];
+        });
+
         return Inertia::render('Vendor/Orders', [
-            'orders' => $orders,
-            'filters' => $request->only(['status']),
+            'orders' => $formattedOrders,
+            'filters' => [
+                'status' => $request->status ?? 'all',
+            ],
+            'vendor' => [
+                'id' => $vendor->id,
+                'business_name' => $vendor->business_name,
+            ],
         ]);
     }
 
@@ -152,7 +243,18 @@ class DashboardController extends Controller
         }
 
         return Inertia::render('Vendor/Settings', [
-            'vendor' => $vendor,
+            'vendor' => [
+                'id' => $vendor->id,
+                'business_name' => $vendor->business_name,
+                'slug' => $vendor->slug,
+                'phone' => $vendor->phone,
+                'status' => $vendor->status,
+                'commission_rate' => $vendor->commission_rate ?? 0.1,
+            ],
+            'user' => [
+                'name' => $user->name,
+                'email' => $user->email,
+            ],
         ]);
     }
 

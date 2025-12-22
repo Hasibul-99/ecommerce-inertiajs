@@ -56,65 +56,18 @@ export default function CouponsIndex({ auth, coupons }: Props) {
     expires_at: ''
   });
 
-  // Mock data for demonstration
-  const mockCoupons: Coupon[] = [
-    {
-      id: 1,
-      code: 'WELCOME20',
-      name: 'Welcome Discount',
-      description: '20% off for new customers',
-      type: 'percentage',
-      value: 20,
-      minimum_amount: 50,
-      maximum_discount: 100,
-      usage_limit: 1000,
-      used_count: 245,
-      status: 'active',
-      starts_at: '2024-01-01T00:00:00Z',
-      expires_at: '2024-12-31T23:59:59Z',
-      created_at: '2024-01-01T10:00:00Z',
-      updated_at: '2024-01-15T14:30:00Z'
-    },
-    {
-      id: 2,
-      code: 'SAVE10',
-      name: 'Save $10',
-      description: '$10 off on orders over $100',
-      type: 'fixed',
-      value: 10,
-      minimum_amount: 100,
-      usage_limit: 500,
-      used_count: 89,
-      status: 'active',
-      starts_at: '2024-01-15T00:00:00Z',
-      expires_at: '2024-06-30T23:59:59Z',
-      created_at: '2024-01-15T09:00:00Z',
-      updated_at: '2024-01-20T11:45:00Z'
-    },
-    {
-      id: 3,
-      code: 'EXPIRED50',
-      name: 'Expired Coupon',
-      description: '50% off - expired',
-      type: 'percentage',
-      value: 50,
-      minimum_amount: 25,
-      usage_limit: 100,
-      used_count: 100,
-      status: 'expired',
-      starts_at: '2023-12-01T00:00:00Z',
-      expires_at: '2023-12-31T23:59:59Z',
-      created_at: '2023-12-01T08:00:00Z',
-      updated_at: '2024-01-01T00:00:00Z'
-    }
-  ];
+  // Use actual coupons data from the backend
+  const displayCoupons = coupons || [];
 
   const handleSearch = () => {
     console.log('Searching for:', searchTerm);
   };
 
   const handleCreateCoupon = () => {
-    router.post(route('admin.coupons.store'), formData, {
+    router.post(route('admin.coupons.store'), {
+      ...formData,
+      value: Number(formData.value)
+    }, {
       onSuccess: () => {
         setShowCreateDialog(false);
         setFormData({
@@ -147,8 +100,8 @@ export default function CouponsIndex({ auth, coupons }: Props) {
       minimum_amount: coupon.minimum_amount?.toString() || '',
       maximum_discount: coupon.maximum_discount?.toString() || '',
       usage_limit: coupon.usage_limit?.toString() || '',
-      starts_at: coupon.starts_at ? coupon.starts_at.split('T')[0] : '',
-      expires_at: coupon.expires_at ? coupon.expires_at.split('T')[0] : ''
+      starts_at: coupon.starts_at || '',
+      expires_at: coupon.expires_at || ''
     });
     setShowEditDialog(true);
   };
@@ -156,7 +109,10 @@ export default function CouponsIndex({ auth, coupons }: Props) {
   const handleUpdateCoupon = () => {
     if (!selectedCoupon) return;
     
-    router.put(route('admin.coupons.update', selectedCoupon.id), formData, {
+    router.put(route('admin.coupons.update', selectedCoupon.id), {
+      ...formData,
+      value: Number(formData.value)
+    }, {
       onSuccess: () => {
         setShowEditDialog(false);
         setSelectedCoupon(null);
@@ -212,10 +168,17 @@ export default function CouponsIndex({ auth, coupons }: Props) {
   const getStatusBadge = (status: string) => {
     const variants = {
       active: 'bg-green-100 text-green-800',
-      inactive: 'bg-red-100 text-red-800',
-      expired: 'bg-gray-100 text-gray-800'
+      inactive: 'bg-gray-100 text-gray-800',
+      expired: 'bg-red-100 text-red-800'
     };
     return variants[status as keyof typeof variants] || variants.inactive;
+  };
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    }).format(amount);
   };
 
   const getUsagePercentage = (used: number, limit?: number) => {
@@ -367,7 +330,7 @@ export default function CouponsIndex({ auth, coupons }: Props) {
                   </div>
                   <div className="ml-4">
                     <p className="text-sm font-medium text-gray-600">Total Coupons</p>
-                    <p className="text-2xl font-bold text-gray-900">{mockCoupons.length}</p>
+                    <p className="text-2xl font-bold text-gray-900">{displayCoupons.length}</p>
                   </div>
                 </div>
               </CardContent>
@@ -381,7 +344,7 @@ export default function CouponsIndex({ auth, coupons }: Props) {
                   <div className="ml-4">
                     <p className="text-sm font-medium text-gray-600">Active Coupons</p>
                     <p className="text-2xl font-bold text-gray-900">
-                      {mockCoupons.filter(c => c.status === 'active').length}
+                      {displayCoupons.filter(c => c.status === 'active').length}
                     </p>
                   </div>
                 </div>
@@ -396,7 +359,7 @@ export default function CouponsIndex({ auth, coupons }: Props) {
                   <div className="ml-4">
                     <p className="text-sm font-medium text-gray-600">Total Uses</p>
                     <p className="text-2xl font-bold text-gray-900">
-                      {mockCoupons.reduce((sum, c) => sum + c.used_count, 0)}
+                      {displayCoupons.reduce((sum, c) => sum + c.used_count, 0)}
                     </p>
                   </div>
                 </div>
@@ -411,7 +374,7 @@ export default function CouponsIndex({ auth, coupons }: Props) {
                   <div className="ml-4">
                     <p className="text-sm font-medium text-gray-600">Expired</p>
                     <p className="text-2xl font-bold text-gray-900">
-                      {mockCoupons.filter(c => c.status === 'expired').length}
+                      {displayCoupons.filter(c => c.status === 'expired').length}
                     </p>
                   </div>
                 </div>
@@ -496,8 +459,8 @@ export default function CouponsIndex({ auth, coupons }: Props) {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {mockCoupons && mockCoupons.length > 0 ? (
-                      mockCoupons.map((coupon) => (
+                    {displayCoupons && displayCoupons.length > 0 ? (
+                      displayCoupons.map((coupon) => (
                         <TableRow key={coupon.id}>
                           <TableCell>
                             <div className="flex items-center space-x-2">

@@ -20,6 +20,22 @@ class EventServiceProvider extends ServiceProvider
         ],
         \App\Events\OrderPlaced::class => [
             \App\Listeners\SendOrderConfirmation::class,
+            \App\Listeners\NotifyVendorsOfNewOrder::class,
+        ],
+        \App\Events\OrderShipped::class => [
+            \App\Listeners\SendOrderShippedNotification::class,
+        ],
+        \App\Events\OrderDelivered::class => [
+            \App\Listeners\SendOrderDeliveredNotification::class,
+        ],
+        \App\Events\OrderCancelled::class => [
+            \App\Listeners\SendOrderCancelledNotification::class,
+        ],
+        \App\Events\PaymentFailed::class => [
+            \App\Listeners\SendPaymentFailedNotification::class,
+        ],
+        \App\Events\PayoutProcessed::class => [
+            \App\Listeners\SendPayoutProcessedNotification::class,
         ],
     ];
 

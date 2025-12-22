@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VendorController;
+use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CheckoutController;
@@ -73,6 +74,15 @@ Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist');
 // Compare Page
 Route::get('/compare', fn() => Inertia::render('Compare'))->name('compare');
 
+// Review Routes
+Route::controller(\App\Http\Controllers\ReviewController::class)->prefix('products/{product}/reviews')->name('reviews.')->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::post('/', 'store')->name('store');
+    Route::patch('/{review}', 'update')->name('update');
+    Route::delete('/{review}', 'destroy')->name('destroy');
+    Route::post('/{review}/helpful', 'markHelpful')->name('helpful');
+});
+
 /*
 |--------------------------------------------------------------------------
 | Webhook Routes (No CSRF Protection)
@@ -117,6 +127,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/', 'clear')->name('clear');
     });
     
+    // Analytics
+    Route::get('/api/analytics/customer', [AnalyticsController::class, 'customerAnalytics'])->name('analytics.customer');
+
     // Wishlist Management
     Route::controller(WishlistController::class)->prefix('wishlist')->name('wishlist.')->group(function () {
         Route::post('/add', 'addItem')->name('add');
@@ -161,6 +174,9 @@ Route::prefix('vendor')->middleware(['auth', 'verified', 'role:vendor'])->name('
         Route::get('/settings', 'settings')->name('settings');
         Route::patch('/settings', 'updateSettings')->name('settings.update');
     });
+
+    // Vendor Analytics
+    Route::get('/api/analytics', [AnalyticsController::class, 'vendorAnalytics'])->name('analytics');
 });
 
 /*

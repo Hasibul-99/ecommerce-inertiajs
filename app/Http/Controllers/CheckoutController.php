@@ -55,12 +55,65 @@ class CheckoutController extends Controller
         // Get user addresses if authenticated
         $addresses = Auth::check() ? Auth::user()->addresses : [];
 
-        return Inertia::render('Checkout', [
-            'cart' => $cart->load('items.product', 'items.productVariant'),
+        // Format cart for frontend
+        $formattedCart = [
+            'items' => $cart->items->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'product' => [
+                        'name' => $item->product->name,
+                        'image' => $item->product->images->first()?->url ?? null,
+                    ],
+                    'quantity' => $item->quantity,
+                    'price_cents' => $item->price_cents ?? $item->product->price,
+                ];
+            }),
+            'subtotal_cents' => $cart->subtotal_cents ?? $this->calculateCartSubtotal($cart),
+            'tax_cents' => $cart->tax_cents ?? $this->calculateCartTax($cart),
+            'total_cents' => $cart->total_cents ?? $this->calculateCartTotal($cart),
+        ];
+
+        // Get wishlist count
+        $wishlistCount = 0;
+        if (auth()->check()) {
+            $wishlistCount = \App\Models\Wishlist::where('user_id', auth()->id())->count();
+        }
+
+        return Inertia::render('Checkout/Index', [
+            'cart' => $formattedCart,
             'addresses' => $addresses,
             'paymentMethods' => $this->getAvailablePaymentMethods(),
             'reservation_id' => $reservationResults['reservation_id'],
+            'cartCount' => $cart->items->count(),
+            'wishlistCount' => $wishlistCount,
         ]);
+    }
+
+    /**
+     * Calculate cart subtotal
+     */
+    private function calculateCartSubtotal($cart)
+    {
+        return $cart->items->sum(function ($item) {
+            $price = $item->price_cents ?? $item->product->price;
+            return $price * $item->quantity;
+        });
+    }
+
+    /**
+     * Calculate cart tax
+     */
+    private function calculateCartTax($cart)
+    {
+        return (int)($this->calculateCartSubtotal($cart) * 0.1);
+    }
+
+    /**
+     * Calculate cart total
+     */
+    private function calculateCartTotal($cart)
+    {
+        return $this->calculateCartSubtotal($cart) + $this->calculateCartTax($cart);
     }
 
     /**
@@ -246,23 +299,54 @@ class CheckoutController extends Controller
                 'payment_status' => 'unpaid',
                 'status' => 'pending',
             ]);
-            
+
             return [
                 'success' => true,
                 'message' => 'Order placed successfully with Cash on Delivery',
             ];
-        } else {
-            // For other payment methods (placeholder for actual payment processing)
-            // In a real application, you would integrate with a payment gateway
-            $order->update([
-                'payment_method' => $request->payment_method,
-                'payment_status' => 'paid',
-                'status' => 'processing',
+        } elseif ($request->payment_method === 'stripe' || $request->payment_method === 'credit_card') {
+            // Use Stripe payment service
+            $paymentService = new \App\Services\StripePaymentService();
+
+            // Create payment intent
+            $result = $paymentService->createPaymentIntent($order);
+
+            if (!$result['success']) {
+                return $result;
+            }
+
+            // In a real application, you would return the client_secret to the frontend
+            // For now, simulate successful payment
+            $paymentService->processSuccessfulPayment($order, [
+                'payment_intent_id' => $result['payment_intent_id'],
+                'payment_method' => 'stripe',
             ]);
-            
+
             return [
                 'success' => true,
                 'message' => 'Payment processed successfully',
+                'client_secret' => $result['client_secret'],
+            ];
+        } elseif ($request->payment_method === 'paypal') {
+            // Use PayPal payment service
+            $paymentService = new \App\Services\StripePaymentService();
+
+            $result = $paymentService->processPayPalPayment($order, [
+                'paypal_email' => $request->paypal_email ?? null,
+            ]);
+
+            return $result;
+        } else {
+            // Other payment methods - mark as pending payment
+            $order->update([
+                'payment_method' => $request->payment_method,
+                'payment_status' => 'pending',
+                'status' => 'pending',
+            ]);
+
+            return [
+                'success' => true,
+                'message' => 'Order placed successfully. Payment pending.',
             ];
         }
     }

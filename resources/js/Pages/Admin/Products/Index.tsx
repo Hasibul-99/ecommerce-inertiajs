@@ -60,16 +60,8 @@ interface Props extends PageProps {
 export default function ProductsIndex({ products, categories, vendors, auth }: Props) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [selectedBrand, setSelectedBrand] = useState('all');
   const [selectedVendor, setSelectedVendor] = useState('all');
   const [selectedStatus, setSelectedStatus] = useState('all');
-
-  // Mock brands data for demonstration
-  const brands = [
-    { id: 1, name: 'Organic Farms Co.' },
-    { id: 2, name: 'Fresh Valley' },
-    { id: 3, name: 'Premium Foods' }
-  ];
 
   // Use actual products data from the backend
   const displayProducts = products?.data || [];
@@ -247,22 +239,6 @@ export default function ProductsIndex({ products, categories, vendors, auth }: P
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label>Brand</Label>
-                  <Select value={selectedBrand} onValueChange={setSelectedBrand}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="All Brands" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Brands</SelectItem>
-                      {brands.map((brand) => (
-                        <SelectItem key={brand.id} value={brand.id.toString()}>
-                          {brand.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
                   <Label>Vendor</Label>
                   <Select value={selectedVendor} onValueChange={setSelectedVendor}>
                     <SelectTrigger>
@@ -270,7 +246,7 @@ export default function ProductsIndex({ products, categories, vendors, auth }: P
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">All Vendors</SelectItem>
-                      {vendors.map((vendor) => (
+                      {vendors?.map((vendor) => (
                         <SelectItem key={vendor.id} value={vendor.id.toString()}>
                           {vendor.name}
                         </SelectItem>

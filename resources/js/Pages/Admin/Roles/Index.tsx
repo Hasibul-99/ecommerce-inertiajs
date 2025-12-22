@@ -74,9 +74,14 @@ export default function RolesIndex({ auth, roles, permissions, filters }: Props)
   };
 
   const handleCreateRole = () => {
+    const permissionNames = selectedPermissions.map(id => {
+      const permission = permissions?.find(p => p.id === id);
+      return permission?.name;
+    }).filter(Boolean);
+
     router.post(route('admin.roles.store'), {
       ...formData,
-      permissions: selectedPermissions
+      permissions: permissionNames
     }, {
       onSuccess: () => {
         setShowCreateDialog(false);
@@ -102,9 +107,14 @@ export default function RolesIndex({ auth, roles, permissions, filters }: Props)
   const handleUpdateRole = () => {
     if (!selectedRole) return;
     
+    const permissionNames = selectedPermissions.map(id => {
+      const permission = permissions?.find(p => p.id === id);
+      return permission?.name;
+    }).filter(Boolean);
+    
     router.put(route('admin.roles.update', selectedRole.id), {
       ...formData,
-      permissions: selectedPermissions
+      permissions: permissionNames
     }, {
       onSuccess: () => {
         setShowEditDialog(false);

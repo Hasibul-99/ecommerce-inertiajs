@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OrderCancelled;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,17 +25,64 @@ class OrderController extends Controller
      *
      * @return \Inertia\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
-        
-        $orders = Order::where('user_id', $user->id)
-            ->with('items.product')
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+
+        $query = Order::where('user_id', $user->id)
+            ->with('items.product');
+
+        // Filter by status
+        if ($request->has('status') && $request->status !== 'all') {
+            $query->where('status', $request->status);
+        }
+
+        // Search by order number
+        if ($request->has('search') && $request->search) {
+            $query->where('order_number', 'like', '%' . $request->search . '%');
+        }
+
+        $orders = $query->orderBy('created_at', 'desc')
+            ->paginate(10)
+            ->withQueryString();
+
+        // Format orders for frontend
+        $formattedOrders = $orders->through(function ($order) {
+            return [
+                'id' => $order->id,
+                'order_number' => $order->order_number,
+                'status' => $order->status,
+                'payment_status' => $order->payment_status,
+                'total_cents' => $order->total_cents,
+                'created_at' => $order->created_at->toISOString(),
+                'items_count' => $order->items->count(),
+                'first_item_image' => $order->items->first()?->product?->images->first()?->url ?? null,
+            ];
+        });
+
+        // Get wishlist count
+        $wishlistCount = 0;
+        if (auth()->check()) {
+            $wishlistCount = \App\Models\Wishlist::where('user_id', auth()->id())->count();
+        }
+
+        // Get cart count
+        $cartCount = 0;
+        if (auth()->check()) {
+            $cart = \App\Models\Cart::where('user_id', auth()->id())->first();
+            if ($cart) {
+                $cartCount = $cart->items()->count();
+            }
+        }
 
         return Inertia::render('Orders/Index', [
-            'orders' => $orders,
+            'orders' => $formattedOrders,
+            'filters' => [
+                'status' => $request->status ?? 'all',
+                'search' => $request->search ?? '',
+            ],
+            'cartCount' => $cartCount,
+            'wishlistCount' => $wishlistCount,
         ]);
     }
 
@@ -48,10 +96,87 @@ class OrderController extends Controller
     {
         $this->authorize('view', $order);
 
-        $order->load('items.product', 'shippingAddress', 'billingAddress');
+        $order->load('items.product.images', 'items.productVariant', 'shippingAddress', 'billingAddress');
+
+        // Format order for frontend
+        $formattedOrder = [
+            'id' => $order->id,
+            'order_number' => $order->order_number,
+            'status' => $order->status,
+            'payment_status' => $order->payment_status,
+            'payment_method' => $order->payment_method,
+            'subtotal_cents' => $order->subtotal_cents,
+            'tax_cents' => $order->tax_cents,
+            'shipping_cents' => $order->shipping_cents ?? 0,
+            'discount_cents' => $order->discount_cents ?? 0,
+            'total_cents' => $order->total_cents,
+            'notes' => $order->notes,
+            'tracking_number' => $order->tracking_number,
+            'shipping_carrier' => $order->shipping_carrier,
+            'created_at' => $order->created_at->toISOString(),
+            'items' => $order->items->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'product_name' => $item->product_name,
+                    'product_id' => $item->product_id,
+                    'quantity' => $item->quantity,
+                    'unit_price_cents' => $item->unit_price_cents,
+                    'subtotal_cents' => $item->subtotal_cents,
+                    'product' => [
+                        'id' => $item->product->id,
+                        'slug' => $item->product->slug,
+                        'image' => $item->product->images->first()?->url ?? null,
+                    ],
+                    'variant' => $item->productVariant ? [
+                        'id' => $item->productVariant->id,
+                        'sku' => $item->productVariant->sku,
+                        'attributes' => $item->productVariant->attributes ?? [],
+                    ] : null,
+                ];
+            }),
+            'shipping_address' => $order->shippingAddress ? [
+                'name' => $order->shippingAddress->name,
+                'address_line1' => $order->shippingAddress->address_line1,
+                'address_line2' => $order->shippingAddress->address_line2,
+                'city' => $order->shippingAddress->city,
+                'state' => $order->shippingAddress->state,
+                'postal_code' => $order->shippingAddress->postal_code,
+                'country' => $order->shippingAddress->country,
+                'phone' => $order->shippingAddress->phone,
+            ] : null,
+            'billing_address' => $order->billingAddress ? [
+                'name' => $order->billingAddress->name,
+                'address_line1' => $order->billingAddress->address_line1,
+                'address_line2' => $order->billingAddress->address_line2,
+                'city' => $order->billingAddress->city,
+                'state' => $order->billingAddress->state,
+                'postal_code' => $order->billingAddress->postal_code,
+                'country' => $order->billingAddress->country,
+                'phone' => $order->billingAddress->phone,
+            ] : null,
+            'can_cancel' => in_array($order->status, ['pending', 'processing']),
+            'can_request_return' => $order->status === 'delivered',
+        ];
+
+        // Get wishlist count
+        $wishlistCount = 0;
+        if (auth()->check()) {
+            $wishlistCount = \App\Models\Wishlist::where('user_id', auth()->id())->count();
+        }
+
+        // Get cart count
+        $cartCount = 0;
+        if (auth()->check()) {
+            $cart = \App\Models\Cart::where('user_id', auth()->id())->first();
+            if ($cart) {
+                $cartCount = $cart->items()->count();
+            }
+        }
 
         return Inertia::render('Orders/Show', [
-            'order' => $order,
+            'order' => $formattedOrder,
+            'cartCount' => $cartCount,
+            'wishlistCount' => $wishlistCount,
         ]);
     }
 
@@ -73,6 +198,9 @@ class OrderController extends Controller
         $order->update([
             'status' => 'cancelled',
         ]);
+
+        // Dispatch order cancelled event
+        event(new OrderCancelled($order));
 
         return redirect()->back()->with('success', 'Order cancelled successfully.');
     }

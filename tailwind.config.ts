@@ -50,7 +50,57 @@ export default {
                 lg: "var(--radius)",
             },
             fontFamily: {
-                sans: ["Inter", "sans-serif"],
+                sans: ["Poppins", "sans-serif"],
+                heading: ["Manrope", "sans-serif"],
+            },
+            colors: {
+                // Grabit Design System Colors
+                grabit: {
+                    primary: "#5caf90",
+                    "primary-dark": "#4a9377",
+                    dark: "#4b5966",
+                    "dark-secondary": "#1d2235",
+                    gray: "#777777",
+                    "gray-light": "#999999",
+                    border: "#eeeeee",
+                    "bg-light": "#f8f8fb",
+                    sale: "#ff7070",
+                    star: "#f27d0c",
+                },
+                // Shadcn/UI colors (keep existing)
+                border: "hsl(var(--border))",
+                input: "hsl(var(--input))",
+                ring: "hsl(var(--ring))",
+                background: "hsl(var(--background))",
+                foreground: "hsl(var(--foreground))",
+                primary: {
+                    DEFAULT: "hsl(var(--primary))",
+                    foreground: "hsl(var(--primary-foreground))",
+                },
+                secondary: {
+                    DEFAULT: "hsl(var(--secondary))",
+                    foreground: "hsl(var(--secondary-foreground))",
+                },
+                destructive: {
+                    DEFAULT: "hsl(var(--destructive))",
+                    foreground: "hsl(var(--destructive-foreground))",
+                },
+                muted: {
+                    DEFAULT: "hsl(var(--muted))",
+                    foreground: "hsl(var(--muted-foreground))",
+                },
+                accent: {
+                    DEFAULT: "hsl(var(--accent))",
+                    foreground: "hsl(var(--accent-foreground))",
+                },
+                popover: {
+                    DEFAULT: "hsl(var(--popover))",
+                    foreground: "hsl(var(--popover-foreground))",
+                },
+                card: {
+                    DEFAULT: "hsl(var(--card))",
+                    foreground: "hsl(var(--card-foreground))",
+                },
             },
             keyframes: {
                 "accordion-down": {

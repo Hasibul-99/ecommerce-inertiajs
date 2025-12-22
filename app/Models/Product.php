@@ -168,4 +168,36 @@ class Product extends Model implements HasMedia
     {
         return $this->hasMany(ProductImage::class);
     }
+
+    /**
+     * Get the reviews for the product.
+     */
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    /**
+     * Get the order items for the product.
+     */
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
+    /**
+     * Get the average rating for the product.
+     */
+    public function getAverageRatingAttribute()
+    {
+        return $this->reviews()->approved()->avg('rating') ?? 0;
+    }
+
+    /**
+     * Get the total reviews count for the product.
+     */
+    public function getReviewsCountAttribute()
+    {
+        return $this->reviews()->approved()->count();
+    }
 }
