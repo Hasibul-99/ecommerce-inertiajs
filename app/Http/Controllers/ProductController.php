@@ -29,13 +29,15 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Product::with(['vendor', 'category', 'images', 'tags'])
-            ->where('status', 'active')
-            ->where('stock', '>', 0);
+        $query = Product::with(['vendor', 'category', 'variants', 'tags', 'reviews'])
+            ->where('status', 'published')
+            ->whereHas('variants', function ($q) {
+                $q->where('stock_quantity', '>', 0);
+            });
 
         // Search
         if ($request->has('search') && $request->search) {
-            $query->where('name', 'like', "%{$request->search}%");
+            $query->where('title', 'like', "%{$request->search}%");
         }
 
         // Category filter
@@ -54,53 +56,73 @@ class ProductController extends Controller
 
         // Price range filter
         if ($request->has('min_price')) {
-            $query->where('price', '>=', $request->min_price * 100); // Convert to cents
+            $query->whereHas('variants', function ($q) use ($request) {
+                $q->where('price_cents', '>=', $request->min_price * 100);
+            });
         }
         if ($request->has('max_price')) {
-            $query->where('price', '<=', $request->max_price * 100); // Convert to cents
+            $query->whereHas('variants', function ($q) use ($request) {
+                $q->where('price_cents', '<=', $request->max_price * 100);
+            });
         }
 
         // Sorting
-        $sort = $request->get('sort', '');
+        $sort = $request->get('sort', 'newest');
         switch ($sort) {
             case 'name_asc':
-                $query->orderBy('name', 'asc');
+                $query->orderBy('title', 'asc');
                 break;
             case 'name_desc':
-                $query->orderBy('name', 'desc');
+                $query->orderBy('title', 'desc');
                 break;
             case 'price_asc':
-                $query->orderBy('price', 'asc');
+            case 'price_low':
+                $query->join('product_variants', 'products.id', '=', 'product_variants.product_id')
+                    ->select('products.*')
+                    ->groupBy('products.id')
+                    ->orderByRaw('MIN(product_variants.price_cents) ASC');
                 break;
             case 'price_desc':
-                $query->orderBy('price', 'desc');
+            case 'price_high':
+                $query->join('product_variants', 'products.id', '=', 'product_variants.product_id')
+                    ->select('products.*')
+                    ->groupBy('products.id')
+                    ->orderByRaw('MIN(product_variants.price_cents) DESC');
+                break;
+            case 'popular':
+                $query->withCount('reviews')->orderBy('reviews_count', 'desc');
+                break;
+            case 'rating':
+                $query->withAvg('reviews', 'rating')->orderBy('reviews_avg_rating', 'desc');
                 break;
             case 'newest':
-                $query->orderBy('created_at', 'desc');
-                break;
             default:
                 $query->orderBy('created_at', 'desc');
+                break;
         }
 
         $products = $query->paginate(12)->withQueryString();
 
         // Transform products for frontend
         $products->getCollection()->transform(function ($product) {
+            $totalStock = $product->variants->sum('stock_quantity');
+            $minPrice = $product->variants->min('price_cents');
+            $averageRating = $product->reviews()->approved()->avg('rating') ?? 0;
+            $reviewsCount = $product->reviews()->approved()->count();
+
             return [
                 'id' => $product->id,
-                'name' => $product->name,
+                'name' => $product->title,
                 'slug' => $product->slug,
-                'price' => $product->price,
-                'old_price' => $product->compare_price,
-                'image' => $product->images->first()?->url ?? null,
-                'rating' => 4, // TODO: Implement real ratings
-                'reviews_count' => 0,
+                'price' => $minPrice ?? $product->base_price_cents,
+                'old_price' => null,
+                'image' => $product->getMedia('images')->first()?->getUrl() ?? null,
+                'rating' => round($averageRating, 1),
+                'reviews_count' => $reviewsCount,
                 'is_new' => $product->created_at->isAfter(now()->subDays(30)),
-                'is_sale' => $product->compare_price > $product->price,
-                'discount_percentage' => $product->compare_price > 0
-                    ? round((($product->compare_price - $product->price) / $product->compare_price) * 100)
-                    : 0,
-                'in_stock' => $product->stock > 0,
+                'is_sale' => false,
+                'discount_percentage' => 0,
+                'in_stock' => $totalStock > 0,
             ];
         });
 
@@ -130,7 +152,10 @@ class ProductController extends Controller
         $cartCount = 0;
         $wishlistCount = 0;
         if (auth()->check()) {
-            $cartCount = \App\Models\Cart::where('user_id', auth()->id())->count();
+            $cart = \App\Models\Cart::where('user_id', auth()->id())->first();
+            if ($cart) {
+                $cartCount = $cart->items()->count();
+            }
             $wishlistCount = \App\Models\Wishlist::where('user_id', auth()->id())->count();
         }
 
