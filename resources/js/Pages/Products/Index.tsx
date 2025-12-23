@@ -66,16 +66,19 @@ export default function ProductsIndex({
     cartCount = 0,
     wishlistCount = 0
 }: ProductsPageProps) {
+    // Ensure filters is always an object
+    const safeFilters = filters || {};
+
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
     const [selectedCategories, setSelectedCategories] = useState<string[]>(
-        filters.category ? [filters.category] : []
+        safeFilters.category ? [safeFilters.category] : []
     );
-    const [selectedTags, setSelectedTags] = useState<string[]>(filters.tags || []);
+    const [selectedTags, setSelectedTags] = useState<string[]>(safeFilters.tags || []);
     const [priceRange, setPriceRange] = useState({
-        min: filters.min_price || 0,
-        max: filters.max_price || 1000
+        min: safeFilters.min_price || 0,
+        max: safeFilters.max_price || 1000
     });
-    const [sortBy, setSortBy] = useState(filters.sort || '');
+    const [sortBy, setSortBy] = useState(safeFilters.sort || '');
 
     // Apply filters
     const applyFilters = () => {
@@ -96,8 +99,8 @@ export default function ProductsIndex({
         if (sortBy) {
             params.sort = sortBy;
         }
-        if (filters.search) {
-            params.search = filters.search;
+        if (safeFilters.search) {
+            params.search = safeFilters.search;
         }
 
         router.get('/products', params, { preserveState: true });
@@ -126,7 +129,7 @@ export default function ProductsIndex({
         const newSort = e.target.value;
         setSortBy(newSort);
 
-        const params: any = { ...filters };
+        const params: any = { ...safeFilters };
         if (newSort) {
             params.sort = newSort;
         } else {
