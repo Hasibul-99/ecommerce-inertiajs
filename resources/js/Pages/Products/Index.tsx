@@ -69,6 +69,17 @@ export default function ProductsIndex({
     // Ensure filters is always an object
     const safeFilters = filters || {};
 
+    // Ensure products has a valid structure
+    const safeProducts = products || {
+        data: [],
+        current_page: 1,
+        last_page: 1,
+        per_page: 12,
+        total: 0,
+        from: 0,
+        to: 0
+    };
+
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
     const [selectedCategories, setSelectedCategories] = useState<string[]>(
         safeFilters.category ? [safeFilters.category] : []
@@ -296,7 +307,7 @@ export default function ProductsIndex({
 
                                 {/* Results Count */}
                                 <span className="text-sm text-grabit-gray">
-                                    Showing {products.from}-{products.to} of {products.total} products
+                                    Showing {safeProducts.from}-{safeProducts.to} of {safeProducts.total} products
                                 </span>
                             </div>
 
@@ -345,29 +356,29 @@ export default function ProductsIndex({
                         )}
 
                         {/* Products Grid */}
-                        {products.data.length > 0 ? (
+                        {safeProducts.data.length > 0 ? (
                             <>
                                 <div className={`grid gap-6 ${
                                     viewMode === 'grid'
                                         ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
                                         : 'grid-cols-1'
                                 }`}>
-                                    {products.data.map((product) => (
+                                    {safeProducts.data.map((product) => (
                                         <ProductCard key={product.id} product={product} />
                                     ))}
                                 </div>
 
                                 {/* Pagination */}
-                                {products.last_page > 1 && (
+                                {safeProducts.last_page > 1 && (
                                     <div className="mt-8 flex justify-center">
                                         <div className="flex items-center gap-2">
-                                            {Array.from({ length: products.last_page }, (_, i) => i + 1).map((page) => (
+                                            {Array.from({ length: safeProducts.last_page }, (_, i) => i + 1).map((page) => (
                                                 <Link
                                                     key={page}
                                                     href={`/products?page=${page}`}
                                                     preserveState
                                                     className={`px-4 py-2 rounded-md transition-colors ${
-                                                        page === products.current_page
+                                                        page === safeProducts.current_page
                                                             ? 'bg-grabit-primary text-white'
                                                             : 'bg-gray-100 text-grabit-gray hover:bg-grabit-primary hover:text-white'
                                                     }`}
