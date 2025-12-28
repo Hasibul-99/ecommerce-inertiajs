@@ -1,116 +1,136 @@
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
-import GuestLayout from '@/Layouts/GuestLayout';
-import { 
-  GiPeach, 
-  GiBread, 
-  GiCorn, 
-  GiCoffeePot, 
-  GiFrenchFries, 
-  GiHamburger, 
-  GiShrimp, 
-  GiPopcorn 
-} from 'react-icons/gi';
+import FrontendLayout from '@/Layouts/FrontendLayout';
+import { PageProps } from '@/types';
+import { FiChevronRight, FiPackage } from 'react-icons/fi';
 
-interface CategoryItem {
+interface Category {
   id: number;
   name: string;
-  icon: string;
-  itemCount: number;
-  bgColor: string;
-  discount?: number;
   slug: string;
+  description?: string;
+  image?: string;
+  products_count: number;
 }
 
-// Icon mapping function
-const getIconComponent = (iconClass: string) => {
-  const iconMap: { [key: string]: React.ComponentType<any> } = {
-    'fi-tr-peach': GiPeach,
-    'fi-tr-bread': GiBread,
-    'fi-tr-corn': GiCorn,
-    'fi-tr-coffee-pot': GiCoffeePot,
-    'fi-tr-french-fries': GiFrenchFries,
-    'fi-tr-hamburger-soda': GiHamburger,
-    'fi-tr-shrimp': GiShrimp,
-    'fi-tr-popcorn': GiPopcorn,
-    // 'fi-tr-egg': GiEggCracked,
-  };
-  
-  return iconMap[iconClass] || GiPeach; // fallback icon
-};
+interface CategoryIndexProps extends PageProps {
+  categories: Category[];
+  cartCount?: number;
+  wishlistCount?: number;
+}
 
-export default function CategoryIndex() {
-  // Mock data for categories - this would come from your backend in a real app
-  const categories: CategoryItem[] = [
-    { id: 1, name: 'Fruits', icon: 'fi-tr-peach', itemCount: 320, bgColor: 'bg-[#fff6ec]', discount: 30, slug: 'fruits' },
-    { id: 2, name: 'Bakery', icon: 'fi-tr-bread', itemCount: 65, bgColor: 'bg-[#e2fde2]', slug: 'bakery' },
-    { id: 3, name: 'Vegetables', icon: 'fi-tr-corn', itemCount: 548, bgColor: 'bg-[#ffeae9]', discount: 15, slug: 'vegetables' },
-    { id: 4, name: 'Dairy & Milk', icon: 'fi-tr-coffee-pot', itemCount: 48, bgColor: 'bg-[#fde1f5]', discount: 10, slug: 'dairy-milk' },
-    { id: 5, name: 'Snack & Spice', icon: 'fi-tr-french-fries', itemCount: 59, bgColor: 'bg-[#ecf0ff]', slug: 'snack-spice' },
-    { id: 6, name: 'Juice & Drinks', icon: 'fi-tr-hamburger-soda', itemCount: 845, bgColor: 'bg-[#f9f9d9]', slug: 'juice-drinks' },
-    { id: 7, name: 'Seafood', icon: 'fi-tr-shrimp', itemCount: 652, bgColor: 'bg-[#fff6ec]', slug: 'seafood' },
-    { id: 8, name: 'Fast Food', icon: 'fi-tr-popcorn', itemCount: 253, bgColor: 'bg-[#e2fde2]', discount: 20, slug: 'fast-food' },
-    { id: 9, name: 'Eggs', icon: 'fi-tr-egg', itemCount: 154, bgColor: 'bg-[#ffeae9]', slug: 'eggs' },
-  ];
+// Color palette for category cards
+const colorPalette = [
+  'bg-blue-50 border-blue-200',
+  'bg-green-50 border-green-200',
+  'bg-yellow-50 border-yellow-200',
+  'bg-purple-50 border-purple-200',
+  'bg-pink-50 border-pink-200',
+  'bg-indigo-50 border-indigo-200',
+  'bg-red-50 border-red-200',
+  'bg-orange-50 border-orange-200',
+];
+
+export default function CategoryIndex({
+  auth,
+  categories = [],
+  cartCount = 0,
+  wishlistCount = 0
+}: CategoryIndexProps) {
 
   return (
-    <GuestLayout>
-      <Head title="Categories" />
+    <FrontendLayout auth={auth} cartCount={cartCount} wishlistCount={wishlistCount}>
+      <Head title="All Categories" />
 
-      {/* Breadcrumb start */}
-      <div className="gi-breadcrumb mb-[40px]">
-        <div className="flex flex-wrap justify-between items-center mx-auto min-[1600px]:max-w-[1600px] min-[1400px]:max-w-[1320px] min-[1200px]:max-w-[1140px] min-[992px]:max-w-[960px] min-[768px]:max-w-[720px] min-[576px]:max-w-[540px] relative">
-          <div className="flex flex-wrap w-full">
-            <div className="w-full px-[12px]">
-              <div className="flex flex-wrap m-0 p-[15px] border-[1px] border-solid border-[#eee] rounded-b-[5px] border-t-[0] gi_breadcrumb_inner">
-                <div className="min-[768px]:w-[50%] w-full px-[12px]">
-                  <h2 className="gi-breadcrumb-title text-[#4b5966] block text-[15px] font-Poppins leading-[22px] font-semibold my-[0] mx-auto capitalize max-[767px]:mb-[5px] max-[767px]:text-center">Categories</h2>
-                </div>
-                <div className="min-[768px]:w-[50%] w-full px-[12px]">
-                  {/* gi-breadcrumb-list start */}
-                  <ul className="gi-breadcrumb-list text-right max-[767px]:text-center">
-                    <li className="gi-breadcrumb-item inline-block text-[14px] font-normal tracking-[0.02rem] leading-[1.2] capitalize"><Link href="/" className="relative text-[#4b5966]">Home</Link></li>
-                    <li className="gi-breadcrumb-item inline-block text-[14px] font-normal tracking-[0.02rem] leading-[1.2] capitalize active">Categories</li>
-                  </ul>
-                  {/* gi-breadcrumb-list end */}
-                </div>
-              </div>
-            </div>
+      {/* Breadcrumb */}
+      <div className="bg-grabit-bg-light py-4">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center gap-2 text-sm text-grabit-gray">
+            <Link href="/" className="hover:text-grabit-primary">Home</Link>
+            <FiChevronRight className="w-4 h-4" />
+            <span className="text-grabit-dark">Categories</span>
           </div>
         </div>
       </div>
-      {/* Breadcrumb end */}
 
-      {/* Category section */}
-      <section className="gi-category py-[40px] max-[767px]:py-[30px]">
-        <div className="flex flex-wrap justify-between items-center mx-auto min-[1600px]:max-w-[1600px] min-[1400px]:max-w-[1320px] min-[1200px]:max-w-[1140px] min-[992px]:max-w-[960px] min-[768px]:max-w-[720px] min-[576px]:max-w-[540px] relative">
-          <div className="w-full flex flex-wrap px-[12px] mb-[-15px]">
-            <div className="min-[1200px]:w-full basis-auto max-w-full border-content-color">
-              <div className="gi-category-block grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                {categories.map((category) => {
-                  const IconComponent = getIconComponent(category.icon);
-                  return (
-                    <div key={category.id} className={`gi-cat-box transition-all duration-[0.3s] ease-in-out p-[15px] rounded-[5px] relative ${category.bgColor}`}>
-                      <div className="gi-cat-icon h-full p-[15px] flex flex-col items-center justify-center bg-[#fff] relative rounded-[5px] z-[5]">
-                        {category.discount && (
-                          <span className="gi-lbl px-[5px] absolute top-[0] right-[0] bg-[#5caf90] text-[#fff] text-[12px] font-semibold rounded-bl-[5px] rounded-tr-[5px]">{category.discount}%</span>
-                        )}
-                        <IconComponent className="transition-all duration-[0.3s] ease-in-out text-[40px] my-[10px] text-[#5caf90] leading-[0]" />
-                        <div className="gi-cat-detail text-center">
-                          <Link href={`/category/${category.slug}`}>
-                            <h4 className="gi-cat-title m-[0] text-[15px] leading-[22px] font-semibold text-[#4b5966] capitalize font-manrope">{category.name}</h4>
-                          </Link>
-                          <p className="items m-[0] text-[13px] leading-[28px] text-[#777]">{category.itemCount} Items</p>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
+      {/* Page Header */}
+      <div className="bg-white border-b border-grabit-border py-8">
+        <div className="container mx-auto px-4">
+          <h1 className="text-3xl font-heading font-bold text-grabit-dark mb-2">
+            Shop by Category
+          </h1>
+          <p className="text-grabit-gray">
+            Browse our wide range of product categories
+          </p>
         </div>
+      </div>
+
+      {/* Categories Grid */}
+      <section className="container mx-auto px-4 py-12">
+        {categories.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {categories.map((category, index) => {
+              const colorClass = colorPalette[index % colorPalette.length];
+
+              return (
+                <Link
+                  key={category.id}
+                  href={`/categories/${category.slug}`}
+                  className="group"
+                >
+                  <div className={`${colorClass} border-2 rounded-lg p-6 transition-all duration-300 hover:shadow-lg hover:scale-105 h-full`}>
+                    <div className="flex flex-col items-center justify-center text-center h-full">
+                      {/* Category Icon/Image */}
+                      <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-4 group-hover:bg-grabit-primary transition-colors">
+                        {category.image ? (
+                          <img
+                            src={category.image}
+                            alt={category.name}
+                            className="w-10 h-10 object-contain"
+                          />
+                        ) : (
+                          <FiPackage className="w-8 h-8 text-grabit-primary group-hover:text-white transition-colors" />
+                        )}
+                      </div>
+
+                      {/* Category Info */}
+                      <h3 className="text-lg font-heading font-semibold text-grabit-dark mb-2 group-hover:text-grabit-primary transition-colors">
+                        {category.name}
+                      </h3>
+
+                      {category.description && (
+                        <p className="text-sm text-grabit-gray mb-3 line-clamp-2">
+                          {category.description}
+                        </p>
+                      )}
+
+                      <p className="text-sm text-grabit-gray">
+                        {category.products_count} {category.products_count === 1 ? 'Product' : 'Products'}
+                      </p>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="text-center py-16">
+            <div className="text-6xl mb-4">📦</div>
+            <h3 className="text-xl font-heading font-semibold text-grabit-dark mb-2">
+              No categories found
+            </h3>
+            <p className="text-grabit-gray mb-6">
+              Categories will appear here once they are added
+            </p>
+            <Link
+              href="/"
+              className="inline-block bg-grabit-primary hover:bg-grabit-primary-dark text-white px-6 py-3 rounded-md font-medium transition-colors"
+            >
+              Back to Home
+            </Link>
+          </div>
+        )}
       </section>
-    </GuestLayout>
+    </FrontendLayout>
   );
 }

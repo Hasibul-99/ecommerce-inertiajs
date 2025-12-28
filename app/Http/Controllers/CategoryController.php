@@ -15,12 +15,35 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::with('children')
+        $categories = Category::withCount('products')
             ->whereNull('parent_id')
-            ->get();
+            ->get()
+            ->map(function ($category) {
+                return [
+                    'id' => $category->id,
+                    'name' => $category->name,
+                    'slug' => $category->slug,
+                    'description' => $category->description,
+                    'image' => $category->image,
+                    'products_count' => $category->products_count,
+                ];
+            });
+
+        // Get cart and wishlist counts
+        $cartCount = 0;
+        $wishlistCount = 0;
+        if (auth()->check()) {
+            $cart = \App\Models\Cart::where('user_id', auth()->id())->first();
+            if ($cart) {
+                $cartCount = $cart->items()->count();
+            }
+            $wishlistCount = \App\Models\Wishlist::where('user_id', auth()->id())->count();
+        }
 
         return Inertia::render('Category/Index', [
-            'categories' => $categories,
+            'categories' => $categories->toArray(),
+            'cartCount' => $cartCount,
+            'wishlistCount' => $wishlistCount,
         ]);
     }
 
