@@ -75,7 +75,7 @@ export default function CategoryIndex({
               return (
                 <Link
                   key={category.id}
-                  href={`/categories/${category.slug}`}
+                  href={`/category/${category.slug}`}
                   className="group"
                 >
                   <div className={`${colorClass} border-2 rounded-lg p-6 transition-all duration-300 hover:shadow-lg hover:scale-105 h-full`}>
