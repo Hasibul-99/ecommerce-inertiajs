@@ -1,185 +1,249 @@
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
-import GuestLayout from '@/Layouts/GuestLayout';
-import { FaTruck, FaSeedling, FaPercent, FaDonate } from 'react-icons/fa';
+import FrontendLayout from '@/Layouts/FrontendLayout';
+import { PageProps } from '@/types';
+import { FiChevronRight, FiTruck, FiHeadphones, FiRotateCw, FiShield, FiAward, FiUsers } from 'react-icons/fi';
 
-interface ServiceItem {
-  id: number;
-  title: string;
-  description: string;
-  icon: string;
+interface AboutUsProps extends PageProps {
+  cartCount?: number;
+  wishlistCount?: number;
 }
 
-export default function AboutUs() {
-  // Mock data for services
-  const services: ServiceItem[] = [
-    { 
-      id: 1, 
-      title: 'Free Shipping', 
-      description: 'Free shipping on all US order or order above $200', 
-      icon: 'FaTruck' 
+export default function AboutUs({
+  auth,
+  cartCount = 0,
+  wishlistCount = 0
+}: AboutUsProps) {
+  const services = [
+    {
+      id: 1,
+      title: 'Free Shipping',
+      description: 'Free shipping on all orders over $200',
+      icon: FiTruck,
+      color: 'bg-blue-50 text-blue-600'
     },
-    { 
-      id: 2, 
-      title: '24X7 Support', 
-      description: 'Contact us 24 hours a day, 7 days a week', 
-      icon: 'FaSeedling' 
+    {
+      id: 2,
+      title: '24/7 Support',
+      description: 'Dedicated customer support anytime',
+      icon: FiHeadphones,
+      color: 'bg-green-50 text-green-600'
     },
-    { 
-      id: 3, 
-      title: '30 Days Return', 
-      description: 'Simply return it within 30 days for an exchange', 
-      icon: 'FaPercent' 
+    {
+      id: 3,
+      title: '30 Days Return',
+      description: 'Easy returns within 30 days',
+      icon: FiRotateCw,
+      color: 'bg-orange-50 text-orange-600'
     },
-    { 
-      id: 4, 
-      title: 'Payment Secure', 
-      description: 'Contact us 24 hours a day, 7 days a week', 
-      icon: 'FaDonate' 
+    {
+      id: 4,
+      title: 'Secure Payment',
+      description: '100% secure payment processing',
+      icon: FiShield,
+      color: 'bg-purple-50 text-purple-600'
     },
   ];
 
-  const iconMap = (iconName: string) => {
-    switch (iconName) {
-      case 'FaTruck':
-        return <FaTruck className="text-[40px] text-[#5caf90] leading-[0]" />;
-      case 'FaSeedling':
-        return <FaSeedling className="text-[40px] text-[#5caf90] leading-[0]" />;
-      case 'FaPercent':
-        return <FaPercent className="text-[40px] text-[#5caf90] leading-[0]" />;
-      case 'FaDonate':
-        return <FaDonate className="text-[40px] text-[#5caf90] leading-[0]" />;
-      default:
-        return null;
-    }
-  };
+  const stats = [
+    { id: 1, value: '10K+', label: 'Happy Customers', icon: FiUsers },
+    { id: 2, value: '5K+', label: 'Products', icon: FiAward },
+    { id: 3, value: '50+', label: 'Categories', icon: FiShield },
+    { id: 4, value: '99%', label: 'Satisfaction', icon: FiAward },
+  ];
 
   return (
-    <GuestLayout>
+    <FrontendLayout auth={auth} cartCount={cartCount} wishlistCount={wishlistCount}>
       <Head title="About Us" />
 
-      {/* Breadcrumb start */}
-      <div className="gi-breadcrumb mb-[40px]">
-        <div className="flex flex-wrap justify-between items-center mx-auto min-[1600px]:max-w-[1600px] min-[1400px]:max-w-[1320px] min-[1200px]:max-w-[1140px] min-[992px]:max-w-[960px] min-[768px]:max-w-[720px] min-[576px]:max-w-[540px] relative">
-          <div className="flex flex-wrap w-full">
-            <div className="w-full px-[12px]">
-              <div className="flex flex-wrap m-0 p-[15px] border-[1px] border-solid border-[#eee] rounded-b-[5px] border-t-[0] gi_breadcrumb_inner">
-                <div className="min-[768px]:w-[50%] w-full px-[12px]">
-                  <h2 className="gi-breadcrumb-title text-[#4b5966] block text-[15px] font-Poppins leading-[22px] font-semibold my-[0] mx-auto capitalize max-[767px]:mb-[5px] max-[767px]:text-center">About Us</h2>
-                </div>
-                <div className="min-[768px]:w-[50%] w-full px-[12px]">
-                  {/* gi-breadcrumb-list start */}
-                  <ul className="gi-breadcrumb-list text-right max-[767px]:text-center">
-                    <li className="gi-breadcrumb-item inline-block text-[14px] font-normal tracking-[0.02rem] leading-[1.2] capitalize"><Link href="/" className="relative text-[#4b5966]">Home</Link></li>
-                    <li className="gi-breadcrumb-item inline-block text-[14px] font-normal tracking-[0.02rem] leading-[1.2] capitalize active">About Us</li>
-                  </ul>
-                  {/* gi-breadcrumb-list end */}
-                </div>
-              </div>
-            </div>
+      {/* Breadcrumb */}
+      <div className="bg-grabit-bg-light py-4">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center gap-2 text-sm text-grabit-gray">
+            <Link href="/" className="hover:text-grabit-primary">Home</Link>
+            <FiChevronRight className="w-4 h-4" />
+            <span className="text-grabit-dark">About Us</span>
           </div>
         </div>
       </div>
-      {/* Breadcrumb end */}
 
-      {/* About section */}
-      <section className="gi-about py-[40px] max-[767px]:py-[30px]">
-        <div className="flex flex-wrap justify-between items-center mx-auto min-[1600px]:max-w-[1600px] min-[1400px]:max-w-[1320px] min-[1200px]:max-w-[1140px] min-[992px]:max-w-[960px] min-[768px]:max-w-[720px] min-[576px]:max-w-[540px] relative">
-          <div className="flex flex-wrap">
-            <div className="min-[1200px]:w-[50%] min-[768px]:w-full px-[12px]">
-              <div className="gi-about-img">
-                <img src="/assets/img/common/about.png" className="v-img w-full rounded-[5px] max-[1199px]:max-w-[600px] max-[199px]:mb-[30px]" alt="about" />
-              </div>
-            </div>
-            <div className="min-[1200px]:w-[50%] min-[768px]:w-full px-[12px]">
-              <div className="gi-about-detail h-full flex flex-col justify-center max-[1199px]:mt-[30px]">
-                <div className="section-title pt-[0] flex flex-col mb-[20px]">
-                  <h2 className="mb-[15px] font-manrope text-[26px] font-semibold text-[#4b5966] relative inline p-[0] capitalize leading-[1]">Who We <span className="text-[#5caf90]">Are?</span></h2>
-                  <p className="m-0 text-[#777] text-[18px] font-medium uppercase max-[991px]:text-[17px] max-[767px]:text-[16px] max-[575px]:text-[15px]">
-                    We're here to serve only the best products for you. Enriching your homes with the best essentials.
-                  </p>
-                </div>
-                <p className="text-[#777] text-[14px] font-normal mb-[16px]">
-                  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
-                  been the industry's standard dummy text ever since the 1500s, when an unknown printer took a
-                  galley of type and scrambled it to make a type specimen book. It has survived not only five
-                  centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-                </p>
-                <p className="text-[#777] text-[14px] font-normal mb-[16px]">
-                  Lorem Ipsum has survived not only five centuries, but also the leap into electronic
-                  typesetting, remaining essentially unchanged.
-                </p>
-                <p className="text-[#777] text-[14px] font-normal mb-[16px]">
-                  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
-                  been the industry's standard dummy text ever since the 1500s, when an unknown printer took a
-                  galley of type and scrambled it to make a type specimen book.
-                </p>
-              </div>
-            </div>
-          </div>
+      {/* Hero Section */}
+      <div className="bg-gradient-to-r from-grabit-primary to-green-600 text-white py-16">
+        <div className="container mx-auto px-4 text-center">
+          <h1 className="text-4xl md:text-5xl font-heading font-bold mb-4">
+            About Our Store
+          </h1>
+          <p className="text-lg md:text-xl max-w-2xl mx-auto opacity-90">
+            Your trusted partner for quality products and exceptional service
+          </p>
         </div>
-      </section>
-      {/* About section End */}
+      </div>
 
-      {/* Service Section */}
-      <section className="gi-service-section py-[40px] max-[767px]:py-[30px]">
-        <div className="flex flex-wrap justify-between items-center mx-auto min-[1600px]:max-w-[1600px] min-[1400px]:max-w-[1320px] min-[1200px]:max-w-[1140px] min-[992px]:max-w-[960px] min-[768px]:max-w-[720px] min-[576px]:max-w-[540px] relative">
-          <div className="section-title-2 w-full mb-[20px] pb-[20px] flex flex-col justify-center items-center">
-            <h2 className="gi-title mb-[0] font-manrope text-[26px] font-semibold text-[#4b5966] relative inline p-[0] capitalize leading-[1]">Our <span className="text-[#5caf90]">Services</span></h2>
-            <p className="max-w-[400px] mt-[15px] text-[14px] text-[#777] text-center leading-[23px]">
-              Customer service should not be a department. It should be the entire company.
-            </p>
-          </div>
-          <div className="flex flex-wrap w-full my-[-12px]">
-            {services.map((service) => (
-              <div key={service.id} className="py-[12px] px-[12px] min-[992px]:w-[25%] min-[576px]:w-[50%] w-full">
-                <div className="gi-ser-inner p-[30px] transition-all duration-[0.3s] ease delay-[0s] cursor-pointer border-[1px] border-solid border-[#eee] h-full flex items-center justify-center flex-col text-center nh-[#fff] rounded-[5px]">
-                  <div className="gi-service-image mb-[15px]">
-                    {iconMap(service.icon)}
-                  </div>
-                  <div className="gi-service-desc">
-                    <h3 className="mb-[10px] text-[18px] font-medium text-[#4b5966] tracking-[0.6px] font-Poppins leading-[1.2] max-[575px]:text-[16px]">{service.title}</h3>
-                    <p className="m-[0] text-[14px] text-[#777] leading-[1.5] tracking-[0.5px] font-light">{service.description}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-      {/* Service Section End */}
-
-      {/* Testimonials Section */}
-      <section className="gi-testimonials-section py-[40px] max-[767px]:py-[30px]">
-        <div className="flex flex-wrap justify-between items-center mx-auto min-[1600px]:max-w-[1600px] min-[1400px]:max-w-[1320px] min-[1200px]:max-w-[1140px] min-[992px]:max-w-[960px] min-[768px]:max-w-[720px] min-[576px]:max-w-[540px] relative">
-          <div className="flex flex-wrap w-full">
-            <div className="w-full px-[12px]">
-              <h3 className="hidden">Testimonials</h3>
-              <div className="testim-bg py-[80px] max-[575px]:py-[60px] bg-[#f8f8fb] border-[1px] border-solid border-[#eee] rounded-[5px]">
-                <div className="gi-test-outer gi-test-section max-w-[700px] m-auto flex justify-center items-center relative">
-                  <div className="gi-test-item my-[0] mx-auto py-[0] px-[15px] relative">
-                    <div className="gi-test-inner max-w-[730px] my-[0] mx-auto cursor-pointer">
-                      <div className="gi-test-img w-[100px] mx-auto mt-auto mb-[30px] block">
-                        <img alt="testimonial" title="testimonial" src="/assets/img/user/1.jpg" className="rounded-[50%]" />
-                      </div>
-                      <div className="gi-test-content flex flex-col">
-                        <p className="gi-test-desc text-[16px] text-[#777] text-center leading-[26px] mb-[20px] font-normal">
-                          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
-                        </p>
-                        <div className="gi-test-bottom flex flex-col items-center">
-                          <div className="gi-test-name text-[18px] text-[#4b5966] font-semibold mb-[5px]">John Doe</div>
-                          <div className="gi-test-designation text-[14px] text-[#777] font-normal">Happy Customer</div>
-                        </div>
-                      </div>
+      {/* Stats Section */}
+      <div className="bg-white py-12 border-b border-grabit-border">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {stats.map((stat) => {
+              const Icon = stat.icon;
+              return (
+                <div key={stat.id} className="text-center">
+                  <div className="flex justify-center mb-3">
+                    <div className="w-16 h-16 bg-grabit-primary bg-opacity-10 rounded-full flex items-center justify-center">
+                      <Icon className="w-8 h-8 text-grabit-primary" />
                     </div>
                   </div>
+                  <h3 className="text-3xl font-bold text-grabit-dark mb-1">{stat.value}</h3>
+                  <p className="text-grabit-gray">{stat.label}</p>
                 </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* About Section */}
+      <section className="container mx-auto px-4 py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <div className="bg-grabit-primary bg-opacity-10 rounded-lg p-8 aspect-square flex items-center justify-center">
+              <div className="text-center">
+                <FiAward className="w-32 h-32 text-grabit-primary mx-auto mb-4" />
+                <p className="text-2xl font-semibold text-grabit-dark">Quality First</p>
               </div>
             </div>
           </div>
+          <div>
+            <h2 className="text-3xl font-heading font-bold text-grabit-dark mb-4">
+              Who We <span className="text-grabit-primary">Are</span>
+            </h2>
+            <p className="text-grabit-gray mb-4 leading-relaxed">
+              We're dedicated to bringing you the best products at competitive prices. Our mission is to provide
+              exceptional quality and service that exceeds your expectations.
+            </p>
+            <p className="text-grabit-gray mb-4 leading-relaxed">
+              With years of experience in the industry, we've built a reputation for reliability, quality, and
+              customer satisfaction. Every product in our catalog is carefully selected to ensure it meets our
+              high standards.
+            </p>
+            <p className="text-grabit-gray mb-6 leading-relaxed">
+              Our team is passionate about what we do, and we're committed to making your shopping experience
+              seamless and enjoyable. From browsing to delivery, we're here to help every step of the way.
+            </p>
+            <Link
+              href="/products"
+              className="inline-block bg-grabit-primary hover:bg-grabit-primary-dark text-white px-8 py-3 rounded-md font-medium transition-colors"
+            >
+              Shop Now
+            </Link>
+          </div>
         </div>
       </section>
-      {/* Testimonials Section End */}
-    </GuestLayout>
+
+      {/* Services Section */}
+      <section className="bg-grabit-bg-light py-16">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-heading font-bold text-grabit-dark mb-3">
+              Our <span className="text-grabit-primary">Services</span>
+            </h2>
+            <p className="text-grabit-gray max-w-2xl mx-auto">
+              We provide exceptional services to ensure your complete satisfaction
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {services.map((service) => {
+              const Icon = service.icon;
+              return (
+                <div
+                  key={service.id}
+                  className="bg-white border border-grabit-border rounded-lg p-6 text-center hover:shadow-lg transition-shadow"
+                >
+                  <div className={`w-16 h-16 ${service.color} rounded-full flex items-center justify-center mx-auto mb-4`}>
+                    <Icon className="w-8 h-8" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-grabit-dark mb-2">
+                    {service.title}
+                  </h3>
+                  <p className="text-sm text-grabit-gray">
+                    {service.description}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Values Section */}
+      <section className="container mx-auto px-4 py-16">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-heading font-bold text-grabit-dark mb-3">
+            Our <span className="text-grabit-primary">Values</span>
+          </h2>
+          <p className="text-grabit-gray max-w-2xl mx-auto">
+            The principles that guide everything we do
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="text-center">
+            <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
+              <FiAward className="w-10 h-10 text-blue-600" />
+            </div>
+            <h3 className="text-xl font-semibold text-grabit-dark mb-2">Quality</h3>
+            <p className="text-grabit-gray">
+              We never compromise on quality. Every product is carefully vetted to meet our high standards.
+            </p>
+          </div>
+
+          <div className="text-center">
+            <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4">
+              <FiUsers className="w-10 h-10 text-green-600" />
+            </div>
+            <h3 className="text-xl font-semibold text-grabit-dark mb-2">Customer First</h3>
+            <p className="text-grabit-gray">
+              Your satisfaction is our priority. We're dedicated to providing exceptional customer service.
+            </p>
+          </div>
+
+          <div className="text-center">
+            <div className="w-20 h-20 bg-purple-50 rounded-full flex items-center justify-center mx-auto mb-4">
+              <FiShield className="w-10 h-10 text-purple-600" />
+            </div>
+            <h3 className="text-xl font-semibold text-grabit-dark mb-2">Trust</h3>
+            <p className="text-grabit-gray">
+              We build lasting relationships through transparency, honesty, and reliable service.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="bg-grabit-primary text-white py-16">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
+            Ready to Start Shopping?
+          </h2>
+          <p className="text-lg mb-8 opacity-90">
+            Explore our wide range of products and find exactly what you need
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/products"
+              className="inline-block bg-white text-grabit-primary hover:bg-gray-100 px-8 py-3 rounded-md font-medium transition-colors"
+            >
+              Browse Products
+            </Link>
+            <Link
+              href="/categories"
+              className="inline-block bg-transparent border-2 border-white text-white hover:bg-white hover:text-grabit-primary px-8 py-3 rounded-md font-medium transition-colors"
+            >
+              View Categories
+            </Link>
+          </div>
+        </div>
+      </section>
+    </FrontendLayout>
   );
 }

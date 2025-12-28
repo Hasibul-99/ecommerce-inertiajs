@@ -48,6 +48,7 @@ use Inertia\Inertia;
 // Home & Info Pages
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about-us', [HomeController::class, 'aboutUs'])->name('about-us');
+Route::get('/about', [HomeController::class, 'aboutUs'])->name('about');
 Route::get('/contact-us', [HomeController::class, 'contactUs'])->name('contact-us');
 Route::post('/contact-us', [HomeController::class, 'submitContactForm'])->name('contact.submit');
 
