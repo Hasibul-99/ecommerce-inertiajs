@@ -50,7 +50,9 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about-us', [HomeController::class, 'aboutUs'])->name('about-us');
 Route::get('/about', [HomeController::class, 'aboutUs'])->name('about');
 Route::get('/contact-us', [HomeController::class, 'contactUs'])->name('contact-us');
+Route::get('/contact', [HomeController::class, 'contactUs'])->name('contact');
 Route::post('/contact-us', [HomeController::class, 'submitContactForm'])->name('contact.submit');
+Route::post('/contact', [HomeController::class, 'submitContactForm'])->name('contact.submit.alt');
 
 // SEO Routes
 Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('sitemap');

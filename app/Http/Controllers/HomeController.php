@@ -186,7 +186,22 @@ class HomeController extends Controller
      */
     public function contactUs()
     {
-        return Inertia::render('ContactUs/Index');
+        // Get cart and wishlist counts
+        $cartCount = 0;
+        $wishlistCount = 0;
+
+        if (Auth::check()) {
+            $cart = Cart::where('user_id', Auth::id())->first();
+            if ($cart) {
+                $cartCount = $cart->items()->count();
+            }
+            $wishlistCount = Wishlist::where('user_id', Auth::id())->count();
+        }
+
+        return Inertia::render('ContactUs/Index', [
+            'cartCount' => $cartCount,
+            'wishlistCount' => $wishlistCount,
+        ]);
     }
 
     /**
