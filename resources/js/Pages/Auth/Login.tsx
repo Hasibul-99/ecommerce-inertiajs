@@ -2,6 +2,7 @@ import { useEffect, FormEventHandler } from 'react';
 import GuestLayout from '@/Layouts/GuestLayout';
 import InputError from '@/Components/Core/InputError';
 import { Head, Link, useForm } from '@inertiajs/react';
+import { FiMail, FiLock, FiLogIn, FiShoppingBag } from 'react-icons/fi';
 
 export default function Login({ status, canResetPassword }: { status?: string, canResetPassword: boolean }) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -18,107 +19,138 @@ export default function Login({ status, canResetPassword }: { status?: string, c
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-
         post(route('login'));
     };
 
     return (
         <GuestLayout>
             <Head title="Log in" />
-            
-            {/* Breadcrumb Section */}
-            <section className="gi-breadcrumb-section py-[20px] bg-[#f8f8fb]">
-                <div className="flex flex-wrap justify-between items-center mx-auto min-[1600px]:max-w-[1600px] min-[1400px]:max-w-[1320px] min-[1200px]:max-w-[1140px] min-[992px]:max-w-[960px] min-[768px]:max-w-[720px] min-[576px]:max-w-[540px] relative">
-                    <div className="w-full px-[12px]">
-                        <div className="gi-breadcrumb-box">
-                            <h1 className="gi-breadcrumb-title text-[20px] font-medium text-[#4b5966] capitalize tracking-[0.02rem] leading-[1.2] mb-[6px]">Login Page</h1>
-                            <ul className="gi-breadcrumb-list flex flex-wrap items-center">
-                                <li className="gi-breadcrumb-item text-[14px] text-[#777] font-normal leading-[1.5] tracking-[0.02rem] relative pr-[10px] mr-[10px] before:content-['/'] before:absolute before:right-0 before:top-0">
-                                    <Link href="/" className="text-[#777] hover:text-[#5caf90]">Home</Link>
-                                </li>
-                                <li className="gi-breadcrumb-item text-[14px] text-[#777] font-normal leading-[1.5] tracking-[0.02rem] relative">
-                                    Login
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
-            {/* Login Section */}
-            <section className="gi-login-section py-[40px] max-[767px]:py-[30px]">
-                <div className="flex flex-wrap justify-between items-center mx-auto min-[1600px]:max-w-[1600px] min-[1400px]:max-w-[1320px] min-[1200px]:max-w-[1140px] min-[992px]:max-w-[960px] min-[768px]:max-w-[720px] min-[576px]:max-w-[540px] relative">
-                    {status && <div className="w-full mb-4 font-medium text-sm text-green-600 px-[12px]">{status}</div>}
-                    
-                    <div className="gi-login-content max-w-[1000px] m-auto flex flex-row max-[991px]:flex-col max-[1199px]:px-[12px] max-[991px]:w-full">
-                        <div className="gi-login-box w-[50%] px-[15px] max-[991px]:w-full max-[991px]:p-[0]">
-                            <div className="gi-login-wrapper max-w-[530px] my-[0] mx-auto">
-                                <div className="gi-login-container p-[30px] max-[575px]:p-[15px] border-[1px] border-solid border-[#eee] rounded-[5px] text-left bg-[#fff]">
-                                    <div className="gi-login-form">
-                                        <form onSubmit={submit} className="flex flex-col">
-                                            <span className="gi-login-wrap flex flex-col">
-                                                <label className="mb-[10px] text-[#4b5966] text-[15px] font-medium tracking-[0] leading-[1]">Email Address*</label>
-                                                <input 
-                                                    type="email" 
-                                                    name="email" 
-                                                    placeholder="Enter your email address" 
-                                                    className="mb-[27px] px-[15px] bg-transparent border-[1px] border-solid border-[#eee] rounded-[5px] text-[#777] text-[14px] outline-[0] h-[50px]" 
-                                                    value={data.email}
-                                                    onChange={(e) => setData('email', e.target.value)}
-                                                    required 
-                                                />
-                                                <InputError message={errors.email} className="mt-[-20px] mb-[15px]" />
-                                            </span>
-                                            <span className="gi-login-wrap flex flex-col">
-                                                <label className="mb-[10px] text-[#4b5966] text-[15px] font-medium tracking-[0] leading-[1]">Password*</label>
-                                                <input 
-                                                    type="password" 
-                                                    name="password" 
-                                                    placeholder="Enter your password" 
-                                                    className="mb-[15px] px-[15px] bg-transparent border-[1px] border-solid border-[#eee] rounded-[5px] text-[#777] text-[14px] outline-[0] h-[50px]" 
-                                                    value={data.password}
-                                                    onChange={(e) => setData('password', e.target.value)}
-                                                    required 
-                                                />
-                                                <InputError message={errors.password} className="mt-[-10px] mb-[15px]" />
-                                            </span>
-                                            <span className="gi-login-wrap flex flex-col gi-login-fp">
-                                                <label className="mb-[0] text-[#4b5966] text-[15px] font-medium tracking-[0] leading-[1]">
-                                                    {canResetPassword && (
-                                                        <Link 
-                                                            href={route('password.request')} 
-                                                            className="mt-[10px] text-[#777] text-[14px] font-normal tracking-[0] flex justify-end hover:text-[#5caf90]"
-                                                        >
-                                                            Forgot Password?
-                                                        </Link>
-                                                    )}
-                                                </label>
-                                            </span>
-                                            <span className="gi-login-wrap gi-login-btn mt-[30px] flex flex-row justify-between items-center">
-                                                <span className="text-[#777] text-[14px]">
-                                                    <Link href={route('register')} className="text-[#4b5966] hover:text-[#5caf90]">Create Account?</Link>
-                                                </span>
-                                                <button 
-                                                    type="submit" 
-                                                    disabled={processing}
-                                                    className="gi-btn-1 btn py-[8px] px-[15px] bg-[#4b5966] text-[#fff] border-[0] transition-all duration-[0.3s] ease-in-out overflow-hidden text-center text-[14px] font-semibold relative rounded-[5px] hover:bg-[#5caf90] hover:text-[#fff] disabled:opacity-75"
-                                                >
-                                                    Login
-                                                </button>
-                                            </span>
-                                        </form>
+            <div className="min-h-screen bg-gradient-to-br from-grabit-primary to-green-600 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+                <div className="max-w-md w-full">
+                    {/* Logo/Brand */}
+                    <div className="text-center mb-8">
+                        <Link href="/" className="inline-flex items-center gap-2 text-white hover:opacity-90 transition-opacity">
+                            <FiShoppingBag className="w-10 h-10" />
+                            <span className="text-3xl font-heading font-bold">Grabit</span>
+                        </Link>
+                        <p className="mt-2 text-white opacity-90">Welcome back! Please login to your account.</p>
+                    </div>
+
+                    {/* Login Card */}
+                    <div className="bg-white rounded-lg shadow-2xl p-8">
+                        {status && (
+                            <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-md">
+                                <p className="text-sm text-green-600">{status}</p>
+                            </div>
+                        )}
+
+                        <form onSubmit={submit} className="space-y-6">
+                            {/* Email Field */}
+                            <div>
+                                <label htmlFor="email" className="block text-sm font-medium text-grabit-dark mb-2">
+                                    Email Address
+                                </label>
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <FiMail className="h-5 w-5 text-grabit-gray" />
                                     </div>
+                                    <input
+                                        id="email"
+                                        type="email"
+                                        name="email"
+                                        placeholder="you@example.com"
+                                        className="block w-full pl-10 pr-3 py-2.5 border border-grabit-border rounded-md focus:outline-none focus:ring-2 focus:ring-grabit-primary focus:border-transparent"
+                                        value={data.email}
+                                        onChange={(e) => setData('email', e.target.value)}
+                                        required
+                                        autoFocus
+                                    />
                                 </div>
+                                <InputError message={errors.email} className="mt-2" />
                             </div>
-                        </div>
-                        <div className="gi-login-box w-[50%] px-[15px] max-[991px]:w-full max-[991px]:p-[0] max-[991px]:hidden">
-                            <div className="gi-login-img">
-                                <img src="/assets/img/common/login.png" alt="login" className="w-full rounded-[5px]" />
+
+                            {/* Password Field */}
+                            <div>
+                                <label htmlFor="password" className="block text-sm font-medium text-grabit-dark mb-2">
+                                    Password
+                                </label>
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <FiLock className="h-5 w-5 text-grabit-gray" />
+                                    </div>
+                                    <input
+                                        id="password"
+                                        type="password"
+                                        name="password"
+                                        placeholder="••••••••"
+                                        className="block w-full pl-10 pr-3 py-2.5 border border-grabit-border rounded-md focus:outline-none focus:ring-2 focus:ring-grabit-primary focus:border-transparent"
+                                        value={data.password}
+                                        onChange={(e) => setData('password', e.target.value)}
+                                        required
+                                    />
+                                </div>
+                                <InputError message={errors.password} className="mt-2" />
                             </div>
+
+                            {/* Remember & Forgot Password */}
+                            <div className="flex items-center justify-between">
+                                <label className="flex items-center">
+                                    <input
+                                        type="checkbox"
+                                        className="h-4 w-4 text-grabit-primary focus:ring-grabit-primary border-grabit-border rounded"
+                                        checked={data.remember}
+                                        onChange={(e) => setData('remember', e.target.checked)}
+                                    />
+                                    <span className="ml-2 text-sm text-grabit-gray">Remember me</span>
+                                </label>
+
+                                {canResetPassword && (
+                                    <Link
+                                        href={route('password.request')}
+                                        className="text-sm text-grabit-primary hover:text-grabit-primary-dark font-medium"
+                                    >
+                                        Forgot password?
+                                    </Link>
+                                )}
+                            </div>
+
+                            {/* Submit Button */}
+                            <button
+                                type="submit"
+                                disabled={processing}
+                                className="w-full flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-grabit-primary hover:bg-grabit-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-grabit-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                            >
+                                <FiLogIn className="w-5 h-5" />
+                                {processing ? 'Signing in...' : 'Sign in'}
+                            </button>
+                        </form>
+
+                        {/* Register Link */}
+                        <div className="mt-6 text-center">
+                            <p className="text-sm text-grabit-gray">
+                                Don't have an account?{' '}
+                                <Link
+                                    href={route('register')}
+                                    className="font-medium text-grabit-primary hover:text-grabit-primary-dark"
+                                >
+                                    Create one now
+                                </Link>
+                            </p>
                         </div>
                     </div>
+
+                    {/* Back to Home */}
+                    <div className="mt-6 text-center">
+                        <Link
+                            href="/"
+                            className="text-sm text-white hover:text-gray-100 opacity-90 hover:opacity-100"
+                        >
+                            ← Back to Home
+                        </Link>
+                    </div>
                 </div>
-            </section>
+            </div>
         </GuestLayout>
     );
 }
