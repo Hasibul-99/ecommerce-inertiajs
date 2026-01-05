@@ -3,6 +3,7 @@ import GuestLayout from '@/Layouts/GuestLayout';
 import InputError from '@/Components/Core/InputError';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { FiUser, FiMail, FiLock, FiUserPlus, FiShoppingBag } from 'react-icons/fi';
+import FrontendLayout from '@/Layouts/FrontendLayout';
 
 export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -24,7 +25,7 @@ export default function Register() {
     };
 
     return (
-        <GuestLayout>
+        <FrontendLayout>
             <Head title="Register" />
 
             <div className="min-h-screen bg-gradient-to-br from-grabit-primary to-green-600 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -184,6 +185,6 @@ export default function Register() {
                     </div>
                 </div>
             </div>
-        </GuestLayout>
+        </FrontendLayout>
     );
 }

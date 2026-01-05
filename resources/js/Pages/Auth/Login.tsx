@@ -1,8 +1,8 @@
 import { useEffect, FormEventHandler } from 'react';
-import GuestLayout from '@/Layouts/GuestLayout';
 import InputError from '@/Components/Core/InputError';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { FiMail, FiLock, FiLogIn, FiShoppingBag } from 'react-icons/fi';
+import FrontendLayout from '@/Layouts/FrontendLayout';
 
 export default function Login({ status, canResetPassword }: { status?: string, canResetPassword: boolean }) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -23,7 +23,7 @@ export default function Login({ status, canResetPassword }: { status?: string, c
     };
 
     return (
-        <GuestLayout>
+        <FrontendLayout>
             <Head title="Log in" />
 
             <div className="min-h-screen bg-gradient-to-br from-grabit-primary to-green-600 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -151,6 +151,6 @@ export default function Login({ status, canResetPassword }: { status?: string, c
                     </div>
                 </div>
             </div>
-        </GuestLayout>
+        </FrontendLayout>
     );
 }

@@ -24,7 +24,7 @@ export default function ResetPassword({ token, email }: { token: string, email: 
     };
 
     return (
-        <GuestLayout>
+        <FrontendLayout>
             <Head title="Reset Password" />
 
             {/* Breadcrumb Section */}
@@ -123,6 +123,6 @@ export default function ResetPassword({ token, email }: { token: string, email: 
                     </div>
                 </div>
             </section>
-        </GuestLayout>
+        </FrontendLayout>
     );
 }

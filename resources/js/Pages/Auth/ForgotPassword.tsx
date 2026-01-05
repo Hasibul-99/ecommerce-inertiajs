@@ -2,6 +2,7 @@ import GuestLayout from '@/Layouts/GuestLayout';
 import InputError from '@/Components/Core/InputError';
 import { Head, useForm, Link } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
+import FrontendLayout from '@/Layouts/FrontendLayout';
 
 export default function ForgotPassword({ status }: { status?: string }) {
     const { data, setData, post, processing, errors } = useForm({
@@ -15,7 +16,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
     };
 
     return (
-        <GuestLayout>
+        <FrontendLayout>
             <Head title="Forgot Password" />
 
             {/* Breadcrumb Section */}
@@ -91,6 +92,6 @@ export default function ForgotPassword({ status }: { status?: string }) {
                     </div>
                 </div>
             </section>
-        </GuestLayout>
+        </FrontendLayout>
     );
 }

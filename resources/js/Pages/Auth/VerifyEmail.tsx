@@ -1,3 +1,4 @@
+import FrontendLayout from '@/Layouts/FrontendLayout';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
@@ -12,7 +13,7 @@ export default function VerifyEmail({ status }: { status?: string }) {
     };
 
     return (
-        <GuestLayout>
+        <FrontendLayout>
             <Head title="Email Verification" />
 
             {/* Breadcrumb Section */}
@@ -85,6 +86,6 @@ export default function VerifyEmail({ status }: { status?: string }) {
                     </div>
                 </div>
             </section>
-        </GuestLayout>
+        </FrontendLayout>
     );
 }
