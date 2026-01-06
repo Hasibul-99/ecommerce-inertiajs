@@ -28,6 +28,13 @@ class OrderItem extends Model
         'tax_cents',
         'total_cents',
         'product_snapshot',
+        'vendor_status',
+        'carrier',
+        'tracking_number',
+        'shipped_at',
+        'estimated_delivery_at',
+        'delivered_at',
+        'vendor_notes',
     ];
 
     /**
@@ -37,6 +44,9 @@ class OrderItem extends Model
      */
     protected $casts = [
         'product_snapshot' => 'json',
+        'shipped_at' => 'datetime',
+        'estimated_delivery_at' => 'datetime',
+        'delivered_at' => 'datetime',
     ];
 
     /**
@@ -127,5 +137,53 @@ class OrderItem extends Model
     public function inventoryReservations()
     {
         return $this->hasMany(InventoryReservation::class);
+    }
+
+    /**
+     * Get the vendor that owns the item.
+     */
+    public function vendor()
+    {
+        return $this->belongsTo(Vendor::class);
+    }
+
+    /**
+     * Check if item is shipped.
+     */
+    public function isShipped(): bool
+    {
+        return $this->vendor_status === 'shipped' || $this->vendor_status === 'delivered';
+    }
+
+    /**
+     * Check if item is delivered.
+     */
+    public function isDelivered(): bool
+    {
+        return $this->vendor_status === 'delivered';
+    }
+
+    /**
+     * Check if item can be shipped.
+     */
+    public function canBeShipped(): bool
+    {
+        return in_array($this->vendor_status, ['confirmed', 'processing', 'ready_to_ship']);
+    }
+
+    /**
+     * Scope for vendor's items.
+     */
+    public function scopeForVendor($query, $vendorId)
+    {
+        return $query->where('vendor_id', $vendorId);
+    }
+
+    /**
+     * Scope for specific status.
+     */
+    public function scopeWithStatus($query, $status)
+    {
+        return $query->where('vendor_status', $status);
     }
 }
