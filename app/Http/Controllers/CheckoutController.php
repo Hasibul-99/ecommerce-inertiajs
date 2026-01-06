@@ -11,6 +11,7 @@ use App\Models\OrderItem;
 use App\Models\Address;
 use App\Models\ProductVariant;
 use App\Models\Vendor;
+use App\Services\CodService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -79,6 +80,29 @@ class CheckoutController extends Controller
             $wishlistCount = \App\Models\Wishlist::where('user_id', auth()->id())->count();
         }
 
+        // Get COD availability info
+        $codService = new CodService();
+        $codInfo = [
+            'available' => config('cod.enabled', true),
+            'fee_cents' => $codService->getCodFee($formattedCart['total_cents']),
+            'min_order_amount_cents' => $codService->getMinOrderAmount(),
+            'max_order_amount_cents' => $codService->getMaxOrderAmount(),
+            'delivery_estimate' => $codService->getDeliveryTimeEstimate(),
+            'instructions' => $codService->getPaymentInstructions(),
+        ];
+
+        // Check COD availability for default address if available
+        if (!empty($addresses)) {
+            $defaultAddress = $addresses[0];
+            $codValidation = $codService->validateCodAvailability(
+                $defaultAddress,
+                $formattedCart['total_cents'],
+                $defaultAddress->phone ?? null
+            );
+            $codInfo['available'] = $codValidation['available'];
+            $codInfo['errors'] = $codValidation['errors'] ?? [];
+        }
+
         return Inertia::render('Checkout/Index', [
             'cart' => $formattedCart,
             'addresses' => $addresses,
@@ -86,6 +110,7 @@ class CheckoutController extends Controller
             'reservation_id' => $reservationResults['reservation_id'],
             'cartCount' => $cart->items->count(),
             'wishlistCount' => $wishlistCount,
+            'codInfo' => $codInfo,
         ]);
     }
 
@@ -142,14 +167,55 @@ class CheckoutController extends Controller
             return redirect()->route('checkout')->with('error', 'Your checkout session has expired. Please try again.');
         }
 
+        // Validate COD if selected
+        if ($request->payment_method === 'cod') {
+            $codService = new CodService();
+
+            // Get or create address for validation
+            $tempAddress = null;
+            if ($request->shipping_address_id) {
+                $tempAddress = Address::find($request->shipping_address_id);
+            } else {
+                // Create temporary address object for validation
+                $tempAddress = new Address([
+                    'city' => $request->shipping_city,
+                    'state' => $request->shipping_state,
+                    'postal_code' => $request->shipping_postal_code,
+                    'phone' => $request->shipping_phone,
+                ]);
+            }
+
+            $codValidation = $codService->validateCodAvailability(
+                $tempAddress,
+                $cart->total_cents,
+                $request->shipping_phone
+            );
+
+            if (!$codValidation['available']) {
+                $errorMessage = implode(' ', $codValidation['errors']);
+                return redirect()->back()->with('error', $errorMessage);
+            }
+        }
+
         try {
             DB::beginTransaction();
 
             // Create or update address
             $shippingAddress = $this->handleAddress($request, $user);
 
+            // Calculate COD fee if applicable
+            $codFeeCents = 0;
+            $codVerificationRequired = false;
+            if ($request->payment_method === 'cod') {
+                $codService = new CodService();
+                $codFeeCents = $codService->getCodFee($cart->total_cents);
+                $codVerificationRequired = $codService->requiresVerification((object) ['total_cents' => $cart->total_cents]);
+            }
+
             // Create order with unique order number
             $orderNumber = 'ORD-' . strtoupper(uniqid());
+            $totalCents = $cart->total_cents + $codFeeCents;
+
             $order = Order::create([
                 'user_id' => $user->id,
                 'order_number' => $orderNumber,
@@ -159,7 +225,9 @@ class CheckoutController extends Controller
                 'subtotal_cents' => $cart->subtotal_cents,
                 'tax_cents' => $cart->tax_cents,
                 'shipping_cents' => $cart->shipping_cents ?? 0,
-                'total_cents' => $cart->total_cents,
+                'total_cents' => $totalCents,
+                'cod_fee_cents' => $codFeeCents,
+                'cod_verification_required' => $codVerificationRequired,
                 'status' => 'pending',
                 'metadata' => [
                     'ip_address' => $request->ip(),
@@ -294,15 +362,20 @@ class CheckoutController extends Controller
         // Handle different payment methods
         if ($request->payment_method === 'cod') {
             // For Cash on Delivery, mark as unpaid but order is still valid
+            $codService = new CodService();
+
             $order->update([
                 'payment_method' => 'cod',
                 'payment_status' => 'unpaid',
-                'status' => 'pending',
+                'status' => 'processing',
+                'fulfillment_status' => 'awaiting_delivery',
             ]);
 
             return [
                 'success' => true,
-                'message' => 'Order placed successfully with Cash on Delivery',
+                'message' => 'Order placed successfully with Cash on Delivery. ' .
+                    'Payment will be collected upon delivery in ' .
+                    $codService->getDeliveryTimeEstimate()['text'] . '.',
             ];
         } elseif ($request->payment_method === 'stripe' || $request->payment_method === 'credit_card') {
             // Use Stripe payment service

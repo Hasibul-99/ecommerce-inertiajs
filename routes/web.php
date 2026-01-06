@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\CodReconciliationController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
@@ -231,6 +232,16 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:admin|super-admin'
         Route::get('/{order}', 'show')->name('show');
         Route::post('/{order}/update-status', 'updateStatus')->name('update-status');
         Route::post('/{order}/mark-as-paid', 'markAsPaid')->name('mark-as-paid');
+
+        // COD Workflow Routes
+        Route::post('/{order}/confirm', 'confirmOrder')->name('confirm');
+        Route::post('/{order}/start-processing', 'startProcessing')->name('start-processing');
+        Route::post('/{order}/assign-delivery-person', 'assignDeliveryPerson')->name('assign-delivery-person');
+        Route::post('/{order}/mark-out-for-delivery', 'markOutForDelivery')->name('mark-out-for-delivery');
+        Route::post('/{order}/confirm-cod-collection', 'confirmCodCollection')->name('confirm-cod-collection');
+        Route::post('/{order}/handle-delivery-failure', 'handleDeliveryFailure')->name('handle-delivery-failure');
+        Route::post('/{order}/complete', 'completeOrder')->name('complete');
+        Route::post('/{order}/cancel', 'cancelOrder')->name('cancel');
     });
     
     // Activity Logs
@@ -238,7 +249,19 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:admin|super-admin'
         Route::get('/', 'index')->name('index');
         Route::get('/{activityLog}', 'show')->name('show');
     });
-    
+
+    // COD Reconciliation Management
+    Route::controller(CodReconciliationController::class)->prefix('cod-reconciliation')->name('cod-reconciliation.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/export', 'export')->name('export');
+        Route::post('/generate', 'generate')->name('generate');
+        Route::post('/auto-verify', 'autoVerify')->name('auto-verify');
+        Route::get('/delivery-person/{deliveryPerson}/summary', 'deliveryPersonSummary')->name('delivery-person-summary');
+        Route::get('/{reconciliation}', 'show')->name('show');
+        Route::post('/{reconciliation}/verify', 'verify')->name('verify');
+        Route::post('/{reconciliation}/dispute', 'dispute')->name('dispute');
+    });
+
     // Vendor Management
     Route::resource('vendors', VendorController::class);
     Route::controller(VendorController::class)->prefix('vendors')->name('vendors.')->group(function () {

@@ -24,9 +24,10 @@ class CheckoutRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'payment_method' => 'required|string|in:credit_card,paypal,bank_transfer',
+            'payment_method' => 'required|string|in:credit_card,paypal,bank_transfer,cod',
             'save_address' => 'boolean',
             'same_billing_address' => 'boolean',
+            'reservation_id' => 'required|string',
         ];
 
         // If using an existing address
@@ -42,7 +43,7 @@ class CheckoutRequest extends FormRequest
                 'shipping_state' => 'required|string|max:255',
                 'shipping_postal_code' => 'required|string|max:20',
                 'shipping_country' => 'required|string|max:2',
-                'shipping_phone' => 'required|string|max:20',
+                'shipping_phone' => $this->payment_method === 'cod' ? 'required|string|max:20' : 'nullable|string|max:20',
             ]);
         }
 
@@ -108,5 +109,27 @@ class CheckoutRequest extends FormRequest
             'billing_country' => 'billing country',
             'billing_phone' => 'billing phone number',
         ];
+    }
+
+    /**
+     * Configure the validator instance.
+     *
+     * @param  \Illuminate\Validation\Validator  $validator
+     * @return void
+     */
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            // Additional COD validation
+            if ($this->payment_method === 'cod') {
+                // Ensure phone number is provided for COD orders
+                if ($this->shipping_address_id) {
+                    $address = \App\Models\Address::find($this->shipping_address_id);
+                    if ($address && empty($address->phone)) {
+                        $validator->errors()->add('shipping_phone', 'Phone number is required for Cash on Delivery orders.');
+                    }
+                }
+            }
+        });
     }
 }

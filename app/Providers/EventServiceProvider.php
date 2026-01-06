@@ -37,6 +37,18 @@ class EventServiceProvider extends ServiceProvider
         \App\Events\PayoutProcessed::class => [
             \App\Listeners\SendPayoutProcessedNotification::class,
         ],
+        \App\Events\CodOrderConfirmed::class => [
+            \App\Listeners\SendCodOrderConfirmedNotification::class,
+        ],
+        \App\Events\CodOrderOutForDelivery::class => [
+            \App\Listeners\SendCodOrderOutForDeliveryNotification::class,
+        ],
+        \App\Events\CodPaymentCollected::class => [
+            \App\Listeners\SendCodPaymentCollectedNotification::class,
+        ],
+        \App\Events\CodDeliveryFailed::class => [
+            \App\Listeners\SendCodDeliveryFailedNotification::class,
+        ],
     ];
 
     /**

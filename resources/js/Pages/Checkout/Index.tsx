@@ -33,6 +33,20 @@ interface Address {
     phone: string;
 }
 
+interface CodInfo {
+    available: boolean;
+    fee_cents: number;
+    min_order_amount_cents: number;
+    max_order_amount_cents: number;
+    delivery_estimate: {
+        min_days: number;
+        max_days: number;
+        text: string;
+    };
+    instructions: string;
+    errors?: string[];
+}
+
 interface CheckoutPageProps extends PageProps {
     cart: Cart;
     addresses: Address[];
@@ -40,6 +54,7 @@ interface CheckoutPageProps extends PageProps {
     reservation_id: string;
     cartCount?: number;
     wishlistCount?: number;
+    codInfo?: CodInfo;
 }
 
 export default function CheckoutIndex({
@@ -49,10 +64,12 @@ export default function CheckoutIndex({
     paymentMethods = [],
     reservation_id,
     cartCount = 0,
-    wishlistCount = 0
+    wishlistCount = 0,
+    codInfo
 }: CheckoutPageProps) {
     const [useExistingAddress, setUseExistingAddress] = useState(addresses.length > 0);
     const [sameBillingAddress, setSameBillingAddress] = useState(true);
+    const [showCodInfo, setShowCodInfo] = useState(false);
 
     const { data, setData, post, processing, errors } = useForm({
         reservation_id: reservation_id,
@@ -81,8 +98,17 @@ export default function CheckoutIndex({
         }).format(priceInCents / 100);
     };
 
+    const isCodSelected = data.payment_method === 'cod';
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+
+        // Additional validation for COD
+        if (isCodSelected && !data.shipping_phone && !useExistingAddress) {
+            alert('Phone number is required for Cash on Delivery orders');
+            return;
+        }
+
         post('/checkout/process');
     };
 
@@ -258,17 +284,25 @@ export default function CheckoutIndex({
 
                                         <div>
                                             <label className="block text-sm font-medium text-grabit-dark mb-2">
-                                                Phone *
+                                                Phone * {isCodSelected && <span className="text-grabit-primary text-xs">(Required for COD)</span>}
                                             </label>
                                             <input
                                                 type="tel"
                                                 value={data.shipping_phone}
                                                 onChange={(e) => setData('shipping_phone', e.target.value)}
-                                                required={!useExistingAddress}
-                                                className="w-full px-4 py-2 border border-grabit-border rounded-md focus:outline-none focus:ring-2 focus:ring-grabit-primary"
+                                                required={!useExistingAddress || isCodSelected}
+                                                className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-grabit-primary ${
+                                                    isCodSelected ? 'border-grabit-primary' : 'border-grabit-border'
+                                                }`}
+                                                placeholder={isCodSelected ? 'Required for delivery confirmation' : ''}
                                             />
                                             {errors.shipping_phone && (
                                                 <p className="text-sm text-red-600 mt-1">{errors.shipping_phone}</p>
+                                            )}
+                                            {isCodSelected && !data.shipping_phone && !useExistingAddress && (
+                                                <p className="text-sm text-amber-600 mt-1">
+                                                    Phone number is required for Cash on Delivery orders
+                                                </p>
                                             )}
                                         </div>
                                     </div>
@@ -299,23 +333,73 @@ export default function CheckoutIndex({
                                 </h2>
 
                                 <div className="space-y-3">
-                                    {paymentMethods.map((method) => (
-                                        <label
-                                            key={method.value}
-                                            className="flex items-center gap-3 p-4 border border-grabit-border rounded-md cursor-pointer hover:border-grabit-primary transition-colors"
-                                        >
-                                            <input
-                                                type="radio"
-                                                name="payment_method"
-                                                value={method.value}
-                                                checked={data.payment_method === method.value}
-                                                onChange={(e) => setData('payment_method', e.target.value)}
-                                                className="w-4 h-4 text-grabit-primary border-grabit-border focus:ring-grabit-primary"
-                                            />
-                                            <FiCreditCard className="w-5 h-5 text-grabit-gray" />
-                                            <span className="font-medium text-grabit-dark">{method.label}</span>
-                                        </label>
-                                    ))}
+                                    {paymentMethods.map((method) => {
+                                        const isCod = method.value === 'cod';
+                                        const codAvailable = codInfo?.available ?? true;
+                                        const isDisabled = isCod && !codAvailable;
+
+                                        return (
+                                            <div key={method.value}>
+                                                <label
+                                                    className={`flex items-center gap-3 p-4 border rounded-md transition-colors ${
+                                                        isDisabled
+                                                            ? 'border-grabit-border bg-gray-50 cursor-not-allowed opacity-60'
+                                                            : 'border-grabit-border cursor-pointer hover:border-grabit-primary'
+                                                    } ${
+                                                        data.payment_method === method.value ? 'border-grabit-primary bg-grabit-primary bg-opacity-5' : ''
+                                                    }`}
+                                                >
+                                                    <input
+                                                        type="radio"
+                                                        name="payment_method"
+                                                        value={method.value}
+                                                        checked={data.payment_method === method.value}
+                                                        onChange={(e) => {
+                                                            setData('payment_method', e.target.value);
+                                                            if (isCod) setShowCodInfo(true);
+                                                        }}
+                                                        disabled={isDisabled}
+                                                        className="w-4 h-4 text-grabit-primary border-grabit-border focus:ring-grabit-primary disabled:opacity-50"
+                                                    />
+                                                    <FiCreditCard className="w-5 h-5 text-grabit-gray" />
+                                                    <div className="flex-1">
+                                                        <span className="font-medium text-grabit-dark">{method.label}</span>
+                                                        {isCod && codInfo && (
+                                                            <span className="ml-2 text-sm text-grabit-gray">
+                                                                (+{formatPrice(codInfo.fee_cents)} fee)
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </label>
+
+                                                {isCod && data.payment_method === 'cod' && codInfo && (
+                                                    <div className="mt-2 ml-11 p-3 bg-blue-50 border border-blue-200 rounded-md text-sm">
+                                                        <div className="space-y-2">
+                                                            <p className="text-grabit-dark">
+                                                                <strong>Delivery:</strong> {codInfo.delivery_estimate.text}
+                                                            </p>
+                                                            <p className="text-grabit-gray">{codInfo.instructions}</p>
+                                                            {codInfo.errors && codInfo.errors.length > 0 && (
+                                                                <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded">
+                                                                    {codInfo.errors.map((error, idx) => (
+                                                                        <p key={idx} className="text-red-600 text-xs">{error}</p>
+                                                                    ))}
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                )}
+
+                                                {isCod && !codAvailable && codInfo?.errors && (
+                                                    <div className="mt-2 ml-11 p-2 bg-amber-50 border border-amber-200 rounded text-xs text-amber-700">
+                                                        {codInfo.errors.map((error, idx) => (
+                                                            <p key={idx}>{error}</p>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
                                 </div>
 
                                 {errors.payment_method && (
@@ -381,10 +465,25 @@ export default function CheckoutIndex({
                                         <span>Shipping:</span>
                                         <span className="text-green-600">Free</span>
                                     </div>
+                                    {isCodSelected && codInfo && (
+                                        <div className="flex justify-between text-grabit-gray">
+                                            <span>COD Fee:</span>
+                                            <span>{formatPrice(codInfo.fee_cents)}</span>
+                                        </div>
+                                    )}
                                     <div className="flex justify-between text-xl font-bold pt-3 border-t border-grabit-border">
                                         <span className="text-grabit-dark">Total:</span>
-                                        <span className="text-grabit-primary">{formatPrice(cart.total_cents)}</span>
+                                        <span className="text-grabit-primary">
+                                            {formatPrice(
+                                                cart.total_cents + (isCodSelected && codInfo ? codInfo.fee_cents : 0)
+                                            )}
+                                        </span>
                                     </div>
+                                    {isCodSelected && codInfo && (
+                                        <div className="text-xs text-amber-600 pt-2">
+                                            Payment to be collected at delivery
+                                        </div>
+                                    )}
                                 </div>
 
                                 {/* Place Order Button */}

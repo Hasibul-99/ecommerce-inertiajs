@@ -12,7 +12,16 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        // Generate COD daily reconciliation report at 11:30 PM every day
+        $schedule->command('cod:generate-daily-report --auto-verify')
+            ->dailyAt('23:30')
+            ->timezone('UTC')
+            ->onSuccess(function () {
+                \Log::info('COD daily report generated successfully');
+            })
+            ->onFailure(function () {
+                \Log::error('COD daily report generation failed');
+            });
     }
 
     /**

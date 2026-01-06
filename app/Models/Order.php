@@ -30,10 +30,17 @@ class Order extends Model
         'notes',
         'coupon_id',
         'payment_status',
+        'payment_method',
         'fulfillment_status',
         'tracking_number',
         'shipping_carrier',
         'metadata',
+        'cod_verification_required',
+        'cod_amount_collected',
+        'cod_collected_at',
+        'cod_collected_by',
+        'delivery_person_id',
+        'cod_fee_cents',
     ];
 
     /**
@@ -43,6 +50,8 @@ class Order extends Model
      */
     protected $casts = [
         'metadata' => 'json',
+        'cod_verification_required' => 'boolean',
+        'cod_collected_at' => 'datetime',
     ];
 
     /**
@@ -173,5 +182,106 @@ class Order extends Model
     public function vendorEarnings()
     {
         return $this->hasMany(VendorEarning::class);
+    }
+
+    /**
+     * Get the delivery person assigned to this order.
+     */
+    public function deliveryPerson()
+    {
+        return $this->belongsTo(User::class, 'delivery_person_id');
+    }
+
+    /**
+     * Get the user who collected the COD payment.
+     */
+    public function codCollector()
+    {
+        return $this->belongsTo(User::class, 'cod_collected_by');
+    }
+
+    /**
+     * Get the COD amount collected in dollars.
+     *
+     * @return float|null
+     */
+    public function getCodAmountCollectedInDollarsAttribute()
+    {
+        return $this->cod_amount_collected ? $this->cod_amount_collected / 100 : null;
+    }
+
+    /**
+     * Get the COD fee in dollars.
+     *
+     * @return float
+     */
+    public function getCodFeeInDollarsAttribute()
+    {
+        return $this->cod_fee_cents / 100;
+    }
+
+    /**
+     * Check if this is a COD order.
+     *
+     * @return bool
+     */
+    public function isCod()
+    {
+        return $this->payment_method === 'cod';
+    }
+
+    /**
+     * Check if COD has been collected.
+     *
+     * @return bool
+     */
+    public function isCodCollected()
+    {
+        return $this->isCod() && $this->cod_collected_at !== null;
+    }
+
+    /**
+     * Mark COD as collected.
+     *
+     * @param int $amountCents
+     * @param int|null $collectedBy
+     * @return bool
+     */
+    public function markCodCollected(int $amountCents, ?int $collectedBy = null)
+    {
+        if (!$this->isCod()) {
+            return false;
+        }
+
+        $this->update([
+            'cod_amount_collected' => $amountCents,
+            'cod_collected_at' => now(),
+            'cod_collected_by' => $collectedBy,
+            'payment_status' => 'paid',
+            'cod_verification_required' => false,
+        ]);
+
+        return true;
+    }
+
+    /**
+     * Check if COD payment is pending.
+     *
+     * @return bool
+     */
+    public function isCodPending()
+    {
+        return $this->isCod() && !$this->isCodCollected();
+    }
+
+    /**
+     * Assign a delivery person to this order.
+     *
+     * @param int $deliveryPersonId
+     * @return bool
+     */
+    public function assignDeliveryPerson(int $deliveryPersonId)
+    {
+        return $this->update(['delivery_person_id' => $deliveryPersonId]);
     }
 }
