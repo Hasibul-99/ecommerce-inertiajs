@@ -170,6 +170,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
 | Vendor Routes
 |--------------------------------------------------------------------------
 */
+
+// Vendor Registration Routes (No vendor role required)
+Route::prefix('vendor')->middleware(['auth', 'verified'])->name('vendor.')->group(function () {
+    Route::controller(\App\Http\Controllers\Vendor\VendorRegistrationController::class)->group(function () {
+        Route::get('/register', 'showRegistrationForm')->name('register');
+        Route::get('/register/step1', 'showStep1')->name('register.step1');
+        Route::post('/register/step1', 'storeStep1')->name('register.step1.store');
+        Route::get('/register/step2', 'showStep2')->name('register.step2');
+        Route::post('/register/step2', 'storeStep2')->name('register.step2.store');
+        Route::get('/register/step3', 'showStep3')->name('register.step3');
+        Route::post('/register/step3', 'storeStep3')->name('register.step3.store');
+        Route::get('/register/complete', 'showComplete')->name('register.complete');
+        Route::post('/register/submit', 'complete')->name('register.submit');
+    });
+});
+
+// Vendor Dashboard Routes (Requires vendor role)
 Route::prefix('vendor')->middleware(['auth', 'verified', 'role:vendor'])->name('vendor.')->group(function () {
     Route::controller(VendorDashboardController::class)->group(function () {
         Route::get('/dashboard', 'index')->name('dashboard');
@@ -265,7 +282,10 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:admin|super-admin'
     // Vendor Management
     Route::resource('vendors', VendorController::class);
     Route::controller(VendorController::class)->prefix('vendors')->name('vendors.')->group(function () {
+        Route::get('/applications', 'applications')->name('applications');
         Route::patch('/{vendor}/status', 'updateStatus')->name('status');
+        Route::post('/{vendor}/approve', 'approve')->name('approve');
+        Route::post('/{vendor}/reject', 'reject')->name('reject');
     });
     
     // Vendor & Payout Status Updates (from DashboardController)
