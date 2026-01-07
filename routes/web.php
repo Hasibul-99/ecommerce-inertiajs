@@ -198,6 +198,28 @@ Route::prefix('vendor')->middleware(['auth', 'verified', 'role:vendor'])->name('
 
     // Vendor Analytics
     Route::get('/api/analytics', [AnalyticsController::class, 'vendorAnalytics'])->name('analytics');
+
+    // Vendor Product Management
+    Route::controller(\App\Http\Controllers\Vendor\ProductController::class)->prefix('products')->name('products.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/', 'store')->name('store');
+        Route::get('/{product}/edit', 'edit')->name('edit');
+        Route::put('/{product}', 'update')->name('update');
+        Route::delete('/{product}', 'destroy')->name('destroy');
+        Route::post('/{product}/duplicate', 'duplicate')->name('duplicate');
+        Route::patch('/{product}/toggle-status', 'toggleStatus')->name('toggle-status');
+        Route::post('/bulk-action', 'bulkAction')->name('bulk-action');
+    });
+
+    // Vendor Order Management
+    Route::controller(\App\Http\Controllers\Vendor\OrderController::class)->prefix('orders')->name('orders.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/{order}', 'show')->name('show');
+        Route::post('/order-items/{orderItem}/update-status', 'updateItemStatus')->name('items.update-status');
+        Route::post('/{order}/add-tracking', 'addShipmentTracking')->name('add-tracking');
+        Route::get('/export', 'exportOrders')->name('export');
+    });
 });
 
 /*
