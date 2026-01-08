@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Vendor;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Services\PackingSlipService;
 use App\Services\VendorOrderService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,11 +15,13 @@ use Inertia\Inertia;
 class OrderController extends Controller
 {
     protected $vendorOrderService;
+    protected $packingSlipService;
 
-    public function __construct(VendorOrderService $vendorOrderService)
+    public function __construct(VendorOrderService $vendorOrderService, PackingSlipService $packingSlipService)
     {
         $this->middleware(['auth', 'verified', 'role:vendor']);
         $this->vendorOrderService = $vendorOrderService;
+        $this->packingSlipService = $packingSlipService;
     }
 
     /**
@@ -392,5 +395,50 @@ class OrderController extends Controller
             ->log('Vendor exported orders');
 
         return response()->stream($callback, 200, $headers);
+    }
+
+    /**
+     * Generate and download packing slip for vendor's items in an order.
+     */
+    public function downloadPackingSlip(Order $order)
+    {
+        $vendor = Auth::user()->vendor;
+
+        // Verify vendor has items in this order
+        $hasItems = $order->items()->where('vendor_id', $vendor->id)->exists();
+        if (!$hasItems) {
+            abort(404, 'Order not found or you do not have access to this order.');
+        }
+
+        try {
+            activity()
+                ->performedOn($order)
+                ->causedBy(Auth::user())
+                ->log('Vendor generated packing slip');
+
+            return $this->packingSlipService->generatePackingSlip($vendor, $order);
+        } catch (\Exception $e) {
+            return back()->with('error', 'Failed to generate packing slip: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Preview packing slip in browser.
+     */
+    public function previewPackingSlip(Order $order)
+    {
+        $vendor = Auth::user()->vendor;
+
+        // Verify vendor has items in this order
+        $hasItems = $order->items()->where('vendor_id', $vendor->id)->exists();
+        if (!$hasItems) {
+            abort(404, 'Order not found or you do not have access to this order.');
+        }
+
+        try {
+            return $this->packingSlipService->streamPackingSlip($vendor, $order);
+        } catch (\Exception $e) {
+            return back()->with('error', 'Failed to preview packing slip: ' . $e->getMessage());
+        }
     }
 }

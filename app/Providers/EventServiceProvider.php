@@ -49,6 +49,9 @@ class EventServiceProvider extends ServiceProvider
         \App\Events\CodDeliveryFailed::class => [
             \App\Listeners\SendCodDeliveryFailedNotification::class,
         ],
+        \App\Events\OrderItemStatusUpdated::class => [
+            \App\Listeners\SendOrderItemStatusNotifications::class,
+        ],
     ];
 
     /**

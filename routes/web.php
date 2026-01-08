@@ -215,10 +215,12 @@ Route::prefix('vendor')->middleware(['auth', 'verified', 'role:vendor'])->name('
     // Vendor Order Management
     Route::controller(\App\Http\Controllers\Vendor\OrderController::class)->prefix('orders')->name('orders.')->group(function () {
         Route::get('/', 'index')->name('index');
+        Route::get('/export', 'exportOrders')->name('export');
         Route::get('/{order}', 'show')->name('show');
+        Route::get('/{order}/packing-slip', 'downloadPackingSlip')->name('packing-slip');
+        Route::get('/{order}/packing-slip/preview', 'previewPackingSlip')->name('packing-slip.preview');
         Route::post('/order-items/{orderItem}/update-status', 'updateItemStatus')->name('items.update-status');
         Route::post('/{order}/add-tracking', 'addShipmentTracking')->name('add-tracking');
-        Route::get('/export', 'exportOrders')->name('export');
     });
 });
 
