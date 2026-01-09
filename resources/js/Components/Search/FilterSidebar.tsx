@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { router } from '@inertiajs/react';
+import { FilterPreferences } from '@/utils/filterPreferences';
 import { FiX, FiChevronDown, FiChevronUp, FiFilter } from 'react-icons/fi';
 
 interface Category {
@@ -70,18 +71,30 @@ export default function FilterSidebar({
     isOpen = true,
     onClose,
 }: FilterSidebarProps) {
-    const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
-        categories: true,
-        price: true,
-        vendors: false,
-        rating: false,
-        tags: false,
-        attributes: false,
-        availability: false,
-    });
+    // Load collapsed sections from localStorage
+    const loadExpandedSections = () => {
+        const saved = FilterPreferences.getCollapsedSections();
+        const defaults = {
+            categories: true,
+            price: true,
+            vendors: false,
+            rating: false,
+            tags: false,
+            attributes: false,
+            availability: false,
+        };
+        return { ...defaults, ...saved };
+    };
+
+    const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>(loadExpandedSections());
 
     const [localPriceMin, setLocalPriceMin] = useState(activeFilters.price_min?.toString() || '');
     const [localPriceMax, setLocalPriceMax] = useState(activeFilters.price_max?.toString() || '');
+
+    // Save expanded sections to localStorage
+    useEffect(() => {
+        FilterPreferences.setCollapsedSections(expandedSections);
+    }, [expandedSections]);
 
     const toggleSection = (section: string) => {
         setExpandedSections((prev) => ({

@@ -103,6 +103,9 @@ export default function SearchBar({
     const handleSearch = (searchQuery?: string) => {
         const finalQuery = searchQuery || query;
         if (finalQuery.trim()) {
+            // Save to localStorage for client-side recent searches
+            saveToLocalStorage(finalQuery);
+
             if (onSearch) {
                 onSearch(finalQuery);
             } else {
@@ -114,6 +117,50 @@ export default function SearchBar({
             setShowDropdown(false);
         }
     };
+
+    const saveToLocalStorage = (searchQuery: string) => {
+        if (typeof window === 'undefined') return;
+
+        try {
+            const stored = localStorage.getItem('recentSearches');
+            let searches: string[] = stored ? JSON.parse(stored) : [];
+
+            // Remove if already exists
+            searches = searches.filter(s => s !== searchQuery);
+
+            // Add to beginning
+            searches.unshift(searchQuery);
+
+            // Keep only last 10
+            searches = searches.slice(0, 10);
+
+            localStorage.setItem('recentSearches', JSON.stringify(searches));
+        } catch (error) {
+            console.error('Failed to save search to localStorage:', error);
+        }
+    };
+
+    const loadFromLocalStorage = (): string[] => {
+        if (typeof window === 'undefined') return [];
+
+        try {
+            const stored = localStorage.getItem('recentSearches');
+            return stored ? JSON.parse(stored) : [];
+        } catch (error) {
+            console.error('Failed to load searches from localStorage:', error);
+            return [];
+        }
+    };
+
+    // Merge localStorage searches with server-side searches
+    useEffect(() => {
+        if (query.length === 0) {
+            const localSearches = loadFromLocalStorage();
+            if (localSearches.length > 0 && recentSearches.length === 0) {
+                setRecentSearches(localSearches);
+            }
+        }
+    }, [query]);
 
     const handleSuggestionClick = (suggestion: Suggestion) => {
         if (suggestion.type === 'product' && suggestion.slug) {

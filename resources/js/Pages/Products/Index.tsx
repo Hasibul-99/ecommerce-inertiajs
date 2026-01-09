@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import FrontendLayout from '@/Layouts/FrontendLayout';
 import ProductCard from '@/Components/Frontend/ProductCard';
 import SearchBar from '@/Components/Search/SearchBar';
 import FilterSidebar from '@/Components/Search/FilterSidebar';
+import { FilterPreferences } from '@/utils/filterPreferences';
 import { FiGrid, FiList, FiFilter, FiX } from 'react-icons/fi';
 import { PageProps } from '@/types';
 
@@ -107,11 +108,35 @@ export default function ProductsIndex({
     cartCount = 0,
     wishlistCount = 0,
 }: ProductsPageProps) {
-    const [viewMode, setViewMode] = useState<'grid' | 'list'>(filters.view || 'grid');
+    // Load preferences from localStorage
+    const [viewMode, setViewMode] = useState<'grid' | 'list'>(
+        filters.view || FilterPreferences.getViewMode()
+    );
     const [showMobileFilters, setShowMobileFilters] = useState(false);
+
+    // Save view preference to localStorage whenever it changes
+    useEffect(() => {
+        FilterPreferences.setViewMode(viewMode);
+    }, [viewMode]);
+
+    // Apply sort preference if no sort is set in URL
+    useEffect(() => {
+        if (!filters.sort_by && typeof window !== 'undefined') {
+            const savedSort = FilterPreferences.getSortPreference();
+            if (savedSort && savedSort !== 'newest') {
+                router.get('/products', { ...filters, sort_by: savedSort }, {
+                    preserveState: true,
+                    preserveScroll: true,
+                    replace: true,
+                    only: ['products'],
+                });
+            }
+        }
+    }, []);
 
     const handleViewChange = (view: 'grid' | 'list') => {
         setViewMode(view);
+        FilterPreferences.setViewMode(view);
         router.get('/products', { ...filters, view }, {
             preserveState: true,
             preserveScroll: true,
@@ -120,7 +145,9 @@ export default function ProductsIndex({
     };
 
     const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        router.get('/products', { ...filters, sort_by: e.target.value }, {
+        const sortValue = e.target.value;
+        FilterPreferences.setSortPreference(sortValue);
+        router.get('/products', { ...filters, sort_by: sortValue }, {
             preserveState: true,
             preserveScroll: true,
             replace: true,

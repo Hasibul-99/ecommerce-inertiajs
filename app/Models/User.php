@@ -108,4 +108,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(OrderStatus::class);
     }
+
+    /**
+     * Get reviews marked as helpful by the user.
+     */
+    public function helpfulVotes()
+    {
+        return $this->belongsToMany(Review::class, 'review_helpful_votes')->withTimestamps();
+    }
 }
