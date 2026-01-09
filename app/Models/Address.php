@@ -9,11 +9,6 @@ class Address extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'user_id',
         'first_name',
@@ -29,11 +24,6 @@ class Address extends Model
         'type',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
         'is_default' => 'boolean',
     ];
@@ -47,18 +37,61 @@ class Address extends Model
     }
 
     /**
-     * Get the orders that use this address as shipping address.
+     * Get the full name.
      */
-    public function shippingOrders()
+    public function getFullNameAttribute(): string
     {
-        return $this->hasMany(Order::class, 'shipping_address_id');
+        return "{$this->first_name} {$this->last_name}";
     }
 
     /**
-     * Get the orders that use this address as billing address.
+     * Get the full address as string.
      */
-    public function billingOrders()
+    public function getFullAddressAttribute(): string
     {
-        return $this->hasMany(Order::class, 'billing_address_id');
+        $parts = [
+            $this->address_line_1,
+            $this->address_line_2,
+            $this->city,
+            $this->state,
+            $this->postal_code,
+            $this->country,
+        ];
+
+        return implode(', ', array_filter($parts));
+    }
+
+    /**
+     * Get the street address (combining line 1 and 2).
+     */
+    public function getStreetAttribute(): string
+    {
+        return $this->address_line_2
+            ? "{$this->address_line_1}, {$this->address_line_2}"
+            : $this->address_line_1;
+    }
+
+    /**
+     * Scope to get default address for a user.
+     */
+    public function scopeDefault($query)
+    {
+        return $query->where('is_default', true);
+    }
+
+    /**
+     * Scope to get shipping addresses.
+     */
+    public function scopeShipping($query)
+    {
+        return $query->whereIn('type', ['shipping', 'both']);
+    }
+
+    /**
+     * Scope to get billing addresses.
+     */
+    public function scopeBilling($query)
+    {
+        return $query->whereIn('type', ['billing', 'both']);
     }
 }

@@ -157,12 +157,32 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/{order}/invoice', 'invoice')->name('invoice');
         Route::post('/{order}/cancel', 'cancel')->name('cancel');
         Route::post('/{order}/return', 'requestReturn')->name('return');
+        Route::post('/{order}/reorder', 'reorder')->name('reorder');
     });
     
     // Payment Processing
     Route::controller(PaymentController::class)->prefix('payment')->name('payment.')->group(function () {
         Route::get('/{order}', 'show')->name('show');
         Route::post('/{order}', 'process')->name('process');
+    });
+
+    // Customer Dashboard
+    Route::controller(\App\Http\Controllers\Customer\DashboardController::class)->prefix('customer')->name('customer.')->group(function () {
+        Route::get('/dashboard', 'index')->name('dashboard');
+        Route::get('/orders', 'orders')->name('orders');
+        Route::get('/addresses', 'addresses')->name('addresses');
+        Route::get('/wishlist', 'wishlist')->name('wishlist');
+        Route::get('/recently-viewed', 'recentlyViewed')->name('recently-viewed');
+        Route::post('/clear-browsing-history', 'clearBrowsingHistory')->name('clear-browsing-history');
+    });
+
+    // Address Management
+    Route::controller(\App\Http\Controllers\Customer\AddressController::class)->prefix('customer/addresses')->name('customer.addresses.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store');
+        Route::put('/{address}', 'update')->name('update');
+        Route::delete('/{address}', 'destroy')->name('destroy');
+        Route::post('/{address}/set-default', 'setDefault')->name('set-default');
     });
 });
 
