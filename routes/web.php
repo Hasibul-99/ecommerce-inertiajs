@@ -27,6 +27,7 @@ use App\Http\Controllers\SeoController;
 use App\Http\Controllers\Vendor\DashboardController as VendorDashboardController;
 use App\Http\Controllers\WebhookController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -87,6 +88,14 @@ Route::controller(\App\Http\Controllers\ReviewController::class)->prefix('produc
     Route::delete('/{review}', 'destroy')->name('destroy');
     Route::post('/{review}/helpful', 'markHelpful')->name('helpful');
 });
+
+// Search API Routes (Public)
+Route::controller(SearchController::class)->prefix('api/search')->name('search.')->group(function () {
+    Route::get('/suggestions', 'suggestions')->name('suggestions');
+    Route::get('/popular', 'popular')->name('popular');
+});
+
+Route::get('/api/products/filter-options', [SearchController::class, 'filterOptions'])->name('products.filter-options');
 
 /*
 |--------------------------------------------------------------------------

@@ -6,18 +6,22 @@ use App\Http\Requests\ProductStoreRequest;
 use App\Http\Requests\ProductUpdateRequest;
 use App\Models\Product;
 use App\Models\Category;
+use App\Services\ProductSearchService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class ProductController extends Controller
 {
+    protected ProductSearchService $searchService;
+
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(ProductSearchService $searchService)
     {
+        $this->searchService = $searchService;
         $this->middleware('auth')->except(['index', 'show']);
     }
 
@@ -29,124 +33,64 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Product::with(['vendor', 'category', 'variants', 'tags', 'reviews'])
-            ->where('status', 'published')
-            ->whereHas('variants', function ($q) {
-                $q->where('stock_quantity', '>', 0);
-            });
+        // Prepare filters from request
+        $filters = [
+            'categories' => $request->input('categories', $request->input('category')),
+            'category_slug' => $request->input('category'),
+            'vendors' => $request->input('vendors'),
+            'tags' => $request->input('tags'),
+            'price_min' => $request->input('price_min', $request->input('min_price')),
+            'price_max' => $request->input('price_max', $request->input('max_price')),
+            'rating' => $request->input('rating'),
+            'in_stock' => $request->boolean('in_stock'),
+            'featured' => $request->boolean('featured'),
+            'on_sale' => $request->boolean('on_sale'),
+            'attributes' => $request->input('attributes', []),
+            'sort_by' => $request->input('sort_by', $request->input('sort', 'newest')),
+            'per_page' => $request->input('per_page', 24),
+        ];
 
-        // Search
-        if ($request->has('search') && $request->search) {
-            $query->where('title', 'like', "%{$request->search}%");
-        }
+        // Remove null values
+        $filters = array_filter($filters, function ($value) {
+            return $value !== null && $value !== '' && $value !== [];
+        });
 
-        // Category filter
-        if ($request->has('category') && $request->category) {
-            $query->whereHas('category', function ($q) use ($request) {
-                $q->where('slug', $request->category);
-            });
-        }
-
-        // Tags filter
-        if ($request->has('tags') && is_array($request->tags)) {
-            $query->whereHas('tags', function ($q) use ($request) {
-                $q->whereIn('slug', $request->tags);
-            });
-        }
-
-        // Price range filter
-        if ($request->has('min_price')) {
-            $query->whereHas('variants', function ($q) use ($request) {
-                $q->where('price_cents', '>=', $request->min_price * 100);
-            });
-        }
-        if ($request->has('max_price')) {
-            $query->whereHas('variants', function ($q) use ($request) {
-                $q->where('price_cents', '<=', $request->max_price * 100);
-            });
-        }
-
-        // Sorting
-        $sort = $request->get('sort', 'newest');
-        switch ($sort) {
-            case 'name_asc':
-                $query->orderBy('title', 'asc');
-                break;
-            case 'name_desc':
-                $query->orderBy('title', 'desc');
-                break;
-            case 'price_asc':
-            case 'price_low':
-                $query->join('product_variants', 'products.id', '=', 'product_variants.product_id')
-                    ->select('products.*')
-                    ->groupBy('products.id')
-                    ->orderByRaw('MIN(product_variants.price_cents) ASC');
-                break;
-            case 'price_desc':
-            case 'price_high':
-                $query->join('product_variants', 'products.id', '=', 'product_variants.product_id')
-                    ->select('products.*')
-                    ->groupBy('products.id')
-                    ->orderByRaw('MIN(product_variants.price_cents) DESC');
-                break;
-            case 'popular':
-                $query->withCount('reviews')->orderBy('reviews_count', 'desc');
-                break;
-            case 'rating':
-                $query->withAvg('reviews', 'rating')->orderBy('reviews_avg_rating', 'desc');
-                break;
-            case 'newest':
-            default:
-                $query->orderBy('created_at', 'desc');
-                break;
-        }
-
-        $products = $query->paginate(12)->withQueryString();
+        // Perform search
+        $searchQuery = $request->input('search', $request->input('q', ''));
+        $products = $this->searchService->search($searchQuery, $filters);
 
         // Transform products for frontend
         $products->getCollection()->transform(function ($product) {
-            $totalStock = $product->variants->sum('stock_quantity');
-            $minPrice = $product->variants->min('price_cents');
-            $averageRating = $product->reviews()->approved()->avg('rating') ?? 0;
-            $reviewsCount = $product->reviews()->approved()->count();
+            $firstImage = $product->images->first();
+
+            // Calculate sale price if available
+            $salePrice = $product->sale_price_cents ?? null;
+            $originalPrice = $product->price_cents;
+            $discountPercentage = 0;
+
+            if ($salePrice && $salePrice < $originalPrice) {
+                $discountPercentage = round((($originalPrice - $salePrice) / $originalPrice) * 100);
+            }
 
             return [
                 'id' => $product->id,
-                'name' => $product->title,
+                'name' => $product->name,
                 'slug' => $product->slug,
-                'price' => $minPrice ?? $product->base_price_cents,
-                'old_price' => null,
-                'image' => $product->getMedia('images')->first()?->getUrl() ?? null,
-                'rating' => round($averageRating, 1),
-                'reviews_count' => $reviewsCount,
+                'price_cents' => $salePrice ?? $originalPrice,
+                'original_price_cents' => $originalPrice,
+                'image' => $firstImage ? $firstImage->url : null,
+                'rating' => round($product->average_rating ?? 0, 1),
+                'reviews_count' => $product->reviews_count ?? 0,
                 'is_new' => $product->created_at->isAfter(now()->subDays(30)),
-                'is_sale' => false,
-                'discount_percentage' => 0,
-                'in_stock' => $totalStock > 0,
+                'is_sale' => $salePrice && $salePrice < $originalPrice,
+                'discount_percentage' => $discountPercentage,
+                'in_stock' => $product->stock_quantity > 0,
+                'vendor_name' => $product->vendor ? $product->vendor->business_name : null,
             ];
         });
 
-        // Get categories for filter
-        $categories = Category::withCount('products')
-            ->where('parent_id', null)
-            ->get()
-            ->map(function ($category) {
-                return [
-                    'id' => $category->id,
-                    'name' => $category->name,
-                    'slug' => $category->slug,
-                    'products_count' => $category->products_count,
-                ];
-            });
-
-        // Get tags for filter
-        $tags = \App\Models\ProductTag::all()->map(function ($tag) {
-            return [
-                'id' => $tag->id,
-                'name' => $tag->name,
-                'slug' => $tag->slug,
-            ];
-        });
+        // Get filter options
+        $filterOptions = $this->searchService->getFilterOptions($request->input('category'));
 
         // Get cart and wishlist counts
         $cartCount = 0;
@@ -161,9 +105,22 @@ class ProductController extends Controller
 
         return Inertia::render('Products/Index', [
             'products' => $products,
-            'categories' => $categories->toArray(),
-            'tags' => $tags->toArray(),
-            'filters' => $request->only(['search', 'category', 'tags', 'min_price', 'max_price', 'sort']) ?: [],
+            'filterOptions' => $filterOptions,
+            'filters' => array_merge([
+                'search' => $searchQuery,
+                'category' => $request->input('category'),
+                'categories' => $request->input('categories', []),
+                'vendors' => $request->input('vendors', []),
+                'tags' => $request->input('tags', []),
+                'price_min' => $request->input('price_min'),
+                'price_max' => $request->input('price_max'),
+                'rating' => $request->input('rating'),
+                'in_stock' => $request->boolean('in_stock'),
+                'featured' => $request->boolean('featured'),
+                'on_sale' => $request->boolean('on_sale'),
+                'sort_by' => $filters['sort_by'] ?? 'newest',
+                'view' => $request->input('view', 'grid'),
+            ]),
             'cartCount' => $cartCount,
             'wishlistCount' => $wishlistCount,
         ]);
