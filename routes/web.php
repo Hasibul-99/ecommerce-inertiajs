@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\CodReconciliationController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\PayoutController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ProductVariantController;
 use App\Http\Controllers\Admin\RoleController;
@@ -222,6 +223,16 @@ Route::prefix('vendor')->middleware(['auth', 'verified', 'role:vendor'])->name('
         Route::post('/order-items/{orderItem}/update-status', 'updateItemStatus')->name('items.update-status');
         Route::post('/{order}/add-tracking', 'addShipmentTracking')->name('add-tracking');
     });
+
+    // Vendor Earnings Management
+    Route::controller(\App\Http\Controllers\Vendor\EarningsController::class)->prefix('earnings')->name('earnings.')->group(function () {
+        Route::get('/', 'dashboard')->name('dashboard');
+        Route::get('/transactions', 'transactions')->name('transactions');
+        Route::get('/transactions/export', 'exportTransactions')->name('transactions.export');
+        Route::get('/payouts', 'payouts')->name('payouts');
+        Route::post('/request-payout', 'requestPayout')->name('request-payout');
+        Route::get('/payouts/{payout}', 'payoutDetails')->name('payout-details');
+    });
 });
 
 /*
@@ -311,7 +322,18 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:admin|super-admin'
         Route::post('/{vendor}/approve', 'approve')->name('approve');
         Route::post('/{vendor}/reject', 'reject')->name('reject');
     });
-    
+
+    // Payout Management
+    Route::controller(\App\Http\Controllers\Admin\PayoutController::class)->prefix('payouts')->name('payouts.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/export', 'export')->name('export');
+        Route::get('/{payout}', 'show')->name('show');
+        Route::post('/{payout}/process', 'process')->name('process');
+        Route::post('/{payout}/cancel', 'cancel')->name('cancel');
+        Route::post('/{payout}/retry', 'retry')->name('retry');
+        Route::post('/bulk-process', 'bulkProcess')->name('bulk-process');
+    });
+
     // Vendor & Payout Status Updates (from DashboardController)
     Route::controller(AdminDashboardController::class)->group(function () {
         Route::patch('/vendors/{vendor}/approve', 'updateVendorStatus')->name('vendors.approve');

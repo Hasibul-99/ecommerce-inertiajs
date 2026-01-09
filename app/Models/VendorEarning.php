@@ -34,36 +34,6 @@ class VendorEarning extends Model
     ];
 
     /**
-     * Get the amount in dollars.
-     *
-     * @return float
-     */
-    public function getAmountInDollarsAttribute()
-    {
-        return $this->amount_cents / 100;
-    }
-
-    /**
-     * Get the commission in dollars.
-     *
-     * @return float
-     */
-    public function getCommissionInDollarsAttribute()
-    {
-        return $this->commission_cents / 100;
-    }
-
-    /**
-     * Get the net amount in dollars.
-     *
-     * @return float
-     */
-    public function getNetAmountInDollarsAttribute()
-    {
-        return $this->net_amount_cents / 100;
-    }
-
-    /**
      * Get the vendor that owns the earning.
      */
     public function vendor()
@@ -72,10 +42,67 @@ class VendorEarning extends Model
     }
 
     /**
-     * Get the order that owns the earning.
+     * Get the order associated with the earning.
      */
     public function order()
     {
         return $this->belongsTo(Order::class);
+    }
+
+    /**
+     * Get the amount in dollars.
+     */
+    public function getAmountInDollarsAttribute(): float
+    {
+        return $this->amount_cents / 100;
+    }
+
+    /**
+     * Get the commission in dollars.
+     */
+    public function getCommissionInDollarsAttribute(): float
+    {
+        return $this->commission_cents / 100;
+    }
+
+    /**
+     * Get the net amount in dollars.
+     */
+    public function getNetAmountInDollarsAttribute(): float
+    {
+        return $this->net_amount_cents / 100;
+    }
+
+    /**
+     * Scope a query to only include available earnings.
+     */
+    public function scopeAvailable($query)
+    {
+        return $query->where('status', 'available')
+            ->where('available_at', '<=', now());
+    }
+
+    /**
+     * Scope a query to only include pending earnings.
+     */
+    public function scopePending($query)
+    {
+        return $query->where('status', 'pending');
+    }
+
+    /**
+     * Scope a query to only include withheld earnings (refund reserve).
+     */
+    public function scopeWithheld($query)
+    {
+        return $query->where('status', 'withheld');
+    }
+
+    /**
+     * Check if the earning is available for payout.
+     */
+    public function isAvailable(): bool
+    {
+        return $this->status === 'available' && $this->available_at <= now();
     }
 }
