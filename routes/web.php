@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\PayoutController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ProductVariantController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\UserController;
@@ -367,6 +368,18 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:admin|super-admin'
     Route::controller(AdminDashboardController::class)->group(function () {
         Route::patch('/vendors/{vendor}/approve', 'updateVendorStatus')->name('vendors.approve');
         Route::patch('/payouts/{payout}/process', 'updatePayoutStatus')->name('payouts.process');
+    });
+
+    // Reports & Analytics
+    Route::controller(ReportController::class)->prefix('reports')->name('reports.')->group(function () {
+        Route::get('/dashboard', 'dashboard')->name('dashboard');
+        Route::get('/sales', 'sales')->name('sales');
+        Route::get('/orders', 'orders')->name('orders');
+        Route::get('/products', 'products')->name('products');
+        Route::get('/vendors', 'vendors')->name('vendors');
+        Route::get('/customers', 'customers')->name('customers');
+        Route::get('/export', 'export')->name('export');
+        Route::post('/clear-cache', 'clearCache')->name('clear-cache');
     });
 });
 
