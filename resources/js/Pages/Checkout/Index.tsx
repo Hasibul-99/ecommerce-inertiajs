@@ -1,510 +1,405 @@
-import { Head, Link, useForm } from '@inertiajs/react';
-import { useState } from 'react';
-import FrontendLayout from '@/Layouts/FrontendLayout';
-import { FiCreditCard, FiLock } from 'react-icons/fi';
-import { PageProps } from '@/types';
-
-interface CartItem {
-    id: number;
-    product: {
-        name: string;
-        image?: string;
-    };
-    quantity: number;
-    price_cents: number;
-}
-
-interface Cart {
-    items: CartItem[];
-    subtotal_cents: number;
-    tax_cents: number;
-    total_cents: number;
-}
+import React, { useState, useEffect } from 'react';
+import { Head, router, useForm } from '@inertiajs/react';
+import { FiTruck, FiMapPin, FiCreditCard, FiCheck, FiAlertCircle } from 'react-icons/fi';
+import axios from 'axios';
 
 interface Address {
     id: number;
-    name: string;
     address_line1: string;
     address_line2?: string;
     city: string;
     state: string;
     postal_code: string;
     country: string;
-    phone: string;
 }
 
-interface CodInfo {
-    available: boolean;
-    fee_cents: number;
-    min_order_amount_cents: number;
-    max_order_amount_cents: number;
-    delivery_estimate: {
+interface CartItem {
+    id: number;
+    product: {
+        id: number;
+        name: string;
+        image?: string;
+        vendor: {
+            id: number;
+            business_name: string;
+        };
+    };
+    quantity: number;
+    price_cents: number;
+}
+
+interface VendorShipping {
+    vendor_id: number;
+    vendor_name: string;
+    items_count: number;
+    subtotal_cents: number;
+    available_methods: ShippingMethodOption[];
+}
+
+interface ShippingMethodOption {
+    method_id: number;
+    method_name: string;
+    method_type: string;
+    carrier: string;
+    rate_cents: number;
+    is_free: boolean;
+    estimated_delivery: {
+        formatted: string;
         min_days: number;
         max_days: number;
-        text: string;
     };
-    instructions: string;
-    errors?: string[];
 }
 
-interface CheckoutPageProps extends PageProps {
-    cart: Cart;
+interface Props {
+    cart: {
+        items: CartItem[];
+        subtotal_cents: number;
+    };
     addresses: Address[];
-    paymentMethods: Array<{ value: string; label: string }>;
-    reservation_id: string;
-    cartCount?: number;
-    wishlistCount?: number;
-    codInfo?: CodInfo;
 }
 
-export default function CheckoutIndex({
-    auth,
-    cart,
-    addresses = [],
-    paymentMethods = [],
-    reservation_id,
-    cartCount = 0,
-    wishlistCount = 0,
-    codInfo
-}: CheckoutPageProps) {
-    const [useExistingAddress, setUseExistingAddress] = useState(addresses.length > 0);
-    const [sameBillingAddress, setSameBillingAddress] = useState(true);
-    const [showCodInfo, setShowCodInfo] = useState(false);
+export default function Checkout({ cart, addresses }: Props) {
+    const [currentStep, setCurrentStep] = useState(1);
+    const [selectedAddress, setSelectedAddress] = useState<Address | null>(addresses[0] || null);
+    const [shippingData, setShippingData] = useState<{
+        vendors: VendorShipping[];
+        zone: any;
+    } | null>(null);
+    const [selectedShipping, setSelectedShipping] = useState<Record<number, number>>({});
+    const [loadingShipping, setLoadingShipping] = useState(false);
+    const [shippingTotal, setShippingTotal] = useState(0);
 
-    const { data, setData, post, processing, errors } = useForm({
-        reservation_id: reservation_id,
-        // Shipping Address
-        address_id: addresses.length > 0 ? addresses[0].id : null,
-        shipping_name: '',
-        shipping_address_line1: '',
-        shipping_address_line2: '',
-        shipping_city: '',
-        shipping_state: '',
-        shipping_postal_code: '',
-        shipping_country: 'US',
-        shipping_phone: '',
-        // Billing
-        same_billing_address: true,
-        // Payment
-        payment_method: paymentMethods.length > 0 ? paymentMethods[0].value : 'credit_card',
-        // Additional
-        notes: '',
+    const { data, setData, post, processing } = useForm({
+        address_id: addresses[0]?.id || null,
+        shipping_selections: {} as Record<number, number>,
+        payment_method: 'card',
     });
 
-    const formatPrice = (priceInCents: number) => {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-        }).format(priceInCents / 100);
+    // Load shipping methods when address is selected
+    useEffect(() => {
+        if (selectedAddress) {
+            loadShippingMethods(selectedAddress.id);
+        }
+    }, [selectedAddress]);
+
+    // Calculate shipping total when selections change
+    useEffect(() => {
+        calculateShippingTotal();
+    }, [selectedShipping]);
+
+    const loadShippingMethods = async (addressId: number) => {
+        setLoadingShipping(true);
+        try {
+            const response = await axios.get('/api/shipping/methods-for-cart', {
+                params: { address_id: addressId },
+            });
+
+            if (response.data.success) {
+                setShippingData(response.data.data);
+
+                // Auto-select cheapest method for each vendor
+                const autoSelections: Record<number, number> = {};
+                response.data.data.vendors.forEach((vendor: VendorShipping) => {
+                    if (vendor.available_methods.length > 0) {
+                        const cheapest = vendor.available_methods.reduce((prev, curr) => {
+                            if (curr.is_free) return curr;
+                            if (prev.is_free) return prev;
+                            return curr.rate_cents < prev.rate_cents ? curr : prev;
+                        });
+                        autoSelections[vendor.vendor_id] = cheapest.method_id;
+                    }
+                });
+                setSelectedShipping(autoSelections);
+                setData('shipping_selections', autoSelections);
+            }
+        } catch (error) {
+            console.error('Error loading shipping methods:', error);
+        } finally {
+            setLoadingShipping(false);
+        }
     };
 
-    const isCodSelected = data.payment_method === 'cod';
+    const calculateShippingTotal = () => {
+        if (!shippingData) return;
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
+        let total = 0;
+        shippingData.vendors.forEach((vendor) => {
+            const methodId = selectedShipping[vendor.vendor_id];
+            if (methodId) {
+                const method = vendor.available_methods.find(m => m.method_id === methodId);
+                if (method && !method.is_free) {
+                    total += method.rate_cents;
+                }
+            }
+        });
+        setShippingTotal(total);
+    };
 
-        // Additional validation for COD
-        if (isCodSelected && !data.shipping_phone && !useExistingAddress) {
-            alert('Phone number is required for Cash on Delivery orders');
+    const handleShippingSelection = (vendorId: number, methodId: number) => {
+        const newSelections = { ...selectedShipping, [vendorId]: methodId };
+        setSelectedShipping(newSelections);
+        setData('shipping_selections', newSelections);
+    };
+
+    const handlePlaceOrder = () => {
+        if (!selectedAddress) {
+            alert('Please select a shipping address');
             return;
         }
 
-        post('/checkout/process');
+        if (Object.keys(selectedShipping).length !== shippingData?.vendors.length) {
+            alert('Please select shipping method for all vendors');
+            return;
+        }
+
+        post(route('checkout.place-order'), {
+            data: {
+                ...data,
+                address_id: selectedAddress.id,
+            },
+        });
     };
 
-    const handleAddressChange = (addressId: number) => {
-        const selected = addresses.find(addr => addr.id === addressId);
-        if (selected) {
-            setData({
-                ...data,
-                address_id: addressId,
-                shipping_name: selected.name,
-                shipping_address_line1: selected.address_line1,
-                shipping_address_line2: selected.address_line2 || '',
-                shipping_city: selected.city,
-                shipping_state: selected.state,
-                shipping_postal_code: selected.postal_code,
-                shipping_country: selected.country,
-                shipping_phone: selected.phone,
-            });
-        }
+    const formatCents = (cents: number) => {
+        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(cents / 100);
     };
+
+    const grandTotal = cart.subtotal_cents + shippingTotal;
 
     return (
-        <FrontendLayout auth={auth} cartCount={cartCount} wishlistCount={wishlistCount}>
+        <>
             <Head title="Checkout" />
 
-            {/* Breadcrumb */}
-            <div className="bg-grabit-bg-light py-4">
-                <div className="container mx-auto px-4">
-                    <div className="flex items-center text-sm text-grabit-gray">
-                        <Link href="/" className="hover:text-grabit-primary">Home</Link>
-                        <span className="mx-2">/</span>
-                        <Link href="/cart" className="hover:text-grabit-primary">Cart</Link>
-                        <span className="mx-2">/</span>
-                        <span className="text-grabit-dark">Checkout</span>
+            <div className="min-h-screen bg-gray-50 py-12">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    {/* Progress Steps */}
+                    <div className="mb-8">
+                        <div className="flex items-center justify-center">
+                            {[1, 2, 3].map((step) => (
+                                <React.Fragment key={step}>
+                                    <div className="flex items-center">
+                                        <div
+                                            className={"flex items-center justify-center w-10 h-10 rounded-full " + (
+                                                currentStep >= step
+                                                    ? 'bg-blue-600 text-white'
+                                                    : 'bg-gray-300 text-gray-600'
+                                            )}
+                                        >
+                                            {currentStep > step ? <FiCheck /> : step}
+                                        </div>
+                                        <span className="ml-2 text-sm font-medium text-gray-900">
+                                            {step === 1 && 'Address'}
+                                            {step === 2 && 'Shipping'}
+                                            {step === 3 && 'Payment'}
+                                        </span>
+                                    </div>
+                                    {step < 3 && (
+                                        <div
+                                            className={"w-24 h-1 mx-4 " + (
+                                                currentStep > step ? 'bg-blue-600' : 'bg-gray-300'
+                                            )}
+                                        />
+                                    )}
+                                </React.Fragment>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        {/* Main Content */}
+                        <div className="lg:col-span-2 space-y-6">
+                            {/* Step 1: Shipping Address */}
+                            <div className="bg-white rounded-lg shadow-sm p-6">
+                                <div className="flex items-center gap-2 mb-4">
+                                    <FiMapPin className="text-blue-600" />
+                                    <h2 className="text-xl font-bold text-gray-900">Shipping Address</h2>
+                                </div>
+
+                                {addresses.length === 0 ? (
+                                    <div className="text-center py-8">
+                                        <p className="text-gray-500">No addresses found. Please add an address first.</p>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-3">
+                                        {addresses.map((address) => (
+                                            <div
+                                                key={address.id}
+                                                onClick={() => {
+                                                    setSelectedAddress(address);
+                                                    setData('address_id', address.id);
+                                                    setCurrentStep(2);
+                                                }}
+                                                className={"border-2 rounded-lg p-4 cursor-pointer transition-colors " + (
+                                                    selectedAddress?.id === address.id
+                                                        ? 'border-blue-600 bg-blue-50'
+                                                        : 'border-gray-200 hover:border-gray-300'
+                                                )}
+                                            >
+                                                <div className="flex items-start justify-between">
+                                                    <div>
+                                                        <p className="font-medium text-gray-900">{address.address_line1}</p>
+                                                        {address.address_line2 && (
+                                                            <p className="text-sm text-gray-600">{address.address_line2}</p>
+                                                        )}
+                                                        <p className="text-sm text-gray-600">
+                                                            {address.city}, {address.state} {address.postal_code}
+                                                        </p>
+                                                        <p className="text-sm text-gray-600">{address.country}</p>
+                                                    </div>
+                                                    {selectedAddress?.id === address.id && (
+                                                        <FiCheck className="text-blue-600" size={20} />
+                                                    )}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Step 2: Shipping Methods - Multi-Vendor */}
+                            {currentStep >= 2 && selectedAddress && (
+                                <div className="bg-white rounded-lg shadow-sm p-6">
+                                    <div className="flex items-center gap-2 mb-4">
+                                        <FiTruck className="text-blue-600" />
+                                        <h2 className="text-xl font-bold text-gray-900">Shipping Methods</h2>
+                                        <span className="text-sm text-gray-500">(Select shipping for each vendor)</span>
+                                    </div>
+
+                                    {loadingShipping ? (
+                                        <div className="text-center py-8">
+                                            <p className="text-gray-500">Loading shipping methods...</p>
+                                        </div>
+                                    ) : shippingData && shippingData.vendors.length > 0 ? (
+                                        <div className="space-y-6">
+                                            {shippingData.vendors.map((vendor) => (
+                                                <div key={vendor.vendor_id} className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                                                    <div className="flex justify-between items-center mb-3 pb-3 border-b border-gray-200">
+                                                        <div>
+                                                            <h3 className="font-semibold text-gray-900 flex items-center gap-2">
+                                                                <FiTruck size={16} />
+                                                                {vendor.vendor_name}
+                                                            </h3>
+                                                            <p className="text-sm text-gray-500">
+                                                                {vendor.items_count} item{vendor.items_count > 1 ? 's' : ''} • {formatCents(vendor.subtotal_cents)}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="space-y-2">
+                                                        {vendor.available_methods.map((method) => (
+                                                            <div
+                                                                key={method.method_id}
+                                                                onClick={() => handleShippingSelection(vendor.vendor_id, method.method_id)}
+                                                                className={"border-2 rounded-lg p-3 cursor-pointer transition-colors bg-white " + (
+                                                                    selectedShipping[vendor.vendor_id] === method.method_id
+                                                                        ? 'border-blue-600 bg-blue-50'
+                                                                        : 'border-gray-200 hover:border-gray-300'
+                                                                )}
+                                                            >
+                                                                <div className="flex items-center justify-between">
+                                                                    <div className="flex-1">
+                                                                        <div className="flex items-center gap-2">
+                                                                            <span className="font-medium text-gray-900">{method.method_name}</span>
+                                                                            {method.is_free && (
+                                                                                <span className="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                                                                                    FREE SHIPPING
+                                                                                </span>
+                                                                            )}
+                                                                        </div>
+                                                                        <p className="text-sm text-gray-500">
+                                                                            {method.carrier && method.carrier + " • "}
+                                                                            Delivery: {method.estimated_delivery.formatted}
+                                                                        </p>
+                                                                    </div>
+                                                                    <div className="text-right ml-4">
+                                                                        <p className="font-semibold text-lg text-gray-900">
+                                                                            {method.is_free ? 'FREE' : formatCents(method.rate_cents)}
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 flex items-start gap-3">
+                                            <FiAlertCircle className="text-yellow-600 flex-shrink-0 mt-0.5" />
+                                            <div>
+                                                <p className="text-sm text-yellow-800">
+                                                    Shipping is not available to this address. Please select a different address.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {shippingData && shippingData.vendors.length > 0 && (
+                                        <button
+                                            onClick={() => setCurrentStep(3)}
+                                            disabled={Object.keys(selectedShipping).length !== shippingData.vendors.length}
+                                            className="mt-6 w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                                        >
+                                            Continue to Payment
+                                        </button>
+                                    )}
+                                </div>
+                            )}
+
+                            {/* Step 3: Payment */}
+                            {currentStep >= 3 && (
+                                <div className="bg-white rounded-lg shadow-sm p-6">
+                                    <div className="flex items-center gap-2 mb-4">
+                                        <FiCreditCard className="text-blue-600" />
+                                        <h2 className="text-xl font-bold text-gray-900">Payment</h2>
+                                    </div>
+
+                                    <button
+                                        onClick={handlePlaceOrder}
+                                        disabled={processing}
+                                        className="w-full px-6 py-4 bg-green-600 text-white font-bold text-lg rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        {processing ? 'Processing...' : 'Place Order - ' + formatCents(grandTotal)}
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Order Summary Sidebar */}
+                        <div className="lg:col-span-1">
+                            <div className="bg-white rounded-lg shadow-sm p-6 sticky top-6">
+                                <h2 className="text-xl font-bold text-gray-900 mb-4">Order Summary</h2>
+
+                                <div className="border-t border-gray-200 pt-4 space-y-2">
+                                    <div className="flex justify-between text-sm">
+                                        <span className="text-gray-600">Subtotal</span>
+                                        <span className="font-medium text-gray-900">{formatCents(cart.subtotal_cents)}</span>
+                                    </div>
+                                    <div className="flex justify-between text-sm">
+                                        <span className="text-gray-600">Shipping</span>
+                                        <span className="font-medium text-gray-900">
+                                            {shippingTotal === 0 && shippingData ? 'FREE' : formatCents(shippingTotal)}
+                                        </span>
+                                    </div>
+                                    <div className="flex justify-between text-lg font-bold text-gray-900 pt-2 border-t border-gray-200">
+                                        <span>Total</span>
+                                        <span>{formatCents(grandTotal)}</span>
+                                    </div>
+                                </div>
+
+                                {shippingTotal === 0 && shippingData && shippingData.vendors.length > 0 && (
+                                    <div className="mt-4 bg-green-50 border border-green-200 rounded-lg p-3">
+                                        <p className="text-sm text-green-800 font-medium flex items-center gap-2">
+                                            <FiCheck className="text-green-600" />
+                                            Free shipping qualified!
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <div className="container mx-auto px-4 py-8">
-                <h1 className="text-3xl font-heading font-bold text-grabit-dark mb-8">Checkout</h1>
-
-                <form onSubmit={handleSubmit}>
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        {/* Checkout Form */}
-                        <div className="lg:col-span-2 space-y-6">
-                            {/* Shipping Address */}
-                            <div className="bg-white border border-grabit-border rounded-lg p-6">
-                                <h2 className="text-xl font-heading font-semibold text-grabit-dark mb-4">
-                                    Shipping Address
-                                </h2>
-
-                                {addresses.length > 0 && (
-                                    <div className="mb-4">
-                                        <label className="flex items-center gap-2 cursor-pointer mb-3">
-                                            <input
-                                                type="checkbox"
-                                                checked={useExistingAddress}
-                                                onChange={(e) => setUseExistingAddress(e.target.checked)}
-                                                className="w-4 h-4 text-grabit-primary border-grabit-border rounded focus:ring-grabit-primary"
-                                            />
-                                            <span className="text-sm text-grabit-gray">Use saved address</span>
-                                        </label>
-
-                                        {useExistingAddress && (
-                                            <select
-                                                value={data.address_id || ''}
-                                                onChange={(e) => handleAddressChange(Number(e.target.value))}
-                                                className="w-full px-4 py-2 border border-grabit-border rounded-md focus:outline-none focus:ring-2 focus:ring-grabit-primary"
-                                            >
-                                                {addresses.map((address) => (
-                                                    <option key={address.id} value={address.id}>
-                                                        {address.name} - {address.address_line1}, {address.city}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        )}
-                                    </div>
-                                )}
-
-                                {!useExistingAddress && (
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div className="md:col-span-2">
-                                            <label className="block text-sm font-medium text-grabit-dark mb-2">
-                                                Full Name *
-                                            </label>
-                                            <input
-                                                type="text"
-                                                value={data.shipping_name}
-                                                onChange={(e) => setData('shipping_name', e.target.value)}
-                                                required={!useExistingAddress}
-                                                className="w-full px-4 py-2 border border-grabit-border rounded-md focus:outline-none focus:ring-2 focus:ring-grabit-primary"
-                                            />
-                                            {errors.shipping_name && (
-                                                <p className="text-sm text-red-600 mt-1">{errors.shipping_name}</p>
-                                            )}
-                                        </div>
-
-                                        <div className="md:col-span-2">
-                                            <label className="block text-sm font-medium text-grabit-dark mb-2">
-                                                Address Line 1 *
-                                            </label>
-                                            <input
-                                                type="text"
-                                                value={data.shipping_address_line1}
-                                                onChange={(e) => setData('shipping_address_line1', e.target.value)}
-                                                required={!useExistingAddress}
-                                                className="w-full px-4 py-2 border border-grabit-border rounded-md focus:outline-none focus:ring-2 focus:ring-grabit-primary"
-                                            />
-                                            {errors.shipping_address_line1 && (
-                                                <p className="text-sm text-red-600 mt-1">{errors.shipping_address_line1}</p>
-                                            )}
-                                        </div>
-
-                                        <div className="md:col-span-2">
-                                            <label className="block text-sm font-medium text-grabit-dark mb-2">
-                                                Address Line 2
-                                            </label>
-                                            <input
-                                                type="text"
-                                                value={data.shipping_address_line2}
-                                                onChange={(e) => setData('shipping_address_line2', e.target.value)}
-                                                className="w-full px-4 py-2 border border-grabit-border rounded-md focus:outline-none focus:ring-2 focus:ring-grabit-primary"
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-sm font-medium text-grabit-dark mb-2">
-                                                City *
-                                            </label>
-                                            <input
-                                                type="text"
-                                                value={data.shipping_city}
-                                                onChange={(e) => setData('shipping_city', e.target.value)}
-                                                required={!useExistingAddress}
-                                                className="w-full px-4 py-2 border border-grabit-border rounded-md focus:outline-none focus:ring-2 focus:ring-grabit-primary"
-                                            />
-                                            {errors.shipping_city && (
-                                                <p className="text-sm text-red-600 mt-1">{errors.shipping_city}</p>
-                                            )}
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-sm font-medium text-grabit-dark mb-2">
-                                                State *
-                                            </label>
-                                            <input
-                                                type="text"
-                                                value={data.shipping_state}
-                                                onChange={(e) => setData('shipping_state', e.target.value)}
-                                                required={!useExistingAddress}
-                                                className="w-full px-4 py-2 border border-grabit-border rounded-md focus:outline-none focus:ring-2 focus:ring-grabit-primary"
-                                            />
-                                            {errors.shipping_state && (
-                                                <p className="text-sm text-red-600 mt-1">{errors.shipping_state}</p>
-                                            )}
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-sm font-medium text-grabit-dark mb-2">
-                                                Postal Code *
-                                            </label>
-                                            <input
-                                                type="text"
-                                                value={data.shipping_postal_code}
-                                                onChange={(e) => setData('shipping_postal_code', e.target.value)}
-                                                required={!useExistingAddress}
-                                                className="w-full px-4 py-2 border border-grabit-border rounded-md focus:outline-none focus:ring-2 focus:ring-grabit-primary"
-                                            />
-                                            {errors.shipping_postal_code && (
-                                                <p className="text-sm text-red-600 mt-1">{errors.shipping_postal_code}</p>
-                                            )}
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-sm font-medium text-grabit-dark mb-2">
-                                                Phone * {isCodSelected && <span className="text-grabit-primary text-xs">(Required for COD)</span>}
-                                            </label>
-                                            <input
-                                                type="tel"
-                                                value={data.shipping_phone}
-                                                onChange={(e) => setData('shipping_phone', e.target.value)}
-                                                required={!useExistingAddress || isCodSelected}
-                                                className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-grabit-primary ${
-                                                    isCodSelected ? 'border-grabit-primary' : 'border-grabit-border'
-                                                }`}
-                                                placeholder={isCodSelected ? 'Required for delivery confirmation' : ''}
-                                            />
-                                            {errors.shipping_phone && (
-                                                <p className="text-sm text-red-600 mt-1">{errors.shipping_phone}</p>
-                                            )}
-                                            {isCodSelected && !data.shipping_phone && !useExistingAddress && (
-                                                <p className="text-sm text-amber-600 mt-1">
-                                                    Phone number is required for Cash on Delivery orders
-                                                </p>
-                                            )}
-                                        </div>
-                                    </div>
-                                )}
-
-                                <div className="mt-4">
-                                    <label className="flex items-center gap-2 cursor-pointer">
-                                        <input
-                                            type="checkbox"
-                                            checked={sameBillingAddress}
-                                            onChange={(e) => {
-                                                setSameBillingAddress(e.target.checked);
-                                                setData('same_billing_address', e.target.checked);
-                                            }}
-                                            className="w-4 h-4 text-grabit-primary border-grabit-border rounded focus:ring-grabit-primary"
-                                        />
-                                        <span className="text-sm text-grabit-gray">
-                                            Billing address same as shipping
-                                        </span>
-                                    </label>
-                                </div>
-                            </div>
-
-                            {/* Payment Method */}
-                            <div className="bg-white border border-grabit-border rounded-lg p-6">
-                                <h2 className="text-xl font-heading font-semibold text-grabit-dark mb-4">
-                                    Payment Method
-                                </h2>
-
-                                <div className="space-y-3">
-                                    {paymentMethods.map((method) => {
-                                        const isCod = method.value === 'cod';
-                                        const codAvailable = codInfo?.available ?? true;
-                                        const isDisabled = isCod && !codAvailable;
-
-                                        return (
-                                            <div key={method.value}>
-                                                <label
-                                                    className={`flex items-center gap-3 p-4 border rounded-md transition-colors ${
-                                                        isDisabled
-                                                            ? 'border-grabit-border bg-gray-50 cursor-not-allowed opacity-60'
-                                                            : 'border-grabit-border cursor-pointer hover:border-grabit-primary'
-                                                    } ${
-                                                        data.payment_method === method.value ? 'border-grabit-primary bg-grabit-primary bg-opacity-5' : ''
-                                                    }`}
-                                                >
-                                                    <input
-                                                        type="radio"
-                                                        name="payment_method"
-                                                        value={method.value}
-                                                        checked={data.payment_method === method.value}
-                                                        onChange={(e) => {
-                                                            setData('payment_method', e.target.value);
-                                                            if (isCod) setShowCodInfo(true);
-                                                        }}
-                                                        disabled={isDisabled}
-                                                        className="w-4 h-4 text-grabit-primary border-grabit-border focus:ring-grabit-primary disabled:opacity-50"
-                                                    />
-                                                    <FiCreditCard className="w-5 h-5 text-grabit-gray" />
-                                                    <div className="flex-1">
-                                                        <span className="font-medium text-grabit-dark">{method.label}</span>
-                                                        {isCod && codInfo && (
-                                                            <span className="ml-2 text-sm text-grabit-gray">
-                                                                (+{formatPrice(codInfo.fee_cents)} fee)
-                                                            </span>
-                                                        )}
-                                                    </div>
-                                                </label>
-
-                                                {isCod && data.payment_method === 'cod' && codInfo && (
-                                                    <div className="mt-2 ml-11 p-3 bg-blue-50 border border-blue-200 rounded-md text-sm">
-                                                        <div className="space-y-2">
-                                                            <p className="text-grabit-dark">
-                                                                <strong>Delivery:</strong> {codInfo.delivery_estimate.text}
-                                                            </p>
-                                                            <p className="text-grabit-gray">{codInfo.instructions}</p>
-                                                            {codInfo.errors && codInfo.errors.length > 0 && (
-                                                                <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded">
-                                                                    {codInfo.errors.map((error, idx) => (
-                                                                        <p key={idx} className="text-red-600 text-xs">{error}</p>
-                                                                    ))}
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                )}
-
-                                                {isCod && !codAvailable && codInfo?.errors && (
-                                                    <div className="mt-2 ml-11 p-2 bg-amber-50 border border-amber-200 rounded text-xs text-amber-700">
-                                                        {codInfo.errors.map((error, idx) => (
-                                                            <p key={idx}>{error}</p>
-                                                        ))}
-                                                    </div>
-                                                )}
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-
-                                {errors.payment_method && (
-                                    <p className="text-sm text-red-600 mt-2">{errors.payment_method}</p>
-                                )}
-                            </div>
-
-                            {/* Order Notes */}
-                            <div className="bg-white border border-grabit-border rounded-lg p-6">
-                                <h2 className="text-xl font-heading font-semibold text-grabit-dark mb-4">
-                                    Order Notes (Optional)
-                                </h2>
-                                <textarea
-                                    value={data.notes}
-                                    onChange={(e) => setData('notes', e.target.value)}
-                                    rows={4}
-                                    placeholder="Any special instructions for your order?"
-                                    className="w-full px-4 py-2 border border-grabit-border rounded-md focus:outline-none focus:ring-2 focus:ring-grabit-primary resize-none"
-                                />
-                            </div>
-                        </div>
-
-                        {/* Order Summary */}
-                        <div className="lg:col-span-1">
-                            <div className="bg-white border border-grabit-border rounded-lg p-6 sticky top-24">
-                                <h2 className="text-xl font-heading font-semibold text-grabit-dark mb-6">
-                                    Order Summary
-                                </h2>
-
-                                {/* Cart Items */}
-                                <div className="space-y-4 mb-6 max-h-64 overflow-y-auto">
-                                    {cart.items.map((item) => (
-                                        <div key={item.id} className="flex gap-3">
-                                            <img
-                                                src={item.product.image || '/images/placeholder-product.png'}
-                                                alt={item.product.name}
-                                                className="w-16 h-16 object-cover rounded-md"
-                                            />
-                                            <div className="flex-1">
-                                                <h3 className="text-sm font-medium text-grabit-dark line-clamp-2">
-                                                    {item.product.name}
-                                                </h3>
-                                                <p className="text-sm text-grabit-gray">Qty: {item.quantity}</p>
-                                                <p className="text-sm font-medium text-grabit-primary">
-                                                    {formatPrice(item.price_cents * item.quantity)}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-
-                                {/* Totals */}
-                                <div className="space-y-3 pt-4 border-t border-grabit-border">
-                                    <div className="flex justify-between text-grabit-gray">
-                                        <span>Subtotal:</span>
-                                        <span>{formatPrice(cart.subtotal_cents)}</span>
-                                    </div>
-                                    <div className="flex justify-between text-grabit-gray">
-                                        <span>Tax:</span>
-                                        <span>{formatPrice(cart.tax_cents)}</span>
-                                    </div>
-                                    <div className="flex justify-between text-grabit-gray">
-                                        <span>Shipping:</span>
-                                        <span className="text-green-600">Free</span>
-                                    </div>
-                                    {isCodSelected && codInfo && (
-                                        <div className="flex justify-between text-grabit-gray">
-                                            <span>COD Fee:</span>
-                                            <span>{formatPrice(codInfo.fee_cents)}</span>
-                                        </div>
-                                    )}
-                                    <div className="flex justify-between text-xl font-bold pt-3 border-t border-grabit-border">
-                                        <span className="text-grabit-dark">Total:</span>
-                                        <span className="text-grabit-primary">
-                                            {formatPrice(
-                                                cart.total_cents + (isCodSelected && codInfo ? codInfo.fee_cents : 0)
-                                            )}
-                                        </span>
-                                    </div>
-                                    {isCodSelected && codInfo && (
-                                        <div className="text-xs text-amber-600 pt-2">
-                                            Payment to be collected at delivery
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* Place Order Button */}
-                                <button
-                                    type="submit"
-                                    disabled={processing}
-                                    className="w-full bg-grabit-primary hover:bg-grabit-primary-dark text-white py-3 px-6 rounded-md font-medium transition-colors mt-6 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                                >
-                                    <FiLock className="w-5 h-5" />
-                                    {processing ? 'Processing...' : 'Place Order'}
-                                </button>
-
-                                {/* Security Note */}
-                                <p className="text-xs text-grabit-gray text-center mt-4">
-                                    Your payment information is secure and encrypted
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </FrontendLayout>
+        </>
     );
 }
