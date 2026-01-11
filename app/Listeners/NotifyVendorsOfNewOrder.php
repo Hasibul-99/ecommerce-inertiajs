@@ -3,10 +3,9 @@
 namespace App\Listeners;
 
 use App\Events\OrderPlaced;
-use App\Mail\OrderPlaced as OrderPlacedMail;
+use App\Notifications\VendorNewOrderNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Facades\Mail;
 
 class NotifyVendorsOfNewOrder implements ShouldQueue
 {
@@ -14,8 +13,6 @@ class NotifyVendorsOfNewOrder implements ShouldQueue
 
     /**
      * Create the event listener.
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -24,28 +21,37 @@ class NotifyVendorsOfNewOrder implements ShouldQueue
 
     /**
      * Handle the event.
-     *
-     * @param  \App\Events\OrderPlaced  $event
-     * @return void
      */
-    public function handle(OrderPlaced $event)
+    public function handle(OrderPlaced $event): void
     {
         $order = $event->order;
 
-        // Get all vendors involved in this order
-        $vendors = $order->items()
-            ->with('product.vendor.user')
-            ->get()
-            ->pluck('product.vendor')
-            ->filter()
-            ->unique('id');
+        // Load order items with product and vendor relationships
+        $order->load(['items.product.vendor.user']);
 
-        // Notify each vendor
-        foreach ($vendors as $vendor) {
-            if ($vendor->user && $vendor->user->email) {
-                Mail::to($vendor->user->email)
-                    ->send(new OrderPlacedMail($order, true));
+        // Group items by vendor
+        $vendorGroups = $order->items->groupBy(function ($item) {
+            return $item->product->vendor_id;
+        });
+
+        // Send notification to each vendor
+        foreach ($vendorGroups as $vendorId => $items) {
+            $vendor = $items->first()->product->vendor;
+
+            // Skip if vendor has no user
+            if (!$vendor || !$vendor->user) {
+                continue;
             }
+
+            // Calculate total for this vendor
+            $vendorTotal = $items->sum('subtotal_cents');
+
+            // Send notification to vendor's user
+            $vendor->user->notify(new VendorNewOrderNotification(
+                $order,
+                $items,
+                $vendorTotal
+            ));
         }
     }
 }

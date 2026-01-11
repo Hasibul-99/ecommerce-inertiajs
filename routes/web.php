@@ -263,6 +263,14 @@ Route::prefix('vendor')->middleware(['auth', 'verified', 'role:vendor'])->name('
         Route::post('/request-payout', 'requestPayout')->name('request-payout');
         Route::get('/payouts/{payout}', 'payoutDetails')->name('payout-details');
     });
+
+    // Vendor Analytics
+    Route::controller(VendorDashboardController::class)->prefix('analytics')->name('analytics.')->group(function () {
+        Route::get('/sales', 'salesAnalytics')->name('sales');
+        Route::get('/products', 'productsAnalytics')->name('products');
+        Route::get('/customers', 'customersAnalytics')->name('customers');
+        Route::get('/export', 'exportAnalytics')->name('export');
+    });
 });
 
 /*
