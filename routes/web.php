@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ProductVariantController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VendorController;
@@ -388,6 +389,19 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:admin|super-admin'
         Route::get('/customers', 'customers')->name('customers');
         Route::get('/export', 'export')->name('export');
         Route::post('/clear-cache', 'clearCache')->name('clear-cache');
+    });
+
+    // Settings Management
+    Route::controller(SettingController::class)->prefix('settings')->name('settings.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/general', 'general')->name('general');
+        Route::get('/payment', 'payment')->name('payment');
+        Route::get('/shipping', 'shipping')->name('shipping');
+        Route::get('/email', 'email')->name('email');
+        Route::get('/vendor', 'vendor')->name('vendor');
+        Route::get('/tax', 'tax')->name('tax');
+        Route::post('/{group}', 'update')->name('update');
+        Route::post('/email/test', 'sendTestEmail')->name('email.test');
     });
 });
 
