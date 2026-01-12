@@ -5,6 +5,8 @@ use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\CodReconciliationController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\EmailTemplateController;
+use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\PayoutController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
@@ -194,6 +196,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('/{address}', 'update')->name('update');
         Route::delete('/{address}', 'destroy')->name('destroy');
         Route::post('/{address}/set-default', 'setDefault')->name('set-default');
+    });
+
+    // Notification Management
+    Route::controller(\App\Http\Controllers\NotificationController::class)->prefix('notifications')->name('notifications.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/recent', 'recent')->name('recent');
+        Route::post('/{id}/mark-as-read', 'markAsRead')->name('mark-as-read');
+        Route::post('/mark-all-as-read', 'markAllAsRead')->name('mark-all-as-read');
+        Route::get('/preferences', 'preferences')->name('preferences');
+        Route::post('/preferences', 'updatePreferences')->name('preferences.update');
     });
 });
 
@@ -402,6 +414,23 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:admin|super-admin'
         Route::get('/tax', 'tax')->name('tax');
         Route::post('/{group}', 'update')->name('update');
         Route::post('/email/test', 'sendTestEmail')->name('email.test');
+    });
+
+    // Email Template Management
+    Route::controller(EmailTemplateController::class)->prefix('email-templates')->name('email-templates.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/{template}/edit', 'edit')->name('edit');
+        Route::put('/{template}', 'update')->name('update');
+        Route::post('/{template}/preview', 'preview')->name('preview');
+        Route::post('/{template}/send-test', 'sendTest')->name('send-test');
+        Route::patch('/{template}/toggle-status', 'toggleStatus')->name('toggle-status');
+    });
+
+    // Notification Management
+    Route::controller(NotificationController::class)->prefix('notifications')->name('notifications.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/settings', 'updateSettings')->name('update-settings');
+        Route::post('/broadcast', 'sendBroadcast')->name('broadcast');
     });
 });
 
