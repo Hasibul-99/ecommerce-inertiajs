@@ -38,6 +38,7 @@ class Product extends Model implements HasMedia
         'average_rating',
         'reviews_count',
         'sales_count',
+        'views_count',
         'status',
         'is_active',
         'is_featured',
@@ -56,6 +57,7 @@ class Product extends Model implements HasMedia
         'average_rating' => 'decimal:2',
         'reviews_count' => 'integer',
         'sales_count' => 'integer',
+        'views_count' => 'integer',
         'stock_quantity' => 'integer',
         'published_at' => 'datetime',
     ];

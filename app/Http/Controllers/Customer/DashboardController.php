@@ -77,7 +77,7 @@ class DashboardController extends Controller
             });
 
         // Wishlist preview (first 4 items)
-        $wishlistItems = $user->wishlistItems()
+        $wishlistItems = $user->wishlists()
             ->with(['product.media'])
             ->take(4)
             ->get()
@@ -224,7 +224,7 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
 
-        $wishlistItems = $user->wishlistItems()
+        $wishlistItems = $user->wishlists()
             ->with(['product.media', 'product.variants'])
             ->orderBy('created_at', 'desc')
             ->get()

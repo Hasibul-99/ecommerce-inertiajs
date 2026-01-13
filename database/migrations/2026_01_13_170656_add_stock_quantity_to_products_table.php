@@ -56,6 +56,11 @@ return new class extends Migration
                 $table->integer('sales_count')->default(0)->after('reviews_count');
             }
 
+            if (!Schema::hasColumn('products', 'views_count')) {
+                $table->integer('views_count')->default(0)->after('sales_count');
+                $table->index('views_count');
+            }
+
             if (!Schema::hasColumn('products', 'is_active')) {
                 $table->boolean('is_active')->default(true)->after('status');
                 $table->index('is_active');
@@ -79,6 +84,7 @@ return new class extends Migration
             $table->dropIndex(['is_active']);
             $table->dropIndex(['is_featured']);
             $table->dropIndex(['average_rating']);
+            $table->dropIndex(['views_count']);
 
             $table->dropColumn([
                 'stock_quantity',
@@ -91,6 +97,7 @@ return new class extends Migration
                 'average_rating',
                 'reviews_count',
                 'sales_count',
+                'views_count',
                 'is_active',
                 'is_featured',
             ]);
