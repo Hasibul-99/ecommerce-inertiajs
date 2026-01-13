@@ -176,7 +176,7 @@ class ProductSearchService
             $categories = Category::withCount(['products' => function ($q) {
                 $q->where('is_active', true);
             }])
-            ->where('products_count', '>', 0)
+            ->having('products_count', '>', 0)
             ->get()
             ->map(function ($category) {
                 return [
