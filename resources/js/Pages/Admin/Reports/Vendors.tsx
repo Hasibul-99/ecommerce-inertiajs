@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Head, router } from '@inertiajs/react';
-import { FiDownload, FiStore, FiPackage, FiDollarSign, FiTrendingUp, FiStar } from 'react-icons/fi';
+import { FiDownload, FiShoppingBag, FiPackage, FiDollarSign, FiTrendingUp, FiStar } from 'react-icons/fi';
 import BarChart from '@/Components/Charts/BarChart';
 
 interface VendorPerformance {
@@ -189,7 +189,7 @@ export default function Vendors({ dateRange, report }: Props) {
                                     <p className="text-sm text-gray-500 mt-1">{report.active_vendors} active</p>
                                 </div>
                                 <div className="p-3 bg-blue-100 rounded-lg">
-                                    <FiStore className="text-blue-600" size={24} />
+                                    <FiShoppingBag className="text-blue-600" size={24} />
                                 </div>
                             </div>
                         </div>

@@ -416,10 +416,10 @@ class VendorAnalyticsService
 
             // Low stock products
             $lowStockProducts = Product::where('vendor_id', $vendor->id)
-                ->where('stock', '<=', 10)
-                ->where('stock', '>', 0)
-                ->select('id', 'name', 'sku', 'stock', 'price_cents')
-                ->orderBy('stock')
+                ->where('stock_quantity', '<=', 10)
+                ->where('stock_quantity', '>', 0)
+                ->select('id', 'name', 'sku', 'stock_quantity as stock', 'price_cents')
+                ->orderBy('stock_quantity')
                 ->limit(10)
                 ->get()
                 ->map(fn($product) => [
@@ -432,7 +432,7 @@ class VendorAnalyticsService
 
             // Out of stock
             $outOfStockCount = Product::where('vendor_id', $vendor->id)
-                ->where('stock', 0)
+                ->where('stock_quantity', 0)
                 ->count();
 
             return [

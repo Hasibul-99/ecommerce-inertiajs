@@ -17,6 +17,7 @@ class Order extends Model
      */
     protected $fillable = [
         'user_id',
+        'vendor_id',
         'order_number',
         'status',
         'subtotal_cents',
@@ -41,6 +42,7 @@ class Order extends Model
         'cod_collected_by',
         'delivery_person_id',
         'cod_fee_cents',
+        'delivered_at',
     ];
 
     /**
@@ -52,6 +54,7 @@ class Order extends Model
         'metadata' => 'json',
         'cod_verification_required' => 'boolean',
         'cod_collected_at' => 'datetime',
+        'delivered_at' => 'datetime',
     ];
 
     /**

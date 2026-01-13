@@ -49,6 +49,102 @@ interface MenuItem {
   children?: MenuItem[];
 }
 
+// Separate component for menu items with children to avoid hooks violation
+const MenuItemWithChildren = ({
+  item,
+  sidebarCollapsed
+}: {
+  item: MenuItem;
+  sidebarCollapsed: boolean;
+}) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const Icon = item.icon;
+
+  return (
+    <div className="space-y-1">
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className={`
+          w-full group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200
+          text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white
+        `}
+      >
+        <Icon className="flex-shrink-0 w-5 h-5 mr-3 text-gray-500 dark:text-gray-400" />
+        <span className="flex-1 text-left">{item.name}</span>
+        {item.badge && (
+          <span className="mr-2 px-2 py-0.5 text-xs font-medium rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+            {item.badge}
+          </span>
+        )}
+        {isExpanded ? (
+          <FiChevronDown className="w-4 h-4" />
+        ) : (
+          <FiChevronRight className="w-4 h-4" />
+        )}
+      </button>
+      {isExpanded && (
+        <div className="space-y-1 ml-3">
+          {item.children?.map((child: MenuItem) => (
+            <MenuItemLink key={child.name} item={child} isChild={true} sidebarCollapsed={sidebarCollapsed} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Separate component for regular menu items
+const MenuItemLink = ({
+  item,
+  isChild = false,
+  sidebarCollapsed
+}: {
+  item: MenuItem;
+  isChild?: boolean;
+  sidebarCollapsed: boolean;
+}) => {
+  const { url } = usePage();
+  const Icon = item.icon;
+
+  const isActiveRoute = (href: string) => {
+    if (href === '#') return false;
+    return url.startsWith(href) || url === href;
+  };
+
+  const isActive = item.href ? isActiveRoute(item.href) : false;
+
+  return (
+    <Link
+      href={item.href || '#'}
+      className={`
+        group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200
+        ${isChild ? 'ml-6 pl-8' : ''}
+        ${isActive
+          ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/25'
+          : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white'
+        }
+        ${sidebarCollapsed && !isChild ? 'justify-center px-2' : ''}
+      `}
+    >
+      <Icon className={`flex-shrink-0 ${sidebarCollapsed && !isChild ? 'w-6 h-6' : 'w-5 h-5 mr-3'} ${isActive ? 'text-white' : 'text-gray-500 dark:text-gray-400'}`} />
+      {(!sidebarCollapsed || isChild) && (
+        <>
+          <span className="flex-1">{item.name}</span>
+          {item.badge && (
+            <span className={`ml-2 px-2 py-0.5 text-xs font-medium rounded-full ${
+              isActive
+                ? 'bg-white/20 text-white'
+                : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
+            }`}>
+              {item.badge}
+            </span>
+          )}
+        </>
+      )}
+    </Link>
+  );
+};
+
 export default function AdminLayout({ user, header, children }: AdminLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -143,89 +239,19 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
     }
   };
 
-  const isActiveRoute = (href: string) => {
-    if (href === '#') return false;
-    return url.startsWith(href) || url === href;
-  };
-
-  const renderMenuItem = (item: MenuItem, isChild = false) => {
-    const [isExpanded, setIsExpanded] = useState(false);
-    const isActive = item.href ? isActiveRoute(item.href) : false;
-    const hasChildren = item.children && item.children.length > 0;
-    const Icon = item.icon;
-
-    if (hasChildren && !sidebarCollapsed) {
-      return (
-        <div key={item.name} className="space-y-1">
-          <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className={`
-              w-full group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200
-              text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white
-            `}
-          >
-            <Icon className="flex-shrink-0 w-5 h-5 mr-3 text-gray-500 dark:text-gray-400" />
-            <span className="flex-1 text-left">{item.name}</span>
-            {item.badge && (
-              <span className="mr-2 px-2 py-0.5 text-xs font-medium rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-                {item.badge}
-              </span>
-            )}
-            {isExpanded ? (
-              <FiChevronDown className="w-4 h-4" />
-            ) : (
-              <FiChevronRight className="w-4 h-4" />
-            )}
-          </button>
-          {isExpanded && (
-            <div className="space-y-1 ml-3">
-              {item.children.map((child: MenuItem) => renderMenuItem(child, true))}
-            </div>
-          )}
-        </div>
-      );
-    }
-
-    return (
-      <Link
-        key={item.name}
-        href={item.href || '#'}
-        className={`
-          group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200
-          ${isChild ? 'ml-6 pl-8' : ''}
-          ${isActive
-            ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/25'
-            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white'
-          }
-          ${sidebarCollapsed && !isChild ? 'justify-center px-2' : ''}
-        `}
-      >
-        <Icon className={`flex-shrink-0 ${sidebarCollapsed && !isChild ? 'w-6 h-6' : 'w-5 h-5 mr-3'} ${isActive ? 'text-white' : 'text-gray-500 dark:text-gray-400'}`} />
-        {(!sidebarCollapsed || isChild) && (
-          <>
-            <span className="flex-1">{item.name}</span>
-            {item.badge && (
-              <span className={`ml-2 px-2 py-0.5 text-xs font-medium rounded-full ${
-                isActive
-                  ? 'bg-white/20 text-white'
-                  : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
-              }`}>
-                {item.badge}
-              </span>
-            )}
-          </>
-        )}
-      </Link>
-    );
-  };
-
   const renderMenuGroup = (groupKey: string, group: any) => {
     const isExpanded = expandedGroups.includes(groupKey);
-    
+
     if (sidebarCollapsed) {
       return (
         <div key={groupKey} className="space-y-1">
-          {group.items.map((item: MenuItem) => renderMenuItem(item))}
+          {group.items.map((item: MenuItem) => {
+            const hasChildren = item.children && item.children.length > 0;
+            if (hasChildren) {
+              return <MenuItemLink key={item.name} item={item} sidebarCollapsed={sidebarCollapsed} />;
+            }
+            return <MenuItemLink key={item.name} item={item} sidebarCollapsed={sidebarCollapsed} />;
+          })}
         </div>
       );
     }
@@ -245,7 +271,13 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
         </button>
         {isExpanded && (
           <div className="space-y-1">
-            {group.items.map((item: MenuItem) => renderMenuItem(item))}
+            {group.items.map((item: MenuItem) => {
+              const hasChildren = item.children && item.children.length > 0;
+              if (hasChildren) {
+                return <MenuItemWithChildren key={item.name} item={item} sidebarCollapsed={sidebarCollapsed} />;
+              }
+              return <MenuItemLink key={item.name} item={item} sidebarCollapsed={sidebarCollapsed} />;
+            })}
           </div>
         )}
       </div>

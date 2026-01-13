@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Head, router } from '@inertiajs/react';
-import { FiDollarSign, FiShoppingCart, FiUsers, FiStore, FiTrendingUp, FiDownload } from 'react-icons/fi';
+import { FiDollarSign, FiShoppingCart, FiUsers, FiShoppingBag, FiTrendingUp, FiDownload } from 'react-icons/fi';
 import LineChart from '@/Components/Charts/LineChart';
 import BarChart from '@/Components/Charts/BarChart';
 import DoughnutChart from '@/Components/Charts/DoughnutChart';

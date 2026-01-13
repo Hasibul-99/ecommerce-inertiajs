@@ -102,8 +102,8 @@ class SendVendorDailySummaries extends Command
 
         // Get low stock count
         $lowStockCount = Product::where('vendor_id', $vendor->id)
-            ->where('stock', '>', 0)
-            ->where('stock', '<=', 10)
+            ->where('stock_quantity', '>', 0)
+            ->where('stock_quantity', '<=', 10)
             ->count();
 
         return [

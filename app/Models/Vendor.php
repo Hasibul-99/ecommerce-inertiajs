@@ -35,6 +35,7 @@ class Vendor extends Model implements HasMedia
         'status',
         'onboarding_step',
         'commission_percent',
+        'commission_rate',
         'stripe_account_id',
         'bank_name',
         'bank_account_name',
@@ -58,6 +59,7 @@ class Vendor extends Model implements HasMedia
         'meta' => 'json',
         'kyc' => 'json',
         'commission_percent' => 'float',
+        'commission_rate' => 'decimal:2',
         'approved_at' => 'datetime',
         'rejected_at' => 'datetime',
     ];

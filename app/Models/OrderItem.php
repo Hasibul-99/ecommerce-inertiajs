@@ -24,6 +24,7 @@ class OrderItem extends Model
         'variant_name',
         'quantity',
         'unit_price_cents',
+        'price_cents',
         'subtotal_cents',
         'tax_cents',
         'total_cents',

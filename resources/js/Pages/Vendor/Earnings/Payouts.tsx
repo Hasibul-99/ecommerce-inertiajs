@@ -195,9 +195,26 @@ export default function PayoutsIndex({ payouts, stats }: Props) {
                                             Showing {payouts.meta.from} to {payouts.meta.to} of {payouts.meta.total} payouts
                                         </div>
                                         <div className="flex gap-2">
-                                            {payouts.links.map((link: any, index: number) => (
-                                                <button key={index} disabled={!link.url} onClick={() => link.url && window.location.href = link.url} dangerouslySetInnerHTML={{ __html: link.label }} className={'px-3 py-2 rounded border text-sm ' + (link.active ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50') + ' ' + (!link.url ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer')} />
-                                            ))}
+                                            {payouts.links.map((link: any, index: number) => {
+                                                const baseClasses = 'px-3 py-2 rounded border text-sm';
+                                                const activeClasses = link.active
+                                                    ? 'bg-blue-600 text-white border-blue-600'
+                                                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50';
+                                                const disabledClasses = !link.url
+                                                    ? 'opacity-50 cursor-not-allowed'
+                                                    : 'cursor-pointer';
+                                                const className = `${baseClasses} ${activeClasses} ${disabledClasses}`;
+
+                                                return (
+                                                    <button
+                                                        key={index}
+                                                        disabled={!link.url}
+                                                        onClick={() => link.url && (window.location.href = link.url)}
+                                                        dangerouslySetInnerHTML={{ __html: link.label }}
+                                                        className={className}
+                                                    />
+                                                );
+                                            })}
                                         </div>
                                     </div>
                                 </div>

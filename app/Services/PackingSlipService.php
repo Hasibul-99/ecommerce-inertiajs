@@ -54,9 +54,9 @@ class PackingSlipService
         });
 
         // Calculate vendor's portion of tax (proportional to their items)
-        $orderTotal = $order->total_amount_cents;
+        $orderTotal = $order->total_cents;
         $vendorProportion = $orderTotal > 0 ? $subtotal / $orderTotal : 0;
-        $vendorTax = (int) ($order->tax_amount_cents * $vendorProportion);
+        $vendorTax = (int) ($order->tax_cents * $vendorProportion);
 
         $total = $subtotal + $vendorTax;
 

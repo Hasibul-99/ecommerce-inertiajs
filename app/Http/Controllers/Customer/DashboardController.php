@@ -38,7 +38,7 @@ class DashboardController extends Controller
                 ->count(),
             'total_spent_cents' => Order::where('user_id', $user->id)
                 ->where('payment_status', 'paid')
-                ->sum('total_amount_cents'),
+                ->sum('total_cents'),
         ];
 
         // Recent orders (last 5)
@@ -52,7 +52,7 @@ class DashboardController extends Controller
                     'id' => $order->id,
                     'order_number' => $order->order_number,
                     'status' => $order->status,
-                    'total_cents' => $order->total_amount_cents,
+                    'total_cents' => $order->total_cents,
                     'items_count' => $order->items->count(),
                     'created_at' => $order->created_at->format('Y-m-d H:i:s'),
                 ];
@@ -69,7 +69,7 @@ class DashboardController extends Controller
                     'id' => $order->id,
                     'order_number' => $order->order_number,
                     'status' => $order->status,
-                    'total_cents' => $order->total_amount_cents,
+                    'total_cents' => $order->total_cents,
                     'items_count' => $order->items->count(),
                     'created_at' => $order->created_at->format('Y-m-d H:i:s'),
                     'estimated_delivery' => $order->estimated_delivery_date?->format('Y-m-d'),
@@ -172,7 +172,7 @@ class DashboardController extends Controller
                 'order_number' => $order->order_number,
                 'status' => $order->status,
                 'payment_status' => $order->payment_status,
-                'total_cents' => $order->total_amount_cents,
+                'total_cents' => $order->total_cents,
                 'items_count' => $order->items->count(),
                 'vendors' => $order->items->pluck('vendor.business_name')->unique()->values(),
                 'created_at' => $order->created_at->format('Y-m-d H:i:s'),

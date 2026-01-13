@@ -257,15 +257,15 @@ class ReportService
                 ]);
 
             // Low stock products
-            $lowStockProducts = Product::where('stock', '<=', 10)
-                ->where('stock', '>', 0)
-                ->select('id', 'name', 'stock', 'sku')
-                ->orderBy('stock')
+            $lowStockProducts = Product::where('stock_quantity', '<=', 10)
+                ->where('stock_quantity', '>', 0)
+                ->select('id', 'name', 'stock_quantity as stock', 'sku')
+                ->orderBy('stock_quantity')
                 ->limit(20)
                 ->get();
 
             // Out of stock products
-            $outOfStockCount = Product::where('stock', 0)->count();
+            $outOfStockCount = Product::where('stock_quantity', 0)->count();
 
             // Total products
             $totalProducts = Product::count();
@@ -363,7 +363,9 @@ class ReportService
         return Cache::remember($cacheKey, now()->addMinutes(30), function () use ($from, $to, $filters) {
             // New vs returning customers
             $newCustomers = User::whereBetween('created_at', [$from, $to])
-                ->where('role', 'customer')
+                ->whereHas('roles', function ($q) {
+                    $q->where('name', 'customer');
+                })
                 ->count();
 
             // Top customers by spend
@@ -394,7 +396,9 @@ class ReportService
 
             // Customer acquisition trend
             $acquisitionTrend = User::whereBetween('created_at', [$from, $to])
-                ->where('role', 'customer')
+                ->whereHas('roles', function ($q) {
+                    $q->where('name', 'customer');
+                })
                 ->select(
                     DB::raw('DATE(created_at) as date'),
                     DB::raw('COUNT(*) as count')
@@ -425,21 +429,29 @@ class ReportService
                 ]);
 
             // Total customers
-            $totalCustomers = User::where('role', 'customer')->count();
+            $totalCustomers = User::whereHas('roles', function ($q) {
+                $q->where('name', 'customer');
+            })->count();
 
             // Customer lifetime value (average)
-            $avgLifetimeValue = DB::table('orders')
-                ->join('users', 'orders.user_id', '=', 'users.id')
-                ->where('users.role', 'customer')
-                ->whereNotIn('orders.status', ['cancelled', 'failed'])
-                ->selectRaw('AVG(customer_total) as avg_ltv')
-                ->fromSub(function ($query) {
-                    $query->from('orders')
-                        ->select('user_id', DB::raw('SUM(total_cents) as customer_total'))
-                        ->whereNotIn('status', ['cancelled', 'failed'])
-                        ->groupBy('user_id');
-                }, 'customer_totals')
-                ->value('avg_ltv');
+            // First, create subquery to calculate total per customer
+            $customerTotalsSubquery = DB::table('orders')
+                ->select('user_id', DB::raw('SUM(total_cents) as customer_total'))
+                ->whereNotIn('status', ['cancelled', 'failed'])
+                ->whereNull('deleted_at')
+                ->groupBy('user_id');
+
+            // Then join with users and roles to filter customers only
+            $avgLifetimeValue = DB::table(DB::raw("({$customerTotalsSubquery->toSql()}) as customer_totals"))
+                ->mergeBindings($customerTotalsSubquery)
+                ->join('users', 'customer_totals.user_id', '=', 'users.id')
+                ->join('model_has_roles', function ($join) {
+                    $join->on('users.id', '=', 'model_has_roles.model_id')
+                        ->where('model_has_roles.model_type', '=', User::class);
+                })
+                ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
+                ->where('roles.name', 'customer')
+                ->avg('customer_totals.customer_total');
 
             return [
                 'total_customers' => $totalCustomers,
