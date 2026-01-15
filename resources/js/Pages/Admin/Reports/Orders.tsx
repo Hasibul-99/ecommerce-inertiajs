@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Head, router } from '@inertiajs/react';
-import { FiDownload, FiShoppingCart, FiCheckCircle, FiXCircle, FiClock } from 'react-icons/fi';
+import { FiDownload, FiShoppingCart, FiCheckCircle, FiXCircle, FiClock, FiActivity } from 'react-icons/fi';
 import LineChart from '@/Components/Charts/LineChart';
 import DoughnutChart from '@/Components/Charts/DoughnutChart';
 import BarChart from '@/Components/Charts/BarChart';
+import AdminLayout from '@/Layouts/AdminLayout';
 
 interface OrdersReport {
     total_orders: number;
@@ -59,7 +60,7 @@ interface Props {
     codReport: CodReport;
 }
 
-export default function Orders({ dateRange, filters, report, codReport }: Props) {
+export default function Orders({ auth, dateRange, filters, report, codReport }: Props) {
     const [from, setFrom] = useState(dateRange.from);
     const [to, setTo] = useState(dateRange.to);
     const [status, setStatus] = useState(filters.status || '');
@@ -167,7 +168,17 @@ export default function Orders({ dateRange, filters, report, codReport }: Props)
     };
 
     return (
-        <>
+        <AdminLayout
+            user={auth.user}
+            header={
+                <div className="flex items-center justify-between">
+                    <h2 className="font-semibold text-xl text-gray-800 leading-tight flex items-center gap-2">
+                        <FiActivity className="h-6 w-6" />
+                        Admin Dashboard
+                    </h2>
+                </div>
+            }
+        >
             <Head title="Orders Report" />
 
             <div className="min-h-screen bg-gray-50 py-8">
@@ -395,6 +406,6 @@ export default function Orders({ dateRange, filters, report, codReport }: Props)
                     </div>
                 </div>
             </div>
-        </>
+        </AdminLayout>
     );
 }

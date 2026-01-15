@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Head, router } from '@inertiajs/react';
-import { FiDownload, FiDollarSign, FiShoppingCart, FiTrendingUp } from 'react-icons/fi';
+import { FiDownload, FiDollarSign, FiShoppingCart, FiTrendingUp, FiActivity } from 'react-icons/fi';
 import LineChart from '@/Components/Charts/LineChart';
 import DoughnutChart from '@/Components/Charts/DoughnutChart';
 import BarChart from '@/Components/Charts/BarChart';
+import AdminLayout from '@/Layouts/AdminLayout';
 
 interface SalesReport {
     total_revenue: number;
@@ -41,7 +42,7 @@ interface Props {
     report: SalesReport;
 }
 
-export default function Sales({ dateRange, filters, report }: Props) {
+export default function Sales({auth, dateRange, filters, report }: Props) {
     const [from, setFrom] = useState(dateRange.from);
     const [to, setTo] = useState(dateRange.to);
     const [vendorId, setVendorId] = useState(filters.vendor_id || '');
@@ -129,8 +130,18 @@ export default function Sales({ dateRange, filters, report }: Props) {
     };
 
     return (
-        <>
-            <Head title="Sales Report" />
+        <AdminLayout
+              user={auth.user}
+              header={
+                <div className="flex items-center justify-between">
+                  <h2 className="font-semibold text-xl text-gray-800 leading-tight flex items-center gap-2">
+                    <FiActivity className="h-6 w-6" />
+                    Admin Dashboard
+                  </h2>
+                </div>
+              }
+            >
+                <Head title="Sales Report" />
 
             <div className="min-h-screen bg-gray-50 py-8">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -307,6 +318,8 @@ export default function Sales({ dateRange, filters, report }: Props) {
                     </div>
                 </div>
             </div>
-        </>
+        
+            </AdminLayout>
+            
     );
 }

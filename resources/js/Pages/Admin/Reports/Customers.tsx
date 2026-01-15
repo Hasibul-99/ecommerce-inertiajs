@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Head, router } from '@inertiajs/react';
-import { FiDownload, FiUsers, FiUserPlus, FiDollarSign, FiGlobe } from 'react-icons/fi';
+import { FiDownload, FiUsers, FiUserPlus, FiDollarSign, FiGlobe, FiActivity } from 'react-icons/fi';
 import LineChart from '@/Components/Charts/LineChart';
 import DoughnutChart from '@/Components/Charts/DoughnutChart';
 import BarChart from '@/Components/Charts/BarChart';
+import AdminLayout from '@/Layouts/AdminLayout';
 
 interface TopCustomer {
     customer_id: number;
@@ -43,7 +44,7 @@ interface Props {
     report: CustomersReport;
 }
 
-export default function Customers({ dateRange, report }: Props) {
+export default function Customers({ auth, dateRange, report }: Props) {
     const [from, setFrom] = useState(dateRange.from);
     const [to, setTo] = useState(dateRange.to);
 
@@ -117,7 +118,17 @@ export default function Customers({ dateRange, report }: Props) {
     };
 
     return (
-        <>
+        <AdminLayout
+            user={auth.user}
+            header={
+                <div className="flex items-center justify-between">
+                    <h2 className="font-semibold text-xl text-gray-800 leading-tight flex items-center gap-2">
+                        <FiActivity className="h-6 w-6" />
+                        Admin Dashboard
+                    </h2>
+                </div>
+            }
+        >
             <Head title="Customers Report" />
 
             <div className="min-h-screen bg-gray-50 py-8">
@@ -332,6 +343,6 @@ export default function Customers({ dateRange, report }: Props) {
                     </div>
                 </div>
             </div>
-        </>
+        </AdminLayout>
     );
 }

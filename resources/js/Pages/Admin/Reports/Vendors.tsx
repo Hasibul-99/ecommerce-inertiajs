@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Head, router } from '@inertiajs/react';
-import { FiDownload, FiShoppingBag, FiPackage, FiDollarSign, FiTrendingUp, FiStar } from 'react-icons/fi';
+import { FiDownload, FiShoppingBag, FiPackage, FiDollarSign, FiTrendingUp, FiStar, FiActivity } from 'react-icons/fi';
 import BarChart from '@/Components/Charts/BarChart';
+import AdminLayout from '@/Layouts/AdminLayout';
 
 interface VendorPerformance {
     vendor_id: number;
@@ -31,7 +32,7 @@ interface Props {
     report: VendorsReport;
 }
 
-export default function Vendors({ dateRange, report }: Props) {
+export default function Vendors({ auth, dateRange, report }: Props) {
     const [from, setFrom] = useState(dateRange.from);
     const [to, setTo] = useState(dateRange.to);
     const [sortBy, setSortBy] = useState<'revenue' | 'orders' | 'fulfillment'>('revenue');
@@ -120,7 +121,17 @@ export default function Vendors({ dateRange, report }: Props) {
     };
 
     return (
-        <>
+        <AdminLayout
+            user={auth.user}
+            header={
+                <div className="flex items-center justify-between">
+                    <h2 className="font-semibold text-xl text-gray-800 leading-tight flex items-center gap-2">
+                        <FiActivity className="h-6 w-6" />
+                        Admin Dashboard
+                    </h2>
+                </div>
+            }
+        >
             <Head title="Vendors Report" />
 
             <div className="min-h-screen bg-gray-50 py-8">
@@ -227,9 +238,9 @@ export default function Vendors({ dateRange, report }: Props) {
                                     <p className="text-2xl font-bold text-gray-900 mt-2">
                                         {report.vendor_performance.length > 0
                                             ? (
-                                                  report.vendor_performance.reduce((sum, v) => sum + v.fulfillment_rate, 0) /
-                                                  report.vendor_performance.length
-                                              ).toFixed(1)
+                                                report.vendor_performance.reduce((sum, v) => sum + v.fulfillment_rate, 0) /
+                                                report.vendor_performance.length
+                                            ).toFixed(1)
                                             : 0}
                                         %
                                     </p>
@@ -351,6 +362,8 @@ export default function Vendors({ dateRange, report }: Props) {
                     </div>
                 </div>
             </div>
-        </>
+        </AdminLayout>
+
+
     );
 }

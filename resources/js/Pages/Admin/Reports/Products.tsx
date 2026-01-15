@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Head, router } from '@inertiajs/react';
-import { FiDownload, FiPackage, FiAlertTriangle, FiXCircle, FiTrendingUp } from 'react-icons/fi';
+import { FiDownload, FiPackage, FiAlertTriangle, FiXCircle, FiTrendingUp, FiActivity } from 'react-icons/fi';
 import BarChart from '@/Components/Charts/BarChart';
 import DoughnutChart from '@/Components/Charts/DoughnutChart';
+import AdminLayout from '@/Layouts/AdminLayout';
 
 interface Product {
     product_id: number;
@@ -47,7 +48,7 @@ interface Props {
     report: ProductsReport;
 }
 
-export default function Products({ dateRange, filters, report }: Props) {
+export default function Products({ auth, dateRange, filters, report }: Props) {
     const [from, setFrom] = useState(dateRange.from);
     const [to, setTo] = useState(dateRange.to);
     const [categoryId, setCategoryId] = useState(filters.category_id || '');
@@ -123,7 +124,17 @@ export default function Products({ dateRange, filters, report }: Props) {
     const totalUnitsSold = report.top_products.reduce((sum, p) => sum + p.units_sold, 0);
 
     return (
-        <>
+        <AdminLayout
+            user={auth.user}
+            header={
+                <div className="flex items-center justify-between">
+                    <h2 className="font-semibold text-xl text-gray-800 leading-tight flex items-center gap-2">
+                        <FiActivity className="h-6 w-6" />
+                        Admin Dashboard
+                    </h2>
+                </div>
+            }
+        >
             <Head title="Products Report" />
 
             <div className="min-h-screen bg-gray-50 py-8">
@@ -286,9 +297,8 @@ export default function Products({ dateRange, filters, report }: Props) {
                                                     <td className="py-2 px-2 text-sm text-gray-900">{product.name}</td>
                                                     <td className="py-2 px-2 text-sm text-gray-600">{product.sku}</td>
                                                     <td className="text-right py-2 px-2">
-                                                        <span className={`text-sm font-medium ${
-                                                            product.stock <= 5 ? 'text-red-600' : 'text-yellow-600'
-                                                        }`}>
+                                                        <span className={`text-sm font-medium ${product.stock <= 5 ? 'text-red-600' : 'text-yellow-600'
+                                                            }`}>
                                                             {product.stock}
                                                         </span>
                                                     </td>
@@ -394,6 +404,6 @@ export default function Products({ dateRange, filters, report }: Props) {
                     </div>
                 </div>
             </div>
-        </>
+        </AdminLayout>
     );
 }

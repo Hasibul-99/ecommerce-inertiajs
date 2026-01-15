@@ -224,7 +224,7 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
     finance: {
       title: 'Finance',
       items: [
-        { name: 'Transactions', href: '#', icon: FiDollarSign },
+        { name: 'Transactions', href: route('admin.reports.orders'), icon: FiDollarSign },
         { name: 'Payments', href: '#', icon: FiCreditCard },
         { name: 'Invoices', href: '#', icon: FiFileText },
       ]
