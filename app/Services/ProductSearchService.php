@@ -19,7 +19,8 @@ class ProductSearchService
     {
         $productsQuery = Product::query()
             ->with(['categories', 'vendor', 'tags', 'media'])
-            ->where('is_active', true);
+            ->where('is_active', true)
+            ->where('stock_quantity', '>', 0); // Only show products in stock
 
         // Text search
         if (!empty($query)) {
@@ -74,10 +75,8 @@ class ProductSearchService
             $productsQuery->where('average_rating', '>=', $minRating);
         }
 
-        // Availability filter (in stock only)
-        if (!empty($filters['in_stock']) && $filters['in_stock']) {
-            $productsQuery->where('stock_quantity', '>', 0);
-        }
+        // Availability filter is already applied by default (stock_quantity > 0)
+        // Users cannot override this on the products page
 
         // Tags filter
         if (!empty($filters['tags'])) {

@@ -56,7 +56,7 @@ class ProductController extends Controller
         });
 
         // Perform search
-        $searchQuery = $request->input('search', $request->input('q', ''));
+        $searchQuery = $request->input('search', $request->input('q', '')) ?? '';
         $products = $this->searchService->search($searchQuery, $filters);
 
         // Transform products for frontend

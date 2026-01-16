@@ -53,11 +53,20 @@ interface Product {
     vendor_id: number;
     category_id: number;
     title: string;
+    name?: string;
     slug?: string;
+    sku?: string;
     description: string;
     base_price_cents: number;
+    price_cents?: number;
+    sale_price_cents?: number;
+    compare_at_price_cents?: number;
+    cost_cents?: number;
+    stock_quantity: number;
     currency: string;
     status: string;
+    is_active?: boolean;
+    is_featured?: boolean;
     variants: ProductVariant[];
     tags?: ProductTag[];
     images?: ProductImage[];
@@ -81,11 +90,20 @@ export default function Edit({ product, categories, vendors, tags, auth }: Props
         vendor_id: product.vendor_id.toString(),
         category_id: product.category_id.toString(),
         title: product.title,
+        name: product.name || '',
         slug: product.slug || '',
+        sku: product.sku || '',
         description: product.description,
         base_price_cents: product.base_price_cents,
+        price_cents: product.price_cents || 0,
+        sale_price_cents: product.sale_price_cents || 0,
+        compare_at_price_cents: product.compare_at_price_cents || 0,
+        cost_cents: product.cost_cents || 0,
+        stock_quantity: product.stock_quantity || 0,
         currency: product.currency,
         status: product.status,
+        is_active: product.is_active ?? true,
+        is_featured: product.is_featured ?? false,
         variants: product.variants || [],
         tag_ids: product.tags?.map(tag => tag.id) || [],
     });
@@ -234,6 +252,32 @@ export default function Edit({ product, categories, vendors, tags, auth }: Props
                                             </div>
 
                                             <div>
+                                                <Label htmlFor="name">Product Name</Label>
+                                                <Input
+                                                    id="name"
+                                                    type="text"
+                                                    value={data.name}
+                                                    onChange={(e) => setData('name', e.target.value)}
+                                                    className={errors.name ? 'border-red-500' : ''}
+                                                    placeholder="Display name for the product"
+                                                />
+                                                {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
+                                            </div>
+
+                                            <div>
+                                                <Label htmlFor="sku">SKU</Label>
+                                                <Input
+                                                    id="sku"
+                                                    type="text"
+                                                    value={data.sku}
+                                                    onChange={(e) => setData('sku', e.target.value)}
+                                                    className={errors.sku ? 'border-red-500' : ''}
+                                                    placeholder="Product SKU/Code"
+                                                />
+                                                {errors.sku && <p className="text-red-500 text-sm mt-1">{errors.sku}</p>}
+                                            </div>
+
+                                            <div>
                                                 <Label htmlFor="slug">Product Slug</Label>
                                                 <Input
                                                     id="slug"
@@ -314,6 +358,77 @@ export default function Edit({ product, categories, vendors, tags, auth }: Props
                                             </div>
 
                                             <div>
+                                                <Label htmlFor="price_cents">Price (cents)</Label>
+                                                <Input
+                                                    id="price_cents"
+                                                    type="number"
+                                                    min="0"
+                                                    value={data.price_cents}
+                                                    onChange={(e) => setData('price_cents', parseInt(e.target.value) || 0)}
+                                                    className={errors.price_cents ? 'border-red-500' : ''}
+                                                    placeholder="Regular price in cents"
+                                                />
+                                                {errors.price_cents && <p className="text-red-500 text-sm mt-1">{errors.price_cents}</p>}
+                                            </div>
+
+                                            <div>
+                                                <Label htmlFor="sale_price_cents">Sale Price (cents)</Label>
+                                                <Input
+                                                    id="sale_price_cents"
+                                                    type="number"
+                                                    min="0"
+                                                    value={data.sale_price_cents}
+                                                    onChange={(e) => setData('sale_price_cents', parseInt(e.target.value) || 0)}
+                                                    className={errors.sale_price_cents ? 'border-red-500' : ''}
+                                                    placeholder="Discounted price (optional)"
+                                                />
+                                                {errors.sale_price_cents && <p className="text-red-500 text-sm mt-1">{errors.sale_price_cents}</p>}
+                                            </div>
+
+                                            <div>
+                                                <Label htmlFor="compare_at_price_cents">Compare At Price (cents)</Label>
+                                                <Input
+                                                    id="compare_at_price_cents"
+                                                    type="number"
+                                                    min="0"
+                                                    value={data.compare_at_price_cents}
+                                                    onChange={(e) => setData('compare_at_price_cents', parseInt(e.target.value) || 0)}
+                                                    className={errors.compare_at_price_cents ? 'border-red-500' : ''}
+                                                    placeholder="Original price before discount"
+                                                />
+                                                {errors.compare_at_price_cents && <p className="text-red-500 text-sm mt-1">{errors.compare_at_price_cents}</p>}
+                                            </div>
+
+                                            <div>
+                                                <Label htmlFor="cost_cents">Cost Price (cents)</Label>
+                                                <Input
+                                                    id="cost_cents"
+                                                    type="number"
+                                                    min="0"
+                                                    value={data.cost_cents}
+                                                    onChange={(e) => setData('cost_cents', parseInt(e.target.value) || 0)}
+                                                    className={errors.cost_cents ? 'border-red-500' : ''}
+                                                    placeholder="Cost price for margin calculation"
+                                                />
+                                                {errors.cost_cents && <p className="text-red-500 text-sm mt-1">{errors.cost_cents}</p>}
+                                            </div>
+
+                                            <div>
+                                                <Label htmlFor="stock_quantity">Stock Quantity</Label>
+                                                <Input
+                                                    id="stock_quantity"
+                                                    type="number"
+                                                    min="0"
+                                                    value={data.stock_quantity}
+                                                    onChange={(e) => setData('stock_quantity', parseInt(e.target.value) || 0)}
+                                                    className={errors.stock_quantity ? 'border-red-500' : ''}
+                                                    placeholder="Enter available stock"
+                                                />
+                                                {errors.stock_quantity && <p className="text-red-500 text-sm mt-1">{errors.stock_quantity}</p>}
+                                                <p className="text-sm text-gray-500 mt-1">Number of units available in stock</p>
+                                            </div>
+
+                                            <div>
                                                 <Label htmlFor="currency">Currency</Label>
                                                 <select
                                                     id="currency"
@@ -339,6 +454,28 @@ export default function Edit({ product, categories, vendors, tags, auth }: Props
                                                     <option value="published">Published</option>
                                                     <option value="archived">Archived</option>
                                                 </select>
+                                            </div>
+
+                                            <div className="flex items-center space-x-2 pt-2">
+                                                <Checkbox
+                                                    id="is_active"
+                                                    checked={data.is_active}
+                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData('is_active', e.target.checked)}
+                                                />
+                                                <Label htmlFor="is_active" className="text-sm font-normal cursor-pointer">
+                                                    Active (Show on website)
+                                                </Label>
+                                            </div>
+
+                                            <div className="flex items-center space-x-2">
+                                                <Checkbox
+                                                    id="is_featured"
+                                                    checked={data.is_featured}
+                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData('is_featured', e.target.checked)}
+                                                />
+                                                <Label htmlFor="is_featured" className="text-sm font-normal cursor-pointer">
+                                                    Featured Product
+                                                </Label>
                                             </div>
                                         </CardContent>
                                     </Card>
