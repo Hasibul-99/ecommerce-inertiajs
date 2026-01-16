@@ -61,7 +61,8 @@ class ProductController extends Controller
 
         // Transform products for frontend
         $products->getCollection()->transform(function ($product) {
-            $firstImage = $product->images->first();
+            // Get first image from media library
+            $firstImage = $product->getFirstMediaUrl('images');
 
             // Calculate sale price if available
             $salePrice = $product->sale_price_cents ?? null;
@@ -78,7 +79,7 @@ class ProductController extends Controller
                 'slug' => $product->slug,
                 'price_cents' => $salePrice ?? $originalPrice,
                 'original_price_cents' => $originalPrice,
-                'image' => $firstImage ? $firstImage->url : null,
+                'image' => $firstImage ?: null,
                 'rating' => round($product->average_rating ?? 0, 1),
                 'reviews_count' => $product->reviews_count ?? 0,
                 'is_new' => $product->created_at->isAfter(now()->subDays(30)),

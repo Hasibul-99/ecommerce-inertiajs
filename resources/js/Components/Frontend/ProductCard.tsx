@@ -28,7 +28,7 @@ export default function ProductCard({ product, onAddToCart, onAddToWishlist }: P
     const [isHovered, setIsHovered] = useState(false);
     const [imageError, setImageError] = useState(false);
 
-    const productImage = product.image || product.images?.[0]?.url || '/images/placeholder-product.png';
+    const productImage = product.image || product.images?.[0]?.url || '/images/placeholder-product.svg';
     const formattedPrice = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
@@ -124,7 +124,7 @@ export default function ProductCard({ product, onAddToCart, onAddToWishlist }: P
             <Link href={`/product/${product.slug}`} className="block relative overflow-hidden bg-gray-50">
                 <div className="aspect-square">
                     <img
-                        src={imageError ? '/images/placeholder-product.png' : productImage}
+                        src={imageError ? '/images/placeholder-product.svg' : productImage}
                         alt={product.name}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                         onError={() => setImageError(true)}

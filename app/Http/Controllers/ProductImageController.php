@@ -6,7 +6,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
-use App\Jobs\ProcessProductImage;
+use Inertia\Inertia;
 
 class ProductImageController extends Controller
 {
@@ -21,35 +21,38 @@ class ProductImageController extends Controller
     }
 
     /**
-     * Upload an image for a product.
+     * Upload images for a product.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request, Product $product)
     {
         $request->validate([
-            'image' => 'required|image|max:10240', // 10MB max
+            'images' => 'required|array|min:1|max:10',
+            'images.*' => 'required|image|mimes:jpeg,jpg,png,gif,webp|max:5120', // 5MB max per image
         ]);
 
         try {
-            // Store the original image temporarily
-            $path = $request->file('image')->store('temp/products', 'local');
-            
-            // Queue the image processing job
-            ProcessProductImage::dispatch($product, $path);
+            $uploadedCount = 0;
 
-            return response()->json([
-                'message' => 'Image uploaded successfully and queued for processing',
-            ], 202);
+            foreach ($request->file('images') as $image) {
+                // Add image to product using Spatie Media Library
+                $product->addMedia($image)
+                    ->toMediaCollection('images');
+
+                $uploadedCount++;
+            }
+
+            return redirect()->back()->with('success', "Successfully uploaded {$uploadedCount} image(s)");
         } catch (\Exception $e) {
-            Log::error('Product image upload failed: ' . $e->getMessage());
-            
-            return response()->json([
-                'message' => 'Failed to upload image',
-                'error' => $e->getMessage(),
-            ], 500);
+            Log::error('Product image upload failed: ' . $e->getMessage(), [
+                'product_id' => $product->id,
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return redirect()->back()->with('error', 'Failed to upload images: ' . $e->getMessage());
         }
     }
 
@@ -58,7 +61,7 @@ class ProductImageController extends Controller
      *
      * @param  \App\Models\Product  $product
      * @param  int  $mediaId
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Product $product, $mediaId)
     {
@@ -66,16 +69,15 @@ class ProductImageController extends Controller
             $media = $product->media()->findOrFail($mediaId);
             $media->delete();
 
-            return response()->json([
-                'message' => 'Image deleted successfully',
-            ]);
+            return redirect()->back()->with('success', 'Image deleted successfully');
         } catch (\Exception $e) {
-            Log::error('Product image deletion failed: ' . $e->getMessage());
-            
-            return response()->json([
-                'message' => 'Failed to delete image',
-                'error' => $e->getMessage(),
-            ], 500);
+            Log::error('Product image deletion failed: ' . $e->getMessage(), [
+                'product_id' => $product->id,
+                'media_id' => $mediaId,
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return redirect()->back()->with('error', 'Failed to delete image: ' . $e->getMessage());
         }
     }
 }

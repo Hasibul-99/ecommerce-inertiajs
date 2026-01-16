@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, useForm, router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { Button } from '@/Components/ui/button';
 import { Input } from '@/Components/ui/input';
@@ -8,7 +8,7 @@ import { Textarea } from '@/Components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import Checkbox from '@/Components/Core/Checkbox';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, Upload, X, Image as ImageIcon } from 'lucide-react';
 import { PageProps } from '@/types';
 
 interface Category {
@@ -41,6 +41,13 @@ interface ProductTag {
     slug: string;
 }
 
+interface ProductImage {
+    id: number;
+    url: string;
+    name: string;
+    size?: number;
+}
+
 interface Product {
     id: number;
     vendor_id: number;
@@ -53,6 +60,7 @@ interface Product {
     status: string;
     variants: ProductVariant[];
     tags?: ProductTag[];
+    images?: ProductImage[];
 }
 
 interface Props extends PageProps {
@@ -64,6 +72,10 @@ interface Props extends PageProps {
 
 export default function Edit({ product, categories, vendors, tags, auth }: Props) {
     const [variants, setVariants] = useState<ProductVariant[]>(product.variants || []);
+    const [selectedImages, setSelectedImages] = useState<File[]>([]);
+    const [imagePreviewUrls, setImagePreviewUrls] = useState<string[]>([]);
+    const [existingImages, setExistingImages] = useState<ProductImage[]>(product.images || []);
+    const [deletingImageIds, setDeletingImageIds] = useState<number[]>([]);
 
     const { data, setData, put, processing, errors } = useForm({
         vendor_id: product.vendor_id.toString(),
@@ -101,6 +113,85 @@ export default function Edit({ product, categories, vendors, tags, auth }: Props
     const removeVariant = (index: number) => {
         const updatedVariants = variants.filter((_, i) => i !== index);
         setVariants(updatedVariants);
+    };
+
+    const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = Array.from(e.target.files || []);
+        if (files.length === 0) return;
+
+        // Validate file types and sizes
+        const validFiles = files.filter(file => {
+            const isValidType = file.type.startsWith('image/');
+            const isValidSize = file.size <= 5 * 1024 * 1024; // 5MB
+            if (!isValidType) {
+                alert(`${file.name} is not an image file`);
+                return false;
+            }
+            if (!isValidSize) {
+                alert(`${file.name} is too large (max 5MB)`);
+                return false;
+            }
+            return true;
+        });
+
+        if (validFiles.length === 0) return;
+
+        // Create preview URLs
+        const newPreviewUrls = validFiles.map(file => URL.createObjectURL(file));
+
+        setSelectedImages(prev => [...prev, ...validFiles]);
+        setImagePreviewUrls(prev => [...prev, ...newPreviewUrls]);
+    };
+
+    const removeSelectedImage = (index: number) => {
+        // Revoke the URL to free memory
+        URL.revokeObjectURL(imagePreviewUrls[index]);
+
+        setSelectedImages(prev => prev.filter((_, i) => i !== index));
+        setImagePreviewUrls(prev => prev.filter((_, i) => i !== index));
+    };
+
+    const deleteExistingImage = async (imageId: number) => {
+        if (!confirm('Are you sure you want to delete this image?')) return;
+
+        setDeletingImageIds(prev => [...prev, imageId]);
+
+        router.delete(route('products.images.destroy', { product: product.id, mediaId: imageId }), {
+            preserveScroll: true,
+            onSuccess: () => {
+                setExistingImages(prev => prev.filter(img => img.id !== imageId));
+                setDeletingImageIds(prev => prev.filter(id => id !== imageId));
+            },
+            onError: () => {
+                alert('Failed to delete image');
+                setDeletingImageIds(prev => prev.filter(id => id !== imageId));
+            },
+        });
+    };
+
+    const uploadNewImages = async () => {
+        if (selectedImages.length === 0) return;
+
+        const formData = new FormData();
+        selectedImages.forEach((file, index) => {
+            formData.append(`images[${index}]`, file);
+        });
+
+        router.post(route('products.images.store', product.id), formData, {
+            preserveScroll: true,
+            onSuccess: () => {
+                // Clear selected images
+                imagePreviewUrls.forEach(url => URL.revokeObjectURL(url));
+                setSelectedImages([]);
+                setImagePreviewUrls([]);
+                // Reload page to show new images
+                router.reload({ only: ['product'] });
+            },
+            onError: (errors) => {
+                alert('Failed to upload images');
+                console.error(errors);
+            },
+        });
     };
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -286,6 +377,159 @@ export default function Edit({ product, categories, vendors, tags, auth }: Props
                                         </CardContent>
                                     </Card>
                                 </div>
+
+                                {/* Product Images Section */}
+                                <Card>
+                                    <CardHeader>
+                                        <CardTitle>Product Images</CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="space-y-6">
+                                            {/* Existing Images */}
+                                            {existingImages.length > 0 && (
+                                                <div>
+                                                    <Label className="text-base font-semibold mb-3 block">Current Images</Label>
+                                                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                                                        {existingImages.map((image) => (
+                                                            <div key={image.id} className="relative group rounded-lg overflow-hidden border border-gray-200 hover:border-blue-500 transition-all">
+                                                                <div className="aspect-square bg-gray-100">
+                                                                    <img
+                                                                        src={image.url}
+                                                                        alt={image.name}
+                                                                        className="w-full h-full object-cover"
+                                                                    />
+                                                                </div>
+                                                                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all flex items-center justify-center">
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => deleteExistingImage(image.id)}
+                                                                        disabled={deletingImageIds.includes(image.id)}
+                                                                        className="opacity-0 group-hover:opacity-100 bg-red-600 hover:bg-red-700 text-white p-2 rounded-full transition-all disabled:opacity-50"
+                                                                    >
+                                                                        {deletingImageIds.includes(image.id) ? (
+                                                                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                                                        ) : (
+                                                                            <Trash2 className="w-5 h-5" />
+                                                                        )}
+                                                                    </button>
+                                                                </div>
+                                                                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2">
+                                                                    <p className="text-white text-xs truncate">{image.name}</p>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {/* New Images Preview */}
+                                            {imagePreviewUrls.length > 0 && (
+                                                <div>
+                                                    <Label className="text-base font-semibold mb-3 block">New Images to Upload</Label>
+                                                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                                                        {imagePreviewUrls.map((url, index) => (
+                                                            <div key={index} className="relative group rounded-lg overflow-hidden border-2 border-dashed border-blue-500">
+                                                                <div className="aspect-square bg-gray-100">
+                                                                    <img
+                                                                        src={url}
+                                                                        alt={`Preview ${index + 1}`}
+                                                                        className="w-full h-full object-cover"
+                                                                    />
+                                                                </div>
+                                                                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all flex items-center justify-center">
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => removeSelectedImage(index)}
+                                                                        className="opacity-0 group-hover:opacity-100 bg-red-600 hover:bg-red-700 text-white p-2 rounded-full transition-all"
+                                                                    >
+                                                                        <X className="w-5 h-5" />
+                                                                    </button>
+                                                                </div>
+                                                                <div className="absolute top-2 right-2">
+                                                                    <span className="bg-blue-600 text-white text-xs px-2 py-1 rounded-full">New</span>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {/* Upload Area */}
+                                            <div>
+                                                <Label className="text-base font-semibold mb-3 block">
+                                                    {existingImages.length > 0 || imagePreviewUrls.length > 0 ? 'Add More Images' : 'Upload Images'}
+                                                </Label>
+                                                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-500 transition-colors">
+                                                    <input
+                                                        type="file"
+                                                        id="product-images"
+                                                        multiple
+                                                        accept="image/*"
+                                                        onChange={handleImageSelect}
+                                                        className="hidden"
+                                                    />
+                                                    <label
+                                                        htmlFor="product-images"
+                                                        className="cursor-pointer flex flex-col items-center space-y-3"
+                                                    >
+                                                        <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
+                                                            <Upload className="w-8 h-8 text-blue-600" />
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-lg font-medium text-gray-700">
+                                                                Click to upload or drag and drop
+                                                            </p>
+                                                            <p className="text-sm text-gray-500 mt-1">
+                                                                PNG, JPG, GIF up to 5MB (Multiple files allowed)
+                                                            </p>
+                                                        </div>
+                                                        <Button
+                                                            type="button"
+                                                            className="bg-blue-600 hover:bg-blue-700 text-white"
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                document.getElementById('product-images')?.click();
+                                                            }}
+                                                        >
+                                                            <ImageIcon className="w-4 h-4 mr-2" />
+                                                            Select Images
+                                                        </Button>
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                            {/* Upload Button */}
+                                            {selectedImages.length > 0 && (
+                                                <div className="flex justify-end">
+                                                    <Button
+                                                        type="button"
+                                                        onClick={uploadNewImages}
+                                                        className="bg-green-600 hover:bg-green-700 text-white"
+                                                    >
+                                                        <Upload className="w-4 h-4 mr-2" />
+                                                        Upload {selectedImages.length} Image{selectedImages.length > 1 ? 's' : ''}
+                                                    </Button>
+                                                </div>
+                                            )}
+
+                                            {/* Info */}
+                                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                                <div className="flex items-start space-x-3">
+                                                    <ImageIcon className="w-5 h-5 text-blue-600 mt-0.5" />
+                                                    <div className="text-sm text-blue-800">
+                                                        <p className="font-medium mb-1">Image Guidelines:</p>
+                                                        <ul className="list-disc list-inside space-y-1 text-blue-700">
+                                                            <li>Use high-quality images (at least 1000x1000px recommended)</li>
+                                                            <li>First image will be used as the product thumbnail</li>
+                                                            <li>Maximum file size: 5MB per image</li>
+                                                            <li>Supported formats: JPG, PNG, GIF, WebP</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </CardContent>
+                                </Card>
 
                                 <Card>
                                     <CardHeader>

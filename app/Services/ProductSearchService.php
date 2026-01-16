@@ -18,7 +18,7 @@ class ProductSearchService
     public function search(string $query = '', array $filters = []): LengthAwarePaginator
     {
         $productsQuery = Product::query()
-            ->with(['images', 'categories', 'vendor', 'tags'])
+            ->with(['categories', 'vendor', 'tags', 'media'])
             ->where('is_active', true);
 
         // Text search

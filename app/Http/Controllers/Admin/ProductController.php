@@ -172,13 +172,23 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $product->load(['variants', 'tags']);
+        $product->load(['variants', 'tags', 'media']);
         $categories = Category::all();
         $vendors = Vendor::with('user')->get();
         $tags = ProductTag::all();
 
+        // Get product images
+        $images = $product->getMedia('images')->map(function ($media) {
+            return [
+                'id' => $media->id,
+                'url' => $media->getUrl(),
+                'name' => $media->name,
+                'size' => $media->size,
+            ];
+        });
+
         return Inertia::render('Admin/Products/Edit', [
-            'product' => $product,
+            'product' => array_merge($product->toArray(), ['images' => $images]),
             'categories' => $categories,
             'vendors' => $vendors,
             'tags' => $tags,

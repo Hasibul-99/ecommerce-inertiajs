@@ -303,7 +303,13 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:admin|super-admin'
     // Product Management
     Route::resource('products', AdminProductController::class);
     Route::patch('/products/bulk-update-status', [AdminProductController::class, 'bulkUpdateStatus'])->name('products.bulk-update-status');
-    
+
+    // Product Image Management (Admin)
+    Route::controller(ProductImageController::class)->prefix('products/{product}/images')->name('products.images.')->group(function () {
+        Route::post('/', 'store')->name('store');
+        Route::delete('/{mediaId}', 'destroy')->name('destroy');
+    });
+
     // Product Variant Management
     Route::resource('product-variants', ProductVariantController::class);
     
