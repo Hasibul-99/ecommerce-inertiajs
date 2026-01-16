@@ -1,4 +1,4 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import AdminLayout from '@/Layouts/AdminLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { PageProps } from '@/types';
 import { FormEventHandler, useState } from 'react';
@@ -100,7 +100,7 @@ export default function Edit({ auth, template, sampleData }: Props) {
     };
 
     return (
-        <AuthenticatedLayout
+        <AdminLayout
             user={auth.user}
             header={
                 <div className="flex justify-between items-center">
@@ -317,6 +317,6 @@ export default function Edit({ auth, template, sampleData }: Props) {
                     </div>
                 </div>
             )}
-        </AuthenticatedLayout>
+        </AdminLayout>
     );
 }

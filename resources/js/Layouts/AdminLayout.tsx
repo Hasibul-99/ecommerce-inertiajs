@@ -28,9 +28,7 @@ import {
   FiFileText,
   FiTruck,
   FiGift,
-  FiStar,
   FiMessageSquare,
-  FiHelpCircle,
   FiMaximize2,
   FiMinimize2
 } from 'react-icons/fi';
@@ -204,13 +202,12 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
     ecommerce: {
       title: 'E-Commerce',
       items: [
-        { name: 'Orders', href: route('admin.orders.index'), icon: FiShoppingCart, badge: '12' },
+        { name: 'Orders', href: route('admin.orders.index'), icon: FiShoppingCart },
         { name: 'Products', href: route('admin.products.index'), icon: FiShoppingBag },
         { name: 'Product Variants', href: route('admin.product-variants.index'), icon: FiPackage },
         { name: 'Categories', href: route('admin.categories.index'), icon: FiGrid },
         { name: 'Tags', href: route('admin.tags.index'), icon: FiTag },
         { name: 'Coupons', href: route('admin.coupons.index'), icon: FiGift },
-        { name: 'Reviews', href: '#', icon: FiStar },
       ]
     },
     users: {
@@ -224,17 +221,33 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
     finance: {
       title: 'Finance',
       items: [
-        { name: 'Transactions', href: route('admin.reports.orders'), icon: FiDollarSign },
-        { name: 'Payments', href: '#', icon: FiCreditCard },
-        { name: 'Invoices', href: '#', icon: FiFileText },
+        { name: 'Payouts', href: route('admin.payouts.index'), icon: FiDollarSign },
+        { name: 'COD Reconciliation', href: route('admin.cod-reconciliation.index'), icon: FiCreditCard },
+      ]
+    },
+    communications: {
+      title: 'Communications',
+      items: [
+        { name: 'Email Templates', href: route('admin.email-templates.index'), icon: FiMessageSquare },
+        { name: 'Notifications', href: route('admin.notifications.index'), icon: FiBell },
       ]
     },
     system: {
       title: 'System',
       items: [
-        { name: 'Settings', href: '#', icon: FiSettings },
+        {
+          name: 'Settings',
+          icon: FiSettings,
+          children: [
+            { name: 'General', href: route('admin.settings.general'), icon: FiSettings },
+            { name: 'Payment', href: route('admin.settings.payment'), icon: FiCreditCard },
+            { name: 'Shipping', href: route('admin.settings.shipping'), icon: FiTruck },
+            { name: 'Email', href: route('admin.settings.email'), icon: FiMessageSquare },
+            { name: 'Vendor', href: route('admin.settings.vendor'), icon: FiShoppingBag },
+            { name: 'Tax', href: route('admin.settings.tax'), icon: FiFileText },
+          ]
+        },
         { name: 'Activity Logs', href: route('admin.activity-logs.index'), icon: FiActivity },
-        { name: 'Support', href: '#', icon: FiHelpCircle },
       ]
     }
   };

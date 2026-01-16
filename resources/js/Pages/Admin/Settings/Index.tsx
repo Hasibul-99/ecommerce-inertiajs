@@ -9,7 +9,7 @@ import {
     FiPercent,
     FiChevronRight,
 } from 'react-icons/fi';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import AdminLayout from '@/Layouts/AdminLayout';
 import { PageProps } from '@/types';
 
 interface Props extends PageProps {
@@ -99,10 +99,17 @@ export default function Index({ auth, groups }: Props) {
     };
 
     return (
-        <AuthenticatedLayout user={auth.user}>
+        <AdminLayout
+            user={auth.user}
+            header={
+                <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                    Settings
+                </h2>
+            }
+        >
             <Head title="Settings" />
 
-            <div className="min-h-screen bg-gray-50 py-8">
+            <div className="py-8">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     {/* Header */}
                     <div className="mb-8">
@@ -168,6 +175,6 @@ export default function Index({ auth, groups }: Props) {
                     </div>
                 </div>
             </div>
-        </AuthenticatedLayout>
+        </AdminLayout>
     );
 }

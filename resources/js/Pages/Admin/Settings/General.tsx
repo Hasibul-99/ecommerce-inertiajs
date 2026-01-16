@@ -1,7 +1,7 @@
 import React, { useState, FormEvent } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import { FiArrowLeft, FiSave } from 'react-icons/fi';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import AdminLayout from '@/Layouts/AdminLayout';
 import TextInput from '@/Components/Settings/TextInput';
 import FileInput from '@/Components/Settings/FileInput';
 import RichTextInput from '@/Components/Settings/RichTextInput';
@@ -97,10 +97,17 @@ export default function General({ auth, settings }: Props) {
     ];
 
     return (
-        <AuthenticatedLayout user={auth.user}>
+        <AdminLayout
+            user={auth.user}
+            header={
+                <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                    General Settings
+                </h2>
+            }
+        >
             <Head title="General Settings" />
 
-            <div className="min-h-screen bg-gray-50 py-8">
+            <div className="py-8">
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                     {/* Header */}
                     <div className="mb-8 flex items-center justify-between">
@@ -234,6 +241,6 @@ export default function General({ auth, settings }: Props) {
                     </form>
                 </div>
             </div>
-        </AuthenticatedLayout>
+        </AdminLayout>
     );
 }
