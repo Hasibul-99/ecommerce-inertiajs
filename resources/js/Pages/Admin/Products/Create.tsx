@@ -8,6 +8,7 @@ import { Textarea } from '@/Components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
 import Checkbox from '@/Components/Core/Checkbox';
+import RichTextEditor from '@/Components/Core/RichTextEditor';
 import { Plus, Trash2 } from 'lucide-react';
 import { PageProps } from '@/types';
 
@@ -188,14 +189,12 @@ export default function Create({ categories, vendors, tags, auth }: Props) {
 
                                             <div>
                                                 <Label htmlFor="description">Description</Label>
-                                                <Textarea
-                                                    id="description"
-                                                    value={data.description}
-                                                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setData('description', e.target.value)}
-                                                    className={errors.description ? 'border-red-500' : ''}
-                                                    rows={4}
+                                                <RichTextEditor
+                                                    content={data.description}
+                                                    onChange={(content) => setData('description', content)}
+                                                    placeholder="Enter product description with rich formatting..."
+                                                    error={errors.description}
                                                 />
-                                                {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
                                             </div>
 
                                             <div>

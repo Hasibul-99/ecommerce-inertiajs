@@ -2,6 +2,7 @@ import { Head, Link, router } from '@inertiajs/react';
 import { useState } from 'react';
 import FrontendLayout from '@/Layouts/FrontendLayout';
 import ProductCard from '@/Components/Frontend/ProductCard';
+import RichTextDisplay from '@/Components/Core/RichTextDisplay';
 import { FiHeart, FiShoppingCart, FiMinus, FiPlus, FiStar, FiCheck } from 'react-icons/fi';
 import { PageProps } from '@/types';
 
@@ -229,9 +230,12 @@ export default function ProductShow({
                         </div>
 
                         {/* Short Description */}
-                        <p className="text-grabit-gray mb-6 leading-relaxed">
-                            {product.description?.substring(0, 200)}...
-                        </p>
+                        <div className="text-grabit-gray mb-6 leading-relaxed line-clamp-3">
+                            <RichTextDisplay
+                                content={product.description || ''}
+                                className="text-sm"
+                            />
+                        </div>
 
                         {/* Variants (if any) */}
                         {product.variants && product.variants.length > 0 && (
@@ -366,7 +370,10 @@ export default function ProductShow({
                     {/* Tab Content */}
                     <div className="text-grabit-gray leading-relaxed">
                         {activeTab === 'description' && (
-                            <div>{product.description || 'No description available.'}</div>
+                            <RichTextDisplay
+                                content={product.description || '<p>No description available.</p>'}
+                                className="text-grabit-dark"
+                            />
                         )}
                         {activeTab === 'specifications' && (
                             <div className="grid grid-cols-2 gap-4">

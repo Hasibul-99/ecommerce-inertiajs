@@ -142,7 +142,7 @@ export default function ProductCard({ product, onAddToCart, onAddToWishlist }: P
                 </Link>
 
                 {/* Rating */}
-                {product.rating && (
+                {product.rating ? (
                     <div className="flex items-center gap-1 mt-2">
                         <div className="flex gap-0.5">{renderRating()}</div>
                         {product.reviews_count && (
@@ -151,7 +151,7 @@ export default function ProductCard({ product, onAddToCart, onAddToWishlist }: P
                             </span>
                         )}
                     </div>
-                )}
+                ) : null}
 
                 {/* Price */}
                 <div className="flex items-center gap-2 mt-2">
