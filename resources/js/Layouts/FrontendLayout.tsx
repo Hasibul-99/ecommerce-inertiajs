@@ -1,6 +1,8 @@
 import { PropsWithChildren } from 'react';
 import Header from '@/Components/Frontend/Header';
 import Footer from '@/Components/Frontend/Footer';
+import { CartWishlistProvider } from '@/Contexts/CartWishlistContext';
+import { Toaster } from 'sonner';
 
 interface FrontendLayoutProps extends PropsWithChildren {
     auth?: {
@@ -20,14 +22,30 @@ export default function FrontendLayout({
     wishlistCount = 0
 }: FrontendLayoutProps) {
     return (
-        <div className="min-h-screen flex flex-col">
-            <Header auth={auth} cartCount={cartCount} wishlistCount={wishlistCount} />
+        <CartWishlistProvider initialCartCount={cartCount} initialWishlistCount={wishlistCount}>
+            <div className="min-h-screen flex flex-col">
+                <Header auth={auth} />
 
-            <main className="flex-1">
-                {children}
-            </main>
+                <main className="flex-1">
+                    {children}
+                </main>
 
-            <Footer />
-        </div>
+                <Footer />
+
+                {/* Toast notifications */}
+                <Toaster
+                    position="top-right"
+                    toastOptions={{
+                        duration: 3000,
+                        style: {
+                            background: '#fff',
+                            color: '#4b5966',
+                            border: '1px solid #eeeeee',
+                        },
+                        className: 'sonner-toast',
+                    }}
+                />
+            </div>
+        </CartWishlistProvider>
     );
 }

@@ -1,6 +1,8 @@
 import { Link } from '@inertiajs/react';
-import { FiHeart, FiShoppingCart, FiEye, FiStar } from 'react-icons/fi';
+import { FiHeart, FiShoppingCart, FiEye, FiStar, FiLoader } from 'react-icons/fi';
 import { useState } from 'react';
+import { useCartWishlist } from '@/Contexts/CartWishlistContext';
+import { toast } from 'sonner';
 
 interface Product {
     id: number;
@@ -20,13 +22,15 @@ interface Product {
 
 interface ProductCardProps {
     product: Product;
-    onAddToCart?: (productId: number) => void;
-    onAddToWishlist?: (productId: number) => void;
 }
 
-export default function ProductCard({ product, onAddToCart, onAddToWishlist }: ProductCardProps) {
+export default function ProductCard({ product }: ProductCardProps) {
     const [isHovered, setIsHovered] = useState(false);
     const [imageError, setImageError] = useState(false);
+    const [isAddingToCart, setIsAddingToCart] = useState(false);
+    const [isAddingToWishlist, setIsAddingToWishlist] = useState(false);
+
+    const { addToCart, addToWishlist } = useCartWishlist();
 
     const productImage = product.image || product.images?.[0]?.url || '/images/placeholder-product.svg';
     const formattedPrice = new Intl.NumberFormat('en-US', {
@@ -41,19 +45,50 @@ export default function ProductCard({ product, onAddToCart, onAddToWishlist }: P
           }).format(product.old_price / 100)
         : null;
 
-    const handleAddToCart = (e: React.MouseEvent) => {
+    const handleAddToCart = async (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
-        if (onAddToCart) {
-            onAddToCart(product.id);
+
+        if (!product.in_stock) {
+            toast.error('Product is out of stock');
+            return;
+        }
+
+        setIsAddingToCart(true);
+        try {
+            await addToCart(product.id, 1);
+            toast.success(`${product.name} added to cart!`, {
+                duration: 3000,
+                position: 'top-right',
+            });
+        } catch (error) {
+            toast.error('Failed to add to cart. Please try again.', {
+                duration: 3000,
+                position: 'top-right',
+            });
+        } finally {
+            setIsAddingToCart(false);
         }
     };
 
-    const handleAddToWishlist = (e: React.MouseEvent) => {
+    const handleAddToWishlist = async (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
-        if (onAddToWishlist) {
-            onAddToWishlist(product.id);
+
+        setIsAddingToWishlist(true);
+        try {
+            await addToWishlist(product.id);
+            toast.success(`${product.name} added to wishlist!`, {
+                duration: 3000,
+                position: 'top-right',
+            });
+        } catch (error) {
+            toast.error('Failed to add to wishlist. Please try again.', {
+                duration: 3000,
+                position: 'top-right',
+            });
+        } finally {
+            setIsAddingToWishlist(false);
         }
     };
 
@@ -106,10 +141,15 @@ export default function ProductCard({ product, onAddToCart, onAddToWishlist }: P
             >
                 <button
                     onClick={handleAddToWishlist}
-                    className="w-8 h-8 bg-white rounded-full flex items-center justify-center hover:bg-grabit-primary hover:text-white transition-colors shadow-md"
+                    disabled={isAddingToWishlist}
+                    className="w-8 h-8 bg-white rounded-full flex items-center justify-center hover:bg-grabit-primary hover:text-white transition-colors shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                     title="Add to Wishlist"
                 >
-                    <FiHeart className="w-4 h-4" />
+                    {isAddingToWishlist ? (
+                        <FiLoader className="w-4 h-4 animate-spin" />
+                    ) : (
+                        <FiHeart className="w-4 h-4" />
+                    )}
                 </button>
                 <Link
                     href={`/product/${product.slug}`}
@@ -168,15 +208,24 @@ export default function ProductCard({ product, onAddToCart, onAddToWishlist }: P
                 {/* Add to Cart Button */}
                 <button
                     onClick={handleAddToCart}
-                    disabled={!product.in_stock}
+                    disabled={!product.in_stock || isAddingToCart}
                     className={`w-full mt-3 py-2 px-4 rounded-md font-medium text-sm transition-all duration-300 flex items-center justify-center gap-2 ${
-                        product.in_stock
+                        product.in_stock && !isAddingToCart
                             ? 'bg-grabit-primary hover:bg-grabit-primary-dark text-white'
                             : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                     } ${isHovered && product.in_stock ? 'opacity-100' : 'opacity-0'} group-hover:opacity-100`}
                 >
-                    <FiShoppingCart className="w-4 h-4" />
-                    <span>{product.in_stock ? 'Add to Cart' : 'Out of Stock'}</span>
+                    {isAddingToCart ? (
+                        <>
+                            <FiLoader className="w-4 h-4 animate-spin" />
+                            <span>Adding...</span>
+                        </>
+                    ) : (
+                        <>
+                            <FiShoppingCart className="w-4 h-4" />
+                            <span>{product.in_stock ? 'Add to Cart' : 'Out of Stock'}</span>
+                        </>
+                    )}
                 </button>
             </div>
         </div>

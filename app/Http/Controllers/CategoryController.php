@@ -24,7 +24,7 @@ class CategoryController extends Controller
                     'name' => $category->name,
                     'slug' => $category->slug,
                     'description' => $category->description,
-                    'image' => $category->image,
+                    'image_url' => $category->image_url,
                     'products_count' => $category->products_count,
                 ];
             });
@@ -33,11 +33,8 @@ class CategoryController extends Controller
         $cartCount = 0;
         $wishlistCount = 0;
         if (auth()->check()) {
-            $cart = \App\Models\Cart::where('user_id', auth()->id())->first();
-            if ($cart) {
-                $cartCount = $cart->items()->count();
-            }
-            $wishlistCount = \App\Models\Wishlist::where('user_id', auth()->id())->count();
+            $cartCount = \App\Models\Cart::getItemCountForUser(auth()->id());
+            $wishlistCount = \App\Models\Wishlist::getItemCountForUser(auth()->id());
         }
 
         return Inertia::render('Category/Index', [
@@ -135,11 +132,8 @@ class CategoryController extends Controller
         $cartCount = 0;
         $wishlistCount = 0;
         if (auth()->check()) {
-            $cart = \App\Models\Cart::where('user_id', auth()->id())->first();
-            if ($cart) {
-                $cartCount = $cart->items()->count();
-            }
-            $wishlistCount = \App\Models\Wishlist::where('user_id', auth()->id())->count();
+            $cartCount = \App\Models\Cart::getItemCountForUser(auth()->id());
+            $wishlistCount = \App\Models\Wishlist::getItemCountForUser(auth()->id());
         }
 
         return Inertia::render('Category/Show', [

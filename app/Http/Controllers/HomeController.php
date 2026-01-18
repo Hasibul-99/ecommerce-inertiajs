@@ -131,7 +131,7 @@ class HomeController extends Controller
                     'id' => $category->id,
                     'name' => $category->name,
                     'slug' => $category->slug,
-                    'image' => $category->image ?? null,
+                    'image_url' => $category->image_url,
                     'products_count' => $category->products_count,
                 ];
             });
@@ -141,8 +141,8 @@ class HomeController extends Controller
         $wishlistCount = 0;
 
         if (Auth::check()) {
-            $cartCount = Cart::where('user_id', Auth::id())->count();
-            $wishlistCount = Wishlist::where('user_id', Auth::id())->count();
+            $cartCount = Cart::getItemCountForUser(Auth::id());
+            $wishlistCount = Wishlist::getItemCountForUser(Auth::id());
         }
 
         return Inertia::render('Welcome', [
@@ -169,11 +169,8 @@ class HomeController extends Controller
         $wishlistCount = 0;
 
         if (Auth::check()) {
-            $cart = Cart::where('user_id', Auth::id())->first();
-            if ($cart) {
-                $cartCount = $cart->items()->count();
-            }
-            $wishlistCount = Wishlist::where('user_id', Auth::id())->count();
+            $cartCount = Cart::getItemCountForUser(Auth::id());
+            $wishlistCount = Wishlist::getItemCountForUser(Auth::id());
         }
 
         return Inertia::render('AboutUs/Index', [
@@ -194,11 +191,8 @@ class HomeController extends Controller
         $wishlistCount = 0;
 
         if (Auth::check()) {
-            $cart = Cart::where('user_id', Auth::id())->first();
-            if ($cart) {
-                $cartCount = $cart->items()->count();
-            }
-            $wishlistCount = Wishlist::where('user_id', Auth::id())->count();
+            $cartCount = Cart::getItemCountForUser(Auth::id());
+            $wishlistCount = Wishlist::getItemCountForUser(Auth::id());
         }
 
         return Inertia::render('ContactUs/Index', [

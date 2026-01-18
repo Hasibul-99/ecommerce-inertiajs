@@ -55,7 +55,7 @@ class CartController extends Controller
         // Get wishlist count
         $wishlistCount = 0;
         if (auth()->check()) {
-            $wishlistCount = \App\Models\Wishlist::where('user_id', auth()->id())->count();
+            $wishlistCount = \App\Models\Wishlist::getItemCountForUser(auth()->id());
         }
 
         return Inertia::render('Cart/Index', [
@@ -103,16 +103,20 @@ class CartController extends Controller
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
-            'variant_id' => 'required|exists:product_variants,id',
-            'quantity' => 'required|integer|min:1',
+            'variant_id' => 'nullable|exists:product_variants,id',
+            'quantity' => 'nullable|integer|min:1',
         ]);
 
         $cart = $this->getCart();
         $product = Product::findOrFail($request->product_id);
-        $variant = ProductVariant::findOrFail($request->variant_id);
-        
+        $quantity = $request->quantity ?? 1;
+
+        // Get variant if provided, otherwise use product stock
+        $variant = $request->variant_id ? ProductVariant::findOrFail($request->variant_id) : null;
+
         // Check if there's enough stock
-        if ($variant->stock_quantity < $request->quantity) {
+        $availableStock = $variant ? $variant->stock_quantity : $product->stock_quantity;
+        if ($availableStock < $quantity) {
             return response()->json([
                 'success' => false,
                 'message' => 'Not enough stock available.'
@@ -122,39 +126,53 @@ class CartController extends Controller
         // Check if the item already exists in the cart
         $cartItem = $cart->items()
             ->where('product_id', $product->id)
-            ->where('product_variant_id', $variant->id)
+            ->where('product_variant_id', $variant?->id)
             ->first();
 
         if ($cartItem) {
             // Update quantity if item exists
+            $newQuantity = $cartItem->quantity + $quantity;
+            if ($newQuantity > $availableStock) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Not enough stock available.'
+                ], 422);
+            }
+
             $cartItem->update([
-                'quantity' => $cartItem->quantity + $request->quantity,
+                'quantity' => $newQuantity,
             ]);
         } else {
             // Create new cart item
             $cart->items()->create([
                 'product_id' => $product->id,
-                'product_variant_id' => $variant->id,
-                'quantity' => $request->quantity,
-                'price_cents' => $variant->price_cents,
+                'product_variant_id' => $variant?->id,
+                'quantity' => $quantity,
+                'price_cents' => $variant ? $variant->price_cents : $product->price_cents,
             ]);
         }
 
         // Calculate cart totals
         $this->updateCartTotals($cart);
 
-        // Return cart token for guest users
-        $cartToken = null;
-        if (!Auth::check()) {
-            $cartToken = $cart->session_id;
+        // Return appropriate response based on request type
+        if (request()->wantsJson() || request()->expectsJson()) {
+            // API/AJAX request - return JSON
+            $cartToken = null;
+            if (!Auth::check()) {
+                $cartToken = $cart->session_id;
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Item added to cart.',
+                'cart_token' => $cartToken,
+                'cart' => $cart->load('items.product', 'items.productVariant')
+            ]);
         }
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Item added to cart.',
-            'cart_token' => $cartToken,
-            'cart' => $cart->load('items.product', 'items.productVariant')
-        ]);
+        // Inertia request - redirect back
+        return back()->with('success', 'Item added to cart.');
     }
 
     /**
@@ -172,14 +190,22 @@ class CartController extends Controller
 
         $cart = $this->getCart();
         $cartItem = $cart->items()->findOrFail($itemId);
-        
+
         // Check if there's enough stock
-        $variant = ProductVariant::findOrFail($cartItem->product_variant_id);
-        if ($variant->stock_quantity < $request->quantity) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Not enough stock available.'
-            ], 422);
+        $variant = $cartItem->product_variant_id
+            ? ProductVariant::find($cartItem->product_variant_id)
+            : null;
+
+        $availableStock = $variant ? $variant->stock_quantity : $cartItem->product->stock_quantity;
+
+        if ($availableStock < $request->quantity) {
+            if (request()->wantsJson() || request()->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Not enough stock available.'
+                ], 422);
+            }
+            return back()->withErrors(['quantity' => 'Not enough stock available.']);
         }
 
         $cartItem->update([
@@ -189,11 +215,16 @@ class CartController extends Controller
         // Calculate cart totals
         $this->updateCartTotals($cart);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Cart updated.',
-            'cart' => $cart->load('items.product', 'items.productVariant')
-        ]);
+        // Return appropriate response based on request type
+        if (request()->wantsJson() || request()->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Cart updated.',
+                'cart' => $cart->load('items.product', 'items.productVariant')
+            ]);
+        }
+
+        return back()->with('success', 'Cart updated.');
     }
 
     /**
@@ -208,15 +239,20 @@ class CartController extends Controller
         $cartItem = $cart->items()->findOrFail($itemId);
 
         $cartItem->delete();
-        
+
         // Calculate cart totals
         $this->updateCartTotals($cart);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Item removed from cart.',
-            'cart' => $cart->load('items.product', 'items.productVariant')
-        ]);
+        // Return appropriate response based on request type
+        if (request()->wantsJson() || request()->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Item removed from cart.',
+                'cart' => $cart->load('items.product', 'items.productVariant')
+            ]);
+        }
+
+        return back()->with('success', 'Item removed from cart.');
     }
 
     /**

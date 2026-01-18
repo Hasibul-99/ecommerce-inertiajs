@@ -9,7 +9,8 @@ interface Category {
   name: string;
   slug: string;
   description?: string;
-  image?: string;
+  image?: string; // Legacy support
+  image_url?: string; // New field from Spatie Media Library
   products_count: number;
 }
 
@@ -69,45 +70,45 @@ export default function CategoryIndex({
       <section className="container mx-auto px-4 py-12">
         {categories.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {categories.map((category, index) => {
-              const colorClass = colorPalette[index % colorPalette.length];
+            {categories.map((category) => {
+              const categoryImage = category.image_url || category.image;
 
               return (
                 <Link
                   key={category.id}
                   href={`/category/${category.slug}`}
-                  className="group"
+                  className="group bg-white rounded-lg overflow-hidden shadow hover:shadow-xl transition-all duration-300"
                 >
-                  <div className={`${colorClass} border-2 rounded-lg p-6 transition-all duration-300 hover:shadow-lg hover:scale-105 h-full`}>
-                    <div className="flex flex-col items-center justify-center text-center h-full">
-                      {/* Category Icon/Image */}
-                      <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-4 group-hover:bg-grabit-primary transition-colors">
-                        {category.image ? (
-                          <img
-                            src={category.image}
-                            alt={category.name}
-                            className="w-10 h-10 object-contain"
-                          />
-                        ) : (
-                          <FiPackage className="w-8 h-8 text-grabit-primary group-hover:text-white transition-colors" />
-                        )}
+                  {/* Category Image */}
+                  <div className="aspect-[4/3] overflow-hidden bg-gray-100">
+                    {categoryImage ? (
+                      <img
+                        src={categoryImage}
+                        alt={category.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <FiPackage className="w-16 h-16 text-gray-300" />
                       </div>
+                    )}
+                  </div>
 
-                      {/* Category Info */}
-                      <h3 className="text-lg font-heading font-semibold text-grabit-dark mb-2 group-hover:text-grabit-primary transition-colors">
-                        {category.name}
-                      </h3>
+                  {/* Category Info */}
+                  <div className="p-4">
+                    <h3 className="text-lg font-heading font-semibold text-grabit-dark group-hover:text-grabit-primary transition-colors mb-2">
+                      {category.name}
+                    </h3>
 
-                      {category.description && (
-                        <p className="text-sm text-grabit-gray mb-3 line-clamp-2">
-                          {category.description}
-                        </p>
-                      )}
-
-                      <p className="text-sm text-grabit-gray">
-                        {category.products_count} {category.products_count === 1 ? 'Product' : 'Products'}
+                    {category.description && (
+                      <p className="text-sm text-grabit-gray mb-3 line-clamp-2">
+                        {category.description}
                       </p>
-                    </div>
+                    )}
+
+                    <p className="text-sm text-grabit-gray">
+                      {category.products_count} {category.products_count === 1 ? 'Product' : 'Products'}
+                    </p>
                   </div>
                 </Link>
               );

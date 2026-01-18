@@ -16,6 +16,7 @@ interface ExtendedCategory extends BaseCategory {
   parent?: ExtendedCategory;
   children?: ExtendedCategory[];
   products_count?: number;
+  image_url?: string;
 }
 
 interface Props extends PageProps {
@@ -40,16 +41,64 @@ export default function CategoriesIndex({ auth, categories, filters }: Props) {
     parent_id: '',
   });
 
+  // Image upload states
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Validate file size (max 2MB)
+      if (file.size > 2048 * 1024) {
+        alert('Image must be less than 2MB');
+        return;
+      }
+
+      // Validate file type
+      const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+      if (!validTypes.includes(file.type)) {
+        alert('Please upload a valid image file (JPEG, PNG, JPG, or GIF)');
+        return;
+      }
+
+      setImageFile(file);
+
+      // Generate preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const clearImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+  };
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     router.get(route('admin.categories.index'), { search: searchTerm }, { preserveState: true });
   };
 
   const handleCreate = () => {
-    router.post(route('admin.categories.store'), formData, {
+    const data = new FormData();
+    data.append('name', formData.name);
+    if (formData.parent_id) {
+      data.append('parent_id', formData.parent_id);
+    }
+    if (imageFile) {
+      data.append('image', imageFile);
+    }
+
+    router.post(route('admin.categories.store'), data, {
+      forceFormData: true,
+      preserveScroll: true,
       onSuccess: () => {
         setShowCreateDialog(false);
         setFormData({ name: '', parent_id: '' });
+        clearImage();
       },
       onError: (errors) => {
         console.error('Error creating category:', errors);
@@ -63,17 +112,35 @@ export default function CategoriesIndex({ auth, categories, filters }: Props) {
       name: category.name,
       parent_id: category.parent_id?.toString() || '',
     });
+    // Load existing image preview if available
+    const extendedCategory = category as ExtendedCategory;
+    if (extendedCategory.image_url) {
+      setImagePreview(extendedCategory.image_url);
+    }
     setShowEditDialog(true);
   };
 
   const handleUpdate = () => {
     if (!selectedCategory) return;
-    
-    router.put(route('admin.categories.update', selectedCategory.id), formData, {
+
+    const data = new FormData();
+    data.append('_method', 'PUT'); // Laravel method spoofing for file uploads
+    data.append('name', formData.name);
+    if (formData.parent_id) {
+      data.append('parent_id', formData.parent_id);
+    }
+    if (imageFile) {
+      data.append('image', imageFile);
+    }
+
+    router.post(route('admin.categories.update', selectedCategory.id), data, {
+      forceFormData: true,
+      preserveScroll: true,
       onSuccess: () => {
         setShowEditDialog(false);
         setSelectedCategory(null);
         setFormData({ name: '', parent_id: '' });
+        clearImage();
       },
       onError: (errors) => {
         console.error('Error updating category:', errors);
@@ -235,6 +302,33 @@ export default function CategoriesIndex({ auth, categories, filters }: Props) {
                           ))}
                         </select>
                       </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="image">Category Image (Optional)</Label>
+                        <input
+                          id="image"
+                          type="file"
+                          accept="image/jpeg,image/png,image/jpg,image/gif"
+                          onChange={handleImageChange}
+                          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                        />
+                        <p className="text-xs text-gray-500">Max size: 2MB. Formats: JPEG, PNG, JPG, GIF</p>
+                        {imagePreview && (
+                          <div className="relative w-32 h-32 mt-2">
+                            <img
+                              src={imagePreview}
+                              alt="Preview"
+                              className="w-full h-full object-cover rounded border"
+                            />
+                            <button
+                              type="button"
+                              onClick={clearImage}
+                              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600 transition-colors"
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     </div>
                     <DialogFooter>
                       <Button variant="outline" onClick={() => setShowCreateDialog(false)}>
@@ -277,6 +371,7 @@ export default function CategoriesIndex({ auth, categories, filters }: Props) {
                 <Table>
                   <TableHeader>
                     <TableRow>
+                      <TableHead>Image</TableHead>
                       <TableHead>Name</TableHead>
                       <TableHead>Slug</TableHead>
                       <TableHead>Parent Category</TableHead>
@@ -289,6 +384,19 @@ export default function CategoriesIndex({ auth, categories, filters }: Props) {
                     {categories.data && categories.data.length > 0 ? (
                       categories.data.map((category) => (
                         <TableRow key={category.id}>
+                          <TableCell>
+                            {(category as ExtendedCategory).image_url ? (
+                              <img
+                                src={(category as ExtendedCategory).image_url}
+                                alt={category.name}
+                                className="w-12 h-12 object-cover rounded border"
+                              />
+                            ) : (
+                              <div className="w-12 h-12 bg-gray-200 rounded flex items-center justify-center border">
+                                <span className="text-gray-400 text-xs">No image</span>
+                              </div>
+                            )}
+                          </TableCell>
                           <TableCell className="font-medium">
                             {renderCategoryName(category)}
                           </TableCell>
@@ -338,7 +446,7 @@ export default function CategoriesIndex({ auth, categories, filters }: Props) {
                       ))
                     ) : (
                       <TableRow>
-                        <TableCell colSpan={6} className="text-center py-8 text-gray-500">
+                        <TableCell colSpan={7} className="text-center py-8 text-gray-500">
                           No categories found
                         </TableCell>
                       </TableRow>
@@ -384,6 +492,33 @@ export default function CategoriesIndex({ auth, categories, filters }: Props) {
                       </option>
                     ))}
                   </select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="edit_image">Category Image (Optional)</Label>
+                  <input
+                    id="edit_image"
+                    type="file"
+                    accept="image/jpeg,image/png,image/jpg,image/gif"
+                    onChange={handleImageChange}
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                  />
+                  <p className="text-xs text-gray-500">Max size: 2MB. Formats: JPEG, PNG, JPG, GIF</p>
+                  {imagePreview && (
+                    <div className="relative w-32 h-32 mt-2">
+                      <img
+                        src={imagePreview}
+                        alt="Preview"
+                        className="w-full h-full object-cover rounded border"
+                      />
+                      <button
+                        type="button"
+                        onClick={clearImage}
+                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600 transition-colors"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
               <DialogFooter>

@@ -97,11 +97,8 @@ class ProductController extends Controller
         $cartCount = 0;
         $wishlistCount = 0;
         if (auth()->check()) {
-            $cart = \App\Models\Cart::where('user_id', auth()->id())->first();
-            if ($cart) {
-                $cartCount = $cart->items()->count();
-            }
-            $wishlistCount = \App\Models\Wishlist::where('user_id', auth()->id())->count();
+            $cartCount = \App\Models\Cart::getItemCountForUser(auth()->id());
+            $wishlistCount = \App\Models\Wishlist::getItemCountForUser(auth()->id());
         }
 
         return Inertia::render('Products/Index', [
@@ -250,11 +247,8 @@ class ProductController extends Controller
         $cartCount = 0;
         $wishlistCount = 0;
         if (auth()->check()) {
-            $cart = \App\Models\Cart::where('user_id', auth()->id())->first();
-            if ($cart) {
-                $cartCount = $cart->items()->count();
-            }
-            $wishlistCount = \App\Models\Wishlist::where('user_id', auth()->id())->count();
+            $cartCount = \App\Models\Cart::getItemCountForUser(auth()->id());
+            $wishlistCount = \App\Models\Wishlist::getItemCountForUser(auth()->id());
         }
 
         // Format product data for frontend

@@ -57,7 +57,7 @@ export default function CartIndex({
         if (newQuantity < 1) return;
 
         setProcessing(true);
-        router.put(
+        router.patch(
             `/cart/${itemId}`,
             { quantity: newQuantity },
             {

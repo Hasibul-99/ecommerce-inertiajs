@@ -1,6 +1,7 @@
 import { Link } from '@inertiajs/react';
 import { useState } from 'react';
 import { FiHeart, FiShoppingBag, FiUser, FiSearch, FiMenu, FiChevronDown } from 'react-icons/fi';
+import { useCartWishlist } from '@/Contexts/CartWishlistContext';
 
 interface HeaderProps {
     auth?: {
@@ -9,14 +10,15 @@ interface HeaderProps {
             email: string;
         };
     };
-    cartCount?: number;
-    wishlistCount?: number;
 }
 
-export default function Header({ auth, cartCount = 0, wishlistCount = 0 }: HeaderProps) {
+export default function Header({ auth }: HeaderProps) {
     const [showUserMenu, setShowUserMenu] = useState(false);
     const [showMobileMenu, setShowMobileMenu] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
+
+    // Get dynamic cart and wishlist counts from context
+    const { cartCount, wishlistCount } = useCartWishlist();
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
@@ -134,12 +136,6 @@ export default function Header({ auth, cartCount = 0, wishlistCount = 0 }: Heade
                                                 >
                                                     Login
                                                 </Link>
-                                                <Link
-                                                    href="/register"
-                                                    className="block px-4 py-2 text-sm text-grabit-gray hover:bg-gray-50 hover:text-grabit-primary"
-                                                >
-                                                    Register
-                                                </Link>
                                             </>
                                         )}
                                     </div>
@@ -153,9 +149,11 @@ export default function Header({ auth, cartCount = 0, wishlistCount = 0 }: Heade
                             >
                                 <div className="relative">
                                     <FiHeart className="w-6 h-6" />
+                                    {console.log("Wishlist count:", wishlistCount)
+                                    }
                                     {wishlistCount > 0 && (
-                                        <span className="absolute -top-2 -right-2 bg-grabit-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                                            {wishlistCount}
+                                        <span className="absolute -top-2 -right-2 bg-grabit-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
+                                            {wishlistCount > 99 ? '99+' : wishlistCount}
                                         </span>
                                     )}
                                 </div>
@@ -173,8 +171,8 @@ export default function Header({ auth, cartCount = 0, wishlistCount = 0 }: Heade
                                 <div className="relative">
                                     <FiShoppingBag className="w-6 h-6" />
                                     {cartCount > 0 && (
-                                        <span className="absolute -top-2 -right-2 bg-grabit-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                                            {cartCount}
+                                        <span className="absolute -top-2 -right-2 bg-grabit-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
+                                            {cartCount > 99 ? '99+' : cartCount}
                                         </span>
                                     )}
                                 </div>

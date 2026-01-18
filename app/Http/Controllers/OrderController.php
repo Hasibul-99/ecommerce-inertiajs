@@ -63,16 +63,13 @@ class OrderController extends Controller
         // Get wishlist count
         $wishlistCount = 0;
         if (auth()->check()) {
-            $wishlistCount = \App\Models\Wishlist::where('user_id', auth()->id())->count();
+            $wishlistCount = \App\Models\Wishlist::getItemCountForUser(auth()->id());
         }
 
         // Get cart count
         $cartCount = 0;
         if (auth()->check()) {
-            $cart = \App\Models\Cart::where('user_id', auth()->id())->first();
-            if ($cart) {
-                $cartCount = $cart->items()->count();
-            }
+            $cartCount = \App\Models\Cart::getItemCountForUser(auth()->id());
         }
 
         return Inertia::render('Orders/Index', [
@@ -161,16 +158,13 @@ class OrderController extends Controller
         // Get wishlist count
         $wishlistCount = 0;
         if (auth()->check()) {
-            $wishlistCount = \App\Models\Wishlist::where('user_id', auth()->id())->count();
+            $wishlistCount = \App\Models\Wishlist::getItemCountForUser(auth()->id());
         }
 
         // Get cart count
         $cartCount = 0;
         if (auth()->check()) {
-            $cart = \App\Models\Cart::where('user_id', auth()->id())->first();
-            if ($cart) {
-                $cartCount = $cart->items()->count();
-            }
+            $cartCount = \App\Models\Cart::getItemCountForUser(auth()->id());
         }
 
         return Inertia::render('Orders/Show', [

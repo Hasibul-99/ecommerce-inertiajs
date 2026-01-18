@@ -97,4 +97,16 @@ class Cart extends Model
     {
         return $this->belongsTo(Coupon::class);
     }
+
+    /**
+     * Get the item count for a specific user.
+     *
+     * @param int $userId
+     * @return int
+     */
+    public static function getItemCountForUser(int $userId): int
+    {
+        $cart = static::where('user_id', $userId)->first();
+        return $cart ? $cart->items()->count() : 0;
+    }
 }

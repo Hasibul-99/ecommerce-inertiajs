@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Category extends Model
+class Category extends Model implements HasMedia
 {
-    use HasFactory;
+    use HasFactory, InteractsWithMedia;
 
     /**
      * The attributes that are mass assignable.
@@ -19,6 +21,23 @@ class Category extends Model
         'slug',
         'parent_id',
     ];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['image_url'];
+
+    /**
+     * Get the category image URL.
+     *
+     * @return string|null
+     */
+    public function getImageUrlAttribute(): ?string
+    {
+        return $this->getFirstMediaUrl('images');
+    }
 
     /**
      * Get the parent category.
