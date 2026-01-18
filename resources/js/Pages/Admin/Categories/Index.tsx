@@ -7,6 +7,7 @@ import { Badge } from '@/Components/ui/badge';
 import { Button } from '@/Components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/Components/ui/dialog';
 import { Label } from '@/Components/ui/label';
+import Pagination from '@/Components/Pagination';
 import { useState } from 'react';
 import { FiEdit, FiTrash2, FiPlus, FiSearch, FiFilter, FiPackage, FiGrid, FiList } from 'react-icons/fi';
 
@@ -454,6 +455,13 @@ export default function CategoriesIndex({ auth, categories, filters }: Props) {
                   </TableBody>
                 </Table>
               </div>
+
+              {/* Pagination */}
+              {categories.data && categories.data.length > 0 && (
+                <div className="mt-6">
+                  <Pagination links={categories.links} />
+                </div>
+              )}
             </CardContent>
           </Card>
 

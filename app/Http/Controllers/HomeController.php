@@ -121,7 +121,7 @@ class HomeController extends Controller
                 ];
             });
 
-        // Get featured categories
+        // Get featured categories (parent categories only)
         $categories = Category::withCount('products')
             ->where('parent_id', null)
             ->take(12)
@@ -133,6 +133,7 @@ class HomeController extends Controller
                     'slug' => $category->slug,
                     'image_url' => $category->image_url,
                     'products_count' => $category->products_count,
+                    'parent_id' => $category->parent_id,
                 ];
             });
 

@@ -28,25 +28,46 @@ class CategoryController extends Controller
      */
     public function index(Request $request)
     {
+        $perPage = $request->get('per_page', 15);
+
         $categories = Category::with(['parent', 'children'])
             ->when($request->search, function ($query, $search) {
                 return $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('description', 'like', "%{$search}%");
+                    ->orWhere('slug', 'like', "%{$search}%");
             })
             ->when($request->parent, function ($query, $parent) {
                 return $query->where('parent_id', $parent);
             })
             ->withCount('products')
             ->orderBy('created_at', 'desc')
-            ->paginate(10)
-            ->withQueryString();
+            ->paginate($perPage)
+            ->withQueryString()
+            ->through(function ($category) {
+                return [
+                    'id' => $category->id,
+                    'name' => $category->name,
+                    'slug' => $category->slug,
+                    'parent_id' => $category->parent_id,
+                    'image_url' => $category->image_url,
+                    'products_count' => $category->products_count,
+                    'created_at' => $category->created_at,
+                    'parent' => $category->parent ? [
+                        'id' => $category->parent->id,
+                        'name' => $category->parent->name,
+                    ] : null,
+                    'children' => $category->children->map(fn($child) => [
+                        'id' => $child->id,
+                        'name' => $child->name,
+                    ]),
+                ];
+            });
 
         $parentCategories = Category::whereNull('parent_id')->get();
 
         return Inertia::render('Admin/Categories/Index', [
             'categories' => $categories,
             'parentCategories' => $parentCategories,
-            'filters' => $request->only(['search', 'parent']),
+            'filters' => $request->only(['search', 'parent', 'per_page']),
         ]);
     }
 
@@ -74,7 +95,6 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
             'parent_id' => 'nullable|exists:categories,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
@@ -82,9 +102,7 @@ class CategoryController extends Controller
         $category = Category::create([
             'name' => $request->name,
             'slug' => Str::slug($request->name),
-            'description' => $request->description,
             'parent_id' => $request->parent_id,
-            'status' => 'active',
         ]);
 
         // Handle image upload if provided
@@ -141,7 +159,6 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
             'parent_id' => 'nullable|exists:categories,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
@@ -149,7 +166,6 @@ class CategoryController extends Controller
         $category->update([
             'name' => $request->name,
             'slug' => Str::slug($request->name),
-            'description' => $request->description,
             'parent_id' => $request->parent_id,
         ]);
 

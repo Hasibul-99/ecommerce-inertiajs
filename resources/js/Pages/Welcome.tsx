@@ -27,8 +27,10 @@ interface Category {
     name: string;
     slug: string;
     image?: string;
+    image_url?: string;
     products_count?: number;
     icon?: string;
+    parent_id?: number | null;
 }
 
 interface WelcomeProps extends PageProps {
@@ -204,10 +206,13 @@ export default function Welcome({
                                 View All →
                             </Link>
                         </div>
-                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                            {categories.slice(0, 12).map((category) => (
-                                <CategoryCard key={category.id} category={category} variant="icon" />
-                            ))}
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+                            {categories
+                                .filter(category => !category.parent_id)
+                                .slice(0, 12)
+                                .map((category) => (
+                                    <CategoryCard key={category.id} category={category} variant="large" />
+                                ))}
                         </div>
                     </div>
                 </section>
