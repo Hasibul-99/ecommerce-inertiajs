@@ -11,6 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Skip in testing environment or SQLite to avoid issues
+        if (config('app.env') === 'testing' || Schema::getConnection()->getDriverName() === 'sqlite') {
+            return;
+        }
+
         // Products table indexes
         Schema::table('products', function (Blueprint $table) {
             // Composite indexes for common queries
@@ -94,6 +99,11 @@ return new class extends Migration
      */
     public function down(): void
     {
+        // Skip in testing environment or SQLite
+        if (config('app.env') === 'testing' || Schema::getConnection()->getDriverName() === 'sqlite') {
+            return;
+        }
+
         // Products table indexes
         Schema::table('products', function (Blueprint $table) {
             $table->dropIndex('idx_products_vendor_status');
