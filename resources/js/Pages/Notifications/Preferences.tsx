@@ -9,7 +9,6 @@ interface NotificationPreference {
     name: string;
     description: string;
     email_enabled: boolean;
-    sms_enabled: boolean;
     push_enabled: boolean;
 }
 
@@ -29,7 +28,7 @@ export default function Preferences({ auth, preferences }: Props) {
         });
     };
 
-    const togglePreference = (index: number, channel: 'email_enabled' | 'sms_enabled' | 'push_enabled') => {
+    const togglePreference = (index: number, channel: 'email_enabled' | 'push_enabled') => {
         const updatedPreferences = [...data.preferences];
         updatedPreferences[index][channel] = !updatedPreferences[index][channel];
         setData('preferences', updatedPreferences);
@@ -70,9 +69,6 @@ export default function Preferences({ auth, preferences }: Props) {
                                                         Email
                                                     </th>
                                                     <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                        SMS
-                                                    </th>
-                                                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                         In-App
                                                     </th>
                                                 </tr>
@@ -94,14 +90,6 @@ export default function Preferences({ auth, preferences }: Props) {
                                                                 className="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
                                                                 checked={preference.email_enabled}
                                                                 onChange={() => togglePreference(index, 'email_enabled')}
-                                                            />
-                                                        </td>
-                                                        <td className="px-6 py-4 text-center">
-                                                            <input
-                                                                type="checkbox"
-                                                                className="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
-                                                                checked={preference.sms_enabled}
-                                                                onChange={() => togglePreference(index, 'sms_enabled')}
                                                             />
                                                         </td>
                                                         <td className="px-6 py-4 text-center">
@@ -142,9 +130,6 @@ export default function Preferences({ auth, preferences }: Props) {
                                                     <ul className="list-disc list-inside space-y-1">
                                                         <li>
                                                             <strong>Email:</strong> Receive notifications via email to your registered email address
-                                                        </li>
-                                                        <li>
-                                                            <strong>SMS:</strong> Get text message notifications to your phone (requires phone number verification)
                                                         </li>
                                                         <li>
                                                             <strong>In-App:</strong> See notifications in the notification bell at the top of the page

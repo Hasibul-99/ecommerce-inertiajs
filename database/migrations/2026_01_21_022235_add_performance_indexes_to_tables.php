@@ -1,0 +1,171 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        // Products table indexes
+        Schema::table('products', function (Blueprint $table) {
+            // Composite indexes for common queries
+            $table->index(['vendor_id', 'status'], 'idx_products_vendor_status');
+            $table->index(['category_id', 'status'], 'idx_products_category_status');
+            $table->index(['status', 'is_featured'], 'idx_products_status_featured');
+            $table->index(['status', 'created_at'], 'idx_products_status_created');
+
+            // Indexes for search and filtering
+            $table->index('price', 'idx_products_price');
+            $table->index('stock', 'idx_products_stock');
+        });
+
+        // Orders table indexes
+        Schema::table('orders', function (Blueprint $table) {
+            $table->index(['user_id', 'status'], 'idx_orders_user_status');
+            $table->index(['status', 'created_at'], 'idx_orders_status_created');
+            $table->index('payment_status', 'idx_orders_payment_status');
+            $table->index('created_at', 'idx_orders_created_at');
+        });
+
+        // Order Items table indexes
+        Schema::table('order_items', function (Blueprint $table) {
+            $table->index(['vendor_id', 'status'], 'idx_order_items_vendor_status');
+            $table->index(['order_id', 'vendor_id'], 'idx_order_items_order_vendor');
+            $table->index('status', 'idx_order_items_status');
+        });
+
+        // Reviews table indexes
+        Schema::table('reviews', function (Blueprint $table) {
+            $table->index(['product_id', 'status'], 'idx_reviews_product_status');
+            $table->index(['user_id', 'created_at'], 'idx_reviews_user_created');
+            $table->index('rating', 'idx_reviews_rating');
+        });
+
+        // Categories table indexes
+        Schema::table('categories', function (Blueprint $table) {
+            $table->index('parent_id', 'idx_categories_parent');
+            $table->index(['parent_id', 'status'], 'idx_categories_parent_status');
+            $table->index('order', 'idx_categories_order');
+        });
+
+        // Vendors table indexes
+        Schema::table('vendors', function (Blueprint $table) {
+            $table->index(['status', 'created_at'], 'idx_vendors_status_created');
+            $table->index('user_id', 'idx_vendors_user');
+        });
+
+        // Payments table indexes
+        if (Schema::hasTable('payments')) {
+            Schema::table('payments', function (Blueprint $table) {
+                $table->index(['order_id', 'status'], 'idx_payments_order_status');
+                $table->index('status', 'idx_payments_status');
+                $table->index('created_at', 'idx_payments_created_at');
+            });
+        }
+
+        // Wishlists table indexes
+        Schema::table('wishlists', function (Blueprint $table) {
+            $table->index('user_id', 'idx_wishlists_user');
+            $table->index(['user_id', 'product_id'], 'idx_wishlists_user_product');
+        });
+
+        // Carts table indexes
+        Schema::table('carts', function (Blueprint $table) {
+            $table->index('user_id', 'idx_carts_user');
+            $table->index(['user_id', 'session_id'], 'idx_carts_user_session');
+        });
+
+        // Activity logs table indexes
+        if (Schema::hasTable('activity_logs')) {
+            Schema::table('activity_logs', function (Blueprint $table) {
+                $table->index(['user_id', 'created_at'], 'idx_activity_logs_user_created');
+                $table->index('created_at', 'idx_activity_logs_created_at');
+            });
+        }
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        // Products table indexes
+        Schema::table('products', function (Blueprint $table) {
+            $table->dropIndex('idx_products_vendor_status');
+            $table->dropIndex('idx_products_category_status');
+            $table->dropIndex('idx_products_status_featured');
+            $table->dropIndex('idx_products_status_created');
+            $table->dropIndex('idx_products_price');
+            $table->dropIndex('idx_products_stock');
+        });
+
+        // Orders table indexes
+        Schema::table('orders', function (Blueprint $table) {
+            $table->dropIndex('idx_orders_user_status');
+            $table->dropIndex('idx_orders_status_created');
+            $table->dropIndex('idx_orders_payment_status');
+            $table->dropIndex('idx_orders_created_at');
+        });
+
+        // Order Items table indexes
+        Schema::table('order_items', function (Blueprint $table) {
+            $table->dropIndex('idx_order_items_vendor_status');
+            $table->dropIndex('idx_order_items_order_vendor');
+            $table->dropIndex('idx_order_items_status');
+        });
+
+        // Reviews table indexes
+        Schema::table('reviews', function (Blueprint $table) {
+            $table->dropIndex('idx_reviews_product_status');
+            $table->dropIndex('idx_reviews_user_created');
+            $table->dropIndex('idx_reviews_rating');
+        });
+
+        // Categories table indexes
+        Schema::table('categories', function (Blueprint $table) {
+            $table->dropIndex('idx_categories_parent');
+            $table->dropIndex('idx_categories_parent_status');
+            $table->dropIndex('idx_categories_order');
+        });
+
+        // Vendors table indexes
+        Schema::table('vendors', function (Blueprint $table) {
+            $table->dropIndex('idx_vendors_status_created');
+            $table->dropIndex('idx_vendors_user');
+        });
+
+        // Payments table indexes
+        if (Schema::hasTable('payments')) {
+            Schema::table('payments', function (Blueprint $table) {
+                $table->dropIndex('idx_payments_order_status');
+                $table->dropIndex('idx_payments_status');
+                $table->dropIndex('idx_payments_created_at');
+            });
+        }
+
+        // Wishlists table indexes
+        Schema::table('wishlists', function (Blueprint $table) {
+            $table->dropIndex('idx_wishlists_user');
+            $table->dropIndex('idx_wishlists_user_product');
+        });
+
+        // Carts table indexes
+        Schema::table('carts', function (Blueprint $table) {
+            $table->dropIndex('idx_carts_user');
+            $table->dropIndex('idx_carts_user_session');
+        });
+
+        // Activity logs table indexes
+        if (Schema::hasTable('activity_logs')) {
+            Schema::table('activity_logs', function (Blueprint $table) {
+                $table->dropIndex('idx_activity_logs_user_created');
+                $table->dropIndex('idx_activity_logs_created_at');
+            });
+        }
+    }
+};

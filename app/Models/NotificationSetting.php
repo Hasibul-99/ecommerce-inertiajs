@@ -14,13 +14,11 @@ class NotificationSetting extends Model
         'user_id',
         'notification_type',
         'email_enabled',
-        'sms_enabled',
         'push_enabled',
     ];
 
     protected $casts = [
         'email_enabled' => 'boolean',
-        'sms_enabled' => 'boolean',
         'push_enabled' => 'boolean',
     ];
 
@@ -39,7 +37,6 @@ class NotificationSetting extends Model
     {
         return match ($channel) {
             'mail' => $this->email_enabled,
-            'sms' => $this->sms_enabled,
             'database', 'broadcast' => $this->push_enabled,
             default => false,
         };
@@ -57,7 +54,6 @@ class NotificationSetting extends Model
             ],
             [
                 'email_enabled' => true,
-                'sms_enabled' => false,
                 'push_enabled' => true,
             ]
         );

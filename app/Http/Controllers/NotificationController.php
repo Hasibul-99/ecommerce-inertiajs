@@ -94,7 +94,6 @@ class NotificationController extends Controller
                 'name' => $type['name'],
                 'description' => $type['description'],
                 'email_enabled' => $saved ? $saved->email_enabled : true,
-                'sms_enabled' => $saved ? $saved->sms_enabled : false,
                 'push_enabled' => $saved ? $saved->push_enabled : true,
             ];
         }
@@ -113,7 +112,6 @@ class NotificationController extends Controller
             'preferences' => 'required|array',
             'preferences.*.type' => 'required|string',
             'preferences.*.email_enabled' => 'boolean',
-            'preferences.*.sms_enabled' => 'boolean',
             'preferences.*.push_enabled' => 'boolean',
         ]);
 
@@ -125,7 +123,6 @@ class NotificationController extends Controller
                 ],
                 [
                     'email_enabled' => $preference['email_enabled'] ?? false,
-                    'sms_enabled' => $preference['sms_enabled'] ?? false,
                     'push_enabled' => $preference['push_enabled'] ?? false,
                 ]
             );

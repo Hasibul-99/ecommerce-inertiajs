@@ -16,7 +16,6 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('notification_type'); // order_placed, order_shipped, etc.
             $table->boolean('email_enabled')->default(true);
-            $table->boolean('sms_enabled')->default(false);
             $table->boolean('push_enabled')->default(true);
             $table->timestamps();
 

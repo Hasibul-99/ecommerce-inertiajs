@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Category;
+use App\Models\Product;
+use App\Observers\CategoryObserver;
+use App\Observers\ProductObserver;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,7 +15,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Register CacheService as singleton
+        $this->app->singleton(\App\Services\CacheService::class);
     }
 
     /**
@@ -19,6 +24,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Register model observers for automatic cache invalidation
+        Category::observe(CategoryObserver::class);
+        Product::observe(ProductObserver::class);
     }
 }

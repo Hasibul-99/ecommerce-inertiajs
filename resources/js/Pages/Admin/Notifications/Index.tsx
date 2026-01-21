@@ -200,17 +200,6 @@ export default function Index({ auth, notificationTypes }: Props) {
                                             Email
                                         </span>
                                     </label>
-                                    <label className="flex items-center">
-                                        <input
-                                            type="checkbox"
-                                            className="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
-                                            checked={data.channels.includes('sms')}
-                                            onChange={() => toggleChannel('sms')}
-                                        />
-                                        <span className="ml-2 text-sm text-gray-700">
-                                            SMS
-                                        </span>
-                                    </label>
                                 </div>
                                 <InputError className="mt-2" message={errors.channels} />
                             </div>

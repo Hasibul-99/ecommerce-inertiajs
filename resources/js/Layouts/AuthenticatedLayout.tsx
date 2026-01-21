@@ -1,5 +1,6 @@
 import { useState, useEffect, PropsWithChildren, ReactNode } from 'react';
 import ApplicationLogo from '@/Components/App/ApplicationLogo';
+import NotificationBell from '@/Components/NotificationBell';
 import { Link, usePage } from '@inertiajs/react';
 import { User } from '@/types';
 import {
@@ -13,7 +14,6 @@ import {
     FiMenu,
     FiX,
     FiSearch,
-    FiBell,
     FiSun,
     FiMoon,
     FiChevronDown,
@@ -29,7 +29,6 @@ interface AuthenticatedLayoutProps {
 export default function AuthenticatedLayout({ user, header, children }: PropsWithChildren<AuthenticatedLayoutProps>) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
     const [darkMode, setDarkMode] = useState(false);
-    const [showNotifications, setShowNotifications] = useState(false);
     const [showUserMenu, setShowUserMenu] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const { url } = usePage();
@@ -157,37 +156,8 @@ export default function AuthenticatedLayout({ user, header, children }: PropsWit
                             </Link>
 
                             {/* Notifications */}
-                            <div className="relative hidden sm:block">
-                                <button
-                                    onClick={() => setShowNotifications(!showNotifications)}
-                                    className="relative p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
-                                >
-                                    <FiBell className="w-5 h-5" />
-                                    <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-                                </button>
-
-                                {showNotifications && (
-                                    <>
-                                        <div className="fixed inset-0 z-40" onClick={() => setShowNotifications(false)}></div>
-                                        <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 py-2 z-50">
-                                            <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-                                                <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Notifications</h3>
-                                            </div>
-                                            <div className="max-h-96 overflow-y-auto">
-                                                <div className="px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors">
-                                                    <p className="text-sm text-gray-900 dark:text-white font-medium">Order Shipped</p>
-                                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Your order #12345 has been shipped</p>
-                                                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">2 hours ago</p>
-                                                </div>
-                                                <div className="px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors">
-                                                    <p className="text-sm text-gray-900 dark:text-white font-medium">Price Drop Alert</p>
-                                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Item in your wishlist is on sale</p>
-                                                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">5 hours ago</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </>
-                                )}
+                            <div className="hidden sm:block">
+                                <NotificationBell />
                             </div>
 
                             {/* User Menu */}
@@ -244,6 +214,20 @@ export default function AuthenticatedLayout({ user, header, children }: PropsWit
                                                     <span>Wishlist</span>
                                                 </Link>
                                                 <div className="border-t border-gray-200 dark:border-gray-700 my-2"></div>
+                                                <Link
+                                                    href={route('notifications.index')}
+                                                    className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                                                >
+                                                    <FiSettings className="w-4 h-4" />
+                                                    <span>Notifications</span>
+                                                </Link>
+                                                <Link
+                                                    href={route('notifications.preferences')}
+                                                    className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                                                >
+                                                    <FiSettings className="w-4 h-4" />
+                                                    <span>Notification Settings</span>
+                                                </Link>
                                                 <Link
                                                     href={route('profile.edit')}
                                                     className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"

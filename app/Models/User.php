@@ -116,4 +116,12 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Review::class, 'review_helpful_votes')->withTimestamps();
     }
+
+    /**
+     * Get the notification settings for the user.
+     */
+    public function notificationSettings()
+    {
+        return $this->hasMany(NotificationSetting::class);
+    }
 }

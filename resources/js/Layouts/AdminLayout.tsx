@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, usePage } from '@inertiajs/react';
+import NotificationBell from '@/Components/NotificationBell';
 import { User } from '@/types/index';
 import {
   FiHome,
@@ -148,7 +149,6 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<string[]>(['main']);
-  const [showNotifications, setShowNotifications] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const { url } = usePage();
 
@@ -423,33 +423,7 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
               </button>
 
               {/* Notifications */}
-              <div className="relative">
-                <button
-                  onClick={() => setShowNotifications(!showNotifications)}
-                  className="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors relative"
-                >
-                  <FiBell className="w-5 h-5" />
-                  <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-                </button>
-                
-                {showNotifications && (
-                  <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50">
-                    <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
-                      <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Notifications</h3>
-                    </div>
-                    <div className="max-h-64 overflow-y-auto">
-                      <div className="px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700">
-                        <p className="text-sm text-gray-900 dark:text-white">New order received</p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">2 minutes ago</p>
-                      </div>
-                      <div className="px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700">
-                        <p className="text-sm text-gray-900 dark:text-white">Vendor approval pending</p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">1 hour ago</p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
+              <NotificationBell />
 
               {/* User menu */}
               <div className="relative">
@@ -506,9 +480,6 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
       </div>
 
       {/* Click outside handlers */}
-      {showNotifications && (
-        <div className="fixed inset-0 z-40" onClick={() => setShowNotifications(false)}></div>
-      )}
       {showUserMenu && (
         <div className="fixed inset-0 z-40" onClick={() => setShowUserMenu(false)}></div>
       )}

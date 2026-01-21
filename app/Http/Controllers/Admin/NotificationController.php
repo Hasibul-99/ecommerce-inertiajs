@@ -36,7 +36,6 @@ class NotificationController extends Controller
         $validated = $request->validate([
             'notification_type' => 'required|string',
             'email_enabled' => 'boolean',
-            'sms_enabled' => 'boolean',
             'push_enabled' => 'boolean',
         ]);
 
@@ -58,7 +57,7 @@ class NotificationController extends Controller
             'message' => 'required|string',
             'user_type' => 'required|in:all,customers,vendors,admins',
             'channels' => 'required|array',
-            'channels.*' => 'in:database,mail,sms',
+            'channels.*' => 'in:database,mail',
         ]);
 
         $query = User::query();
