@@ -33,7 +33,18 @@ interface Category {
     parent_id?: number | null;
 }
 
+interface HeroSlide {
+    id: number;
+    title: string;
+    subtitle?: string;
+    description?: string;
+    buttonText: string;
+    buttonLink: string;
+    image: string;
+}
+
 interface WelcomeProps extends PageProps {
+    heroSlides?: HeroSlide[];
     featuredProducts?: Product[];
     dealProducts?: Product[];
     newProducts?: Product[];
@@ -44,6 +55,7 @@ interface WelcomeProps extends PageProps {
 
 export default function Welcome({
     auth,
+    heroSlides = [],
     featuredProducts = [],
     dealProducts = [],
     newProducts = [],
@@ -53,8 +65,10 @@ export default function Welcome({
 }: WelcomeProps) {
     const [currentSlide, setCurrentSlide] = useState(0);
 
-    const heroSlides = [
+    // Fallback hero slides if none are configured in admin panel
+    const defaultHeroSlides: HeroSlide[] = [
         {
+            id: 1,
             title: 'Fresh Groceries',
             subtitle: 'Delivered to Your Doorstep',
             description: 'Get farm-fresh products with unbeatable prices',
@@ -63,6 +77,7 @@ export default function Welcome({
             buttonLink: '/products'
         },
         {
+            id: 2,
             title: 'Big Sale',
             subtitle: 'Up to 50% Off',
             description: 'On all electronics and accessories',
@@ -71,6 +86,7 @@ export default function Welcome({
             buttonLink: '/products?sale=1'
         },
         {
+            id: 3,
             title: 'New Arrivals',
             subtitle: 'Latest Collection 2024',
             description: 'Discover the newest products in fashion and lifestyle',
@@ -80,19 +96,22 @@ export default function Welcome({
         }
     ];
 
+    // Use dynamic slides from database, or fallback to default
+    const slides = heroSlides.length > 0 ? heroSlides : defaultHeroSlides;
+
     useEffect(() => {
         const timer = setInterval(() => {
-            setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+            setCurrentSlide((prev) => (prev + 1) % slides.length);
         }, 5000);
         return () => clearInterval(timer);
-    }, []);
+    }, [slides.length]);
 
     const nextSlide = () => {
-        setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+        setCurrentSlide((prev) => (prev + 1) % slides.length);
     };
 
     const prevSlide = () => {
-        setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
+        setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
     };
 
     const organizationStructuredData = {
@@ -125,7 +144,7 @@ export default function Welcome({
 
             {/* Hero Slider */}
             <section className="relative h-[500px] bg-gray-100 overflow-hidden">
-                {heroSlides.map((slide, index) => (
+                {slides.map((slide, index) => (
                     <div
                         key={index}
                         className={`absolute inset-0 transition-opacity duration-1000 ${
@@ -177,7 +196,7 @@ export default function Welcome({
 
                 {/* Dots */}
                 <div className="absolute bottom-6 left-0 right-0 z-30 flex justify-center gap-2">
-                    {heroSlides.map((_, index) => (
+                    {slides.map((_, index) => (
                         <button
                             key={index}
                             onClick={() => setCurrentSlide(index)}

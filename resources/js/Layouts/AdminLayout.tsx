@@ -31,7 +31,8 @@ import {
   FiGift,
   FiMessageSquare,
   FiMaximize2,
-  FiMinimize2
+  FiMinimize2,
+  FiImage
 } from 'react-icons/fi';
 
 interface AdminLayoutProps {
@@ -208,6 +209,7 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
         { name: 'Categories', href: route('admin.categories.index'), icon: FiGrid },
         { name: 'Tags', href: route('admin.tags.index'), icon: FiTag },
         { name: 'Coupons', href: route('admin.coupons.index'), icon: FiGift },
+        { name: 'Hero Slides', href: route('admin.hero-slides.index'), icon: FiImage },
       ]
     },
     users: {

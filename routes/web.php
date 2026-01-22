@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\CodReconciliationController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\EmailTemplateController;
+use App\Http\Controllers\Admin\HeroSlideController;
 use App\Http\Controllers\Admin\NotificationController as AdminNotificationController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\PayoutController;
@@ -396,6 +397,15 @@ Route::middleware(['auth', 'verified', 'role:admin|super-admin'])->prefix('admin
 
     // Tags
     Route::resource('tags', TagController::class);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Hero Slides Management
+    |--------------------------------------------------------------------------
+    */
+    Route::resource('hero-slides', HeroSlideController::class);
+    Route::post('/hero-slides/update-order', [HeroSlideController::class, 'updateOrder'])->name('hero-slides.update-order');
+    Route::patch('/hero-slides/{heroSlide}/toggle-status', [HeroSlideController::class, 'toggleStatus'])->name('hero-slides.toggle-status');
 
     /*
     |--------------------------------------------------------------------------

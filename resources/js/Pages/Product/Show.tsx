@@ -136,7 +136,7 @@ function ProductContent({
     };
 
     return (
-        <>
+        <FrontendLayout>
             <Head title={`${product.name} - Product Details`} />
 
             {/* Breadcrumb */}
@@ -456,4 +456,8 @@ function ProductContent({
             </div>
         </FrontendLayout>
     );
+}
+
+export default function Show({ product, relatedProducts }: ProductShowProps) {
+    return <ProductContent product={product} relatedProducts={relatedProducts} />;
 }

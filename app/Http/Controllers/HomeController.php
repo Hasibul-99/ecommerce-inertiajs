@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Models\Cart;
 use App\Models\Wishlist;
+use App\Models\HeroSlide;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -20,6 +21,22 @@ class HomeController extends Controller
      */
     public function index()
     {
+        // Get hero slides
+        $heroSlides = HeroSlide::active()
+            ->ordered()
+            ->get()
+            ->map(function ($slide) {
+                return [
+                    'id' => $slide->id,
+                    'title' => $slide->title,
+                    'subtitle' => $slide->subtitle,
+                    'description' => $slide->description,
+                    'buttonText' => $slide->button_text,
+                    'buttonLink' => $slide->button_link,
+                    'image' => $slide->image_url,
+                ];
+            });
+
         // Get featured products (is_featured = true, is_active = true, with stock)
         $featuredProducts = Product::with(['vendor', 'category', 'media'])
             ->where('is_featured', true)
@@ -149,6 +166,7 @@ class HomeController extends Controller
         return Inertia::render('Welcome', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
+            'heroSlides' => $heroSlides,
             'featuredProducts' => $featuredProducts,
             'dealProducts' => $dealProducts,
             'newProducts' => $newProducts,
