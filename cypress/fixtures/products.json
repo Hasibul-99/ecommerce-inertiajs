@@ -1,0 +1,56 @@
+{
+  "sampleProduct": {
+    "title": "Test Product",
+    "description": "This is a test product description",
+    "price": 99.99,
+    "stock": 100,
+    "category": "Electronics",
+    "sku": "TEST-PROD-001"
+  },
+  "products": [
+    {
+      "id": 1,
+      "title": "Wireless Headphones",
+      "slug": "wireless-headphones",
+      "description": "Premium wireless headphones with noise cancellation",
+      "price": 299.99,
+      "stock": 50,
+      "category": "Electronics",
+      "vendor_id": 1
+    },
+    {
+      "id": 2,
+      "title": "Smart Watch",
+      "slug": "smart-watch",
+      "description": "Feature-rich smartwatch with health tracking",
+      "price": 399.99,
+      "stock": 30,
+      "category": "Electronics",
+      "vendor_id": 1
+    },
+    {
+      "id": 3,
+      "title": "Laptop Stand",
+      "slug": "laptop-stand",
+      "description": "Ergonomic adjustable laptop stand",
+      "price": 49.99,
+      "stock": 100,
+      "category": "Accessories",
+      "vendor_id": 2
+    }
+  ],
+  "outOfStockProduct": {
+    "id": 999,
+    "title": "Out of Stock Item",
+    "slug": "out-of-stock-item",
+    "stock": 0,
+    "price": 19.99
+  },
+  "lowStockProduct": {
+    "id": 998,
+    "title": "Low Stock Item",
+    "slug": "low-stock-item",
+    "stock": 2,
+    "price": 29.99
+  }
+}

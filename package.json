@@ -3,9 +3,21 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "tsc && vite build && vite build --ssr"
+        "build": "tsc && vite build && vite build --ssr",
+        "cypress:open": "cypress open",
+        "cypress:run": "cypress run",
+        "cypress:run:chrome": "cypress run --browser chrome",
+        "cypress:run:firefox": "cypress run --browser firefox",
+        "cypress:run:customer": "cypress run --spec 'cypress/e2e/customer/**/*'",
+        "cypress:run:vendor": "cypress run --spec 'cypress/e2e/vendor/**/*'",
+        "cypress:run:admin": "cypress run --spec 'cypress/e2e/admin/**/*'",
+        "cypress:run:performance": "cypress run --spec 'cypress/e2e/performance/**/*'",
+        "cypress:run:visual": "cypress run --spec 'cypress/e2e/visual/**/*'",
+        "cypress:run:mobile": "cypress run --config viewportWidth=375,viewportHeight=667",
+        "test:e2e": "start-server-and-test 'php artisan serve' http://localhost:8000 'cypress run'"
     },
     "devDependencies": {
+        "@cypress/webpack-preprocessor": "^7.0.2",
         "@headlessui/react": "^1.4.2",
         "@inertiajs/react": "^1.0.0",
         "@types/node": "^18.13.0",
@@ -15,6 +27,7 @@
         "@vitejs/plugin-react": "^4.2.0",
         "autoprefixer": "^10.4.21",
         "axios": "^1.6.4",
+        "cypress": "^15.9.0",
         "laravel-vite-plugin": "^1.0.0",
         "postcss": "^8.5.4",
         "react": "^18.2.0",

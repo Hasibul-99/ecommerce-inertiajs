@@ -1,0 +1,62 @@
+{
+  "sampleOrder": {
+    "order_number": "ORD-123456",
+    "status": "pending",
+    "payment_method": "cod",
+    "payment_status": "unpaid",
+    "total": 149.99,
+    "items": [
+      {
+        "product_id": 1,
+        "quantity": 1,
+        "price": 149.99
+      }
+    ]
+  },
+  "codOrder": {
+    "payment_method": "cod",
+    "shipping_address": {
+      "first_name": "John",
+      "last_name": "Doe",
+      "address": "123 Main Street",
+      "city": "New York",
+      "state": "NY",
+      "postal_code": "10001",
+      "country": "US",
+      "phone": "+1234567890"
+    }
+  },
+  "stripeOrder": {
+    "payment_method": "stripe",
+    "card": {
+      "number": "4242424242424242",
+      "exp_month": "12",
+      "exp_year": "2025",
+      "cvc": "123"
+    }
+  },
+  "addresses": [
+    {
+      "type": "shipping",
+      "first_name": "John",
+      "last_name": "Doe",
+      "address": "123 Main Street",
+      "city": "New York",
+      "state": "NY",
+      "postal_code": "10001",
+      "country": "US",
+      "phone": "+1234567890"
+    },
+    {
+      "type": "billing",
+      "first_name": "John",
+      "last_name": "Doe",
+      "address": "456 Oak Avenue",
+      "city": "Los Angeles",
+      "state": "CA",
+      "postal_code": "90001",
+      "country": "US",
+      "phone": "+1987654321"
+    }
+  ]
+}
