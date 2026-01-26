@@ -39,6 +39,7 @@ use App\Http\Controllers\Vendor\EarningsController;
 use App\Http\Controllers\Vendor\OrderController as VendorOrderController;
 use App\Http\Controllers\Vendor\ProductController as VendorProductController;
 use App\Http\Controllers\Vendor\VendorRegistrationController;
+use App\Http\Controllers\TrackOrderController;
 use App\Http\Controllers\WebhookController;
 use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
@@ -112,6 +113,15 @@ Route::controller(SearchController::class)->prefix('api/search')->name('search.'
     Route::get('/popular', 'popular')->name('popular');
 });
 Route::get('/api/products/filter-options', [SearchController::class, 'filterOptions'])->name('products.filter-options');
+
+// Order Tracking (Public - No Authentication Required)
+Route::controller(TrackOrderController::class)->prefix('track-order')->name('track-order.')->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::post('/search', 'search')->name('search');
+    Route::get('/{token}', 'show')->name('show');
+    Route::post('/{token}/subscribe', 'subscribe')->name('subscribe');
+    Route::get('/unsubscribe/{token}', 'unsubscribe')->name('unsubscribe');
+});
 
 /*
 |--------------------------------------------------------------------------

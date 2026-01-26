@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
         // Create initial super admin user
         // IMPORTANT: Change these credentials in production using environment variables
         $superAdminEmail = env('ADMIN_EMAIL', 'admin@yourdomain.com');
-        $superAdminPassword = env('ADMIN_PASSWORD', 'Password123!');
+        $superAdminPassword = env('ADMIN_PASSWORD', 'password123!');
 
         $superAdminUser = User::where('email', $superAdminEmail)->first();
         if (!$superAdminUser) {
@@ -42,7 +42,7 @@ class DatabaseSeeder extends Seeder
 
             $this->command->info('Super Admin user created successfully!');
             $this->command->warn("Email: {$superAdminEmail}");
-            $this->command->warn('Password: ' . ($superAdminPassword === 'ChangeThisPassword123!'
+            $this->command->warn('Password: ' . ($superAdminPassword === 'Password123!'
                 ? 'ChangeThisPassword123! (PLEASE CHANGE THIS!)'
                 : '[Set via ADMIN_PASSWORD env variable]'));
         } else {
