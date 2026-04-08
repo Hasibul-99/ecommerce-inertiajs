@@ -1,0 +1,147 @@
+version: '3.8'
+
+services:
+  # PHP Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    container_name: grabit-app
+    restart: unless-stopped
+    volumes:
+      - .:/var/www/html
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+    networks:
+      - grabit
+
+  # Nginx Web Server
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: grabit-nginx
+    restart: unless-stopped
+    ports:
+      - '${APP_PORT:-8000}:80'
+    volumes:
+      - .:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+    networks:
+      - grabit
+
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: grabit-mysql
+    restart: unless-stopped
+    ports:
+      - '${DB_PORT:-3306}:3306'
+    environment:
+      MYSQL_DATABASE: '${DB_DATABASE:-grabit}'
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD:-secret}'
+      MYSQL_USER: '${DB_USERNAME:-grabit}'
+      MYSQL_PASSWORD: '${DB_PASSWORD:-secret}'
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - grabit
+
+  # Redis Cache & Queue
+  redis:
+    image: redis:7-alpine
+    container_name: grabit-redis
+    restart: unless-stopped
+    ports:
+      - '${REDIS_PORT:-6379}:6379'
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - grabit
+
+  # Meilisearch (Full-text Search)
+  meilisearch:
+    image: getmeili/meilisearch:v1.6
+    container_name: grabit-meilisearch
+    restart: unless-stopped
+    ports:
+      - '${MEILISEARCH_PORT:-7700}:7700'
+    environment:
+      MEILI_MASTER_KEY: '${MEILISEARCH_KEY:-masterKey}'
+      MEILI_ENV: development
+    volumes:
+      - meilisearch-data:/meili_data
+    networks:
+      - grabit
+
+  # Mailpit (Email Testing)
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: grabit-mailpit
+    restart: unless-stopped
+    ports:
+      - '${MAILPIT_PORT:-8025}:8025'
+      - '${MAILPIT_SMTP_PORT:-1025}:1025'
+    networks:
+      - grabit
+
+  # Queue Worker
+  queue:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    container_name: grabit-queue
+    restart: unless-stopped
+    command: php artisan queue:work redis --sleep=3 --tries=3 --max-time=3600
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - app
+      - redis
+    networks:
+      - grabit
+
+  # Scheduler
+  scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    container_name: grabit-scheduler
+    restart: unless-stopped
+    command: >
+      sh -c "while true; do php /var/www/html/artisan schedule:run --verbose --no-interaction; sleep 60; done"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - app
+    networks:
+      - grabit
+
+volumes:
+  mysql-data:
+  redis-data:
+  meilisearch-data:
+
+networks:
+  grabit:
+    driver: bridge

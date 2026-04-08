@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ProductVariantController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\SecurityController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\UserController;
@@ -553,6 +554,21 @@ Route::middleware(['auth', 'verified', 'role:admin|super-admin'])->prefix('admin
     Route::controller(ActivityLogController::class)->prefix('activity-logs')->name('activity-logs.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/{activityLog}', 'show')->name('show');
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Security Management
+    |--------------------------------------------------------------------------
+    */
+    Route::controller(SecurityController::class)->prefix('security')->name('security.')->group(function () {
+        Route::get('/logs', 'logs')->name('logs');
+        Route::get('/blocked-ips', 'blockedIps')->name('blocked-ips');
+        Route::get('/login-attempts', 'loginAttempts')->name('login-attempts');
+        Route::post('/block-ip', 'blockIp')->name('block-ip');
+        Route::delete('/unblock-ip/{ip}', 'unblockIp')->name('unblock-ip');
+        Route::post('/cleanup-events', 'cleanupEvents')->name('cleanup-events');
+        Route::get('/export-logs', 'exportLogs')->name('export-logs');
     });
 });
 
