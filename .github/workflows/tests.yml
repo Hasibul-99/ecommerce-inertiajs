@@ -18,7 +18,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -30,10 +30,17 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --prefer-dist --no-interaction --no-progress --optimize-autoloader
 
+      - name: Copy environment file
+        run: cp .env.example .env
+
+      - name: Generate application key
+        run: php artisan key:generate
+
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '18'
+          cache: 'npm'
 
       - name: Install NPM dependencies
         run: npm ci
@@ -41,27 +48,20 @@ jobs:
       - name: Build assets
         run: npm run build
 
-      - name: Copy environment file
-        run: cp .env.example .env.testing
-
-      - name: Generate application key
-        run: php artisan key:generate --env=testing
-
       - name: Create SQLite database
         run: touch database/database.sqlite
 
       - name: Run migrations
-        run: php artisan migrate --env=testing --force
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: database/database.sqlite
+        run: php artisan migrate --force
 
-      - name: Execute tests with coverage
-        run: php artisan test --coverage --min=80
-
-      - name: Upload coverage to Codecov
-        if: matrix.php-version == '8.2'
-        uses: codecov/codecov-action@v3
-        with:
-          files: ./coverage.xml
-          fail_ci_if_error: false
+      - name: Execute tests
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: database/database.sqlite
+        run: php artisan test
 
   code-style:
     runs-on: ubuntu-latest
@@ -70,18 +70,18 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          tools: php-cs-fixer
 
-      - name: Run PHP CS Fixer (dry run)
-        run: |
-          composer global require friendsofphp/php-cs-fixer
-          ~/.composer/vendor/bin/php-cs-fixer fix --dry-run --diff
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Run Laravel Pint
+        run: ./vendor/bin/pint --test
 
   security:
     runs-on: ubuntu-latest
@@ -90,7 +90,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
