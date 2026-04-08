@@ -46,4 +46,25 @@ class Wishlist extends Model
     {
         return $this->hasMany(WishlistItem::class);
     }
+
+    /**
+     * Get the products in the wishlist.
+     */
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'wishlist_items')
+            ->withTimestamps();
+    }
+
+    /**
+     * Get the item count for a specific user.
+     *
+     * @param int $userId
+     * @return int
+     */
+    public static function getItemCountForUser(int $userId): int
+    {
+        $wishlist = static::where('user_id', $userId)->first();
+        return $wishlist ? $wishlist->items()->count() : 0;
+    }
 }

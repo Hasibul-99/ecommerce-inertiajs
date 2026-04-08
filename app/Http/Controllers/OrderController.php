@@ -63,16 +63,13 @@ class OrderController extends Controller
         // Get wishlist count
         $wishlistCount = 0;
         if (auth()->check()) {
-            $wishlistCount = \App\Models\Wishlist::where('user_id', auth()->id())->count();
+            $wishlistCount = \App\Models\Wishlist::getItemCountForUser(auth()->id());
         }
 
         // Get cart count
         $cartCount = 0;
         if (auth()->check()) {
-            $cart = \App\Models\Cart::where('user_id', auth()->id())->first();
-            if ($cart) {
-                $cartCount = $cart->items()->count();
-            }
+            $cartCount = \App\Models\Cart::getItemCountForUser(auth()->id());
         }
 
         return Inertia::render('Orders/Index', [
@@ -161,16 +158,13 @@ class OrderController extends Controller
         // Get wishlist count
         $wishlistCount = 0;
         if (auth()->check()) {
-            $wishlistCount = \App\Models\Wishlist::where('user_id', auth()->id())->count();
+            $wishlistCount = \App\Models\Wishlist::getItemCountForUser(auth()->id());
         }
 
         // Get cart count
         $cartCount = 0;
         if (auth()->check()) {
-            $cart = \App\Models\Cart::where('user_id', auth()->id())->first();
-            if ($cart) {
-                $cartCount = $cart->items()->count();
-            }
+            $cartCount = \App\Models\Cart::getItemCountForUser(auth()->id());
         }
 
         return Inertia::render('Orders/Show', [
@@ -288,5 +282,64 @@ class OrderController extends Controller
         // In a real application, you would generate a PDF invoice
         // For now, we'll just return a message
         return redirect()->back()->with('info', 'Invoice download functionality will be implemented soon.');
+    }
+
+    /**
+     * Reorder items from a previous order.
+     *
+     * @param  \App\Models\Order  $order
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function reorder(Order $order)
+    {
+        $this->authorize('view', $order);
+
+        try {
+            $cart = \App\Models\Cart::firstOrCreate(['user_id' => Auth::id()]);
+            $addedCount = 0;
+
+            foreach ($order->items as $orderItem) {
+                // Check if product is still available
+                $product = $orderItem->product;
+                if (!$product || !$product->is_active) {
+                    continue;
+                }
+
+                // Check stock
+                if ($product->stock_quantity < $orderItem->quantity) {
+                    continue;
+                }
+
+                // Add to cart
+                $cartItem = $cart->items()->where('product_id', $orderItem->product_id)
+                    ->where('product_variant_id', $orderItem->product_variant_id)
+                    ->first();
+
+                if ($cartItem) {
+                    // Update quantity if already in cart
+                    $newQuantity = $cartItem->quantity + $orderItem->quantity;
+                    if ($newQuantity <= $product->stock_quantity) {
+                        $cartItem->update(['quantity' => $newQuantity]);
+                        $addedCount++;
+                    }
+                } else {
+                    // Add new item to cart
+                    $cart->items()->create([
+                        'product_id' => $orderItem->product_id,
+                        'product_variant_id' => $orderItem->product_variant_id,
+                        'quantity' => $orderItem->quantity,
+                    ]);
+                    $addedCount++;
+                }
+            }
+
+            if ($addedCount > 0) {
+                return redirect()->route('cart')->with('success', "{$addedCount} items added to your cart.");
+            } else {
+                return redirect()->back()->with('error', 'No items could be added. Products may be out of stock or unavailable.');
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to reorder: ' . $e->getMessage());
+        }
     }
 }

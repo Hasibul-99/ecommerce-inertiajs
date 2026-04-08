@@ -23,11 +23,25 @@ class Product extends Model implements HasMedia
         'vendor_id',
         'category_id',
         'title',
+        'name',
         'slug',
+        'sku',
         'description',
+        'attributes',
         'base_price_cents',
+        'price_cents',
+        'sale_price_cents',
+        'compare_at_price_cents',
+        'cost_cents',
         'currency',
+        'stock_quantity',
+        'average_rating',
+        'reviews_count',
+        'sales_count',
+        'views_count',
         'status',
+        'is_active',
+        'is_featured',
         'published_at',
     ];
 
@@ -37,6 +51,14 @@ class Product extends Model implements HasMedia
      * @var array<string, string>
      */
     protected $casts = [
+        'attributes' => 'array',
+        'is_active' => 'boolean',
+        'is_featured' => 'boolean',
+        'average_rating' => 'decimal:2',
+        'reviews_count' => 'integer',
+        'sales_count' => 'integer',
+        'views_count' => 'integer',
+        'stock_quantity' => 'integer',
         'published_at' => 'datetime',
     ];
 

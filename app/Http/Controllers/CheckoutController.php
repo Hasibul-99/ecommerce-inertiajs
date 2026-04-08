@@ -77,7 +77,7 @@ class CheckoutController extends Controller
         // Get wishlist count
         $wishlistCount = 0;
         if (auth()->check()) {
-            $wishlistCount = \App\Models\Wishlist::where('user_id', auth()->id())->count();
+            $wishlistCount = \App\Models\Wishlist::getItemCountForUser(auth()->id());
         }
 
         // Get COD availability info

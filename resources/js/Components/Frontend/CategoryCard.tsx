@@ -5,7 +5,8 @@ interface Category {
     id: number;
     name: string;
     slug: string;
-    image?: string;
+    image?: string; // Legacy support
+    image_url?: string; // New field from Spatie Media Library
     products_count?: number;
     icon?: string;
 }
@@ -18,7 +19,8 @@ interface CategoryCardProps {
 export default function CategoryCard({ category, variant = 'default' }: CategoryCardProps) {
     const [imageError, setImageError] = useState(false);
 
-    const categoryImage = category.image || '/images/category/placeholder.png';
+    // Support both new image_url (from Spatie) and legacy image field
+    const categoryImage = category.image_url || category.image || '/images/category/placeholder.png';
 
     if (variant === 'icon') {
         // Icon style category card (for category carousel)

@@ -29,19 +29,9 @@ class Commission extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'rate' => 'float',
+        'rate' => 'decimal:2',
         'processed_at' => 'datetime',
     ];
-
-    /**
-     * Get the amount in dollars.
-     *
-     * @return float
-     */
-    public function getAmountInDollarsAttribute()
-    {
-        return $this->amount_cents / 100;
-    }
 
     /**
      * Get the order item that owns the commission.
@@ -57,5 +47,29 @@ class Commission extends Model
     public function vendor()
     {
         return $this->belongsTo(Vendor::class);
+    }
+
+    /**
+     * Get the amount in dollars.
+     */
+    public function getAmountInDollarsAttribute(): float
+    {
+        return $this->amount_cents / 100;
+    }
+
+    /**
+     * Scope a query to only include pending commissions.
+     */
+    public function scopePending($query)
+    {
+        return $query->where('status', 'pending');
+    }
+
+    /**
+     * Scope a query to only include processed commissions.
+     */
+    public function scopeProcessed($query)
+    {
+        return $query->where('status', 'processed');
     }
 }

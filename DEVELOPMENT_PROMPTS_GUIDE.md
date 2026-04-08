@@ -1041,7 +1041,11 @@ Include a simple template syntax for variables: {{order.number}}, {{user.name}},
 ```
 
 ---
+<<<<<<< HEAD
 
+=======
+--- done --- 
+>>>>>>> c3cbdff2ffbd8ec5134ebc9d6a8ccb7bfee00779
 ## 🔐 PHASE 7: Security & Performance
 
 ### Prompt 7.1: Security Enhancements

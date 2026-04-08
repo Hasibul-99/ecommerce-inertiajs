@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, usePage } from '@inertiajs/react';
+import NotificationBell from '@/Components/NotificationBell';
 import { User } from '@/types/index';
 import {
   FiHome,
@@ -28,11 +29,10 @@ import {
   FiFileText,
   FiTruck,
   FiGift,
-  FiStar,
   FiMessageSquare,
-  FiHelpCircle,
   FiMaximize2,
-  FiMinimize2
+  FiMinimize2,
+  FiImage
 } from 'react-icons/fi';
 
 interface AdminLayoutProps {
@@ -49,12 +49,107 @@ interface MenuItem {
   children?: MenuItem[];
 }
 
+// Separate component for menu items with children to avoid hooks violation
+const MenuItemWithChildren = ({
+  item,
+  sidebarCollapsed
+}: {
+  item: MenuItem;
+  sidebarCollapsed: boolean;
+}) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const Icon = item.icon;
+
+  return (
+    <div className="space-y-1">
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className={`
+          w-full group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200
+          text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white
+        `}
+      >
+        <Icon className="flex-shrink-0 w-5 h-5 mr-3 text-gray-500 dark:text-gray-400" />
+        <span className="flex-1 text-left">{item.name}</span>
+        {item.badge && (
+          <span className="mr-2 px-2 py-0.5 text-xs font-medium rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+            {item.badge}
+          </span>
+        )}
+        {isExpanded ? (
+          <FiChevronDown className="w-4 h-4" />
+        ) : (
+          <FiChevronRight className="w-4 h-4" />
+        )}
+      </button>
+      {isExpanded && (
+        <div className="space-y-1 ml-3">
+          {item.children?.map((child: MenuItem) => (
+            <MenuItemLink key={child.name} item={child} isChild={true} sidebarCollapsed={sidebarCollapsed} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Separate component for regular menu items
+const MenuItemLink = ({
+  item,
+  isChild = false,
+  sidebarCollapsed
+}: {
+  item: MenuItem;
+  isChild?: boolean;
+  sidebarCollapsed: boolean;
+}) => {
+  const { url } = usePage();
+  const Icon = item.icon;
+
+  const isActiveRoute = (href: string) => {
+    if (href === '#') return false;
+    return url.startsWith(href) || url === href;
+  };
+
+  const isActive = item.href ? isActiveRoute(item.href) : false;
+
+  return (
+    <Link
+      href={item.href || '#'}
+      className={`
+        group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200
+        ${isChild ? 'ml-6 pl-8' : ''}
+        ${isActive
+          ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/25'
+          : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white'
+        }
+        ${sidebarCollapsed && !isChild ? 'justify-center px-2' : ''}
+      `}
+    >
+      <Icon className={`flex-shrink-0 ${sidebarCollapsed && !isChild ? 'w-6 h-6' : 'w-5 h-5 mr-3'} ${isActive ? 'text-white' : 'text-gray-500 dark:text-gray-400'}`} />
+      {(!sidebarCollapsed || isChild) && (
+        <>
+          <span className="flex-1">{item.name}</span>
+          {item.badge && (
+            <span className={`ml-2 px-2 py-0.5 text-xs font-medium rounded-full ${
+              isActive
+                ? 'bg-white/20 text-white'
+                : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
+            }`}>
+              {item.badge}
+            </span>
+          )}
+        </>
+      )}
+    </Link>
+  );
+};
+
 export default function AdminLayout({ user, header, children }: AdminLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<string[]>(['main']);
-  const [showNotifications, setShowNotifications] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const { url } = usePage();
 
@@ -91,19 +186,30 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
       title: 'Main',
       items: [
         { name: 'Dashboard', href: route('admin.dashboard'), icon: FiHome },
-        { name: 'Analytics', href: '#', icon: FiBarChart, badge: 'New' },
+        {
+          name: 'Reports & Analytics',
+          icon: FiBarChart,
+          children: [
+            { name: 'Overview', href: route('admin.reports.dashboard'), icon: FiHome },
+            { name: 'Sales', href: route('admin.reports.sales'), icon: FiDollarSign },
+            { name: 'Orders', href: route('admin.reports.orders'), icon: FiShoppingCart },
+            { name: 'Products', href: route('admin.reports.products'), icon: FiPackage },
+            { name: 'Vendors', href: route('admin.reports.vendors'), icon: FiTruck },
+            { name: 'Customers', href: route('admin.reports.customers'), icon: FiUsers },
+          ]
+        },
       ]
     },
     ecommerce: {
       title: 'E-Commerce',
       items: [
-        { name: 'Orders', href: route('admin.orders.index'), icon: FiShoppingCart, badge: '12' },
+        { name: 'Orders', href: route('admin.orders.index'), icon: FiShoppingCart },
         { name: 'Products', href: route('admin.products.index'), icon: FiShoppingBag },
         { name: 'Product Variants', href: route('admin.product-variants.index'), icon: FiPackage },
         { name: 'Categories', href: route('admin.categories.index'), icon: FiGrid },
         { name: 'Tags', href: route('admin.tags.index'), icon: FiTag },
         { name: 'Coupons', href: route('admin.coupons.index'), icon: FiGift },
-        { name: 'Reviews', href: '#', icon: FiStar },
+        { name: 'Hero Slides', href: route('admin.hero-slides.index'), icon: FiImage },
       ]
     },
     users: {
@@ -117,70 +223,50 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
     finance: {
       title: 'Finance',
       items: [
-        { name: 'Transactions', href: '#', icon: FiDollarSign },
-        { name: 'Payments', href: '#', icon: FiCreditCard },
-        { name: 'Invoices', href: '#', icon: FiFileText },
+        { name: 'Payouts', href: route('admin.payouts.index'), icon: FiDollarSign },
+        { name: 'COD Reconciliation', href: route('admin.cod-reconciliation.index'), icon: FiCreditCard },
+      ]
+    },
+    communications: {
+      title: 'Communications',
+      items: [
+        { name: 'Email Templates', href: route('admin.email-templates.index'), icon: FiMessageSquare },
+        { name: 'Notifications', href: route('admin.notifications.index'), icon: FiBell },
       ]
     },
     system: {
       title: 'System',
       items: [
-        { name: 'Settings', href: '#', icon: FiSettings },
+        {
+          name: 'Settings',
+          icon: FiSettings,
+          children: [
+            { name: 'General', href: route('admin.settings.general'), icon: FiSettings },
+            { name: 'Payment', href: route('admin.settings.payment'), icon: FiCreditCard },
+            { name: 'Shipping', href: route('admin.settings.shipping'), icon: FiTruck },
+            { name: 'Email', href: route('admin.settings.email'), icon: FiMessageSquare },
+            { name: 'Vendor', href: route('admin.settings.vendor'), icon: FiShoppingBag },
+            { name: 'Tax', href: route('admin.settings.tax'), icon: FiFileText },
+          ]
+        },
         { name: 'Activity Logs', href: route('admin.activity-logs.index'), icon: FiActivity },
-        { name: 'Support', href: '#', icon: FiHelpCircle },
       ]
     }
   };
 
-  const isActiveRoute = (href: string) => {
-    if (href === '#') return false;
-    return url.startsWith(href) || url === href;
-  };
-
-  const renderMenuItem = (item: MenuItem, isChild = false) => {
-    const isActive = item.href ? isActiveRoute(item.href) : false;
-    const Icon = item.icon;
-    
-    return (
-      <Link
-        key={item.name}
-        href={item.href || '#'}
-        className={`
-          group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200
-          ${isChild ? 'ml-6 pl-8' : ''}
-          ${isActive 
-            ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/25' 
-            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white'
-          }
-          ${sidebarCollapsed && !isChild ? 'justify-center px-2' : ''}
-        `}
-      >
-        <Icon className={`flex-shrink-0 ${sidebarCollapsed && !isChild ? 'w-6 h-6' : 'w-5 h-5 mr-3'} ${isActive ? 'text-white' : 'text-gray-500 dark:text-gray-400'}`} />
-        {(!sidebarCollapsed || isChild) && (
-          <>
-            <span className="flex-1">{item.name}</span>
-            {item.badge && (
-              <span className={`ml-2 px-2 py-0.5 text-xs font-medium rounded-full ${
-                isActive 
-                  ? 'bg-white/20 text-white' 
-                  : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
-              }`}>
-                {item.badge}
-              </span>
-            )}
-          </>
-        )}
-      </Link>
-    );
-  };
-
   const renderMenuGroup = (groupKey: string, group: any) => {
     const isExpanded = expandedGroups.includes(groupKey);
-    
+
     if (sidebarCollapsed) {
       return (
         <div key={groupKey} className="space-y-1">
-          {group.items.map((item: MenuItem) => renderMenuItem(item))}
+          {group.items.map((item: MenuItem) => {
+            const hasChildren = item.children && item.children.length > 0;
+            if (hasChildren) {
+              return <MenuItemLink key={item.name} item={item} sidebarCollapsed={sidebarCollapsed} />;
+            }
+            return <MenuItemLink key={item.name} item={item} sidebarCollapsed={sidebarCollapsed} />;
+          })}
         </div>
       );
     }
@@ -200,7 +286,13 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
         </button>
         {isExpanded && (
           <div className="space-y-1">
-            {group.items.map((item: MenuItem) => renderMenuItem(item))}
+            {group.items.map((item: MenuItem) => {
+              const hasChildren = item.children && item.children.length > 0;
+              if (hasChildren) {
+                return <MenuItemWithChildren key={item.name} item={item} sidebarCollapsed={sidebarCollapsed} />;
+              }
+              return <MenuItemLink key={item.name} item={item} sidebarCollapsed={sidebarCollapsed} />;
+            })}
           </div>
         )}
       </div>
@@ -333,33 +425,7 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
               </button>
 
               {/* Notifications */}
-              <div className="relative">
-                <button
-                  onClick={() => setShowNotifications(!showNotifications)}
-                  className="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors relative"
-                >
-                  <FiBell className="w-5 h-5" />
-                  <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-                </button>
-                
-                {showNotifications && (
-                  <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50">
-                    <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
-                      <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Notifications</h3>
-                    </div>
-                    <div className="max-h-64 overflow-y-auto">
-                      <div className="px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700">
-                        <p className="text-sm text-gray-900 dark:text-white">New order received</p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">2 minutes ago</p>
-                      </div>
-                      <div className="px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700">
-                        <p className="text-sm text-gray-900 dark:text-white">Vendor approval pending</p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">1 hour ago</p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
+              <NotificationBell />
 
               {/* User menu */}
               <div className="relative">
@@ -416,9 +482,6 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
       </div>
 
       {/* Click outside handlers */}
-      {showNotifications && (
-        <div className="fixed inset-0 z-40" onClick={() => setShowNotifications(false)}></div>
-      )}
       {showUserMenu && (
         <div className="fixed inset-0 z-40" onClick={() => setShowUserMenu(false)}></div>
       )}

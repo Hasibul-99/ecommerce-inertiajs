@@ -6,17 +6,21 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\Review;
+use App\Services\ReviewService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
+    protected $reviewService;
+
     /**
      * Create a new controller instance.
      */
-    public function __construct()
+    public function __construct(ReviewService $reviewService)
     {
-        $this->middleware('auth')->only(['store', 'update', 'destroy']);
+        $this->reviewService = $reviewService;
+        $this->middleware('auth')->only(['store', 'update', 'destroy', 'markHelpful', 'report']);
     }
 
     /**
@@ -28,12 +32,22 @@ class ReviewController extends Controller
     public function index(Product $product, Request $request)
     {
         $query = $product->reviews()
-            ->with('user')
+            ->with(['user', 'images', 'vendorResponder'])
             ->approved();
 
         // Filter by rating
         if ($request->has('rating') && $request->rating != 'all') {
             $query->where('rating', $request->rating);
+        }
+
+        // Filter by verified purchase
+        if ($request->has('verified') && $request->verified == '1') {
+            $query->where('is_verified_purchase', true);
+        }
+
+        // Filter by has images
+        if ($request->has('with_images') && $request->with_images == '1') {
+            $query->has('images');
         }
 
         // Sort
@@ -54,16 +68,36 @@ class ReviewController extends Controller
 
         $reviews = $query->paginate(10);
 
+        // Check if current user has marked reviews as helpful
+        $user = Auth::user();
+        $helpfulVotes = [];
+        if ($user) {
+            $helpfulVotes = $user->helpfulVotes()->pluck('review_id')->toArray();
+        }
+
         // Format reviews for frontend
-        $formattedReviews = $reviews->through(function ($review) {
+        $formattedReviews = $reviews->through(function ($review) use ($helpfulVotes) {
             return [
                 'id' => $review->id,
                 'rating' => $review->rating,
                 'title' => $review->title,
                 'comment' => $review->comment,
+                'pros' => $review->pros,
+                'cons' => $review->cons,
                 'is_verified_purchase' => $review->is_verified_purchase,
                 'helpful_count' => $review->helpful_count,
+                'is_helpful' => in_array($review->id, $helpfulVotes),
                 'created_at' => $review->created_at->toISOString(),
+                'images' => $review->images->map(fn($img) => [
+                    'id' => $img->id,
+                    'url' => $img->url,
+                    'order' => $img->order,
+                ]),
+                'vendor_response' => $review->vendor_response,
+                'vendor_response_at' => $review->vendor_response_at?->toISOString(),
+                'vendor_responder' => $review->vendorResponder ? [
+                    'name' => $review->vendorResponder->name,
+                ] : null,
                 'user' => [
                     'name' => $review->user->name,
                     'avatar' => $review->user->avatar ?? null,
@@ -71,7 +105,13 @@ class ReviewController extends Controller
             ];
         });
 
-        return response()->json($formattedReviews);
+        // Get review statistics
+        $stats = $this->reviewService->getProductReviewStats($product);
+
+        return response()->json([
+            'reviews' => $formattedReviews,
+            'stats' => $stats,
+        ]);
     }
 
     /**
@@ -85,35 +125,30 @@ class ReviewController extends Controller
     {
         $user = Auth::user();
 
-        // Check if user has already reviewed this product
-        if ($product->reviews()->where('user_id', $user->id)->exists()) {
-            return redirect()->back()->with('error', 'You have already reviewed this product.');
-        }
-
         $request->validate([
             'rating' => 'required|integer|min:1|max:5',
             'title' => 'nullable|string|max:255',
-            'comment' => 'nullable|string|max:1000',
+            'comment' => 'required|string|max:2000',
+            'pros' => 'nullable|string|max:1000',
+            'cons' => 'nullable|string|max:1000',
+            'images' => 'nullable|array|max:5',
+            'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        // Check if this is a verified purchase
-        $isVerifiedPurchase = OrderItem::whereHas('order', function ($query) use ($user) {
-            $query->where('user_id', $user->id)
-                ->whereIn('status', ['delivered', 'completed']);
-        })
-        ->where('product_id', $product->id)
-        ->exists();
+        try {
+            $review = $this->reviewService->createReview($user, $product, [
+                'rating' => $request->rating,
+                'title' => $request->title,
+                'comment' => $request->comment,
+                'pros' => $request->pros,
+                'cons' => $request->cons,
+                'images' => $request->file('images', []),
+            ]);
 
-        $review = $product->reviews()->create([
-            'user_id' => $user->id,
-            'rating' => $request->rating,
-            'title' => $request->title,
-            'comment' => $request->comment,
-            'is_verified_purchase' => $isVerifiedPurchase,
-            'is_approved' => true, // Auto-approve for now
-        ]);
-
-        return redirect()->back()->with('success', 'Your review has been submitted successfully.');
+            return redirect()->back()->with('success', 'Your review has been submitted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     /**
@@ -135,14 +170,23 @@ class ReviewController extends Controller
         $request->validate([
             'rating' => 'required|integer|min:1|max:5',
             'title' => 'nullable|string|max:255',
-            'comment' => 'nullable|string|max:1000',
+            'comment' => 'required|string|max:2000',
+            'pros' => 'nullable|string|max:1000',
+            'cons' => 'nullable|string|max:1000',
         ]);
 
         $review->update([
             'rating' => $request->rating,
             'title' => $request->title,
             'comment' => $request->comment,
+            'pros' => $request->pros,
+            'cons' => $request->cons,
         ]);
+
+        activity()
+            ->performedOn($review)
+            ->causedBy($user)
+            ->log('review_updated');
 
         return redirect()->back()->with('success', 'Your review has been updated successfully.');
     }
@@ -168,18 +212,72 @@ class ReviewController extends Controller
     }
 
     /**
-     * Mark a review as helpful.
+     * Mark a review as helpful (toggle).
      *
      * @param  \App\Models\Review  $review
      * @return \Illuminate\Http\JsonResponse
      */
     public function markHelpful(Review $review)
     {
-        $review->increment('helpful_count');
+        $user = Auth::user();
+
+        $isHelpful = $this->reviewService->markAsHelpful($user, $review);
 
         return response()->json([
             'success' => true,
-            'helpful_count' => $review->helpful_count,
+            'is_helpful' => $isHelpful,
+            'helpful_count' => $review->fresh()->helpful_count,
         ]);
+    }
+
+    /**
+     * Report a review.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Review  $review
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function report(Request $request, Review $review)
+    {
+        $user = Auth::user();
+
+        $request->validate([
+            'reason' => 'required|string|in:spam,inappropriate,offensive,fake,other',
+            'details' => 'nullable|string|max:500',
+        ]);
+
+        try {
+            $this->reviewService->reportReview(
+                $user,
+                $review,
+                $request->reason,
+                $request->details
+            );
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Thank you for your report. We will review it shortly.',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    /**
+     * Check if user can review a product.
+     *
+     * @param  \App\Models\Product  $product
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function canReview(Product $product)
+    {
+        $user = Auth::user();
+
+        $result = $this->reviewService->canUserReview($user, $product);
+
+        return response()->json($result);
     }
 }

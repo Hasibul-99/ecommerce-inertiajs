@@ -1,0 +1,35 @@
+{
+  "customer": {
+    "email": "customer@example.com",
+    "password": "password123",
+    "name": "John Customer",
+    "phone": "+1234567890",
+    "role": "customer"
+  },
+  "vendor": {
+    "email": "vendor@example.com",
+    "password": "vendor123",
+    "name": "Jane Vendor",
+    "business_name": "Test Vendor Store",
+    "phone": "+1234567891",
+    "role": "vendor"
+  },
+  "admin": {
+    "email": "admin@example.com",
+    "password": "admin123",
+    "name": "Admin User",
+    "role": "admin"
+  },
+  "testCustomers": [
+    {
+      "email": "customer1@test.com",
+      "password": "test123",
+      "name": "Test Customer 1"
+    },
+    {
+      "email": "customer2@test.com",
+      "password": "test123",
+      "name": "Test Customer 2"
+    }
+  ]
+}

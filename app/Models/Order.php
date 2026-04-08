@@ -17,6 +17,7 @@ class Order extends Model
      */
     protected $fillable = [
         'user_id',
+        'vendor_id',
         'order_number',
         'status',
         'subtotal_cents',
@@ -41,6 +42,7 @@ class Order extends Model
         'cod_collected_by',
         'delivery_person_id',
         'cod_fee_cents',
+        'delivered_at',
     ];
 
     /**
@@ -52,6 +54,7 @@ class Order extends Model
         'metadata' => 'json',
         'cod_verification_required' => 'boolean',
         'cod_collected_at' => 'datetime',
+        'delivered_at' => 'datetime',
     ];
 
     /**
@@ -283,5 +286,93 @@ class Order extends Model
     public function assignDeliveryPerson(int $deliveryPersonId)
     {
         return $this->update(['delivery_person_id' => $deliveryPersonId]);
+    }
+
+    /**
+     * Get the tracking tokens for this order.
+     */
+    public function trackingTokens()
+    {
+        return $this->hasMany(\App\Models\TrackingToken::class);
+    }
+
+    /**
+     * Get the tracking subscriptions for this order.
+     */
+    public function trackingSubscriptions()
+    {
+        return $this->hasMany(\App\Models\TrackingSubscription::class);
+    }
+
+    /**
+     * Get the tracking views for this order.
+     */
+    public function trackingViews()
+    {
+        return $this->hasMany(\App\Models\TrackingView::class);
+    }
+
+    /**
+     * Get public tracking URL for this order.
+     *
+     * @return string
+     */
+    public function getPublicTrackingUrl(): string
+    {
+        $trackingService = app(\App\Services\TrackingService::class);
+        $token = $trackingService->generateTrackingToken($this);
+        return route('track-order.show', ['token' => $token]);
+    }
+
+    /**
+     * Get tracking progress percentage.
+     *
+     * @return int
+     */
+    public function getTrackingProgress(): int
+    {
+        $statusProgress = [
+            'pending' => 0,
+            'confirmed' => 10,
+            'processing' => 25,
+            'ready_to_ship' => 40,
+            'shipped' => 60,
+            'in_transit' => 75,
+            'out_for_delivery' => 90,
+            'delivered' => 100,
+            'cancelled' => 0,
+            'refunded' => 0,
+        ];
+
+        return $statusProgress[$this->status] ?? 0;
+    }
+
+    /**
+     * Get the latest tracking event.
+     *
+     * @return array|null
+     */
+    public function getLatestTrackingEvent(): ?array
+    {
+        $latestShipment = $this->shipments()
+            ->whereNotNull('tracking_events')
+            ->orderBy('last_tracking_update', 'desc')
+            ->first();
+
+        if ($latestShipment && $latestShipment->tracking_events) {
+            return end($latestShipment->tracking_events);
+        }
+
+        return null;
+    }
+
+    /**
+     * Check if order has tracking information.
+     *
+     * @return bool
+     */
+    public function hasTracking(): bool
+    {
+        return !empty($this->tracking_number) || $this->shipments()->whereNotNull('tracking_number')->exists();
     }
 }

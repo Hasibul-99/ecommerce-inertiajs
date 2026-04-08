@@ -41,8 +41,45 @@ class ProductPolicy
      */
     public function create(User $user): bool
     {
-        // Only admin and vendor can create products
-        return $user->hasRole(['admin', 'vendor']) && ($user->hasRole('admin') || $user->vendor);
+        // Admin can always create products
+        if ($user->hasRole('admin')) {
+            return true;
+        }
+
+        // Vendor must be approved to create products
+        if ($user->hasRole('vendor')) {
+            $vendor = $user->vendor;
+
+            if (!$vendor || !$vendor->isApproved()) {
+                return false;
+            }
+
+            // Check product limits (optional: implement tier-based limits)
+            // Example: Free vendors limited to 10 products, Premium unlimited
+            $productLimit = $this->getProductLimitForVendor($vendor);
+            $currentProductCount = Product::where('vendor_id', $vendor->id)->count();
+
+            return $productLimit === null || $currentProductCount < $productLimit;
+        }
+
+        return false;
+    }
+
+    /**
+     * Get product limit for vendor based on tier.
+     */
+    protected function getProductLimitForVendor($vendor): ?int
+    {
+        // Default limits by tier - customize as needed
+        $tier = $vendor->getSetting('tier', 'free');
+
+        return match($tier) {
+            'free' => 10,
+            'basic' => 50,
+            'premium' => 200,
+            'enterprise' => null, // unlimited
+            default => 10,
+        };
     }
 
     /**
@@ -55,9 +92,13 @@ class ProductPolicy
             return true;
         }
 
-        // Vendor can only update their own products
+        // Vendor can only update their own products and must be approved
         if ($user->hasRole('vendor')) {
-            return $user->vendor && $product->vendor_id === $user->vendor->id;
+            $vendor = $user->vendor;
+
+            return $vendor &&
+                   $vendor->isApproved() &&
+                   $product->vendor_id === $vendor->id;
         }
 
         return false;

@@ -29,11 +29,40 @@ class WishlistController extends Controller
     {
         $user = Auth::user();
         $wishlist = Wishlist::where('user_id', $user->id)
-            ->with('products.images')
+            ->with(['items.product.media'])
             ->first();
 
-        return Inertia::render('Wishlist', [
-            'wishlist' => $wishlist ?? new Wishlist(['products' => []]),
+        // Format wishlist items for frontend
+        $wishlistItems = [];
+        if ($wishlist) {
+            $wishlistItems = $wishlist->items->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'product' => [
+                        'id' => $item->product->id,
+                        'name' => $item->product->name ?: $item->product->title,
+                        'slug' => $item->product->slug,
+                        'price' => $item->product->price_cents,
+                        'sale_price' => $item->product->sale_price_cents,
+                        'old_price' => $item->product->sale_price_cents ? $item->product->price_cents : null,
+                        'image' => $item->product->getFirstMediaUrl('images') ?: null,
+                        'in_stock' => $item->product->stock_quantity > 0,
+                        'stock' => $item->product->stock_quantity,
+                    ],
+                ];
+            })->toArray();
+        }
+
+        // Get cart count
+        $cartCount = 0;
+        if (Auth::check()) {
+            $cartCount = \App\Models\Cart::getItemCountForUser(Auth::id());
+        }
+
+        return Inertia::render('Wishlist/Index', [
+            'wishlistItems' => $wishlistItems,
+            'cartCount' => $cartCount,
+            'wishlistCount' => count($wishlistItems),
         ]);
     }
 

@@ -1,9 +1,12 @@
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import { useState } from 'react';
 import FrontendLayout from '@/Layouts/FrontendLayout';
 import ProductCard from '@/Components/Frontend/ProductCard';
-import { FiHeart, FiShoppingCart, FiMinus, FiPlus, FiStar, FiCheck } from 'react-icons/fi';
+import RichTextDisplay from '@/Components/Core/RichTextDisplay';
+import { FiHeart, FiShoppingCart, FiMinus, FiPlus, FiStar, FiCheck, FiLoader } from 'react-icons/fi';
 import { PageProps } from '@/types';
+import { useCartWishlist } from '@/Contexts/CartWishlistContext';
+import { toast } from 'sonner';
 
 interface ProductImage {
     id: number;
@@ -64,17 +67,22 @@ interface ProductShowProps extends PageProps {
     wishlistCount?: number;
 }
 
-export default function ProductShow({
-    auth,
+// Inner component that uses the context
+function ProductContent({
     product,
     relatedProducts = [],
-    cartCount = 0,
-    wishlistCount = 0
-}: ProductShowProps) {
+}: {
+    product: Product;
+    relatedProducts: RelatedProduct[];
+}) {
     const [selectedImage, setSelectedImage] = useState(product.images[0] || null);
     const [quantity, setQuantity] = useState(1);
     const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(null);
     const [activeTab, setActiveTab] = useState('description');
+    const [isAddingToCart, setIsAddingToCart] = useState(false);
+    const [isAddingToWishlist, setIsAddingToWishlist] = useState(false);
+
+    const { addToCart, addToWishlist } = useCartWishlist();
 
     const formatPrice = (priceInCents: number) => {
         return new Intl.NumberFormat('en-US', {
@@ -98,22 +106,37 @@ export default function ProductShow({
         }
     };
 
-    const handleAddToCart = () => {
-        router.post('/cart', {
-            product_id: product.id,
-            variant_id: selectedVariant?.id,
-            quantity: quantity,
-        });
+    const handleAddToCart = async () => {
+        if (currentStock === 0) {
+            toast.error('Product is out of stock');
+            return;
+        }
+
+        setIsAddingToCart(true);
+        try {
+            await addToCart(product.id, quantity, selectedVariant?.id);
+            toast.success(`${quantity} ${quantity > 1 ? 'items' : 'item'} added to cart!`);
+        } catch (error) {
+            toast.error('Failed to add to cart. Please try again.');
+        } finally {
+            setIsAddingToCart(false);
+        }
     };
 
-    const handleAddToWishlist = () => {
-        router.post('/wishlist', {
-            product_id: product.id,
-        });
+    const handleAddToWishlist = async () => {
+        setIsAddingToWishlist(true);
+        try {
+            await addToWishlist(product.id);
+            toast.success('Product added to wishlist!');
+        } catch (error) {
+            toast.error('Failed to add to wishlist. Please try again.');
+        } finally {
+            setIsAddingToWishlist(false);
+        }
     };
 
     return (
-        <FrontendLayout auth={auth} cartCount={cartCount} wishlistCount={wishlistCount}>
+        <FrontendLayout>
             <Head title={`${product.name} - Product Details`} />
 
             {/* Breadcrumb */}
@@ -229,9 +252,12 @@ export default function ProductShow({
                         </div>
 
                         {/* Short Description */}
-                        <p className="text-grabit-gray mb-6 leading-relaxed">
-                            {product.description?.substring(0, 200)}...
-                        </p>
+                        <div className="text-grabit-gray mb-6 leading-relaxed line-clamp-3">
+                            <RichTextDisplay
+                                content={product.description || ''}
+                                className="text-sm"
+                            />
+                        </div>
 
                         {/* Variants (if any) */}
                         {product.variants && product.variants.length > 0 && (
@@ -286,22 +312,36 @@ export default function ProductShow({
                         <div className="flex gap-4 mb-6">
                             <button
                                 onClick={handleAddToCart}
-                                disabled={currentStock === 0}
+                                disabled={currentStock === 0 || isAddingToCart}
                                 className={`flex-1 py-3 px-6 rounded-md font-medium transition-colors flex items-center justify-center gap-2 ${
-                                    currentStock > 0
+                                    currentStock > 0 && !isAddingToCart
                                         ? 'bg-grabit-primary hover:bg-grabit-primary-dark text-white'
                                         : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                                 }`}
                             >
-                                <FiShoppingCart className="w-5 h-5" />
-                                {currentStock > 0 ? 'Add to Cart' : 'Out of Stock'}
+                                {isAddingToCart ? (
+                                    <>
+                                        <FiLoader className="w-5 h-5 animate-spin" />
+                                        Adding to Cart...
+                                    </>
+                                ) : (
+                                    <>
+                                        <FiShoppingCart className="w-5 h-5" />
+                                        {currentStock > 0 ? 'Add to Cart' : 'Out of Stock'}
+                                    </>
+                                )}
                             </button>
                             <button
                                 onClick={handleAddToWishlist}
-                                className="p-3 border border-grabit-border rounded-md hover:border-grabit-primary hover:text-grabit-primary transition-colors"
+                                disabled={isAddingToWishlist}
+                                className="p-3 border border-grabit-border rounded-md hover:border-grabit-primary hover:text-grabit-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                 title="Add to Wishlist"
                             >
-                                <FiHeart className="w-6 h-6" />
+                                {isAddingToWishlist ? (
+                                    <FiLoader className="w-6 h-6 animate-spin" />
+                                ) : (
+                                    <FiHeart className="w-6 h-6" />
+                                )}
                             </button>
                         </div>
 
@@ -366,7 +406,10 @@ export default function ProductShow({
                     {/* Tab Content */}
                     <div className="text-grabit-gray leading-relaxed">
                         {activeTab === 'description' && (
-                            <div>{product.description || 'No description available.'}</div>
+                            <RichTextDisplay
+                                content={product.description || '<p>No description available.</p>'}
+                                className="text-grabit-dark"
+                            />
                         )}
                         {activeTab === 'specifications' && (
                             <div className="grid grid-cols-2 gap-4">
@@ -413,4 +456,8 @@ export default function ProductShow({
             </div>
         </FrontendLayout>
     );
+}
+
+export default function Show({ product, relatedProducts }: ProductShowProps) {
+    return <ProductContent product={product} relatedProducts={relatedProducts} />;
 }

@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Vendor;
+use App\Services\VendorOnboardingService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Role;
@@ -111,9 +113,11 @@ class VendorController extends Controller
      * @param  \App\Models\Vendor  $vendor
      * @return \Inertia\Response
      */
-    public function show(Vendor $vendor)
+    public function show(Vendor $vendor, VendorOnboardingService $onboardingService)
     {
-        $vendor->load('user', 'products');
+        $vendor->load(['user', 'products', 'documents.reviewer', 'approver', 'rejecter']);
+
+        $approvalScore = $onboardingService->calculateApprovalScore($vendor);
 
         return Inertia::render('Admin/Vendors/Show', [
             'vendor' => $vendor,
@@ -122,6 +126,18 @@ class VendorController extends Controller
                 'published' => $vendor->products->where('status', 'published')->count(),
                 'draft' => $vendor->products->where('status', 'draft')->count(),
             ],
+            'approvalScore' => $approvalScore,
+            'documents' => $vendor->documents->map(function ($doc) {
+                return [
+                    'id' => $doc->id,
+                    'type' => $doc->type,
+                    'original_name' => $doc->original_name,
+                    'status' => $doc->status,
+                    'reviewed_by' => $doc->reviewer?->name,
+                    'reviewed_at' => $doc->reviewed_at?->format('Y-m-d H:i:s'),
+                    'review_notes' => $doc->review_notes,
+                ];
+            }),
         ]);
     }
 
@@ -214,5 +230,72 @@ class VendorController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Vendor status updated successfully.');
+    }
+
+    /**
+     * Approve a vendor application.
+     */
+    public function approve(Request $request, Vendor $vendor, VendorOnboardingService $onboardingService)
+    {
+        try {
+            $onboardingService->approveVendor($vendor, Auth::id());
+
+            activity()
+                ->performedOn($vendor)
+                ->causedBy(Auth::user())
+                ->log('Vendor application approved');
+
+            return redirect()->back()->with('success', 'Vendor application approved successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    /**
+     * Reject a vendor application.
+     */
+    public function reject(Request $request, Vendor $vendor, VendorOnboardingService $onboardingService)
+    {
+        $request->validate([
+            'reason' => 'required|string|min:10',
+        ]);
+
+        try {
+            $onboardingService->rejectVendor($vendor, Auth::id(), $request->reason);
+
+            activity()
+                ->performedOn($vendor)
+                ->causedBy(Auth::user())
+                ->withProperties(['reason' => $request->reason])
+                ->log('Vendor application rejected');
+
+            return redirect()->back()->with('success', 'Vendor application rejected.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    /**
+     * Show pending vendor applications.
+     */
+    public function applications(Request $request)
+    {
+        $vendors = Vendor::with(['user', 'documents'])
+            ->pending()
+            ->when($request->search, function ($query, $search) {
+                return $query->where('business_name', 'like', "%{$search}%")
+                    ->orWhereHas('user', function ($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%")
+                          ->orWhere('email', 'like', "%{$search}%");
+                    });
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(15)
+            ->withQueryString();
+
+        return Inertia::render('Admin/Vendors/Applications', [
+            'vendors' => $vendors,
+            'filters' => $request->only(['search']),
+        ]);
     }
 }

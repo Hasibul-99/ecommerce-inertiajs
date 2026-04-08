@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Models\Cart;
 use App\Models\Wishlist;
+use App\Models\HeroSlide;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -20,105 +21,124 @@ class HomeController extends Controller
      */
     public function index()
     {
-        // Get featured products (published products with stock)
-        $featuredProducts = Product::with(['vendor', 'category', 'variants', 'reviews'])
-            ->where('status', 'published')
-            ->whereHas('variants', function ($query) {
-                $query->where('stock_quantity', '>', 0);
-            })
+        // Get hero slides
+        $heroSlides = HeroSlide::active()
+            ->ordered()
+            ->get()
+            ->map(function ($slide) {
+                return [
+                    'id' => $slide->id,
+                    'title' => $slide->title,
+                    'subtitle' => $slide->subtitle,
+                    'description' => $slide->description,
+                    'buttonText' => $slide->button_text,
+                    'buttonLink' => $slide->button_link,
+                    'image' => $slide->image_url,
+                ];
+            });
+
+        // Get featured products (is_featured = true, is_active = true, with stock)
+        $featuredProducts = Product::with(['vendor', 'category', 'media'])
+            ->where('is_featured', true)
+            ->where('is_active', true)
+            ->where('stock_quantity', '>', 0)
             ->latest()
             ->take(10)
             ->get()
             ->map(function ($product) {
-                $totalStock = $product->variants->sum('stock_quantity');
-                $minPrice = $product->variants->min('price_cents');
-                $averageRating = $product->reviews()->approved()->avg('rating') ?? 0;
-                $reviewsCount = $product->reviews()->approved()->count();
+                // Calculate sale price if available
+                $salePrice = $product->sale_price_cents ?? null;
+                $originalPrice = $product->price_cents ?: $product->base_price_cents;
+                $discountPercentage = 0;
+
+                if ($salePrice && $salePrice < $originalPrice) {
+                    $discountPercentage = round((($originalPrice - $salePrice) / $originalPrice) * 100);
+                }
 
                 return [
                     'id' => $product->id,
-                    'name' => $product->title,
+                    'name' => $product->name ?: $product->title,
                     'slug' => $product->slug,
-                    'price' => $minPrice ?? $product->base_price_cents,
-                    'old_price' => null,
-                    'image' => $product->getMedia('images')->first()?->getUrl() ?? null,
-                    'rating' => round($averageRating, 1),
-                    'reviews_count' => $reviewsCount,
+                    'price' => $salePrice ?? $originalPrice,
+                    'old_price' => $salePrice ? $originalPrice : null,
+                    'image' => $product->getFirstMediaUrl('images') ?: null,
+                    'rating' => round($product->average_rating ?? 0, 1),
+                    'reviews_count' => $product->reviews_count ?? 0,
                     'is_new' => $product->created_at->isAfter(now()->subDays(30)),
-                    'is_sale' => false,
-                    'discount_percentage' => 0,
-                    'in_stock' => $totalStock > 0,
+                    'is_sale' => $salePrice && $salePrice < $originalPrice,
+                    'discount_percentage' => $discountPercentage,
+                    'in_stock' => $product->stock_quantity > 0,
                 ];
             });
 
-        // Get deal products (recently published products with good ratings)
-        $dealProducts = Product::with(['vendor', 'category', 'variants', 'reviews'])
-            ->where('status', 'published')
-            ->whereHas('variants', function ($query) {
-                $query->where('stock_quantity', '>', 0);
-            })
-            ->whereHas('reviews', function ($query) {
-                $query->where('is_approved', true)
-                    ->where('rating', '>=', 4);
-            })
-            ->latest('published_at')
+        // Get deal products (products on sale with active status and stock)
+        $dealProducts = Product::with(['vendor', 'category', 'media'])
+            ->where('is_active', true)
+            ->where('stock_quantity', '>', 0)
+            ->whereNotNull('sale_price_cents')
+            ->whereColumn('sale_price_cents', '<', 'price_cents')
+            ->latest('created_at')
             ->take(5)
             ->get()
             ->map(function ($product) {
-                $totalStock = $product->variants->sum('stock_quantity');
-                $minPrice = $product->variants->min('price_cents');
-                $averageRating = $product->reviews()->approved()->avg('rating') ?? 0;
-                $reviewsCount = $product->reviews()->approved()->count();
+                $salePrice = $product->sale_price_cents;
+                $originalPrice = $product->price_cents ?: $product->base_price_cents;
+                $discountPercentage = 0;
+
+                if ($salePrice && $salePrice < $originalPrice) {
+                    $discountPercentage = round((($originalPrice - $salePrice) / $originalPrice) * 100);
+                }
 
                 return [
                     'id' => $product->id,
-                    'name' => $product->title,
+                    'name' => $product->name ?: $product->title,
                     'slug' => $product->slug,
-                    'price' => $minPrice ?? $product->base_price_cents,
-                    'old_price' => null,
-                    'image' => $product->getMedia('images')->first()?->getUrl() ?? null,
-                    'rating' => round($averageRating, 1),
-                    'reviews_count' => $reviewsCount,
+                    'price' => $salePrice,
+                    'old_price' => $originalPrice,
+                    'image' => $product->getFirstMediaUrl('images') ?: null,
+                    'rating' => round($product->average_rating ?? 0, 1),
+                    'reviews_count' => $product->reviews_count ?? 0,
                     'is_new' => false,
-                    'is_sale' => false,
-                    'discount_percentage' => 0,
-                    'in_stock' => $totalStock > 0,
+                    'is_sale' => true,
+                    'discount_percentage' => $discountPercentage,
+                    'in_stock' => $product->stock_quantity > 0,
                 ];
             });
 
-        // Get new products (created in last 30 days)
-        $newProducts = Product::with(['vendor', 'category', 'variants', 'reviews'])
-            ->where('status', 'published')
-            ->whereHas('variants', function ($query) {
-                $query->where('stock_quantity', '>', 0);
-            })
+        // Get new products (created in last 30 days, active, with stock)
+        $newProducts = Product::with(['vendor', 'category', 'media'])
+            ->where('is_active', true)
+            ->where('stock_quantity', '>', 0)
             ->where('created_at', '>=', now()->subDays(30))
             ->latest()
             ->take(10)
             ->get()
             ->map(function ($product) {
-                $totalStock = $product->variants->sum('stock_quantity');
-                $minPrice = $product->variants->min('price_cents');
-                $averageRating = $product->reviews()->approved()->avg('rating') ?? 0;
-                $reviewsCount = $product->reviews()->approved()->count();
+                $salePrice = $product->sale_price_cents ?? null;
+                $originalPrice = $product->price_cents ?: $product->base_price_cents;
+                $discountPercentage = 0;
+
+                if ($salePrice && $salePrice < $originalPrice) {
+                    $discountPercentage = round((($originalPrice - $salePrice) / $originalPrice) * 100);
+                }
 
                 return [
                     'id' => $product->id,
-                    'name' => $product->title,
+                    'name' => $product->name ?: $product->title,
                     'slug' => $product->slug,
-                    'price' => $minPrice ?? $product->base_price_cents,
-                    'old_price' => null,
-                    'image' => $product->getMedia('images')->first()?->getUrl() ?? null,
-                    'rating' => round($averageRating, 1),
-                    'reviews_count' => $reviewsCount,
+                    'price' => $salePrice ?? $originalPrice,
+                    'old_price' => $salePrice ? $originalPrice : null,
+                    'image' => $product->getFirstMediaUrl('images') ?: null,
+                    'rating' => round($product->average_rating ?? 0, 1),
+                    'reviews_count' => $product->reviews_count ?? 0,
                     'is_new' => true,
-                    'is_sale' => false,
-                    'discount_percentage' => 0,
-                    'in_stock' => $totalStock > 0,
+                    'is_sale' => $salePrice && $salePrice < $originalPrice,
+                    'discount_percentage' => $discountPercentage,
+                    'in_stock' => $product->stock_quantity > 0,
                 ];
             });
 
-        // Get featured categories
+        // Get featured categories (parent categories only)
         $categories = Category::withCount('products')
             ->where('parent_id', null)
             ->take(12)
@@ -128,8 +148,9 @@ class HomeController extends Controller
                     'id' => $category->id,
                     'name' => $category->name,
                     'slug' => $category->slug,
-                    'image' => $category->image ?? null,
+                    'image_url' => $category->image_url,
                     'products_count' => $category->products_count,
+                    'parent_id' => $category->parent_id,
                 ];
             });
 
@@ -138,13 +159,14 @@ class HomeController extends Controller
         $wishlistCount = 0;
 
         if (Auth::check()) {
-            $cartCount = Cart::where('user_id', Auth::id())->count();
-            $wishlistCount = Wishlist::where('user_id', Auth::id())->count();
+            $cartCount = Cart::getItemCountForUser(Auth::id());
+            $wishlistCount = Wishlist::getItemCountForUser(Auth::id());
         }
 
         return Inertia::render('Welcome', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
+            'heroSlides' => $heroSlides,
             'featuredProducts' => $featuredProducts,
             'dealProducts' => $dealProducts,
             'newProducts' => $newProducts,
@@ -166,11 +188,8 @@ class HomeController extends Controller
         $wishlistCount = 0;
 
         if (Auth::check()) {
-            $cart = Cart::where('user_id', Auth::id())->first();
-            if ($cart) {
-                $cartCount = $cart->items()->count();
-            }
-            $wishlistCount = Wishlist::where('user_id', Auth::id())->count();
+            $cartCount = Cart::getItemCountForUser(Auth::id());
+            $wishlistCount = Wishlist::getItemCountForUser(Auth::id());
         }
 
         return Inertia::render('AboutUs/Index', [
@@ -191,11 +210,8 @@ class HomeController extends Controller
         $wishlistCount = 0;
 
         if (Auth::check()) {
-            $cart = Cart::where('user_id', Auth::id())->first();
-            if ($cart) {
-                $cartCount = $cart->items()->count();
-            }
-            $wishlistCount = Wishlist::where('user_id', Auth::id())->count();
+            $cartCount = Cart::getItemCountForUser(Auth::id());
+            $wishlistCount = Wishlist::getItemCountForUser(Auth::id());
         }
 
         return Inertia::render('ContactUs/Index', [

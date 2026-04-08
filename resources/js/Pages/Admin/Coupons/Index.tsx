@@ -1,4 +1,4 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import AdminLayout from '@/Layouts/AdminLayout';
 import { Head, Link, router } from '@inertiajs/react';
 import { PageProps, User } from '@/types/index';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/card';
@@ -187,15 +187,8 @@ export default function CouponsIndex({ auth, coupons }: Props) {
   };
 
   return (
-    <AuthenticatedLayout
-      user={{
-        id: 1,
-        name: 'Admin User',
-        email: 'admin@example.com',
-        email_verified_at: new Date().toISOString(),
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      }}
+    <AdminLayout
+      user={auth.user}
       header={<h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Coupon Management</h2>}
     >
       <Head title="Coupon Management" />
@@ -562,6 +555,6 @@ export default function CouponsIndex({ auth, coupons }: Props) {
           </Card>
         </div>
       </div>
-    </AuthenticatedLayout>
+    </AdminLayout>
   );
 }
