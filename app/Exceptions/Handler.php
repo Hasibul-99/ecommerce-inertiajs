@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Inertia\Inertia;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -26,5 +29,25 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    /**
+     * Render HTTP errors as Inertia pages for SPA requests.
+     */
+    public function render($request, Throwable $e)
+    {
+        $response = parent::render($request, $e);
+        $status   = $response->getStatusCode();
+
+        if ($request->header('X-Inertia') && in_array($status, [403, 404, 419, 429, 500, 503])) {
+            return Inertia::render("Errors/{$status}", [
+                'status'  => $status,
+                'message' => $e->getMessage() ?: null,
+            ])
+            ->toResponse($request)
+            ->setStatusCode($status);
+        }
+
+        return $response;
     }
 }
