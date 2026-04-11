@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, usePage } from '@inertiajs/react';
+import { Toaster, toast } from 'sonner';
 import NotificationBell from '@/Components/NotificationBell';
-import { User } from '@/types/index';
+import { User, PageProps } from '@/types/index';
 import {
   FiHome,
   FiShoppingBag,
@@ -151,7 +152,14 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
   const [darkMode, setDarkMode] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<string[]>(['main']);
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const { url } = usePage();
+  const { url, props } = usePage<PageProps>();
+  const flash = props.flash as PageProps['flash'];
+
+  // Show flash messages from server (e.g. after redirects)
+  useEffect(() => {
+    if (flash?.success) toast.success(flash.success);
+    if (flash?.error) toast.error(flash.error);
+  }, [flash?.success, flash?.error]);
 
   // Initialize dark mode from localStorage
   useEffect(() => {
@@ -485,6 +493,8 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
       {showUserMenu && (
         <div className="fixed inset-0 z-40" onClick={() => setShowUserMenu(false)}></div>
       )}
+
+      <Toaster position="top-right" richColors closeButton />
     </div>
   );
 }

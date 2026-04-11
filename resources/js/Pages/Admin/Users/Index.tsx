@@ -68,6 +68,7 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [selectedUser, setSelectedUser] = useState<ExtendedUser | null>(null);
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -98,13 +99,16 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
     router.get(route('admin.users.index'));
   };
 
-  const getStatusBadge = (status: string) => {
-    const variants = {
-      active: 'bg-green-100 text-green-800',
-      inactive: 'bg-gray-100 text-gray-800',
-      suspended: 'bg-red-100 text-red-800'
-    };
-    return variants[status as keyof typeof variants] || variants.inactive;
+  const getStatusBadge = (emailVerifiedAt: string | null | undefined) => {
+    return emailVerifiedAt
+      ? 'bg-green-100 text-green-800'
+      : 'bg-yellow-100 text-yellow-800';
+  };
+
+  const handleToggleVerification = (user: ExtendedUser) => {
+    router.patch(route('admin.users.toggle-verification', user.id), {}, {
+      preserveScroll: true,
+    });
   };
 
   const getRoleBadge = (userRoles?: Role[]) => {
@@ -123,9 +127,18 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
   };
 
   const handleCreateUser = () => {
-    router.post(route('admin.users.store'), formData, {
+    setFormErrors({});
+    router.post(route('admin.users.store'), {
+      name: formData.name,
+      email: formData.email,
+      password: formData.password,
+      password_confirmation: formData.password_confirmation,
+      roles: formData.role_id ? [formData.role_id] : [],
+      status: formData.status,
+    }, {
       onSuccess: () => {
         setShowCreateDialog(false);
+        setFormErrors({});
         setFormData({
           name: '',
           email: '',
@@ -136,42 +149,43 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
         });
       },
       onError: (errors) => {
-        console.error('Error creating user:', errors);
+        setFormErrors(errors as Record<string, string>);
       }
     });
   };
 
   const handleEditUser = (user: ExtendedUser) => {
     setSelectedUser(user);
+    setFormErrors({});
     setFormData({
       name: user.name,
       email: user.email,
       password: '',
       password_confirmation: '',
-      role_id: user.role || '',
-      status: user.status
+      role_id: user.roles && user.roles.length > 0 ? user.roles[0].name : '',
+      status: user.status,
     });
     setShowEditDialog(true);
   };
 
   const handleUpdateUser = () => {
     if (!selectedUser) return;
-    
-    const updateData = {
+    setFormErrors({});
+
+    router.put(route('admin.users.update', selectedUser.id), {
       name: formData.name,
       email: formData.email,
-      role_id: formData.role_id,
+      roles: formData.role_id ? [formData.role_id] : [],
       status: formData.status,
       ...(formData.password && {
         password: formData.password,
-        password_confirmation: formData.password_confirmation
-      })
-    };
-
-    router.put(route('admin.users.update', selectedUser.id), updateData, {
+        password_confirmation: formData.password_confirmation,
+      }),
+    }, {
       onSuccess: () => {
         setShowEditDialog(false);
         setSelectedUser(null);
+        setFormErrors({});
         setFormData({
           name: '',
           email: '',
@@ -182,7 +196,7 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
         });
       },
       onError: (errors) => {
-        console.error('Error updating user:', errors);
+        setFormErrors(errors as Record<string, string>);
       }
     });
   };
@@ -226,7 +240,7 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
               </h1>
               <p className="text-gray-600 mt-1">Manage users and assign roles</p>
             </div>
-            <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
+            <Dialog open={showCreateDialog} onOpenChange={(open) => { setShowCreateDialog(open); if (!open) setFormErrors({}); }}>
               <DialogTrigger asChild>
                 <Button className="flex items-center gap-2">
                   <FiPlus className="w-4 h-4" />
@@ -247,28 +261,30 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
                       <Label>Name</Label>
                       <input
                         type="text"
-                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        className={`flex h-10 w-full rounded-md border bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${formErrors.name ? 'border-red-500' : 'border-input'}`}
                         placeholder="Enter full name"
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       />
+                      {formErrors.name && <p className="text-xs text-red-500">{formErrors.name}</p>}
                     </div>
                     <div className="space-y-2">
                       <Label>Email</Label>
                       <input
                         type="email"
-                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        className={`flex h-10 w-full rounded-md border bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${formErrors.email ? 'border-red-500' : 'border-input'}`}
                         placeholder="Enter email address"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       />
+                      {formErrors.email && <p className="text-xs text-red-500">{formErrors.email}</p>}
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label>Role</Label>
-                      <select 
-                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                      <select
+                        className={`flex h-10 w-full rounded-md border bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${formErrors.roles ? 'border-red-500' : 'border-input'}`}
                         value={formData.role_id}
                         onChange={(e) => setFormData({ ...formData, role_id: e.target.value })}
                       >
@@ -279,10 +295,11 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
                           </option>
                         ))}
                       </select>
+                      {formErrors.roles && <p className="text-xs text-red-500">{formErrors.roles}</p>}
                     </div>
                     <div className="space-y-2">
                       <Label>Status</Label>
-                      <select 
+                      <select
                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                         value={formData.status}
                         onChange={(e) => setFormData({ ...formData, status: e.target.value as 'active' | 'inactive' | 'suspended' })}
@@ -293,15 +310,29 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
                       </select>
                     </div>
                   </div>
-                  <div className="space-y-2">
-                    <Label>Password</Label>
-                    <input
-                      type="password"
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                      placeholder="Enter password"
-                      value={formData.password}
-                      onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    />
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Password</Label>
+                      <input
+                        type="password"
+                        className={`flex h-10 w-full rounded-md border bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${formErrors.password ? 'border-red-500' : 'border-input'}`}
+                        placeholder="Enter password"
+                        value={formData.password}
+                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                      />
+                      {formErrors.password && <p className="text-xs text-red-500">{formErrors.password}</p>}
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Confirm Password</Label>
+                      <input
+                        type="password"
+                        className={`flex h-10 w-full rounded-md border bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${formErrors.password_confirmation ? 'border-red-500' : 'border-input'}`}
+                        placeholder="Confirm password"
+                        value={formData.password_confirmation}
+                        onChange={(e) => setFormData({ ...formData, password_confirmation: e.target.value })}
+                      />
+                      {formErrors.password_confirmation && <p className="text-xs text-red-500">{formErrors.password_confirmation}</p>}
+                    </div>
                   </div>
                 </form>
                 <DialogFooter>
@@ -337,7 +368,7 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
                   <div className="ml-4">
                     <p className="text-sm font-medium text-green-700">Active Users</p>
                     <p className="text-2xl font-bold text-green-900">
-                      {displayUsers.filter((user: ExtendedUser) => user.status === 'active').length}
+                      {displayUsers.filter((user: ExtendedUser) => !!user.email_verified_at).length}
                     </p>
                   </div>
                 </div>
@@ -367,9 +398,9 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
                     <FiUserX className="w-6 h-6 text-red-600" />
                   </div>
                   <div className="ml-4">
-                    <p className="text-sm font-medium text-red-700">Suspended</p>
+                    <p className="text-sm font-medium text-red-700">Unverified</p>
                     <p className="text-2xl font-bold text-red-900">
-                      {displayUsers.filter((user: ExtendedUser) => user.status === 'suspended').length}
+                      {displayUsers.filter((user: ExtendedUser) => !user.email_verified_at).length}
                     </p>
                   </div>
                 </div>
@@ -485,8 +516,8 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
                             </Badge>
                           </TableCell>
                           <TableCell>
-                            <Badge className={getStatusBadge(user.status)}>
-                              {user.status}
+                            <Badge className={getStatusBadge(user.email_verified_at)}>
+                              {user.email_verified_at ? 'Active' : 'Inactive'}
                             </Badge>
                           </TableCell>
                           <TableCell>
@@ -498,8 +529,8 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
                                 </>
                               ) : (
                                 <>
-                                  <FiUserX className="h-4 w-4 text-red-500" />
-                                  <span className="text-sm text-red-600">Unverified</span>
+                                  <FiUserX className="h-4 w-4 text-yellow-500" />
+                                  <span className="text-sm text-yellow-600">Unverified</span>
                                 </>
                               )}
                             </div>
@@ -508,20 +539,30 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
                             <span className="text-sm text-gray-500">{formatDate(user.created_at)}</span>
                           </TableCell>
                           <TableCell>
-                            <div className="flex items-center space-x-2">
+                            <div className="flex items-center space-x-1">
                               <Button
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => handleEditUser(user)}
-                                className="flex items-center gap-1"
+                                title="Edit user"
                               >
                                 <FiEdit className="w-4 h-4" />
                               </Button>
                               <Button
                                 variant="ghost"
                                 size="sm"
+                                onClick={() => handleToggleVerification(user)}
+                                title={user.email_verified_at ? 'Revoke verification' : 'Verify email'}
+                                className={user.email_verified_at ? 'text-yellow-600 hover:text-yellow-700' : 'text-green-600 hover:text-green-700'}
+                              >
+                                {user.email_verified_at ? <FiUserX className="w-4 h-4" /> : <FiUserCheck className="w-4 h-4" />}
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
                                 onClick={() => handleDeleteUser(user)}
-                                className="text-red-600 hover:text-red-700 flex items-center gap-1"
+                                title="Delete user"
+                                className="text-red-600 hover:text-red-700"
                               >
                                 <FiTrash2 className="w-4 h-4" />
                               </Button>
@@ -546,7 +587,7 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
           </Card>
 
           {/* Edit User Dialog */}
-          <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
+          <Dialog open={showEditDialog} onOpenChange={(open) => { setShowEditDialog(open); if (!open) setFormErrors({}); }}>
             <DialogContent className="max-w-2xl">
               <DialogHeader>
                 <DialogTitle className="flex items-center gap-2">
@@ -580,21 +621,23 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label>Role Assignment</Label>
-                      <select 
-                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                      <select
+                        className={`flex h-10 w-full rounded-md border bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${formErrors.roles ? 'border-red-500' : 'border-input'}`}
                         value={formData.role_id}
                         onChange={(e) => setFormData({ ...formData, role_id: e.target.value })}
                       >
+                        <option value="">Select role</option>
                         {roles.map((role) => (
                           <option key={role.id} value={role.name}>
                             {role.display_name || role.name}
                           </option>
                         ))}
                       </select>
+                      {formErrors.roles && <p className="text-xs text-red-500">{formErrors.roles}</p>}
                     </div>
                     <div className="space-y-2">
                       <Label>Status</Label>
-                      <select 
+                      <select
                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                         value={formData.status}
                         onChange={(e) => setFormData({ ...formData, status: e.target.value as 'active' | 'inactive' | 'suspended' })}
@@ -603,6 +646,29 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
                         <option value="inactive">Inactive</option>
                         <option value="suspended">Suspended</option>
                       </select>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>New Password <span className="text-gray-400 font-normal">(leave blank to keep)</span></Label>
+                      <input
+                        type="password"
+                        className={`flex h-10 w-full rounded-md border bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${formErrors.password ? 'border-red-500' : 'border-input'}`}
+                        placeholder="Enter new password"
+                        value={formData.password}
+                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                      />
+                      {formErrors.password && <p className="text-xs text-red-500">{formErrors.password}</p>}
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Confirm Password</Label>
+                      <input
+                        type="password"
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        placeholder="Confirm new password"
+                        value={formData.password_confirmation}
+                        onChange={(e) => setFormData({ ...formData, password_confirmation: e.target.value })}
+                      />
                     </div>
                   </div>
                   <div className="space-y-2">
