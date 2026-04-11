@@ -216,7 +216,7 @@ export default function CouponsIndex({ auth, coupons }: Props) {
                 <form className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label>Coupon Code</Label>
+                      <Label>Coupon Code <span className="text-red-500">*</span></Label>
                       <Input 
                         placeholder="Enter coupon code" 
                         value={formData.code}
@@ -224,7 +224,7 @@ export default function CouponsIndex({ auth, coupons }: Props) {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label>Coupon Name</Label>
+                      <Label>Coupon Name <span className="text-red-500">*</span></Label>
                       <Input 
                         placeholder="Enter coupon name" 
                         value={formData.name}
@@ -243,7 +243,7 @@ export default function CouponsIndex({ auth, coupons }: Props) {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label>Discount Type</Label>
+                      <Label>Discount Type <span className="text-red-500">*</span></Label>
                       <Select value={formData.type} onValueChange={(value) => setFormData({ ...formData, type: value as 'percentage' | 'fixed' })}>
                         <SelectTrigger>
                           <SelectValue placeholder="Select type" />
@@ -255,7 +255,7 @@ export default function CouponsIndex({ auth, coupons }: Props) {
                       </Select>
                     </div>
                     <div className="space-y-2">
-                      <Label>Discount Value</Label>
+                      <Label>Discount Value <span className="text-red-500">*</span></Label>
                       <Input 
                         type="number" 
                         step="0.01" 

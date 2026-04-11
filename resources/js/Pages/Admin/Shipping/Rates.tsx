@@ -352,7 +352,7 @@ export default function Rates({ rates, zones, methods, filters }: Props) {
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            Shipping Zone *
+                                            Shipping Zone <span className="text-red-500">*</span>
                                         </label>
                                         <select
                                             value={data.shipping_zone_id}
@@ -372,7 +372,7 @@ export default function Rates({ rates, zones, methods, filters }: Props) {
 
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            Shipping Method *
+                                            Shipping Method <span className="text-red-500">*</span>
                                         </label>
                                         <select
                                             value={data.shipping_method_id}
@@ -396,7 +396,7 @@ export default function Rates({ rates, zones, methods, filters }: Props) {
                                     <div className="grid grid-cols-2 gap-4">
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                Min Weight *
+                                                Min Weight <span className="text-red-500">*</span>
                                             </label>
                                             <input
                                                 type="number"
@@ -428,7 +428,7 @@ export default function Rates({ rates, zones, methods, filters }: Props) {
                                     <div className="grid grid-cols-2 gap-4">
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                Min Order Total *
+                                                Min Order Total <span className="text-red-500">*</span>
                                             </label>
                                             <input
                                                 type="number"
@@ -458,7 +458,7 @@ export default function Rates({ rates, zones, methods, filters }: Props) {
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            Shipping Rate (cents) *
+                                            Shipping Rate (cents) <span className="text-red-500">*</span>
                                         </label>
                                         <input
                                             type="number"
@@ -550,7 +550,7 @@ export default function Rates({ rates, zones, methods, filters }: Props) {
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            Shipping Zone *
+                                            Shipping Zone <span className="text-red-500">*</span>
                                         </label>
                                         <select
                                             value={importForm.data.shipping_zone_id}
@@ -569,7 +569,7 @@ export default function Rates({ rates, zones, methods, filters }: Props) {
 
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            Shipping Method *
+                                            Shipping Method <span className="text-red-500">*</span>
                                         </label>
                                         <select
                                             value={importForm.data.shipping_method_id}
@@ -589,7 +589,7 @@ export default function Rates({ rates, zones, methods, filters }: Props) {
 
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        CSV File *
+                                        CSV File <span className="text-red-500">*</span>
                                     </label>
                                     <input
                                         type="file"

@@ -57,7 +57,7 @@ export default function Create({ products, auth }: Props) {
                             <form onSubmit={handleSubmit} className="space-y-6">
                                 {/* Product Selection */}
                                 <div className="space-y-2">
-                                    <Label htmlFor="product_id">Product *</Label>
+                                    <Label htmlFor="product_id">Product <span className="text-red-500">*</span></Label>
                                     <Select
                                         value={data.product_id}
                                         onValueChange={(value) => setData('product_id', value)}
@@ -95,7 +95,7 @@ export default function Create({ products, auth }: Props) {
 
                                 {/* Price */}
                                 <div className="space-y-2">
-                                    <Label htmlFor="price_cents">Price (in cents) *</Label>
+                                    <Label htmlFor="price_cents">Price (in cents) <span className="text-red-500">*</span></Label>
                                     <Input
                                         id="price_cents"
                                         type="number"
@@ -114,7 +114,7 @@ export default function Create({ products, auth }: Props) {
 
                                 {/* Stock Quantity */}
                                 <div className="space-y-2">
-                                    <Label htmlFor="stock_quantity">Stock Quantity *</Label>
+                                    <Label htmlFor="stock_quantity">Stock Quantity <span className="text-red-500">*</span></Label>
                                     <Input
                                         id="stock_quantity"
                                         type="number"

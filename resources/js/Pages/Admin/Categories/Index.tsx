@@ -278,7 +278,7 @@ export default function CategoriesIndex({ auth, categories, filters }: Props) {
                     </DialogHeader>
                     <div className="space-y-4">
                       <div className="space-y-2">
-                        <Label htmlFor="name">Category Name</Label>
+                        <Label htmlFor="name">Category Name <span className="text-red-500">*</span></Label>
                         <input
                           type="text"
                           value={formData.name}
@@ -476,7 +476,7 @@ export default function CategoriesIndex({ auth, categories, filters }: Props) {
               </DialogHeader>
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="edit_name">Category Name</Label>
+                  <Label htmlFor="edit_name">Category Name <span className="text-red-500">*</span></Label>
                   <input
                     type="text"
                     value={formData.name}

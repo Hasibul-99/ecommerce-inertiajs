@@ -83,7 +83,7 @@ const Edit: React.FC<Props> = ({ auth, vendor }) => {
                   
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                      Owner Name
+                      Owner Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -100,7 +100,7 @@ const Edit: React.FC<Props> = ({ auth, vendor }) => {
 
                   <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                      Email Address
+                      Email Address <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="email"
@@ -138,7 +138,7 @@ const Edit: React.FC<Props> = ({ auth, vendor }) => {
                   
                   <div>
                     <label htmlFor="vendor_name" className="block text-sm font-medium text-gray-700">
-                      Vendor Name
+                      Vendor Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -155,7 +155,7 @@ const Edit: React.FC<Props> = ({ auth, vendor }) => {
 
                   <div>
                     <label htmlFor="status" className="block text-sm font-medium text-gray-700">
-                      Status
+                      Status <span className="text-red-500">*</span>
                     </label>
                     <select
                       id="status"

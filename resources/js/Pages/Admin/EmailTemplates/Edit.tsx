@@ -140,7 +140,7 @@ export default function Edit({ auth, template, sampleData }: Props) {
                                     </div>
 
                                     <div>
-                                        <InputLabel htmlFor="subject" value="Email Subject" />
+                                        <InputLabel htmlFor="subject">Email Subject <span className="text-red-500">*</span></InputLabel>
                                         <TextInput
                                             id="subject"
                                             className="mt-1 block w-full"
@@ -155,7 +155,7 @@ export default function Edit({ auth, template, sampleData }: Props) {
                                     </div>
 
                                     <div>
-                                        <InputLabel htmlFor="body_html" value="HTML Body" />
+                                        <InputLabel htmlFor="body_html">HTML Body <span className="text-red-500">*</span></InputLabel>
                                         <textarea
                                             id="body_html"
                                             name="body_html"

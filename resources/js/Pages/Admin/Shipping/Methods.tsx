@@ -318,7 +318,7 @@ export default function Methods({ methods, filters }: Props) {
                             <form onSubmit={handleSubmit} className="space-y-4">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Method Name *
+                                        Method Name <span className="text-red-500">*</span>
                                     </label>
                                     <input
                                         type="text"
@@ -360,7 +360,7 @@ export default function Methods({ methods, filters }: Props) {
 
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            Type *
+                                            Type <span className="text-red-500">*</span>
                                         </label>
                                         <select
                                             value={data.type}
@@ -379,7 +379,7 @@ export default function Methods({ methods, filters }: Props) {
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            Min Delivery Days *
+                                            Min Delivery Days <span className="text-red-500">*</span>
                                         </label>
                                         <input
                                             type="number"
@@ -393,7 +393,7 @@ export default function Methods({ methods, filters }: Props) {
 
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            Max Delivery Days *
+                                            Max Delivery Days <span className="text-red-500">*</span>
                                         </label>
                                         <input
                                             type="number"
@@ -408,7 +408,7 @@ export default function Methods({ methods, filters }: Props) {
 
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Status *
+                                        Status <span className="text-red-500">*</span>
                                     </label>
                                     <select
                                         value={data.status}

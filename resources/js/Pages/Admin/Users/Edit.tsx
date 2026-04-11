@@ -84,7 +84,7 @@ export default function EditUser({ auth, user, roles }: Props) {
                   <div className="space-y-2">
                     <Label htmlFor="name" className="flex items-center">
                       <FiUser className="w-4 h-4 mr-2" />
-                      Full Name
+                      Full Name <span className="text-red-500 ml-1">*</span>
                     </Label>
                     <Input
                       id="name"
@@ -103,7 +103,7 @@ export default function EditUser({ auth, user, roles }: Props) {
                   <div className="space-y-2">
                     <Label htmlFor="email" className="flex items-center">
                       <FiMail className="w-4 h-4 mr-2" />
-                      Email Address
+                      Email Address <span className="text-red-500 ml-1">*</span>
                     </Label>
                     <Input
                       id="email"

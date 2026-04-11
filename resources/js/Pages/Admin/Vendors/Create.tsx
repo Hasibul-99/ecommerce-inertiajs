@@ -66,7 +66,7 @@ const Create: React.FC<Props> = ({ auth }) => {
 
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                      Owner Name
+                      Owner Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -83,7 +83,7 @@ const Create: React.FC<Props> = ({ auth }) => {
 
                   <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                      Email Address
+                      Email Address <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="email"
@@ -100,7 +100,7 @@ const Create: React.FC<Props> = ({ auth }) => {
 
                   <div>
                     <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                      Password
+                      Password <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="password"
@@ -117,7 +117,7 @@ const Create: React.FC<Props> = ({ auth }) => {
 
                   <div>
                     <label htmlFor="password_confirmation" className="block text-sm font-medium text-gray-700">
-                      Confirm Password
+                      Confirm Password <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="password"
@@ -155,7 +155,7 @@ const Create: React.FC<Props> = ({ auth }) => {
 
                   <div>
                     <label htmlFor="vendor_name" className="block text-sm font-medium text-gray-700">
-                      Vendor Name
+                      Vendor Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -172,7 +172,7 @@ const Create: React.FC<Props> = ({ auth }) => {
 
                   <div>
                     <label htmlFor="status" className="block text-sm font-medium text-gray-700">
-                      Status
+                      Status <span className="text-red-500">*</span>
                     </label>
                     <select
                       id="status"

@@ -80,7 +80,7 @@ export default function CreateUser({ auth, roles }: Props) {
                   <div className="space-y-2">
                     <Label htmlFor="name" className="flex items-center">
                       <FiUser className="w-4 h-4 mr-2" />
-                      Full Name
+                      Full Name <span className="text-red-500 ml-1">*</span>
                     </Label>
                     <Input
                       id="name"
@@ -99,7 +99,7 @@ export default function CreateUser({ auth, roles }: Props) {
                   <div className="space-y-2">
                     <Label htmlFor="email" className="flex items-center">
                       <FiMail className="w-4 h-4 mr-2" />
-                      Email Address
+                      Email Address <span className="text-red-500 ml-1">*</span>
                     </Label>
                     <Input
                       id="email"
@@ -118,7 +118,7 @@ export default function CreateUser({ auth, roles }: Props) {
                   <div className="space-y-2">
                     <Label htmlFor="password" className="flex items-center">
                       <FiLock className="w-4 h-4 mr-2" />
-                      Password
+                      Password <span className="text-red-500 ml-1">*</span>
                     </Label>
                     <Input
                       id="password"
@@ -137,7 +137,7 @@ export default function CreateUser({ auth, roles }: Props) {
                   <div className="space-y-2">
                     <Label htmlFor="password_confirmation" className="flex items-center">
                       <FiLock className="w-4 h-4 mr-2" />
-                      Confirm Password
+                      Confirm Password <span className="text-red-500 ml-1">*</span>
                     </Label>
                     <Input
                       id="password_confirmation"

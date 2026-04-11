@@ -93,7 +93,7 @@ export default function TagsEdit({ auth, tag }: Props) {
                   {/* Tag Slug */}
                   <div className="space-y-2">
                     <Label htmlFor="slug">
-                      Slug <span className="text-red-500">*</span>
+                      Slug
                     </Label>
                     <Input
                       id="slug"
