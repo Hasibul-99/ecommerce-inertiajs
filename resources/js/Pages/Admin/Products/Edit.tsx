@@ -241,7 +241,7 @@ export default function Edit({ product, categories, vendors, tags, auth }: Props
                                         </CardHeader>
                                         <CardContent className="space-y-4">
                                             <div>
-                                                <Label htmlFor="title">Product Title</Label>
+                                                <Label htmlFor="title">Product Title <span className="text-red-500">*</span></Label>
                                                 <Input
                                                     id="title"
                                                     type="text"
@@ -292,7 +292,7 @@ export default function Edit({ product, categories, vendors, tags, auth }: Props
                                             </div>
 
                                             <div>
-                                                <Label htmlFor="description">Description</Label>
+                                                <Label htmlFor="description">Description <span className="text-red-500">*</span></Label>
                                                 <RichTextEditor
                                                     content={data.description}
                                                     onChange={(content) => setData('description', content)}
@@ -302,7 +302,7 @@ export default function Edit({ product, categories, vendors, tags, auth }: Props
                                             </div>
 
                                             <div>
-                                                <Label htmlFor="vendor_id">Vendor</Label>
+                                                <Label htmlFor="vendor_id">Vendor <span className="text-red-500">*</span></Label>
                                                 <select
                                                     id="vendor_id"
                                                     value={data.vendor_id}
@@ -320,7 +320,7 @@ export default function Edit({ product, categories, vendors, tags, auth }: Props
                                             </div>
 
                                             <div>
-                                                <Label htmlFor="category_id">Category</Label>
+                                                <Label htmlFor="category_id">Category <span className="text-red-500">*</span></Label>
                                                 <select
                                                     id="category_id"
                                                     value={data.category_id}
@@ -345,7 +345,7 @@ export default function Edit({ product, categories, vendors, tags, auth }: Props
                                         </CardHeader>
                                         <CardContent className="space-y-4">
                                             <div>
-                                                <Label htmlFor="base_price_cents">Base Price (cents)</Label>
+                                                <Label htmlFor="base_price_cents">Base Price (cents) <span className="text-red-500">*</span></Label>
                                                 <Input
                                                     id="base_price_cents"
                                                     type="number"
@@ -413,7 +413,7 @@ export default function Edit({ product, categories, vendors, tags, auth }: Props
                                             </div>
 
                                             <div>
-                                                <Label htmlFor="stock_quantity">Stock Quantity</Label>
+                                                <Label htmlFor="stock_quantity">Stock Quantity <span className="text-red-500">*</span></Label>
                                                 <Input
                                                     id="stock_quantity"
                                                     type="number"
@@ -428,7 +428,7 @@ export default function Edit({ product, categories, vendors, tags, auth }: Props
                                             </div>
 
                                             <div>
-                                                <Label htmlFor="currency">Currency</Label>
+                                                <Label htmlFor="currency">Currency <span className="text-red-500">*</span></Label>
                                                 <select
                                                     id="currency"
                                                     value={data.currency}
@@ -442,7 +442,7 @@ export default function Edit({ product, categories, vendors, tags, auth }: Props
                                             </div>
 
                                             <div>
-                                                <Label htmlFor="status">Status</Label>
+                                                <Label htmlFor="status">Status <span className="text-red-500">*</span></Label>
                                                 <select
                                                     id="status"
                                                     value={data.status}
@@ -696,14 +696,14 @@ export default function Edit({ product, categories, vendors, tags, auth }: Props
                                                         </div>
                                                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                                             <div>
-                                                                <Label>Title</Label>
+                                                                <Label>Title <span className="text-red-500">*</span></Label>
                                                                 <Input
                                                                     value={variant.title}
                                                                     onChange={(e) => updateVariant(index, 'title', e.target.value)}
                                                                 />
                                                             </div>
                                                             <div>
-                                                                <Label>Price (cents)</Label>
+                                                                <Label>Price (cents) <span className="text-red-500">*</span></Label>
                                                                 <Input
                                                                     type="number"
                                                                     value={variant.price_cents}
@@ -711,7 +711,7 @@ export default function Edit({ product, categories, vendors, tags, auth }: Props
                                                                 />
                                                             </div>
                                                             <div>
-                                                                <Label>Inventory Quantity</Label>
+                                                                <Label>Inventory Quantity <span className="text-red-500">*</span></Label>
                                                                 <Input
                                                                     type="number"
                                                                     value={variant.inventory_quantity}

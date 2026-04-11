@@ -196,6 +196,7 @@ class UserController extends Controller
      */
     public function toggleVerification(User $user)
     {
+        // dd($user);
         $user->update([
             'email_verified_at' => $user->email_verified_at ? null : now(),
         ]);
