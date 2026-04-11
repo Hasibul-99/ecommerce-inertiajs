@@ -9,6 +9,7 @@ use App\Services\VendorOnboardingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Role;
 
@@ -34,7 +35,7 @@ class VendorController extends Controller
     {
         $vendors = Vendor::with('user')
             ->when($request->search, function ($query, $search) {
-                return $query->where('name', 'like', "%{$search}%")
+                return $query->where('business_name', 'like', "%{$search}%")
                     ->orWhereHas('user', function ($q) use ($search) {
                         $q->where('name', 'like', "%{$search}%")
                           ->orWhere('email', 'like', "%{$search}%");
@@ -93,14 +94,22 @@ class VendorController extends Controller
         $vendorRole = Role::findByName('vendor');
         $user->assignRole($vendorRole);
 
+        // Generate a unique slug from the vendor business name
+        $slug = Str::slug($request->vendor_name);
+        $originalSlug = $slug;
+        $counter = 1;
+        while (Vendor::where('slug', $slug)->exists()) {
+            $slug = $originalSlug . '-' . $counter++;
+        }
+
         // Create vendor profile
         $vendor = Vendor::create([
-            'user_id' => $user->id,
-            'name' => $request->vendor_name,
-            'description' => $request->description,
-            'phone' => $request->phone,
-            'address' => $request->address,
-            'status' => $request->status,
+            'user_id'       => $user->id,
+            'business_name' => $request->vendor_name,
+            'slug'          => $slug,
+            'description'   => $request->description,
+            'phone'         => $request->phone,
+            'status'        => $request->status,
         ]);
 
         return redirect()->route('admin.vendors.index')
@@ -183,11 +192,10 @@ class VendorController extends Controller
 
         // Update vendor profile
         $vendor->update([
-            'name' => $request->vendor_name,
-            'description' => $request->description,
-            'phone' => $request->phone,
-            'address' => $request->address,
-            'status' => $request->status,
+            'business_name' => $request->vendor_name,
+            'description'   => $request->description,
+            'phone'         => $request->phone,
+            'status'        => $request->status,
         ]);
 
         return redirect()->route('admin.vendors.index')

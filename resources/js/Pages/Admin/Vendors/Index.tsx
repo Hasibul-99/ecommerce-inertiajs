@@ -63,7 +63,7 @@ export default function VendorsIndex({ auth, vendors, filters }: Props) {
   };
 
   const handleStatusUpdate = (vendorId: number, status: string) => {
-    router.patch(route('admin.vendors.update-status', vendorId), {
+    router.patch(route('admin.vendors.status', vendorId), {
       status: status,
     }, {
       preserveState: true,
