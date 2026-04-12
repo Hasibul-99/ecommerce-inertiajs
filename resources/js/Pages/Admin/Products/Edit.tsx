@@ -175,7 +175,7 @@ export default function Edit({ product, categories, vendors, tags, auth }: Props
 
         setDeletingImageIds(prev => [...prev, imageId]);
 
-        router.delete(route('products.images.destroy', { product: product.id, mediaId: imageId }), {
+        router.delete(route('admin.products.images.destroy', { product: product.id, mediaId: imageId }), {
             preserveScroll: true,
             onSuccess: () => {
                 setExistingImages(prev => prev.filter(img => img.id !== imageId));
@@ -196,7 +196,7 @@ export default function Edit({ product, categories, vendors, tags, auth }: Props
             formData.append(`images[${index}]`, file);
         });
 
-        router.post(route('products.images.store', product.id), formData, {
+        router.post(route('admin.products.images.store', product.id), formData, {
             preserveScroll: true,
             onSuccess: () => {
                 // Clear selected images

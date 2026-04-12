@@ -164,10 +164,13 @@ class ProductController extends Controller
             'tag_ids' => 'nullable|array',
             'tag_ids.*' => 'exists:product_tags,id',
             'variants' => 'nullable|array',
+            'variants.*.title' => 'nullable|string|max:255',
             'variants.*.sku' => 'nullable|string|max:255',
             'variants.*.attributes' => 'nullable', // Can be string (JSON) or array
             'variants.*.price_cents' => 'required|integer|min:0',
-            'variants.*.stock_quantity' => 'required|integer|min:0',
+            'variants.*.compare_at_price_cents' => 'nullable|integer|min:0',
+            'variants.*.cost_cents' => 'nullable|integer|min:0',
+            'variants.*.inventory_quantity' => 'required|integer|min:0',
             'variants.*.is_default' => 'nullable',
         ]);
 
@@ -200,18 +203,14 @@ class ProductController extends Controller
         // Create variants if provided
         if ($request->variants) {
             foreach ($request->variants as $variantData) {
-                // Parse attributes if it's a JSON string
-                $attributes = $variantData['attributes'] ?? null;
-                if (is_string($attributes)) {
-                    $attributes = json_decode($attributes, true);
-                }
+                $attributes = $this->buildVariantAttributes($variantData);
 
                 ProductVariant::create([
                     'product_id' => $product->id,
                     'sku' => $variantData['sku'] ?? null,
                     'attributes' => $attributes,
                     'price_cents' => $variantData['price_cents'],
-                    'stock_quantity' => $variantData['stock_quantity'],
+                    'stock_quantity' => $variantData['inventory_quantity'],
                     'is_default' => $variantData['is_default'] ?? false,
                 ]);
             }
@@ -246,7 +245,13 @@ class ProductController extends Controller
     {
         $product->load(['variants', 'tags', 'media']);
         $categories = Category::all();
-        $vendors = Vendor::with('user')->get();
+        $vendors = Vendor::with('user')->get()->map(function ($vendor) {
+            return [
+                'id' => $vendor->id,
+                'name' => $vendor->business_name,
+                'user' => ['name' => $vendor->user->name],
+            ];
+        });
         $tags = ProductTag::all();
 
         // Get product images
@@ -259,8 +264,27 @@ class ProductController extends Controller
             ];
         });
 
+        // Transform variants to match frontend expectations
+        $variants = $product->variants->map(function ($variant) {
+            $attributes = $variant->attributes ?? [];
+            return [
+                'id' => $variant->id,
+                'title' => $attributes['title'] ?? '',
+                'sku' => $variant->sku,
+                'price_cents' => $variant->price_cents,
+                'inventory_quantity' => $variant->stock_quantity,
+                'compare_at_price_cents' => $attributes['compare_at_price_cents'] ?? null,
+                'cost_cents' => $attributes['cost_cents'] ?? null,
+            ];
+        });
+
+        $productData = array_merge($product->toArray(), [
+            'images' => $images,
+            'variants' => $variants,
+        ]);
+
         return Inertia::render('Admin/Products/Edit', [
-            'product' => array_merge($product->toArray(), ['images' => $images]),
+            'product' => $productData,
             'categories' => $categories,
             'vendors' => $vendors,
             'tags' => $tags,
@@ -298,10 +322,13 @@ class ProductController extends Controller
             'tag_ids.*' => 'exists:product_tags,id',
             'variants' => 'nullable|array',
             'variants.*.id' => 'nullable|exists:product_variants,id',
+            'variants.*.title' => 'nullable|string|max:255',
             'variants.*.sku' => 'nullable|string|max:255',
             'variants.*.attributes' => 'nullable', // Can be string (JSON) or array
             'variants.*.price_cents' => 'required|integer|min:0',
-            'variants.*.stock_quantity' => 'required|integer|min:0',
+            'variants.*.compare_at_price_cents' => 'nullable|integer|min:0',
+            'variants.*.cost_cents' => 'nullable|integer|min:0',
+            'variants.*.inventory_quantity' => 'required|integer|min:0',
             'variants.*.is_default' => 'nullable',
         ]);
 
@@ -334,11 +361,7 @@ class ProductController extends Controller
             $variantIds = [];
 
             foreach ($request->variants as $variantData) {
-                // Parse attributes if it's a JSON string
-                $attributes = $variantData['attributes'] ?? null;
-                if (is_string($attributes)) {
-                    $attributes = json_decode($attributes, true);
-                }
+                $attributes = $this->buildVariantAttributes($variantData);
 
                 if (isset($variantData['id'])) {
                     // Update existing variant
@@ -348,7 +371,7 @@ class ProductController extends Controller
                             'sku' => $variantData['sku'] ?? null,
                             'attributes' => $attributes,
                             'price_cents' => $variantData['price_cents'],
-                            'stock_quantity' => $variantData['stock_quantity'],
+                            'stock_quantity' => $variantData['inventory_quantity'],
                             'is_default' => $variantData['is_default'] ?? false,
                         ]);
                         $variantIds[] = $variant->id;
@@ -360,7 +383,7 @@ class ProductController extends Controller
                         'sku' => $variantData['sku'] ?? null,
                         'attributes' => $attributes,
                         'price_cents' => $variantData['price_cents'],
-                        'stock_quantity' => $variantData['stock_quantity'],
+                        'stock_quantity' => $variantData['inventory_quantity'],
                         'is_default' => $variantData['is_default'] ?? false,
                     ]);
                     $variantIds[] = $variant->id;
@@ -387,6 +410,29 @@ class ProductController extends Controller
 
         return redirect()->route('admin.products.index')
             ->with('success', 'Product deleted successfully.');
+    }
+
+    /**
+     * Build the attributes JSON for a variant, merging title and extra price fields.
+     */
+    private function buildVariantAttributes(array $variantData): array
+    {
+        $attributes = $variantData['attributes'] ?? [];
+        if (is_string($attributes)) {
+            $attributes = json_decode($attributes, true) ?? [];
+        }
+
+        if (!empty($variantData['title'])) {
+            $attributes['title'] = $variantData['title'];
+        }
+        if (!empty($variantData['compare_at_price_cents'])) {
+            $attributes['compare_at_price_cents'] = $variantData['compare_at_price_cents'];
+        }
+        if (!empty($variantData['cost_cents'])) {
+            $attributes['cost_cents'] = $variantData['cost_cents'];
+        }
+
+        return $attributes;
     }
 
     /**
