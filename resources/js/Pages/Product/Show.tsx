@@ -67,7 +67,7 @@ interface ProductShowProps extends PageProps {
     wishlistCount?: number;
 }
 
-// Inner component that uses the context
+// Inner component that uses the context — must render inside FrontendLayout (CartWishlistProvider)
 function ProductContent({
     product,
     relatedProducts = [],
@@ -136,7 +136,7 @@ function ProductContent({
     };
 
     return (
-        <FrontendLayout>
+        <>
             <Head title={`${product.name} - Product Details`} />
 
             {/* Breadcrumb */}
@@ -454,10 +454,14 @@ function ProductContent({
                     </div>
                 )}
             </div>
-        </FrontendLayout>
+        </>
     );
 }
 
-export default function Show({ product, relatedProducts }: ProductShowProps) {
-    return <ProductContent product={product} relatedProducts={relatedProducts} />;
+export default function Show({ product, relatedProducts, auth }: ProductShowProps) {
+    return (
+        <FrontendLayout auth={auth}>
+            <ProductContent product={product} relatedProducts={relatedProducts} />
+        </FrontendLayout>
+    );
 }

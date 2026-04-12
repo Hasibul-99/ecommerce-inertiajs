@@ -254,9 +254,13 @@ class ProductController extends Controller
         // Format product data for frontend
         $formattedProduct = [
             'id' => $product->id,
-            'title' => $product->title,
+            'name' => $product->name ?: $product->title,
             'slug' => $product->slug,
+            'sku' => $product->sku,
             'description' => $product->description,
+            'price' => $product->price_cents ?? $product->base_price_cents,
+            'compare_price' => $product->compare_at_price_cents ?: null,
+            'stock' => $product->stock_quantity,
             'base_price_cents' => $product->base_price_cents,
             'status' => $product->status,
             'images' => $product->getMedia('images')->map(function ($media) {
@@ -283,8 +287,8 @@ class ProductController extends Controller
                 return [
                     'id' => $variant->id,
                     'sku' => $variant->sku,
-                    'price_cents' => $variant->price_cents,
-                    'stock_quantity' => $variant->stock_quantity,
+                    'price' => $variant->price_cents,
+                    'stock' => $variant->stock_quantity,
                     'is_default' => $variant->is_default,
                     'attributes' => $attributes,
                 ];
@@ -296,7 +300,7 @@ class ProductController extends Controller
             ] : null,
             'vendor' => $product->vendor ? [
                 'id' => $product->vendor->id,
-                'business_name' => $product->vendor->business_name,
+                'name' => $product->vendor->business_name,
             ] : null,
             'tags' => $product->tags->map(function ($tag) {
                 return [
