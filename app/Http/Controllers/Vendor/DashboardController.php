@@ -133,7 +133,7 @@ class DashboardController extends Controller
         }
 
         $products = Product::where('vendor_id', $vendor->id)
-            ->with(['images', 'category'])
+            ->with(['media', 'category'])
             ->when($request->search, function ($query, $search) {
                 return $query->where('name', 'like', "%{$search}%");
             })
@@ -154,7 +154,7 @@ class DashboardController extends Controller
                 'stock' => $product->stock,
                 'status' => $product->status,
                 'category' => $product->category ? $product->category->name : null,
-                'image' => $product->images->first()?->url ?? null,
+                'image' => $product->getFirstMediaUrl('images') ?: null,
                 'created_at' => $product->created_at->toISOString(),
             ];
         });

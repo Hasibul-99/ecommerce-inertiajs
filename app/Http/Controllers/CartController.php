@@ -21,7 +21,7 @@ class CartController extends Controller
     public function index()
     {
         $cart = $this->getCart();
-        $cart->load(['items.product.images', 'items.productVariant']);
+        $cart->load(['items.product.media', 'items.productVariant']);
 
         // Format cart data for frontend
         $formattedCart = [
@@ -37,7 +37,7 @@ class CartController extends Controller
                         'id' => $item->product->id,
                         'name' => $item->product->name,
                         'slug' => $item->product->slug,
-                        'image' => $item->product->images->first()?->url ?? null,
+                        'image' => $item->product->getFirstMediaUrl('images') ?: null,
                         'stock' => $item->productVariant ? $item->productVariant->stock : $item->product->stock,
                     ],
                     'variant' => $item->productVariant ? [

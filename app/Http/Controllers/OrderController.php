@@ -30,7 +30,7 @@ class OrderController extends Controller
         $user = Auth::user();
 
         $query = Order::where('user_id', $user->id)
-            ->with('items.product');
+            ->with('items.product.media');
 
         // Filter by status
         if ($request->has('status') && $request->status !== 'all') {
@@ -56,7 +56,7 @@ class OrderController extends Controller
                 'total_cents' => $order->total_cents,
                 'created_at' => $order->created_at->toISOString(),
                 'items_count' => $order->items->count(),
-                'first_item_image' => $order->items->first()?->product?->images->first()?->url ?? null,
+                'first_item_image' => $order->items->first()?->product?->getFirstMediaUrl('images') ?: null,
             ];
         });
 
@@ -93,7 +93,7 @@ class OrderController extends Controller
     {
         $this->authorize('view', $order);
 
-        $order->load('items.product.images', 'items.productVariant', 'shippingAddress', 'billingAddress');
+        $order->load('items.product.media', 'items.productVariant', 'shippingAddress', 'billingAddress');
 
         // Format order for frontend
         $formattedOrder = [
@@ -122,7 +122,7 @@ class OrderController extends Controller
                     'product' => [
                         'id' => $item->product->id,
                         'slug' => $item->product->slug,
-                        'image' => $item->product->images->first()?->url ?? null,
+                        'image' => $item->product->getFirstMediaUrl('images') ?: null,
                     ],
                     'variant' => $item->productVariant ? [
                         'id' => $item->productVariant->id,

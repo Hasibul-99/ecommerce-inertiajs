@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CheckoutRequest;
 use App\Models\Cart;
 use App\Models\Commission;
-use App\Models\InventoryReservation;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Address;
@@ -46,13 +45,6 @@ class CheckoutController extends Controller
             return redirect()->route('cart')->with('error', 'Your cart is empty.');
         }
 
-        // Create inventory reservations for each item in the cart
-        $reservationResults = $this->createInventoryReservations($cart);
-        
-        if (!$reservationResults['success']) {
-            return redirect()->route('cart')->with('error', $reservationResults['message']);
-        }
-        
         // Get user addresses if authenticated
         $addresses = Auth::check() ? Auth::user()->addresses : [];
 
@@ -63,7 +55,7 @@ class CheckoutController extends Controller
                     'id' => $item->id,
                     'product' => [
                         'name' => $item->product->name,
-                        'image' => $item->product->images->first()?->url ?? null,
+                        'image' => $item->product->getFirstMediaUrl('images') ?: null,
                     ],
                     'quantity' => $item->quantity,
                     'price_cents' => $item->price_cents ?? $item->product->price,
@@ -92,8 +84,8 @@ class CheckoutController extends Controller
         ];
 
         // Check COD availability for default address if available
-        if (!empty($addresses)) {
-            $defaultAddress = $addresses[0];
+        $defaultAddress = collect($addresses)->first();
+        if ($defaultAddress) {
             $codValidation = $codService->validateCodAvailability(
                 $defaultAddress,
                 $formattedCart['total_cents'],
@@ -107,7 +99,6 @@ class CheckoutController extends Controller
             'cart' => $formattedCart,
             'addresses' => $addresses,
             'paymentMethods' => $this->getAvailablePaymentMethods(),
-            'reservation_id' => $reservationResults['reservation_id'],
             'cartCount' => $cart->items->count(),
             'wishlistCount' => $wishlistCount,
             'codInfo' => $codInfo,
@@ -151,20 +142,11 @@ class CheckoutController extends Controller
     {
         $user = Auth::user();
         $cart = Cart::where('user_id', $user->id)
-            ->with('items.product', 'items.productVariant')
+            ->with('items.product.media', 'items.productVariant')
             ->first();
 
         if (!$cart || $cart->items->isEmpty()) {
             return redirect()->route('cart')->with('error', 'Your cart is empty.');
-        }
-
-        // Verify inventory reservations are still valid
-        $reservations = InventoryReservation::where('reservation_id', $request->reservation_id)
-            ->where('expires_at', '>', now())
-            ->get();
-            
-        if ($reservations->isEmpty()) {
-            return redirect()->route('checkout')->with('error', 'Your checkout session has expired. Please try again.');
         }
 
         // Validate COD if selected
@@ -293,9 +275,6 @@ class CheckoutController extends Controller
                 $variant->decrement('stock_quantity', $cartItem->quantity);
             }
             
-            // Remove inventory reservations
-            InventoryReservation::where('reservation_id', $request->reservation_id)->delete();
-
             // Clear the cart
             $cart->items()->delete();
             $cart->delete();
