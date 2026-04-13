@@ -9,6 +9,7 @@ use App\Models\ReviewReport;
 use App\Models\User;
 use App\Models\OrderItem;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -71,15 +72,13 @@ class ReviewService
             $this->updateProductRatingCache($product);
 
             // Log activity
-            activity()
-                ->performedOn($review)
-                ->causedBy($user)
-                ->withProperties([
-                    'product_id' => $product->id,
-                    'rating' => $review->rating,
-                    'is_verified' => $review->is_verified_purchase,
-                ])
-                ->log('review_created');
+            Log::info('review_created', [
+                'review_id' => $review->id,
+                'product_id' => $product->id,
+                'user_id' => $user->id,
+                'rating' => $review->rating,
+                'is_verified' => $review->is_verified_purchase,
+            ]);
 
             return $review->load('images', 'user');
         });
@@ -110,10 +109,9 @@ class ReviewService
         // Check if user has purchased this product
         $orderItem = OrderItem::whereHas('order', function ($query) use ($user) {
             $query->where('user_id', $user->id)
-                ->where('status', 'completed');
+                ->whereIn('status', ['delivered', 'completed']);
         })
         ->where('product_id', $product->id)
-        ->whereDoesntHave('review')
         ->first();
 
         if ($orderItem) {
@@ -207,17 +205,18 @@ class ReviewService
             if ($review->reported_count >= $reportThreshold && $review->is_approved) {
                 $review->update(['is_approved' => false]);
 
-                activity()
-                    ->performedOn($review)
-                    ->withProperties(['reason' => 'auto_hidden_reports', 'count' => $review->reported_count])
-                    ->log('review_auto_hidden');
+                Log::info('review_auto_hidden', [
+                    'review_id' => $review->id,
+                    'reason' => 'auto_hidden_reports',
+                    'count' => $review->reported_count,
+                ]);
             }
 
-            activity()
-                ->performedOn($review)
-                ->causedBy($user)
-                ->withProperties(['reason' => $reason])
-                ->log('review_reported');
+            Log::info('review_reported', [
+                'review_id' => $review->id,
+                'user_id' => $user->id,
+                'reason' => $reason,
+            ]);
         });
     }
 
@@ -425,10 +424,10 @@ class ReviewService
             'vendor_response_by' => $vendor->id,
         ]);
 
-        activity()
-            ->performedOn($review)
-            ->causedBy($vendor)
-            ->log('vendor_responded_to_review');
+        Log::info('vendor_responded_to_review', [
+            'review_id' => $review->id,
+            'vendor_id' => $vendor->id,
+        ]);
 
         return $review->load('vendorResponder');
     }

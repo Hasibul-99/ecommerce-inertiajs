@@ -3,10 +3,13 @@ import { useState } from 'react';
 import FrontendLayout from '@/Layouts/FrontendLayout';
 import ProductCard from '@/Components/Frontend/ProductCard';
 import RichTextDisplay from '@/Components/Core/RichTextDisplay';
-import { FiHeart, FiShoppingCart, FiMinus, FiPlus, FiStar, FiCheck, FiLoader } from 'react-icons/fi';
+import StarRating from '@/Components/Reviews/StarRating';
+import ReviewList from '@/Components/Reviews/ReviewList';
+import { FiHeart, FiShoppingCart, FiMinus, FiPlus, FiLoader } from 'react-icons/fi';
 import { PageProps } from '@/types';
 import { useCartWishlist } from '@/Contexts/CartWishlistContext';
 import { toast } from 'sonner';
+import type { Review } from '@/Components/Reviews/ReviewCard';
 
 interface ProductImage {
     id: number;
@@ -60,9 +63,25 @@ interface RelatedProduct {
     in_stock?: boolean;
 }
 
+interface ReviewsSummary {
+    average_rating: number;
+    total_reviews: number;
+    ratings_breakdown: Record<number, number>;
+}
+
+interface CanReviewData {
+    can_review: boolean;
+    message: string | null;
+    is_verified_purchase: boolean;
+}
+
 interface ProductShowProps extends PageProps {
     product: Product;
     relatedProducts: RelatedProduct[];
+    reviews: Review[];
+    reviewsSummary: ReviewsSummary;
+    canReview: CanReviewData;
+    userHasReviewed: boolean;
     cartCount?: number;
     wishlistCount?: number;
 }
@@ -71,9 +90,17 @@ interface ProductShowProps extends PageProps {
 function ProductContent({
     product,
     relatedProducts = [],
+    reviews,
+    reviewsSummary,
+    canReview,
+    currentUserId,
 }: {
     product: Product;
     relatedProducts: RelatedProduct[];
+    reviews: Review[];
+    reviewsSummary: ReviewsSummary;
+    canReview: CanReviewData;
+    currentUserId?: number;
 }) {
     const [selectedImage, setSelectedImage] = useState(product.images[0] || null);
     const [quantity, setQuantity] = useState(1);
@@ -221,17 +248,12 @@ function ProductContent({
 
                         {/* Rating */}
                         <div className="flex items-center gap-2 mb-6">
-                            <div className="flex">
-                                {[...Array(5)].map((_, i) => (
-                                    <FiStar
-                                        key={i}
-                                        className={`w-5 h-5 ${
-                                            i < 4 ? 'fill-grabit-star text-grabit-star' : 'text-gray-300'
-                                        }`}
-                                    />
-                                ))}
-                            </div>
-                            <span className="text-sm text-grabit-gray">(0 reviews)</span>
+                            <StarRating rating={reviewsSummary.average_rating} size="md" />
+                            <span className="text-sm text-grabit-gray">
+                                {reviewsSummary.average_rating > 0
+                                    ? `${reviewsSummary.average_rating.toFixed(1)} (${reviewsSummary.total_reviews} ${reviewsSummary.total_reviews === 1 ? 'review' : 'reviews'})`
+                                    : '(No reviews yet)'}
+                            </span>
                         </div>
 
                         {/* Price */}
@@ -399,7 +421,7 @@ function ProductContent({
                                     : 'border-transparent text-grabit-gray hover:text-grabit-primary'
                             }`}
                         >
-                            Reviews (0)
+                            Reviews ({reviewsSummary.total_reviews})
                         </button>
                     </div>
 
@@ -432,10 +454,15 @@ function ProductContent({
                             </div>
                         )}
                         {activeTab === 'reviews' && (
-                            <div className="text-center py-8">
-                                <p className="text-grabit-gray mb-4">No reviews yet.</p>
-                                <p className="text-sm text-grabit-gray">Be the first to review this product!</p>
-                            </div>
+                            <ReviewList
+                                key={reviewsSummary.total_reviews}
+                                productId={product.id}
+                                productSlug={product.slug}
+                                initialReviews={reviews}
+                                reviewsSummary={reviewsSummary}
+                                canReview={canReview}
+                                currentUserId={currentUserId}
+                            />
                         )}
                     </div>
                 </div>
@@ -458,10 +485,24 @@ function ProductContent({
     );
 }
 
-export default function Show({ product, relatedProducts, auth }: ProductShowProps) {
+export default function Show({
+    product,
+    relatedProducts,
+    reviews,
+    reviewsSummary,
+    canReview,
+    auth,
+}: ProductShowProps) {
     return (
         <FrontendLayout auth={auth}>
-            <ProductContent product={product} relatedProducts={relatedProducts} />
+            <ProductContent
+                product={product}
+                relatedProducts={relatedProducts}
+                reviews={reviews}
+                reviewsSummary={reviewsSummary}
+                canReview={canReview}
+                currentUserId={auth?.user?.id}
+            />
         </FrontendLayout>
     );
 }

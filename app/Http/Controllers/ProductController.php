@@ -194,25 +194,45 @@ class ProductController extends Controller
                 ];
             });
 
-        // Get reviews data
+        // Get reviews data with full fields
+        $helpfulVoteIds = [];
+        if (auth()->check()) {
+            $helpfulVoteIds = auth()->user()->helpfulVotes()->pluck('reviews.id')->toArray();
+        }
+
         $reviews = $product->reviews()
-            ->with('user')
+            ->with(['user', 'images', 'vendorResponder'])
             ->approved()
+            ->orderBy('helpful_count', 'desc')
             ->latest()
             ->take(10)
             ->get()
-            ->map(function ($review) {
+            ->map(function ($review) use ($helpfulVoteIds) {
                 return [
                     'id' => $review->id,
                     'rating' => $review->rating,
                     'title' => $review->title,
                     'comment' => $review->comment,
+                    'pros' => $review->pros,
+                    'cons' => $review->cons,
                     'is_verified_purchase' => $review->is_verified_purchase,
                     'helpful_count' => $review->helpful_count,
+                    'is_helpful' => in_array($review->id, $helpfulVoteIds),
                     'created_at' => $review->created_at->toISOString(),
+                    'images' => $review->images->map(fn($img) => [
+                        'id' => $img->id,
+                        'url' => $img->url,
+                    ])->toArray(),
+                    'vendor_response' => $review->vendor_response,
+                    'vendor_response_at' => $review->vendor_response_at?->toISOString(),
+                    'vendor_responder' => $review->vendorResponder
+                        ? ['name' => $review->vendorResponder->name]
+                        : null,
                     'user' => [
                         'name' => $review->user->name,
+                        'avatar' => $review->user->avatar ?? null,
                     ],
+                    'user_id' => $review->user_id,
                 ];
             });
 
@@ -227,20 +247,36 @@ class ProductController extends Controller
         $totalReviews = $product->reviews()->approved()->count();
 
         // Check if user can review
-        $canReview = false;
+        $canReviewData = [
+            'can_review' => false,
+            'message' => 'Sign in to leave a review.',
+            'is_verified_purchase' => false,
+        ];
         $userHasReviewed = false;
         if (auth()->check()) {
             $userHasReviewed = $product->reviews()->where('user_id', auth()->id())->exists();
+            if ($userHasReviewed) {
+                $canReviewData = [
+                    'can_review' => false,
+                    'message' => 'You have already reviewed this product.',
+                    'is_verified_purchase' => false,
+                ];
+            } else {
+                $hasPurchased = \App\Models\OrderItem::whereHas('order', function ($query) {
+                    $query->where('user_id', auth()->id())
+                        ->whereIn('status', ['delivered', 'completed']);
+                })
+                ->where('product_id', $product->id)
+                ->exists();
 
-            // User can review if they purchased the product
-            $hasPurchased = \App\Models\OrderItem::whereHas('order', function ($query) {
-                $query->where('user_id', auth()->id())
-                    ->whereIn('status', ['delivered', 'completed']);
-            })
-            ->where('product_id', $product->id)
-            ->exists();
-
-            $canReview = $hasPurchased && !$userHasReviewed;
+                $canReviewData = [
+                    'can_review' => true,
+                    'message' => $hasPurchased
+                        ? 'You can review this product as a verified purchase.'
+                        : 'You can review this product.',
+                    'is_verified_purchase' => $hasPurchased,
+                ];
+            }
         }
 
         // Get cart and wishlist counts
@@ -319,7 +355,7 @@ class ProductController extends Controller
                 'total_reviews' => $totalReviews,
                 'ratings_breakdown' => $ratingsBreakdown,
             ],
-            'canReview' => $canReview,
+            'canReview' => $canReviewData,
             'userHasReviewed' => $userHasReviewed,
             'cartCount' => $cartCount,
             'wishlistCount' => $wishlistCount,

@@ -62,6 +62,9 @@ class ReviewController extends Controller
             case 'rating_low':
                 $query->orderBy('rating', 'asc');
                 break;
+            case 'oldest':
+                $query->oldest();
+                break;
             default: // recent
                 $query->latest();
         }
@@ -91,17 +94,17 @@ class ReviewController extends Controller
                 'images' => $review->images->map(fn($img) => [
                     'id' => $img->id,
                     'url' => $img->url,
-                    'order' => $img->order,
-                ]),
+                ])->toArray(),
                 'vendor_response' => $review->vendor_response,
                 'vendor_response_at' => $review->vendor_response_at?->toISOString(),
-                'vendor_responder' => $review->vendorResponder ? [
-                    'name' => $review->vendorResponder->name,
-                ] : null,
+                'vendor_responder' => $review->vendorResponder
+                    ? ['name' => $review->vendorResponder->name]
+                    : null,
                 'user' => [
                     'name' => $review->user->name,
                     'avatar' => $review->user->avatar ?? null,
                 ],
+                'user_id' => $review->user_id,
             ];
         });
 
@@ -183,10 +186,10 @@ class ReviewController extends Controller
             'cons' => $request->cons,
         ]);
 
-        activity()
-            ->performedOn($review)
-            ->causedBy($user)
-            ->log('review_updated');
+        \Illuminate\Support\Facades\Log::info('review_updated', [
+            'review_id' => $review->id,
+            'user_id' => $user->id,
+        ]);
 
         return redirect()->back()->with('success', 'Your review has been updated successfully.');
     }

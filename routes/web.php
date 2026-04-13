@@ -175,7 +175,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::patch('/{review}', 'update')->name('update');
         Route::delete('/{review}', 'destroy')->name('destroy');
         Route::post('/{review}/helpful', 'markHelpful')->name('helpful');
+        Route::post('/{review}/report', 'report')->name('report');
     });
+
+    // Check if authenticated user can review a product
+    Route::get('/products/{product}/can-review', [ReviewController::class, 'canReview'])->name('reviews.can-review');
 
     // Checkout Process
     Route::controller(CheckoutController::class)->prefix('checkout')->name('checkout')->group(function () {

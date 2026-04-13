@@ -222,4 +222,16 @@ class Product extends Model implements HasMedia
     {
         return $this->reviews()->approved()->count();
     }
+
+    /**
+     * Resolve route binding by either ID or slug.
+     * This allows review and other routes to use the product slug in the URL.
+     */
+    public function resolveRouteBinding($value, $field = null): ?self
+    {
+        return $this->where('id', $value)
+            ->orWhere('slug', $value)
+            ->withTrashed(false)
+            ->first() ?? abort(404);
+    }
 }

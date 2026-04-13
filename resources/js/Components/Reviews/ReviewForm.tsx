@@ -1,36 +1,55 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from '@inertiajs/react';
 import { FiStar, FiX, FiImage, FiAlertCircle } from 'react-icons/fi';
+import { toast } from 'sonner';
+import type { Review } from './ReviewCard';
 
 interface ReviewFormProps {
     productId: number;
     productSlug: string;
     canReview?: {
         can_review: boolean;
-        message: string;
+        message: string | null;
         is_verified_purchase: boolean;
     };
+    editingReview?: Review;
     onSuccess?: () => void;
 }
 
-export default function ReviewForm({ productId, productSlug, canReview, onSuccess }: ReviewFormProps) {
+export default function ReviewForm({ productId, productSlug, canReview, editingReview, onSuccess }: ReviewFormProps) {
     const [hoveredRating, setHoveredRating] = useState(0);
     const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+    const isEditing = !!editingReview;
 
-    const { data, setData, post, processing, errors, reset } = useForm({
-        rating: 0,
-        title: '',
-        comment: '',
-        pros: '',
-        cons: '',
+    const { data, setData, post, patch, processing, errors, reset } = useForm({
+        rating: editingReview?.rating ?? 0,
+        title: editingReview?.title ?? '',
+        comment: editingReview?.comment ?? '',
+        pros: editingReview?.pros ?? '',
+        cons: editingReview?.cons ?? '',
         images: [] as File[],
     });
+
+    // Re-populate when editingReview changes
+    useEffect(() => {
+        if (editingReview) {
+            setData({
+                rating: editingReview.rating,
+                title: editingReview.title ?? '',
+                comment: editingReview.comment,
+                pros: editingReview.pros ?? '',
+                cons: editingReview.cons ?? '',
+                images: [],
+            });
+            setImagePreviews([]);
+        }
+    }, [editingReview?.id]);
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || []);
 
         if (files.length + data.images.length > 5) {
-            alert('You can only upload up to 5 images');
+            toast.error('You can only upload up to 5 images.');
             return;
         }
 
@@ -53,34 +72,44 @@ export default function ReviewForm({ productId, productSlug, canReview, onSucces
         e.preventDefault();
 
         if (data.rating === 0) {
-            alert('Please select a rating');
+            toast.error('Please select a rating');
             return;
         }
 
-        const formData = new FormData();
-        formData.append('rating', data.rating.toString());
-        formData.append('title', data.title);
-        formData.append('comment', data.comment);
-        formData.append('pros', data.pros);
-        formData.append('cons', data.cons);
+        if (isEditing && editingReview) {
+            // PATCH for edit (no images on edit — keep it simple)
+            patch(route('reviews.update', { product: productSlug, review: editingReview.id }), {
+                preserveScroll: true,
+                onSuccess: () => {
+                    toast.success('Review updated successfully.');
+                    if (onSuccess) onSuccess();
+                },
+                onError: () => toast.error('Failed to update review.'),
+            });
+            return;
+        }
 
-        data.images.forEach((image, index) => {
-            formData.append(`images[${index}]`, image);
-        });
-
+        // POST for new review — useForm sends its own tracked state,
+        // forceFormData handles File objects in data.images automatically
         post(route('reviews.store', productSlug), {
-            data: formData,
             forceFormData: true,
-            onSuccess: () => {
+            onSuccess: (page) => {
+                const flash = (page.props as any)?.flash;
+                if (flash?.error) {
+                    toast.error(flash.error);
+                    return;
+                }
+                toast.success('Review submitted successfully.');
                 reset();
                 setImagePreviews([]);
                 if (onSuccess) onSuccess();
             },
+            onError: () => toast.error('Failed to submit review.'),
         });
     };
 
-    // Check if user can review
-    if (canReview && !canReview.can_review) {
+    // Check if user can review (only enforce for new reviews, not editing)
+    if (!isEditing && canReview && !canReview.can_review) {
         return (
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 flex items-start gap-3">
                 <FiAlertCircle className="text-yellow-600 flex-shrink-0 mt-0.5" />
@@ -195,8 +224,8 @@ export default function ReviewForm({ productId, productSlug, canReview, onSucces
                 {errors.cons && <p className="mt-1 text-sm text-red-600">{errors.cons}</p>}
             </div>
 
-            {/* Images */}
-            <div>
+            {/* Images — only for new reviews */}
+            {!isEditing && <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                     Add Photos (Optional, up to 5)
                 </label>
@@ -234,7 +263,7 @@ export default function ReviewForm({ productId, productSlug, canReview, onSucces
                     )}
                 </div>
                 {errors.images && <p className="mt-1 text-sm text-red-600">{errors.images}</p>}
-            </div>
+            </div>}
 
             {/* Verified Purchase Badge */}
             {canReview?.is_verified_purchase && (
@@ -261,7 +290,7 @@ export default function ReviewForm({ productId, productSlug, canReview, onSucces
                     disabled={processing || data.rating === 0}
                     className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                    {processing ? 'Submitting...' : 'Submit Review'}
+                    {processing ? (isEditing ? 'Saving...' : 'Submitting...') : (isEditing ? 'Save Changes' : 'Submit Review')}
                 </button>
             </div>
         </form>
