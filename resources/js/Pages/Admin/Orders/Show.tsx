@@ -457,9 +457,9 @@ export default function Show({ auth, order, workflowState, activityLogs = [], de
                 <FiMapPin className="text-gray-400" /> Shipping Address
               </h4>
               <div className="space-y-1 text-sm">
-                <p className="font-medium">{order.shippingAddress.name}</p>
-                <p>{order.shippingAddress.address_line1}</p>
-                {order.shippingAddress.address_line2 && <p>{order.shippingAddress.address_line2}</p>}
+                <p className="font-medium">{order.shippingAddress.first_name} {order.shippingAddress.last_name}</p>
+                <p>{order.shippingAddress.address_line_1}</p>
+                {order.shippingAddress.address_line_2 && <p>{order.shippingAddress.address_line_2}</p>}
                 <p>
                   {order.shippingAddress.city}, {order.shippingAddress.state} {order.shippingAddress.postal_code}
                 </p>
@@ -473,9 +473,9 @@ export default function Show({ auth, order, workflowState, activityLogs = [], de
                 <FiMapPin className="text-gray-400" /> Billing Address
               </h4>
               <div className="space-y-1 text-sm">
-                <p className="font-medium">{order.billingAddress.name}</p>
-                <p>{order.billingAddress.address_line1}</p>
-                {order.billingAddress.address_line2 && <p>{order.billingAddress.address_line2}</p>}
+                <p className="font-medium">{order.billingAddress.first_name} {order.billingAddress.last_name}</p>
+                <p>{order.billingAddress.address_line_1}</p>
+                {order.billingAddress.address_line_2 && <p>{order.billingAddress.address_line_2}</p>}
                 <p>
                   {order.billingAddress.city}, {order.billingAddress.state} {order.billingAddress.postal_code}
                 </p>

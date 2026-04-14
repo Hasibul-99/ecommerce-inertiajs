@@ -21,64 +21,27 @@ class CheckoutRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
+    public function rules(): array
     {
         $rules = [
-            'payment_method' => 'required|string|in:credit_card,paypal,bank_transfer,cod',
-            'save_address' => 'boolean',
+            'payment_method'       => 'required|string|in:cod',
+            'save_address'         => 'boolean',
             'same_billing_address' => 'boolean',
-            'reservation_id' => 'required|string',
         ];
 
-        // If using an existing address
         if ($this->shipping_address_id) {
             $rules['shipping_address_id'] = 'required|exists:addresses,id';
         } else {
-            // If creating a new address
             $rules = array_merge($rules, [
-                'shipping_name' => 'required|string|max:255',
+                'shipping_name'          => 'required|string|max:255',
                 'shipping_address_line1' => 'required|string|max:255',
                 'shipping_address_line2' => 'nullable|string|max:255',
-                'shipping_city' => 'required|string|max:255',
-                'shipping_state' => 'required|string|max:255',
-                'shipping_postal_code' => 'required|string|max:20',
-                'shipping_country' => 'required|string|max:2',
-                'shipping_phone' => $this->payment_method === 'cod' ? 'required|string|max:20' : 'nullable|string|max:20',
+                'shipping_city'          => 'required|string|max:255',
+                'shipping_state'         => 'required|string|max:255',
+                'shipping_postal_code'   => 'required|string|max:20',
+                'shipping_country'       => 'required|string|max:2',
+                'shipping_phone'         => 'required|string|max:20',
             ]);
-        }
-
-        // If not using same billing address
-        if ($this->has('same_billing_address') && !$this->same_billing_address) {
-            if ($this->billing_address_id) {
-                $rules['billing_address_id'] = 'required|exists:addresses,id';
-            } else {
-                $rules = array_merge($rules, [
-                    'billing_name' => 'required|string|max:255',
-                    'billing_address_line1' => 'required|string|max:255',
-                    'billing_address_line2' => 'nullable|string|max:255',
-                    'billing_city' => 'required|string|max:255',
-                    'billing_state' => 'required|string|max:255',
-                    'billing_postal_code' => 'required|string|max:20',
-                    'billing_country' => 'required|string|max:2',
-                    'billing_phone' => 'required|string|max:20',
-                ]);
-            }
-        }
-
-        // Payment method specific validation
-        if ($this->payment_method === 'credit_card') {
-            $rules = array_merge($rules, [
-                'card_number' => 'required|string|min:13|max:19',
-                'card_name' => 'required|string|max:255',
-                'card_expiry_month' => 'required|string|size:2',
-                'card_expiry_year' => 'required|string|size:2',
-                'card_cvv' => 'required|string|size:3',
-            ]);
-        } elseif ($this->payment_method === 'paypal') {
-            $rules['paypal_email'] = 'required|email';
-        } elseif ($this->payment_method === 'bank_transfer') {
-            $rules['bank_account_name'] = 'required|string|max:255';
-            $rules['bank_account_number'] = 'required|string|max:50';
         }
 
         return $rules;
@@ -111,25 +74,4 @@ class CheckoutRequest extends FormRequest
         ];
     }
 
-    /**
-     * Configure the validator instance.
-     *
-     * @param  \Illuminate\Validation\Validator  $validator
-     * @return void
-     */
-    public function withValidator($validator)
-    {
-        $validator->after(function ($validator) {
-            // Additional COD validation
-            if ($this->payment_method === 'cod') {
-                // Ensure phone number is provided for COD orders
-                if ($this->shipping_address_id) {
-                    $address = \App\Models\Address::find($this->shipping_address_id);
-                    if ($address && empty($address->phone)) {
-                        $validator->errors()->add('shipping_phone', 'Phone number is required for Cash on Delivery orders.');
-                    }
-                }
-            }
-        });
-    }
 }

@@ -12,7 +12,7 @@ return [
     */
 
     // Minimum order amount for COD (in cents)
-    'min_order_amount_cents' => env('COD_MIN_ORDER_AMOUNT_CENTS', 50000), // $500
+    'min_order_amount_cents' => env('COD_MIN_ORDER_AMOUNT_CENTS', 500), // $5
 
     // Maximum order amount for COD (in cents)
     'max_order_amount_cents' => env('COD_MAX_ORDER_AMOUNT_CENTS', 50000000), // $500,000

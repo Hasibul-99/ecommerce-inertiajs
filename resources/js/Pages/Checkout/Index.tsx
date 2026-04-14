@@ -1,405 +1,547 @@
-import React, { useState, useEffect } from 'react';
-import { Head, router, useForm } from '@inertiajs/react';
-import { FiTruck, FiMapPin, FiCreditCard, FiCheck, FiAlertCircle } from 'react-icons/fi';
-import axios from 'axios';
+import React, { useState } from 'react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
+import FrontendLayout from '@/Layouts/FrontendLayout';
+import InputError from '@/Components/Core/InputError';
+import { FiCheck, FiMapPin, FiTruck, FiAlertCircle } from 'react-icons/fi';
+import { PageProps } from '@/types';
+import { Address } from '@/types/models';
 
-interface Address {
-    id: number;
-    address_line1: string;
-    address_line2?: string;
-    city: string;
-    state: string;
-    postal_code: string;
-    country: string;
-}
-
-interface CartItem {
+interface CheckoutCartItem {
     id: number;
     product: {
-        id: number;
         name: string;
-        image?: string;
-        vendor: {
-            id: number;
-            business_name: string;
-        };
+        image?: string | null;
     };
     quantity: number;
     price_cents: number;
 }
 
-interface VendorShipping {
-    vendor_id: number;
-    vendor_name: string;
-    items_count: number;
+interface CheckoutCart {
+    items: CheckoutCartItem[];
     subtotal_cents: number;
-    available_methods: ShippingMethodOption[];
+    tax_cents: number;
+    total_cents: number;
 }
 
-interface ShippingMethodOption {
-    method_id: number;
-    method_name: string;
-    method_type: string;
-    carrier: string;
-    rate_cents: number;
-    is_free: boolean;
-    estimated_delivery: {
-        formatted: string;
+interface CodInfo {
+    available: boolean;
+    fee_cents: number;
+    delivery_estimate: {
         min_days: number;
         max_days: number;
+        text: string;
     };
+    instructions: string;
+    errors?: string[];
 }
 
-interface Props {
-    cart: {
-        items: CartItem[];
-        subtotal_cents: number;
-    };
+interface CheckoutPageProps extends PageProps {
+    cart: CheckoutCart;
     addresses: Address[];
+    codInfo: CodInfo;
+    cartCount: number;
+    wishlistCount: number;
 }
 
-export default function Checkout({ cart, addresses }: Props) {
-    const [currentStep, setCurrentStep] = useState(1);
-    const [selectedAddress, setSelectedAddress] = useState<Address | null>(addresses[0] || null);
-    const [shippingData, setShippingData] = useState<{
-        vendors: VendorShipping[];
-        zone: any;
-    } | null>(null);
-    const [selectedShipping, setSelectedShipping] = useState<Record<number, number>>({});
-    const [loadingShipping, setLoadingShipping] = useState(false);
-    const [shippingTotal, setShippingTotal] = useState(0);
+interface FormData {
+    payment_method: 'cod';
+    shipping_address_id: number | null;
+    shipping_name: string;
+    shipping_address_line1: string;
+    shipping_address_line2: string;
+    shipping_city: string;
+    shipping_state: string;
+    shipping_postal_code: string;
+    shipping_country: string;
+    shipping_phone: string;
+    save_address: boolean;
+    same_billing_address: boolean;
+}
 
-    const { data, setData, post, processing } = useForm({
-        address_id: addresses[0]?.id || null,
-        shipping_selections: {} as Record<number, number>,
-        payment_method: 'card',
+const formatCents = (cents: number) =>
+    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(cents / 100);
+
+const inputClass =
+    'bg-transparent border-[1px] border-solid border-[#eee] text-[#4b5966] text-[14px] mb-[26px] px-[15px] w-full outline-0 rounded-[5px] h-[50px] focus:border-[#5caf90] transition-colors duration-200';
+
+const labelClass =
+    'mb-[7px] text-[#4b5966] text-[15px] font-medium tracking-[0] leading-[1] inline-block';
+
+export default function CheckoutIndex({
+    auth,
+    cart,
+    addresses,
+    codInfo,
+    cartCount,
+    wishlistCount,
+}: CheckoutPageProps) {
+    const { props } = usePage<CheckoutPageProps>();
+    const flash = (props as any).flash as { error?: string; success?: string } | undefined;
+
+    const [showNewAddressForm, setShowNewAddressForm] = useState(addresses.length === 0);
+
+    const { data, setData, post, processing, errors } = useForm<FormData>({
+        payment_method: 'cod',
+        shipping_address_id: addresses[0]?.id ?? null,
+        shipping_name: '',
+        shipping_address_line1: '',
+        shipping_address_line2: '',
+        shipping_city: '',
+        shipping_state: '',
+        shipping_postal_code: '',
+        shipping_country: 'US',
+        shipping_phone: '',
+        save_address: false,
+        same_billing_address: true,
     });
 
-    // Load shipping methods when address is selected
-    useEffect(() => {
-        if (selectedAddress) {
-            loadShippingMethods(selectedAddress.id);
-        }
-    }, [selectedAddress]);
-
-    // Calculate shipping total when selections change
-    useEffect(() => {
-        calculateShippingTotal();
-    }, [selectedShipping]);
-
-    const loadShippingMethods = async (addressId: number) => {
-        setLoadingShipping(true);
-        try {
-            const response = await axios.get('/api/shipping/methods-for-cart', {
-                params: { address_id: addressId },
-            });
-
-            if (response.data.success) {
-                setShippingData(response.data.data);
-
-                // Auto-select cheapest method for each vendor
-                const autoSelections: Record<number, number> = {};
-                response.data.data.vendors.forEach((vendor: VendorShipping) => {
-                    if (vendor.available_methods.length > 0) {
-                        const cheapest = vendor.available_methods.reduce((prev, curr) => {
-                            if (curr.is_free) return curr;
-                            if (prev.is_free) return prev;
-                            return curr.rate_cents < prev.rate_cents ? curr : prev;
-                        });
-                        autoSelections[vendor.vendor_id] = cheapest.method_id;
-                    }
-                });
-                setSelectedShipping(autoSelections);
-                setData('shipping_selections', autoSelections);
-            }
-        } catch (error) {
-            console.error('Error loading shipping methods:', error);
-        } finally {
-            setLoadingShipping(false);
-        }
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        post(route('checkout.process'));
     };
 
-    const calculateShippingTotal = () => {
-        if (!shippingData) return;
-
-        let total = 0;
-        shippingData.vendors.forEach((vendor) => {
-            const methodId = selectedShipping[vendor.vendor_id];
-            if (methodId) {
-                const method = vendor.available_methods.find(m => m.method_id === methodId);
-                if (method && !method.is_free) {
-                    total += method.rate_cents;
-                }
-            }
-        });
-        setShippingTotal(total);
+    const selectSavedAddress = (address: Address) => {
+        setData('shipping_address_id', address.id);
+        setShowNewAddressForm(false);
     };
 
-    const handleShippingSelection = (vendorId: number, methodId: number) => {
-        const newSelections = { ...selectedShipping, [vendorId]: methodId };
-        setSelectedShipping(newSelections);
-        setData('shipping_selections', newSelections);
+    const openNewAddressForm = () => {
+        setData('shipping_address_id', null);
+        setShowNewAddressForm(true);
     };
 
-    const handlePlaceOrder = () => {
-        if (!selectedAddress) {
-            alert('Please select a shipping address');
-            return;
-        }
-
-        if (Object.keys(selectedShipping).length !== shippingData?.vendors.length) {
-            alert('Please select shipping method for all vendors');
-            return;
-        }
-
-        post(route('checkout.place-order'), {
-            data: {
-                ...data,
-                address_id: selectedAddress.id,
-            },
-        });
-    };
-
-    const formatCents = (cents: number) => {
-        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(cents / 100);
-    };
-
-    const grandTotal = cart.subtotal_cents + shippingTotal;
+    const grandTotal = cart.total_cents + codInfo.fee_cents;
 
     return (
-        <>
+        <FrontendLayout auth={auth} cartCount={cartCount} wishlistCount={wishlistCount}>
             <Head title="Checkout" />
 
-            <div className="min-h-screen bg-gray-50 py-12">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    {/* Progress Steps */}
-                    <div className="mb-8">
-                        <div className="flex items-center justify-center">
-                            {[1, 2, 3].map((step) => (
-                                <React.Fragment key={step}>
-                                    <div className="flex items-center">
-                                        <div
-                                            className={"flex items-center justify-center w-10 h-10 rounded-full " + (
-                                                currentStep >= step
-                                                    ? 'bg-blue-600 text-white'
-                                                    : 'bg-gray-300 text-gray-600'
-                                            )}
-                                        >
-                                            {currentStep > step ? <FiCheck /> : step}
-                                        </div>
-                                        <span className="ml-2 text-sm font-medium text-gray-900">
-                                            {step === 1 && 'Address'}
-                                            {step === 2 && 'Shipping'}
-                                            {step === 3 && 'Payment'}
-                                        </span>
-                                    </div>
-                                    {step < 3 && (
-                                        <div
-                                            className={"w-24 h-1 mx-4 " + (
-                                                currentStep > step ? 'bg-blue-600' : 'bg-gray-300'
-                                            )}
-                                        />
-                                    )}
-                                </React.Fragment>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        {/* Main Content */}
-                        <div className="lg:col-span-2 space-y-6">
-                            {/* Step 1: Shipping Address */}
-                            <div className="bg-white rounded-lg shadow-sm p-6">
-                                <div className="flex items-center gap-2 mb-4">
-                                    <FiMapPin className="text-blue-600" />
-                                    <h2 className="text-xl font-bold text-gray-900">Shipping Address</h2>
-                                </div>
-
-                                {addresses.length === 0 ? (
-                                    <div className="text-center py-8">
-                                        <p className="text-gray-500">No addresses found. Please add an address first.</p>
-                                    </div>
-                                ) : (
-                                    <div className="space-y-3">
-                                        {addresses.map((address) => (
-                                            <div
-                                                key={address.id}
-                                                onClick={() => {
-                                                    setSelectedAddress(address);
-                                                    setData('address_id', address.id);
-                                                    setCurrentStep(2);
-                                                }}
-                                                className={"border-2 rounded-lg p-4 cursor-pointer transition-colors " + (
-                                                    selectedAddress?.id === address.id
-                                                        ? 'border-blue-600 bg-blue-50'
-                                                        : 'border-gray-200 hover:border-gray-300'
-                                                )}
-                                            >
-                                                <div className="flex items-start justify-between">
-                                                    <div>
-                                                        <p className="font-medium text-gray-900">{address.address_line1}</p>
-                                                        {address.address_line2 && (
-                                                            <p className="text-sm text-gray-600">{address.address_line2}</p>
-                                                        )}
-                                                        <p className="text-sm text-gray-600">
-                                                            {address.city}, {address.state} {address.postal_code}
-                                                        </p>
-                                                        <p className="text-sm text-gray-600">{address.country}</p>
-                                                    </div>
-                                                    {selectedAddress?.id === address.id && (
-                                                        <FiCheck className="text-blue-600" size={20} />
-                                                    )}
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Step 2: Shipping Methods - Multi-Vendor */}
-                            {currentStep >= 2 && selectedAddress && (
-                                <div className="bg-white rounded-lg shadow-sm p-6">
-                                    <div className="flex items-center gap-2 mb-4">
-                                        <FiTruck className="text-blue-600" />
-                                        <h2 className="text-xl font-bold text-gray-900">Shipping Methods</h2>
-                                        <span className="text-sm text-gray-500">(Select shipping for each vendor)</span>
-                                    </div>
-
-                                    {loadingShipping ? (
-                                        <div className="text-center py-8">
-                                            <p className="text-gray-500">Loading shipping methods...</p>
-                                        </div>
-                                    ) : shippingData && shippingData.vendors.length > 0 ? (
-                                        <div className="space-y-6">
-                                            {shippingData.vendors.map((vendor) => (
-                                                <div key={vendor.vendor_id} className="border border-gray-200 rounded-lg p-4 bg-gray-50">
-                                                    <div className="flex justify-between items-center mb-3 pb-3 border-b border-gray-200">
-                                                        <div>
-                                                            <h3 className="font-semibold text-gray-900 flex items-center gap-2">
-                                                                <FiTruck size={16} />
-                                                                {vendor.vendor_name}
-                                                            </h3>
-                                                            <p className="text-sm text-gray-500">
-                                                                {vendor.items_count} item{vendor.items_count > 1 ? 's' : ''} • {formatCents(vendor.subtotal_cents)}
-                                                            </p>
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="space-y-2">
-                                                        {vendor.available_methods.map((method) => (
-                                                            <div
-                                                                key={method.method_id}
-                                                                onClick={() => handleShippingSelection(vendor.vendor_id, method.method_id)}
-                                                                className={"border-2 rounded-lg p-3 cursor-pointer transition-colors bg-white " + (
-                                                                    selectedShipping[vendor.vendor_id] === method.method_id
-                                                                        ? 'border-blue-600 bg-blue-50'
-                                                                        : 'border-gray-200 hover:border-gray-300'
-                                                                )}
-                                                            >
-                                                                <div className="flex items-center justify-between">
-                                                                    <div className="flex-1">
-                                                                        <div className="flex items-center gap-2">
-                                                                            <span className="font-medium text-gray-900">{method.method_name}</span>
-                                                                            {method.is_free && (
-                                                                                <span className="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
-                                                                                    FREE SHIPPING
-                                                                                </span>
-                                                                            )}
-                                                                        </div>
-                                                                        <p className="text-sm text-gray-500">
-                                                                            {method.carrier && method.carrier + " • "}
-                                                                            Delivery: {method.estimated_delivery.formatted}
-                                                                        </p>
-                                                                    </div>
-                                                                    <div className="text-right ml-4">
-                                                                        <p className="font-semibold text-lg text-gray-900">
-                                                                            {method.is_free ? 'FREE' : formatCents(method.rate_cents)}
-                                                                        </p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    ) : (
-                                        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 flex items-start gap-3">
-                                            <FiAlertCircle className="text-yellow-600 flex-shrink-0 mt-0.5" />
-                                            <div>
-                                                <p className="text-sm text-yellow-800">
-                                                    Shipping is not available to this address. Please select a different address.
-                                                </p>
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {shippingData && shippingData.vendors.length > 0 && (
-                                        <button
-                                            onClick={() => setCurrentStep(3)}
-                                            disabled={Object.keys(selectedShipping).length !== shippingData.vendors.length}
-                                            className="mt-6 w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
-                                        >
-                                            Continue to Payment
-                                        </button>
-                                    )}
-                                </div>
-                            )}
-
-                            {/* Step 3: Payment */}
-                            {currentStep >= 3 && (
-                                <div className="bg-white rounded-lg shadow-sm p-6">
-                                    <div className="flex items-center gap-2 mb-4">
-                                        <FiCreditCard className="text-blue-600" />
-                                        <h2 className="text-xl font-bold text-gray-900">Payment</h2>
-                                    </div>
-
-                                    <button
-                                        onClick={handlePlaceOrder}
-                                        disabled={processing}
-                                        className="w-full px-6 py-4 bg-green-600 text-white font-bold text-lg rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                                    >
-                                        {processing ? 'Processing...' : 'Place Order - ' + formatCents(grandTotal)}
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Order Summary Sidebar */}
-                        <div className="lg:col-span-1">
-                            <div className="bg-white rounded-lg shadow-sm p-6 sticky top-6">
-                                <h2 className="text-xl font-bold text-gray-900 mb-4">Order Summary</h2>
-
-                                <div className="border-t border-gray-200 pt-4 space-y-2">
-                                    <div className="flex justify-between text-sm">
-                                        <span className="text-gray-600">Subtotal</span>
-                                        <span className="font-medium text-gray-900">{formatCents(cart.subtotal_cents)}</span>
-                                    </div>
-                                    <div className="flex justify-between text-sm">
-                                        <span className="text-gray-600">Shipping</span>
-                                        <span className="font-medium text-gray-900">
-                                            {shippingTotal === 0 && shippingData ? 'FREE' : formatCents(shippingTotal)}
-                                        </span>
-                                    </div>
-                                    <div className="flex justify-between text-lg font-bold text-gray-900 pt-2 border-t border-gray-200">
-                                        <span>Total</span>
-                                        <span>{formatCents(grandTotal)}</span>
-                                    </div>
-                                </div>
-
-                                {shippingTotal === 0 && shippingData && shippingData.vendors.length > 0 && (
-                                    <div className="mt-4 bg-green-50 border border-green-200 rounded-lg p-3">
-                                        <p className="text-sm text-green-800 font-medium flex items-center gap-2">
-                                            <FiCheck className="text-green-600" />
-                                            Free shipping qualified!
-                                        </p>
-                                    </div>
-                                )}
-                            </div>
+            {/* Breadcrumb */}
+            <div className="py-[10px] bg-[#f8f8fb] border-b-[1px] border-solid border-[#eee]">
+                <div className="flex flex-wrap justify-between items-center mx-auto min-[1600px]:max-w-[1600px] min-[1400px]:max-w-[1320px] min-[1200px]:max-w-[1140px] min-[992px]:max-w-[960px] min-[768px]:max-w-[720px] min-[576px]:max-w-[540px]">
+                    <div className="flex flex-wrap w-full px-[12px]">
+                        <div className="flex items-center text-[13px] text-[#777]">
+                            <Link href="/" className="hover:text-[#5caf90] transition-colors">Home</Link>
+                            <span className="mx-[8px]">/</span>
+                            <Link href="/cart" className="hover:text-[#5caf90] transition-colors">Cart</Link>
+                            <span className="mx-[8px]">/</span>
+                            <span className="text-[#4b5966]">Checkout</span>
                         </div>
                     </div>
                 </div>
             </div>
-        </>
+
+            {/* Flash error banner */}
+            {flash?.error && (
+                <div className="bg-[#fff5f5] border-b-[1px] border-solid border-[#ff7070] px-[12px] py-[10px]">
+                    <div className="mx-auto min-[1600px]:max-w-[1600px] min-[1400px]:max-w-[1320px] min-[1200px]:max-w-[1140px] min-[992px]:max-w-[960px] min-[768px]:max-w-[720px] min-[576px]:max-w-[540px] flex items-center gap-[8px]">
+                        <FiAlertCircle className="text-[#ff7070] flex-shrink-0" size={16} />
+                        <span className="text-[13px] text-[#ff7070] font-medium">{flash.error}</span>
+                    </div>
+                </div>
+            )}
+
+            {/* Checkout Section */}
+            <section className="py-[40px] text-[14px] max-[767px]:py-[30px]">
+                <div className="flex flex-wrap justify-between items-start mx-auto min-[1600px]:max-w-[1600px] min-[1400px]:max-w-[1320px] min-[1200px]:max-w-[1140px] min-[992px]:max-w-[960px] min-[768px]:max-w-[720px] min-[576px]:max-w-[540px] relative">
+                    <form onSubmit={handleSubmit} className="flex flex-wrap w-full">
+
+                        {/* ── RIGHT SIDEBAR (Order Summary + COD) ── */}
+                        <div className="px-[12px] min-[992px]:w-[33.33%] w-full">
+
+                            {/* Summary Block */}
+                            <div className="border-[1px] border-solid border-[#eee] mb-[30px] p-[15px] rounded-[5px] bg-[#fff]">
+                                <h3 className="text-[20px] max-[1199px]:text-[18px] font-semibold tracking-[0] mb-[0] text-[#4b5966] leading-[1.2]">
+                                    Order Summary
+                                </h3>
+                                <div className="mt-[15px]">
+                                    {/* Totals */}
+                                    <div className="flex justify-between items-center mb-[10px]">
+                                        <span className="text-[#777] text-[14px] leading-[24px]">Sub-Total</span>
+                                        <span className="text-[#4b5966] text-[15px] leading-[24px] font-medium">
+                                            {formatCents(cart.subtotal_cents)}
+                                        </span>
+                                    </div>
+                                    <div className="flex justify-between items-center mb-[10px]">
+                                        <span className="text-[#777] text-[14px] leading-[24px]">Tax (10%)</span>
+                                        <span className="text-[#4b5966] text-[15px] leading-[24px] font-medium">
+                                            {formatCents(cart.tax_cents)}
+                                        </span>
+                                    </div>
+                                    <div className="flex justify-between items-center mb-[10px]">
+                                        <span className="text-[#777] text-[14px] leading-[24px]">Shipping</span>
+                                        <span className="text-[#5caf90] text-[15px] leading-[24px] font-medium">Free</span>
+                                    </div>
+                                    {codInfo.fee_cents > 0 && (
+                                        <div className="flex justify-between items-center mb-[10px]">
+                                            <span className="text-[#777] text-[14px] leading-[24px]">COD Fee</span>
+                                            <span className="text-[#4b5966] text-[15px] leading-[24px] font-medium">
+                                                {formatCents(codInfo.fee_cents)}
+                                            </span>
+                                        </div>
+                                    )}
+                                    <div className="border-t-[1px] border-solid border-[#eee] pt-[19px] mb-[0] mt-[16px] flex justify-between items-center">
+                                        <span className="text-[16px] font-semibold text-[#4b5966] font-heading">Total Amount</span>
+                                        <span className="text-[16px] font-bold text-[#5caf90] font-heading">
+                                            {formatCents(grandTotal)}
+                                        </span>
+                                    </div>
+
+                                    {/* Cart Items */}
+                                    <div className="mt-[20px] space-y-[12px]">
+                                        {cart.items.map((item) => (
+                                            <div
+                                                key={item.id}
+                                                className="flex items-center gap-[12px] border-[1px] border-solid border-[#eee] rounded-[5px] p-[10px]"
+                                            >
+                                                <div className="w-[50px] h-[50px] flex-shrink-0 rounded-[5px] overflow-hidden border-[1px] border-solid border-[#eee] bg-[#f8f8fb]">
+                                                    {item.product.image ? (
+                                                        <img
+                                                            src={item.product.image}
+                                                            alt={item.product.name}
+                                                            className="w-full h-full object-cover"
+                                                        />
+                                                    ) : (
+                                                        <div className="w-full h-full flex items-center justify-center text-[#777] text-[10px]">
+                                                            No img
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="text-[13px] font-medium text-[#4b5966] truncate leading-[1.3]">
+                                                        {item.product.name}
+                                                    </p>
+                                                    <p className="text-[12px] text-[#777] mt-[2px]">
+                                                        {formatCents(item.price_cents)} × {item.quantity}
+                                                    </p>
+                                                </div>
+                                                <span className="text-[13px] font-semibold text-[#4b5966] flex-shrink-0">
+                                                    {formatCents(item.price_cents * item.quantity)}
+                                                </span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Delivery Method Block */}
+                            <div className="border-[1px] border-solid border-[#eee] mb-[30px] p-[15px] rounded-[5px] bg-[#fff]">
+                                <h3 className="text-[20px] max-[1199px]:text-[18px] font-semibold tracking-[0] mb-[0] text-[#4b5966] leading-[1.2]">
+                                    Delivery Method
+                                </h3>
+                                <div className="mt-[15px]">
+                                    <p className="text-[#777] text-[14px] font-light leading-[24px] mb-[12px]">
+                                        Please select the preferred shipping method to use on this order.
+                                    </p>
+                                    <div className="flex items-center gap-[10px] p-[12px] border-[1px] border-solid border-[#5caf90] rounded-[5px] bg-[#f8f8fb]">
+                                        <div className="w-[18px] h-[18px] rounded-full border-[2px] border-solid border-[#5caf90] flex items-center justify-center flex-shrink-0">
+                                            <div className="w-[8px] h-[8px] rounded-full bg-[#5caf90]" />
+                                        </div>
+                                        <div>
+                                            <span className="text-[#4b5966] text-[14px] font-medium">Free Shipping</span>
+                                            <span className="text-[#777] text-[13px] ml-[8px]">Rate – $0.00</span>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-[8px] mt-[12px] text-[13px] text-[#777]">
+                                        <FiTruck className="text-[#5caf90] flex-shrink-0" size={15} />
+                                        <span>
+                                            Estimated delivery:{' '}
+                                            <strong className="text-[#4b5966]">{codInfo.delivery_estimate.text}</strong>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Payment Method Block */}
+                            <div className="border-[1px] border-solid border-[#eee] mb-[30px] p-[15px] rounded-[5px] bg-[#fff]">
+                                <h3 className="text-[20px] max-[1199px]:text-[18px] font-semibold tracking-[0] mb-[0] text-[#4b5966] leading-[1.2]">
+                                    Payment Method
+                                </h3>
+                                <div className="mt-[15px]">
+                                    <p className="text-[#777] text-[14px] font-light leading-[24px] mb-[12px]">
+                                        {codInfo.instructions}
+                                    </p>
+                                    <div className="flex items-center gap-[10px] p-[12px] border-[1px] border-solid border-[#5caf90] rounded-[5px] bg-[#f8f8fb]">
+                                        <div className="w-[18px] h-[18px] rounded-full border-[2px] border-solid border-[#5caf90] flex items-center justify-center flex-shrink-0">
+                                            <div className="w-[8px] h-[8px] rounded-full bg-[#5caf90]" />
+                                        </div>
+                                        <span className="text-[#4b5966] text-[14px] font-medium">Cash on Delivery</span>
+                                    </div>
+
+                                    {/* COD unavailable warning */}
+                                    {!codInfo.available && codInfo.errors && codInfo.errors.length > 0 && (
+                                        <div className="mt-[12px] p-[12px] bg-[#fff5f5] border-[1px] border-solid border-[#ff7070] rounded-[5px]">
+                                            <p className="text-[13px] font-medium text-[#ff7070] mb-[4px]">
+                                                COD not available for this address
+                                            </p>
+                                            <ul className="list-disc list-inside space-y-[2px]">
+                                                {codInfo.errors.map((error, i) => (
+                                                    <li key={i} className="text-[13px] text-[#ff7070]">{error}</li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+
+                                    {codInfo.fee_cents > 0 && (
+                                        <p className="mt-[10px] text-[13px] text-[#777]">
+                                            A COD fee of{' '}
+                                            <strong className="text-[#4b5966]">{formatCents(codInfo.fee_cents)}</strong>{' '}
+                                            will be collected on delivery.
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* ── LEFT MAIN (Billing / Shipping Details) ── */}
+                        <div className="px-[12px] min-[992px]:w-[66.66%] w-full max-[991px]:mt-[30px]">
+                            <div className="pb-[3px] p-[30px] border-[1px] border-solid border-[#eee] bg-[#fff] rounded-[5px] mb-[40px]">
+                                <h3 className="text-[20px] font-semibold tracking-[0] mb-[25px] text-[#4b5966] font-heading leading-[1] max-[575px]:text-[18px]">
+                                    Shipping Details
+                                </h3>
+
+                                {/* Saved address cards */}
+                                {addresses.length > 0 && (
+                                    <div className="mb-[24px]">
+                                        <p className="text-[#4b5966] text-[15px] font-medium tracking-[0] leading-[1] mb-[14px]">
+                                            Saved Addresses
+                                        </p>
+                                        <div className="flex flex-col gap-[10px]">
+                                            {addresses.map((address) => {
+                                                const isSelected =
+                                                    data.shipping_address_id === address.id && !showNewAddressForm;
+                                                return (
+                                                    <div
+                                                        key={address.id}
+                                                        onClick={() => selectSavedAddress(address)}
+                                                        className={`flex items-start justify-between p-[15px] border-[1px] border-solid rounded-[5px] cursor-pointer transition-all duration-[0.2s] ${
+                                                            isSelected
+                                                                ? 'border-[#5caf90] bg-[#f8f8fb]'
+                                                                : 'border-[#eee] hover:border-[#5caf90]'
+                                                        }`}
+                                                    >
+                                                        <div className="flex items-start gap-[12px]">
+                                                            <div
+                                                                className={`mt-[2px] w-[18px] h-[18px] rounded-full border-[2px] border-solid flex-shrink-0 flex items-center justify-center transition-colors ${
+                                                                    isSelected
+                                                                        ? 'border-[#5caf90]'
+                                                                        : 'border-[#eee]'
+                                                                }`}
+                                                            >
+                                                                {isSelected && (
+                                                                    <div className="w-[8px] h-[8px] rounded-full bg-[#5caf90]" />
+                                                                )}
+                                                            </div>
+                                                            <div>
+                                                                <p className="text-[14px] font-medium text-[#4b5966] mb-[2px]">
+                                                                    {address.first_name} {address.last_name}
+                                                                </p>
+                                                                <p className="text-[13px] text-[#777]">
+                                                                    {address.address_line_1}
+                                                                    {address.address_line_2 && `, ${address.address_line_2}`}
+                                                                </p>
+                                                                <p className="text-[13px] text-[#777]">
+                                                                    {address.city}, {address.state} {address.postal_code}, {address.country}
+                                                                </p>
+                                                                {address.phone && (
+                                                                    <p className="text-[13px] text-[#777] mt-[2px]">
+                                                                        📞 {address.phone}
+                                                                    </p>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex items-center gap-[8px] flex-shrink-0 ml-[10px]">
+                                                            {address.is_default && (
+                                                                <span className="text-[11px] bg-[#5caf90] text-[#fff] px-[8px] py-[2px] rounded-full">
+                                                                    Default
+                                                                </span>
+                                                            )}
+                                                            {isSelected && (
+                                                                <div className="w-[22px] h-[22px] rounded-full bg-[#5caf90] flex items-center justify-center">
+                                                                    <FiCheck className="text-[#fff]" size={12} />
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+
+                                        <button
+                                            type="button"
+                                            onClick={openNewAddressForm}
+                                            className="mt-[14px] text-[14px] text-[#5caf90] font-medium hover:text-[#4a9377] transition-colors flex items-center gap-[6px]"
+                                        >
+                                            <FiMapPin size={14} />
+                                            {showNewAddressForm ? '← Back to saved addresses' : '+ Add a new address'}
+                                        </button>
+                                    </div>
+                                )}
+
+                                {/* New Address Form */}
+                                {showNewAddressForm && (
+                                    <div className="gi-check-bill-form mb-[2px]">
+                                        <div className="flex flex-row flex-wrap mx-[-15px]">
+
+                                            {/* Full Name */}
+                                            <div className="w-full px-[15px]">
+                                                <label className={labelClass}>Full Name *</label>
+                                                <input
+                                                    type="text"
+                                                    value={data.shipping_name}
+                                                    onChange={(e) => setData('shipping_name', e.target.value)}
+                                                    placeholder="Enter your full name"
+                                                    className={inputClass}
+                                                />
+                                                <InputError message={errors.shipping_name} className="mt-[-20px] mb-[10px]" />
+                                            </div>
+
+                                            {/* Address Line 1 */}
+                                            <div className="w-full px-[15px]">
+                                                <label className={labelClass}>Address *</label>
+                                                <input
+                                                    type="text"
+                                                    value={data.shipping_address_line1}
+                                                    onChange={(e) => setData('shipping_address_line1', e.target.value)}
+                                                    placeholder="Address Line 1"
+                                                    className={inputClass}
+                                                />
+                                                <InputError message={errors.shipping_address_line1} className="mt-[-20px] mb-[10px]" />
+                                            </div>
+
+                                            {/* Address Line 2 */}
+                                            <div className="w-full px-[15px]">
+                                                <label className={labelClass}>
+                                                    Address Line 2{' '}
+                                                    <span className="text-[#777] font-normal text-[13px]">(optional)</span>
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    value={data.shipping_address_line2}
+                                                    onChange={(e) => setData('shipping_address_line2', e.target.value)}
+                                                    placeholder="Apartment, suite, unit, etc."
+                                                    className={inputClass}
+                                                />
+                                            </div>
+
+                                            {/* City */}
+                                            <div className="w-[50%] max-[575px]:w-full px-[15px]">
+                                                <label className={labelClass}>City *</label>
+                                                <input
+                                                    type="text"
+                                                    value={data.shipping_city}
+                                                    onChange={(e) => setData('shipping_city', e.target.value)}
+                                                    placeholder="City"
+                                                    className={inputClass}
+                                                />
+                                                <InputError message={errors.shipping_city} className="mt-[-20px] mb-[10px]" />
+                                            </div>
+
+                                            {/* State */}
+                                            <div className="w-[50%] max-[575px]:w-full px-[15px]">
+                                                <label className={labelClass}>State / Province *</label>
+                                                <input
+                                                    type="text"
+                                                    value={data.shipping_state}
+                                                    onChange={(e) => setData('shipping_state', e.target.value)}
+                                                    placeholder="State"
+                                                    className={inputClass}
+                                                />
+                                                <InputError message={errors.shipping_state} className="mt-[-20px] mb-[10px]" />
+                                            </div>
+
+                                            {/* Postal Code */}
+                                            <div className="w-[50%] max-[575px]:w-full px-[15px]">
+                                                <label className={labelClass}>Post Code *</label>
+                                                <input
+                                                    type="text"
+                                                    value={data.shipping_postal_code}
+                                                    onChange={(e) => setData('shipping_postal_code', e.target.value)}
+                                                    placeholder="Post Code"
+                                                    className={inputClass}
+                                                />
+                                                <InputError message={errors.shipping_postal_code} className="mt-[-20px] mb-[10px]" />
+                                            </div>
+
+                                            {/* Country */}
+                                            <div className="w-[50%] max-[575px]:w-full px-[15px]">
+                                                <label className={labelClass}>Country *</label>
+                                                <input
+                                                    type="text"
+                                                    value={data.shipping_country}
+                                                    onChange={(e) => setData('shipping_country', e.target.value.toUpperCase())}
+                                                    placeholder="US"
+                                                    maxLength={2}
+                                                    className={inputClass + ' uppercase'}
+                                                />
+                                                <InputError message={errors.shipping_country} className="mt-[-20px] mb-[10px]" />
+                                            </div>
+
+                                            {/* Phone */}
+                                            <div className="w-full px-[15px]">
+                                                <label className={labelClass}>
+                                                    Phone Number *
+                                                    <span className="text-[#777] font-normal text-[13px] ml-[6px]">
+                                                        (required for COD)
+                                                    </span>
+                                                </label>
+                                                <input
+                                                    type="tel"
+                                                    value={data.shipping_phone}
+                                                    onChange={(e) => setData('shipping_phone', e.target.value)}
+                                                    placeholder="+1 (555) 000-0000"
+                                                    className={inputClass}
+                                                />
+                                                <InputError message={errors.shipping_phone} className="mt-[-20px] mb-[10px]" />
+                                            </div>
+
+                                            {/* Save Address */}
+                                            <div className="w-full px-[15px]">
+                                                <label className="flex items-center gap-[10px] cursor-pointer">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={data.save_address}
+                                                        onChange={(e) => setData('save_address', e.target.checked)}
+                                                        className="w-[15px] h-[15px] accent-[#5caf90] cursor-pointer"
+                                                    />
+                                                    <span className="text-[14px] text-[#777]">
+                                                        Save this address for future orders
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Place Order Button */}
+                            <div className="flex flex-col gap-[12px]">
+                                <button
+                                    type="submit"
+                                    disabled={processing || !codInfo.available}
+                                    className="transition-all duration-[0.3s] ease-in-out py-[12px] px-[30px] text-[15px] font-medium bg-[#5caf90] text-[#fff] text-center rounded-[5px] hover:bg-[#4b5966] hover:text-[#fff] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-[8px]"
+                                >
+                                    {processing ? (
+                                        <>
+                                            <span className="animate-spin inline-block w-[16px] h-[16px] border-[2px] border-[#fff] border-t-transparent rounded-full" />
+                                            Placing Order...
+                                        </>
+                                    ) : (
+                                        `Place Order — ${formatCents(grandTotal)}`
+                                    )}
+                                </button>
+                                <Link
+                                    href="/cart"
+                                    className="transition-all duration-[0.3s] ease-in-out py-[12px] px-[30px] text-[15px] font-medium border-[1px] border-solid border-[#eee] text-[#4b5966] text-center rounded-[5px] hover:border-[#5caf90] hover:text-[#5caf90]"
+                                >
+                                    ← Back to Cart
+                                </Link>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </section>
+        </FrontendLayout>
     );
 }

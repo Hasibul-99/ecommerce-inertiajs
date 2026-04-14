@@ -11,7 +11,7 @@ class CodService
     /**
      * COD configuration constants
      */
-    private const DEFAULT_MIN_ORDER_AMOUNT_CENTS = 50000; // $500
+    private const DEFAULT_MIN_ORDER_AMOUNT_CENTS = 0; // No minimum
     private const DEFAULT_MAX_ORDER_AMOUNT_CENTS = 50000000; // $500,000
     private const DEFAULT_COD_FEE_CENTS = 500; // $5
     private const DEFAULT_COD_FEE_PERCENTAGE = 0.02; // 2%

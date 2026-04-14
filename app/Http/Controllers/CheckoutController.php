@@ -72,7 +72,7 @@ class CheckoutController extends Controller
             $wishlistCount = \App\Models\Wishlist::getItemCountForUser(auth()->id());
         }
 
-        // Get COD availability info
+        // Get COD availability info (availability checked on submission, not here)
         $codService = new CodService();
         $codInfo = [
             'available' => config('cod.enabled', true),
@@ -81,19 +81,8 @@ class CheckoutController extends Controller
             'max_order_amount_cents' => $codService->getMaxOrderAmount(),
             'delivery_estimate' => $codService->getDeliveryTimeEstimate(),
             'instructions' => $codService->getPaymentInstructions(),
+            'errors' => [],
         ];
-
-        // Check COD availability for default address if available
-        $defaultAddress = collect($addresses)->first();
-        if ($defaultAddress) {
-            $codValidation = $codService->validateCodAvailability(
-                $defaultAddress,
-                $formattedCart['total_cents'],
-                $defaultAddress->phone ?? null
-            );
-            $codInfo['available'] = $codValidation['available'];
-            $codInfo['errors'] = $codValidation['errors'] ?? [];
-        }
 
         return Inertia::render('Checkout/Index', [
             'cart' => $formattedCart,
@@ -149,34 +138,24 @@ class CheckoutController extends Controller
             return redirect()->route('cart')->with('error', 'Your cart is empty.');
         }
 
-        // Validate COD if selected
-        if ($request->payment_method === 'cod') {
-            $codService = new CodService();
+        // Validate COD is globally enabled
+        if (!config('cod.enabled', true)) {
+            return redirect()->back()->with('error', 'Cash on Delivery is not available at this time.');
+        }
 
-            // Get or create address for validation
-            $tempAddress = null;
-            if ($request->shipping_address_id) {
-                $tempAddress = Address::find($request->shipping_address_id);
-            } else {
-                // Create temporary address object for validation
-                $tempAddress = new Address([
-                    'city' => $request->shipping_city,
-                    'state' => $request->shipping_state,
-                    'postal_code' => $request->shipping_postal_code,
-                    'phone' => $request->shipping_phone,
-                ]);
-            }
+        $codService = new CodService();
+        $orderAmountCents = $cart->total_cents > 0
+            ? $cart->total_cents
+            : $this->calculateCartTotal($cart);
 
-            $codValidation = $codService->validateCodAvailability(
-                $tempAddress,
-                $cart->total_cents,
-                $request->shipping_phone
-            );
-
-            if (!$codValidation['available']) {
-                $errorMessage = implode(' ', $codValidation['errors']);
-                return redirect()->back()->with('error', $errorMessage);
-            }
+        // Check order amount limits only (address / phone validated on save)
+        if ($orderAmountCents < $codService->getMinOrderAmount()) {
+            $min = number_format($codService->getMinOrderAmount() / 100, 2);
+            return redirect()->back()->with('error', "COD is only available for orders above $$min.");
+        }
+        if ($orderAmountCents > $codService->getMaxOrderAmount()) {
+            $max = number_format($codService->getMaxOrderAmount() / 100, 2);
+            return redirect()->back()->with('error', "COD is not available for orders above $$max.");
         }
 
         try {
@@ -185,33 +164,34 @@ class CheckoutController extends Controller
             // Create or update address
             $shippingAddress = $this->handleAddress($request, $user);
 
-            // Calculate COD fee if applicable
-            $codFeeCents = 0;
-            $codVerificationRequired = false;
-            if ($request->payment_method === 'cod') {
-                $codService = new CodService();
-                $codFeeCents = $codService->getCodFee($cart->total_cents);
-                $codVerificationRequired = $codService->requiresVerification((object) ['total_cents' => $cart->total_cents]);
-            }
+            // Calculate subtotal / totals from cart items (source of truth)
+            $calculatedSubtotal = $this->calculateCartSubtotal($cart);
+            $calculatedTax      = $this->calculateCartTax($cart);
+            $calculatedTotal    = $calculatedSubtotal + $calculatedTax;
+
+            // Calculate COD fee
+            $codFeeCents = $codService->getCodFee($calculatedTotal);
+            $highValueThreshold = config('cod.high_value_threshold_cents', 1000000);
+            $codVerificationRequired = $calculatedTotal >= $highValueThreshold;
 
             // Create order with unique order number
             $orderNumber = 'ORD-' . strtoupper(uniqid());
-            $totalCents = $cart->total_cents + $codFeeCents;
+            $totalCents  = $calculatedTotal + $codFeeCents;
 
             $order = Order::create([
-                'user_id' => $user->id,
-                'order_number' => $orderNumber,
-                'shipping_address_id' => $shippingAddress->id,
-                'billing_address_id' => $request->same_billing_address ? $shippingAddress->id : null,
-                'payment_method' => $request->payment_method,
-                'subtotal_cents' => $cart->subtotal_cents,
-                'tax_cents' => $cart->tax_cents,
-                'shipping_cents' => $cart->shipping_cents ?? 0,
-                'total_cents' => $totalCents,
-                'cod_fee_cents' => $codFeeCents,
+                'user_id'                   => $user->id,
+                'order_number'              => $orderNumber,
+                'shipping_address_id'       => $shippingAddress->id,
+                'billing_address_id'        => $request->same_billing_address ? $shippingAddress->id : null,
+                'payment_method'            => $request->payment_method,
+                'subtotal_cents'            => $calculatedSubtotal,
+                'tax_cents'                 => $calculatedTax,
+                'shipping_cents'            => 0,
+                'total_cents'               => $totalCents,
+                'cod_fee_cents'             => $codFeeCents,
                 'cod_verification_required' => $codVerificationRequired,
-                'status' => 'pending',
-                'metadata' => [
+                'status'                    => 'pending',
+                'metadata'                  => [
                     'ip_address' => $request->ip(),
                     'user_agent' => $request->userAgent(),
                 ],
@@ -222,30 +202,34 @@ class CheckoutController extends Controller
                 $variant = $cartItem->productVariant;
                 $product = $cartItem->product;
                 
+                $productName = $product->title ?? $product->name ?? 'Product';
+
                 // Create product snapshot for historical record
                 $productSnapshot = [
-                    'id' => $product->id,
-                    'title' => $product->title,
-                    'description' => $product->description,
-                    'variant' => [
-                        'id' => $variant->id,
+                    'id'      => $product->id,
+                    'title'   => $productName,
+                    'variant' => $variant ? [
+                        'id'   => $variant->id,
                         'name' => $variant->name,
-                        'sku' => $variant->sku,
-                    ],
+                        'sku'  => $variant->sku,
+                    ] : null,
                 ];
-                
+
                 // Create order item
+                $itemSubtotal = $cartItem->quantity * $cartItem->price_cents;
+                $itemTax      = (int)($itemSubtotal * 0.1);
                 $orderItem = OrderItem::create([
-                    'order_id' => $order->id,
-                    'product_id' => $cartItem->product_id,
+                    'order_id'           => $order->id,
+                    'product_id'         => $cartItem->product_id,
                     'product_variant_id' => $cartItem->product_variant_id,
-                    'product_name' => $product->title,
-                    'quantity' => $cartItem->quantity,
-                    'unit_price_cents' => $cartItem->price_cents,
-                    'subtotal_cents' => $cartItem->quantity * $cartItem->price_cents,
-                    'tax_cents' => (int)($cartItem->quantity * $cartItem->price_cents * 0.1), // 10% tax
-                    'total_cents' => $cartItem->quantity * $cartItem->price_cents * 1.1, // Including tax
-                    'product_snapshot' => $productSnapshot,
+                    'vendor_id'          => $product->vendor_id,
+                    'product_name'       => $productName,
+                    'quantity'           => $cartItem->quantity,
+                    'unit_price_cents'   => $cartItem->price_cents,
+                    'subtotal_cents'     => $itemSubtotal,
+                    'tax_cents'          => $itemTax,
+                    'total_cents'        => $itemSubtotal + $itemTax,
+                    'product_snapshot'   => $productSnapshot,
                 ]);
                 
                 // Calculate and create commission if product has a vendor
@@ -271,25 +255,35 @@ class CheckoutController extends Controller
             
             // Update inventory - decrement stock for each variant
             foreach ($cart->items as $cartItem) {
-                $variant = ProductVariant::find($cartItem->product_variant_id);
-                $variant->decrement('stock_quantity', $cartItem->quantity);
+                if ($cartItem->product_variant_id) {
+                    $variant = ProductVariant::find($cartItem->product_variant_id);
+                    $variant?->decrement('stock_quantity', $cartItem->quantity);
+                }
             }
             
             // Clear the cart
             $cart->items()->delete();
             $cart->delete();
-            
-            // Dispatch events
-            event(new OrderPlaced($order));
-            event(new OrderPaid($order));
 
             DB::commit();
+
+            // Dispatch events after commit — email failures must not roll back the order
+            try {
+                event(new OrderPlaced($order));
+                event(new OrderPaid($order));
+            } catch (\Throwable $e) {
+                \Log::warning('Post-order event failed (order was saved)', [
+                    'order_id' => $order->id,
+                    'error'    => $e->getMessage(),
+                ]);
+            }
 
             return redirect()->route('orders.show', $order->id)
                 ->with('success', 'Your order has been placed successfully.');
 
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             DB::rollBack();
+            \Log::error('Checkout failed', ['user_id' => $user->id, 'error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
             return redirect()->back()->with('error', 'Checkout failed: ' . $e->getMessage());
         }
     }
@@ -313,18 +307,23 @@ class CheckoutController extends Controller
             
             return $address;
         } else {
-            // Create new address
+            // Split full name into first / last
+            $nameParts = explode(' ', trim($request->shipping_name), 2);
+            $firstName = $nameParts[0];
+            $lastName  = $nameParts[1] ?? $nameParts[0];
+
             return Address::create([
-                'user_id' => $user->id,
-                'name' => $request->shipping_name,
-                'address_line1' => $request->shipping_address_line1,
-                'address_line2' => $request->shipping_address_line2,
-                'city' => $request->shipping_city,
-                'state' => $request->shipping_state,
-                'postal_code' => $request->shipping_postal_code,
-                'country' => $request->shipping_country,
-                'phone' => $request->shipping_phone,
-                'is_default' => $request->save_address ? true : false,
+                'user_id'        => $user->id,
+                'first_name'     => $firstName,
+                'last_name'      => $lastName,
+                'address_line_1' => $request->shipping_address_line1,
+                'address_line_2' => $request->shipping_address_line2,
+                'city'           => $request->shipping_city,
+                'state'          => $request->shipping_state,
+                'postal_code'    => $request->shipping_postal_code,
+                'country'        => $request->shipping_country,
+                'phone'          => $request->shipping_phone,
+                'is_default'     => (bool) $request->save_address,
             ]);
         }
     }
@@ -336,71 +335,23 @@ class CheckoutController extends Controller
      * @param  \App\Models\Order  $order
      * @return array
      */
-    protected function processPayment(CheckoutRequest $request, Order $order)
+    protected function processPayment(CheckoutRequest $request, Order $order): array
     {
-        // Handle different payment methods
-        if ($request->payment_method === 'cod') {
-            // For Cash on Delivery, mark as unpaid but order is still valid
-            $codService = new CodService();
+        $codService = new CodService();
 
-            $order->update([
-                'payment_method' => 'cod',
-                'payment_status' => 'unpaid',
-                'status' => 'processing',
-                'fulfillment_status' => 'awaiting_delivery',
-            ]);
+        $order->update([
+            'payment_method'     => 'cod',
+            'payment_status'     => 'unpaid',
+            'status'             => 'processing',
+            'fulfillment_status' => 'awaiting_delivery',
+        ]);
 
-            return [
-                'success' => true,
-                'message' => 'Order placed successfully with Cash on Delivery. ' .
-                    'Payment will be collected upon delivery in ' .
-                    $codService->getDeliveryTimeEstimate()['text'] . '.',
-            ];
-        } elseif ($request->payment_method === 'stripe' || $request->payment_method === 'credit_card') {
-            // Use Stripe payment service
-            $paymentService = new \App\Services\StripePaymentService();
-
-            // Create payment intent
-            $result = $paymentService->createPaymentIntent($order);
-
-            if (!$result['success']) {
-                return $result;
-            }
-
-            // In a real application, you would return the client_secret to the frontend
-            // For now, simulate successful payment
-            $paymentService->processSuccessfulPayment($order, [
-                'payment_intent_id' => $result['payment_intent_id'],
-                'payment_method' => 'stripe',
-            ]);
-
-            return [
-                'success' => true,
-                'message' => 'Payment processed successfully',
-                'client_secret' => $result['client_secret'],
-            ];
-        } elseif ($request->payment_method === 'paypal') {
-            // Use PayPal payment service
-            $paymentService = new \App\Services\StripePaymentService();
-
-            $result = $paymentService->processPayPalPayment($order, [
-                'paypal_email' => $request->paypal_email ?? null,
-            ]);
-
-            return $result;
-        } else {
-            // Other payment methods - mark as pending payment
-            $order->update([
-                'payment_method' => $request->payment_method,
-                'payment_status' => 'pending',
-                'status' => 'pending',
-            ]);
-
-            return [
-                'success' => true,
-                'message' => 'Order placed successfully. Payment pending.',
-            ];
-        }
+        return [
+            'success' => true,
+            'message' => 'Order placed successfully with Cash on Delivery. ' .
+                'Payment will be collected upon delivery in ' .
+                $codService->getDeliveryTimeEstimate()['text'] . '.',
+        ];
     }
 
     /**
@@ -408,12 +359,9 @@ class CheckoutController extends Controller
      *
      * @return array
      */
-    protected function getAvailablePaymentMethods()
+    protected function getAvailablePaymentMethods(): array
     {
         return [
-            ['id' => 'credit_card', 'name' => 'Credit Card'],
-            ['id' => 'paypal', 'name' => 'PayPal'],
-            ['id' => 'bank_transfer', 'name' => 'Bank Transfer'],
             ['id' => 'cod', 'name' => 'Cash on Delivery'],
         ];
     }
