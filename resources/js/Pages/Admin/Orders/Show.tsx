@@ -456,31 +456,39 @@ export default function Show({ auth, order, workflowState, activityLogs = [], de
               <h4 className="font-medium text-gray-900 mb-4 flex items-center gap-2">
                 <FiMapPin className="text-gray-400" /> Shipping Address
               </h4>
-              <div className="space-y-1 text-sm">
-                <p className="font-medium">{order.shippingAddress.first_name} {order.shippingAddress.last_name}</p>
-                <p>{order.shippingAddress.address_line_1}</p>
-                {order.shippingAddress.address_line_2 && <p>{order.shippingAddress.address_line_2}</p>}
-                <p>
-                  {order.shippingAddress.city}, {order.shippingAddress.state} {order.shippingAddress.postal_code}
-                </p>
-                <p>{order.shippingAddress.country}</p>
-                {order.shippingAddress.phone && <p className="mt-2">Phone: {order.shippingAddress.phone}</p>}
-              </div>
+              {order.shippingAddress ? (
+                <div className="space-y-1 text-sm">
+                  <p className="font-medium">{order.shippingAddress.first_name} {order.shippingAddress.last_name}</p>
+                  <p>{order.shippingAddress.address_line_1}</p>
+                  {order.shippingAddress.address_line_2 && <p>{order.shippingAddress.address_line_2}</p>}
+                  <p>
+                    {order.shippingAddress.city}, {order.shippingAddress.state} {order.shippingAddress.postal_code}
+                  </p>
+                  <p>{order.shippingAddress.country}</p>
+                  {order.shippingAddress.phone && <p className="mt-2">Phone: {order.shippingAddress.phone}</p>}
+                </div>
+              ) : (
+                <p className="text-sm text-gray-400">Not provided</p>
+              )}
             </div>
 
             <div className="bg-white border border-gray-200 rounded-lg p-6">
               <h4 className="font-medium text-gray-900 mb-4 flex items-center gap-2">
                 <FiMapPin className="text-gray-400" /> Billing Address
               </h4>
-              <div className="space-y-1 text-sm">
-                <p className="font-medium">{order.billingAddress.first_name} {order.billingAddress.last_name}</p>
-                <p>{order.billingAddress.address_line_1}</p>
-                {order.billingAddress.address_line_2 && <p>{order.billingAddress.address_line_2}</p>}
-                <p>
-                  {order.billingAddress.city}, {order.billingAddress.state} {order.billingAddress.postal_code}
-                </p>
-                <p>{order.billingAddress.country}</p>
-              </div>
+              {order.billingAddress ? (
+                <div className="space-y-1 text-sm">
+                  <p className="font-medium">{order.billingAddress.first_name} {order.billingAddress.last_name}</p>
+                  <p>{order.billingAddress.address_line_1}</p>
+                  {order.billingAddress.address_line_2 && <p>{order.billingAddress.address_line_2}</p>}
+                  <p>
+                    {order.billingAddress.city}, {order.billingAddress.state} {order.billingAddress.postal_code}
+                  </p>
+                  <p>{order.billingAddress.country}</p>
+                </div>
+              ) : (
+                <p className="text-sm text-gray-400">Same as shipping</p>
+              )}
             </div>
           </div>
 
