@@ -1,7 +1,7 @@
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import FrontendLayout from '@/Layouts/FrontendLayout';
-import { FiShoppingBag, FiPackage, FiUser, FiHeart, FiMapPin, FiSearch, FiFilter } from 'react-icons/fi';
+import { FiShoppingBag, FiPackage, FiUser, FiHeart, FiMapPin, FiSearch, FiFilter, FiGrid } from 'react-icons/fi';
 import { PageProps } from '@/types';
 
 interface Order {
@@ -38,8 +38,16 @@ export default function OrdersIndex({
     cartCount = 0,
     wishlistCount = 0
 }: OrdersPageProps) {
+    const { url } = usePage();
     const [searchTerm, setSearchTerm] = useState(filters.search);
     const [selectedStatus, setSelectedStatus] = useState(filters.status);
+
+    const navLinkClass = (path: string) => {
+        const active = url === path || url.startsWith(path + '?');
+        return `flex items-center gap-3 px-4 py-3 rounded-md transition-colors ${
+            active ? 'bg-grabit-primary text-white' : 'text-grabit-gray hover:bg-grabit-bg-light'
+        }`;
+    };
 
     const formatPrice = (priceInCents: number) => {
         return new Intl.NumberFormat('en-US', {
@@ -127,38 +135,23 @@ export default function OrdersIndex({
                             </div>
 
                             <nav className="space-y-2">
-                                <Link
-                                    href="/dashboard"
-                                    className="flex items-center gap-3 px-4 py-3 rounded-md text-grabit-gray hover:bg-grabit-bg-light transition-colors"
-                                >
-                                    <FiUser className="w-5 h-5" />
+                                <Link href="/dashboard" className={navLinkClass('/dashboard')}>
+                                    <FiGrid className="w-5 h-5" />
                                     <span>Dashboard</span>
                                 </Link>
-                                <Link
-                                    href="/orders"
-                                    className="flex items-center gap-3 px-4 py-3 rounded-md bg-grabit-primary text-white"
-                                >
+                                <Link href="/orders" className={navLinkClass('/orders')}>
                                     <FiShoppingBag className="w-5 h-5" />
                                     <span>My Orders</span>
                                 </Link>
-                                <Link
-                                    href="/wishlist"
-                                    className="flex items-center gap-3 px-4 py-3 rounded-md text-grabit-gray hover:bg-grabit-bg-light transition-colors"
-                                >
+                                <Link href="/wishlist" className={navLinkClass('/wishlist')}>
                                     <FiHeart className="w-5 h-5" />
                                     <span>Wishlist</span>
                                 </Link>
-                                <Link
-                                    href="/profile"
-                                    className="flex items-center gap-3 px-4 py-3 rounded-md text-grabit-gray hover:bg-grabit-bg-light transition-colors"
-                                >
+                                <Link href="/addresses" className={navLinkClass('/addresses')}>
                                     <FiMapPin className="w-5 h-5" />
                                     <span>Addresses</span>
                                 </Link>
-                                <Link
-                                    href="/profile"
-                                    className="flex items-center gap-3 px-4 py-3 rounded-md text-grabit-gray hover:bg-grabit-bg-light transition-colors"
-                                >
+                                <Link href="/profile" className={navLinkClass('/profile')}>
                                     <FiUser className="w-5 h-5" />
                                     <span>Account Settings</span>
                                 </Link>

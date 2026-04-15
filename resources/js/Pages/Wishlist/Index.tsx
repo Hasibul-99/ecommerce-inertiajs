@@ -1,10 +1,10 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import FrontendLayout from '@/Layouts/FrontendLayout';
 import { useState } from 'react';
 import { PageProps } from '@/types';
 import { useCartWishlist } from '@/Contexts/CartWishlistContext';
 import { toast } from 'sonner';
-import { FiShoppingCart, FiTrash2, FiHeart } from 'react-icons/fi';
+import { FiShoppingCart, FiTrash2, FiHeart, FiShoppingBag, FiUser, FiMapPin, FiGrid } from 'react-icons/fi';
 
 interface Product {
     id: number;
@@ -32,14 +32,24 @@ interface WishlistIndexProps extends PageProps {
 // Inner component that uses the context
 function WishlistContent({
     initialItems,
+    auth,
 }: {
     initialItems: WishlistItem[];
+    auth: PageProps['auth'];
 }) {
     const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>(initialItems || []);
     const [removingItems, setRemovingItems] = useState<Set<number>>(new Set());
     const [movingToCart, setMovingToCart] = useState<Set<number>>(new Set());
 
+    const { url } = usePage();
     const { addToCart, removeFromWishlist } = useCartWishlist();
+
+    const navLinkClass = (path: string) => {
+        const active = url === path || url.startsWith(path + '?');
+        return `flex items-center gap-3 px-4 py-3 rounded-md transition-colors ${
+            active ? 'bg-grabit-primary text-white' : 'text-grabit-gray hover:bg-grabit-bg-light'
+        }`;
+    };
 
     const formatPrice = (priceInCents: number) => {
         return new Intl.NumberFormat('en-US', {
@@ -92,205 +102,240 @@ function WishlistContent({
         <>
             <Head title="My Wishlist" />
 
-            {/* Breadcrumb */}
-            <div className="bg-grabit-bg-light py-4">
+            {/* Header */}
+            <div className="bg-grabit-bg-light py-8">
                 <div className="container mx-auto px-4">
-                    <div className="flex items-center text-sm text-grabit-gray">
-                        <Link href="/" className="hover:text-grabit-primary">Home</Link>
-                        <span className="mx-2">/</span>
-                        <span className="text-grabit-dark">Wishlist</span>
-                    </div>
+                    <h1 className="text-3xl font-heading font-bold text-grabit-dark mb-2">
+                        My Wishlist
+                    </h1>
+                    <p className="text-grabit-gray">{wishlistItems.length} saved {wishlistItems.length === 1 ? 'item' : 'items'}</p>
                 </div>
             </div>
 
-            {/* Wishlist Content */}
             <div className="container mx-auto px-4 py-8">
-                <div className="flex items-center justify-between mb-6">
-                    <h1 className="text-2xl font-heading font-bold text-grabit-dark">
-                        My Wishlist ({wishlistItems.length} items)
-                    </h1>
-                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                    {/* Sidebar Navigation */}
+                    <aside className="lg:col-span-1">
+                        <div className="bg-white border border-grabit-border rounded-lg p-6">
+                            <div className="flex items-center gap-3 mb-6 pb-6 border-b border-grabit-border">
+                                <div className="w-12 h-12 bg-grabit-primary rounded-full flex items-center justify-center text-white font-semibold text-lg">
+                                    {auth.user.name.charAt(0).toUpperCase()}
+                                </div>
+                                <div>
+                                    <h3 className="font-medium text-grabit-dark">{auth.user.name}</h3>
+                                    <p className="text-sm text-grabit-gray">{auth.user.email}</p>
+                                </div>
+                            </div>
 
-                {wishlistItems.length > 0 ? (
-                    <div className="bg-white border border-grabit-border rounded-lg overflow-hidden">
-                        {/* Desktop View */}
-                        <div className="hidden md:block overflow-x-auto">
-                            <table className="w-full">
-                                <thead className="bg-grabit-bg-light">
-                                    <tr>
-                                        <th className="py-4 px-6 text-left text-sm font-medium text-grabit-dark">Product</th>
-                                        <th className="py-4 px-6 text-left text-sm font-medium text-grabit-dark">Price</th>
-                                        <th className="py-4 px-6 text-left text-sm font-medium text-grabit-dark">Stock Status</th>
-                                        <th className="py-4 px-6 text-right text-sm font-medium text-grabit-dark">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-grabit-border">
+                            <nav className="space-y-2">
+                                <Link href="/dashboard" className={navLinkClass('/dashboard')}>
+                                    <FiGrid className="w-5 h-5" />
+                                    <span>Dashboard</span>
+                                </Link>
+                                <Link href="/orders" className={navLinkClass('/orders')}>
+                                    <FiShoppingBag className="w-5 h-5" />
+                                    <span>My Orders</span>
+                                </Link>
+                                <Link href="/wishlist" className={navLinkClass('/wishlist')}>
+                                    <FiHeart className="w-5 h-5" />
+                                    <span>Wishlist</span>
+                                </Link>
+                                <Link href="/addresses" className={navLinkClass('/addresses')}>
+                                    <FiMapPin className="w-5 h-5" />
+                                    <span>Addresses</span>
+                                </Link>
+                                <Link href="/profile" className={navLinkClass('/profile')}>
+                                    <FiUser className="w-5 h-5" />
+                                    <span>Account Settings</span>
+                                </Link>
+                            </nav>
+                        </div>
+                    </aside>
+
+                    {/* Main Content */}
+                    <main className="lg:col-span-3">
+                        {wishlistItems.length > 0 ? (
+                            <div className="bg-white border border-grabit-border rounded-lg overflow-hidden">
+                                {/* Desktop View */}
+                                <div className="hidden md:block overflow-x-auto">
+                                    <table className="w-full">
+                                        <thead className="bg-grabit-bg-light">
+                                            <tr>
+                                                <th className="py-4 px-6 text-left text-sm font-medium text-grabit-dark">Product</th>
+                                                <th className="py-4 px-6 text-left text-sm font-medium text-grabit-dark">Price</th>
+                                                <th className="py-4 px-6 text-left text-sm font-medium text-grabit-dark">Stock Status</th>
+                                                <th className="py-4 px-6 text-right text-sm font-medium text-grabit-dark">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-grabit-border">
+                                            {wishlistItems.map((item) => {
+                                                const currentPrice = item.product.sale_price || item.product.price;
+                                                const isRemoving = removingItems.has(item.id);
+                                                const isMoving = movingToCart.has(item.id);
+
+                                                return (
+                                                    <tr key={item.id} className="hover:bg-gray-50">
+                                                        <td className="py-4 px-6">
+                                                            <div className="flex items-center gap-4">
+                                                                <Link href={`/product/${item.product.slug}`}>
+                                                                    <img
+                                                                        src={item.product.image || '/images/placeholder-product.svg'}
+                                                                        alt={item.product.name}
+                                                                        className="w-20 h-20 object-cover rounded-md border border-grabit-border"
+                                                                    />
+                                                                </Link>
+                                                                <div>
+                                                                    <Link
+                                                                        href={`/product/${item.product.slug}`}
+                                                                        className="font-medium text-grabit-dark hover:text-grabit-primary line-clamp-2"
+                                                                    >
+                                                                        {item.product.name}
+                                                                    </Link>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td className="py-4 px-6">
+                                                            <div className="flex flex-col">
+                                                                <span className="font-medium text-grabit-dark">
+                                                                    {formatPrice(currentPrice)}
+                                                                </span>
+                                                                {item.product.sale_price && item.product.old_price && (
+                                                                    <span className="text-sm text-grabit-gray line-through">
+                                                                        {formatPrice(item.product.old_price)}
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                        </td>
+                                                        <td className="py-4 px-6">
+                                                            <span
+                                                                className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                                                                    item.product.in_stock
+                                                                        ? 'bg-green-100 text-green-800'
+                                                                        : 'bg-red-100 text-red-800'
+                                                                }`}
+                                                            >
+                                                                {item.product.in_stock ? `In Stock (${item.product.stock})` : 'Out of Stock'}
+                                                            </span>
+                                                        </td>
+                                                        <td className="py-4 px-6">
+                                                            <div className="flex items-center justify-end gap-2">
+                                                                <button
+                                                                    onClick={() => handleMoveToCart(item)}
+                                                                    disabled={!item.product.in_stock || isMoving || isRemoving}
+                                                                    className={`flex items-center gap-2 px-4 py-2 rounded-md font-medium text-sm transition-colors ${
+                                                                        item.product.in_stock && !isMoving && !isRemoving
+                                                                            ? 'bg-grabit-primary hover:bg-grabit-primary-dark text-white'
+                                                                            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                                                    }`}
+                                                                >
+                                                                    <FiShoppingCart className="w-4 h-4" />
+                                                                    {isMoving ? 'Moving...' : 'Add to Cart'}
+                                                                </button>
+                                                                <button
+                                                                    onClick={() => handleRemoveFromWishlist(item)}
+                                                                    disabled={isRemoving || isMoving}
+                                                                    className="p-2 text-red-600 hover:bg-red-50 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                                                    title="Remove from wishlist"
+                                                                >
+                                                                    <FiTrash2 className="w-5 h-5" />
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                {/* Mobile View */}
+                                <div className="md:hidden divide-y divide-grabit-border">
                                     {wishlistItems.map((item) => {
                                         const currentPrice = item.product.sale_price || item.product.price;
                                         const isRemoving = removingItems.has(item.id);
                                         const isMoving = movingToCart.has(item.id);
 
                                         return (
-                                            <tr key={item.id} className="hover:bg-gray-50">
-                                                <td className="py-4 px-6">
-                                                    <div className="flex items-center gap-4">
-                                                        <Link href={`/product/${item.product.slug}`}>
-                                                            <img
-                                                                src={item.product.image || '/images/placeholder-product.svg'}
-                                                                alt={item.product.name}
-                                                                className="w-20 h-20 object-cover rounded-md border border-grabit-border"
-                                                            />
+                                            <div key={item.id} className="p-4">
+                                                <div className="flex gap-4 mb-4">
+                                                    <Link href={`/product/${item.product.slug}`}>
+                                                        <img
+                                                            src={item.product.image || '/images/placeholder-product.svg'}
+                                                            alt={item.product.name}
+                                                            className="w-24 h-24 object-cover rounded-md border border-grabit-border"
+                                                        />
+                                                    </Link>
+                                                    <div className="flex-1">
+                                                        <Link
+                                                            href={`/product/${item.product.slug}`}
+                                                            className="font-medium text-grabit-dark hover:text-grabit-primary line-clamp-2 mb-2"
+                                                        >
+                                                            {item.product.name}
                                                         </Link>
-                                                        <div>
-                                                            <Link
-                                                                href={`/product/${item.product.slug}`}
-                                                                className="font-medium text-grabit-dark hover:text-grabit-primary line-clamp-2"
-                                                            >
-                                                                {item.product.name}
-                                                            </Link>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td className="py-4 px-6">
-                                                    <div className="flex flex-col">
-                                                        <span className="font-medium text-grabit-dark">
-                                                            {formatPrice(currentPrice)}
-                                                        </span>
-                                                        {item.product.sale_price && item.product.old_price && (
-                                                            <span className="text-sm text-grabit-gray line-through">
-                                                                {formatPrice(item.product.old_price)}
+                                                        <div className="mb-2">
+                                                            <span className="font-medium text-grabit-dark">
+                                                                {formatPrice(currentPrice)}
                                                             </span>
-                                                        )}
-                                                    </div>
-                                                </td>
-                                                <td className="py-4 px-6">
-                                                    <span
-                                                        className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                                                            item.product.in_stock
-                                                                ? 'bg-green-100 text-green-800'
-                                                                : 'bg-red-100 text-red-800'
-                                                        }`}
-                                                    >
-                                                        {item.product.in_stock ? `In Stock (${item.product.stock})` : 'Out of Stock'}
-                                                    </span>
-                                                </td>
-                                                <td className="py-4 px-6">
-                                                    <div className="flex items-center justify-end gap-2">
-                                                        <button
-                                                            onClick={() => handleMoveToCart(item)}
-                                                            disabled={!item.product.in_stock || isMoving || isRemoving}
-                                                            className={`flex items-center gap-2 px-4 py-2 rounded-md font-medium text-sm transition-colors ${
-                                                                item.product.in_stock && !isMoving && !isRemoving
-                                                                    ? 'bg-grabit-primary hover:bg-grabit-primary-dark text-white'
-                                                                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                                            {item.product.sale_price && item.product.old_price && (
+                                                                <span className="text-sm text-grabit-gray line-through ml-2">
+                                                                    {formatPrice(item.product.old_price)}
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                        <span
+                                                            className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                                                                item.product.in_stock
+                                                                    ? 'bg-green-100 text-green-800'
+                                                                    : 'bg-red-100 text-red-800'
                                                             }`}
                                                         >
-                                                            <FiShoppingCart className="w-4 h-4" />
-                                                            {isMoving ? 'Moving...' : 'Add to Cart'}
-                                                        </button>
-                                                        <button
-                                                            onClick={() => handleRemoveFromWishlist(item)}
-                                                            disabled={isRemoving || isMoving}
-                                                            className="p-2 text-red-600 hover:bg-red-50 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                                                            title="Remove from wishlist"
-                                                        >
-                                                            <FiTrash2 className="w-5 h-5" />
-                                                        </button>
+                                                            {item.product.in_stock ? 'In Stock' : 'Out of Stock'}
+                                                        </span>
                                                     </div>
-                                                </td>
-                                            </tr>
+                                                </div>
+                                                <div className="flex gap-2">
+                                                    <button
+                                                        onClick={() => handleMoveToCart(item)}
+                                                        disabled={!item.product.in_stock || isMoving || isRemoving}
+                                                        className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-md font-medium text-sm transition-colors ${
+                                                            item.product.in_stock && !isMoving && !isRemoving
+                                                                ? 'bg-grabit-primary hover:bg-grabit-primary-dark text-white'
+                                                                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                                        }`}
+                                                    >
+                                                        <FiShoppingCart className="w-4 h-4" />
+                                                        {isMoving ? 'Moving...' : 'Add to Cart'}
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleRemoveFromWishlist(item)}
+                                                        disabled={isRemoving || isMoving}
+                                                        className="px-4 py-2 text-red-600 hover:bg-red-50 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                                    >
+                                                        <FiTrash2 className="w-5 h-5" />
+                                                    </button>
+                                                </div>
+                                            </div>
                                         );
                                     })}
-                                </tbody>
-                            </table>
-                        </div>
-
-                        {/* Mobile View */}
-                        <div className="md:hidden divide-y divide-grabit-border">
-                            {wishlistItems.map((item) => {
-                                const currentPrice = item.product.sale_price || item.product.price;
-                                const isRemoving = removingItems.has(item.id);
-                                const isMoving = movingToCart.has(item.id);
-
-                                return (
-                                    <div key={item.id} className="p-4">
-                                        <div className="flex gap-4 mb-4">
-                                            <Link href={`/product/${item.product.slug}`}>
-                                                <img
-                                                    src={item.product.image || '/images/placeholder-product.svg'}
-                                                    alt={item.product.name}
-                                                    className="w-24 h-24 object-cover rounded-md border border-grabit-border"
-                                                />
-                                            </Link>
-                                            <div className="flex-1">
-                                                <Link
-                                                    href={`/product/${item.product.slug}`}
-                                                    className="font-medium text-grabit-dark hover:text-grabit-primary line-clamp-2 mb-2"
-                                                >
-                                                    {item.product.name}
-                                                </Link>
-                                                <div className="mb-2">
-                                                    <span className="font-medium text-grabit-dark">
-                                                        {formatPrice(currentPrice)}
-                                                    </span>
-                                                    {item.product.sale_price && item.product.old_price && (
-                                                        <span className="text-sm text-grabit-gray line-through ml-2">
-                                                            {formatPrice(item.product.old_price)}
-                                                        </span>
-                                                    )}
-                                                </div>
-                                                <span
-                                                    className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                                                        item.product.in_stock
-                                                            ? 'bg-green-100 text-green-800'
-                                                            : 'bg-red-100 text-red-800'
-                                                    }`}
-                                                >
-                                                    {item.product.in_stock ? 'In Stock' : 'Out of Stock'}
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div className="flex gap-2">
-                                            <button
-                                                onClick={() => handleMoveToCart(item)}
-                                                disabled={!item.product.in_stock || isMoving || isRemoving}
-                                                className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-md font-medium text-sm transition-colors ${
-                                                    item.product.in_stock && !isMoving && !isRemoving
-                                                        ? 'bg-grabit-primary hover:bg-grabit-primary-dark text-white'
-                                                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                                }`}
-                                            >
-                                                <FiShoppingCart className="w-4 h-4" />
-                                                {isMoving ? 'Moving...' : 'Add to Cart'}
-                                            </button>
-                                            <button
-                                                onClick={() => handleRemoveFromWishlist(item)}
-                                                disabled={isRemoving || isMoving}
-                                                className="px-4 py-2 text-red-600 hover:bg-red-50 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                                            >
-                                                <FiTrash2 className="w-5 h-5" />
-                                            </button>
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </div>
-                ) : (
-                    <div className="bg-white border border-grabit-border rounded-lg p-12 text-center">
-                        <FiHeart className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-                        <h2 className="text-xl font-medium text-grabit-dark mb-2">Your Wishlist is Empty</h2>
-                        <p className="text-grabit-gray mb-6">
-                            Start adding products to your wishlist by clicking the heart icon on products you love.
-                        </p>
-                        <Link
-                            href="/products"
-                            className="inline-flex items-center justify-center px-6 py-3 bg-grabit-primary hover:bg-grabit-primary-dark text-white rounded-md font-medium transition-colors"
-                        >
-                            Continue Shopping
-                        </Link>
-                    </div>
-                )}
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="bg-white border border-grabit-border rounded-lg p-12 text-center">
+                                <FiHeart className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+                                <h2 className="text-xl font-medium text-grabit-dark mb-2">Your Wishlist is Empty</h2>
+                                <p className="text-grabit-gray mb-6">
+                                    Start adding products to your wishlist by clicking the heart icon on products you love.
+                                </p>
+                                <Link
+                                    href="/products"
+                                    className="inline-flex items-center justify-center px-6 py-3 bg-grabit-primary hover:bg-grabit-primary-dark text-white rounded-md font-medium transition-colors"
+                                >
+                                    Continue Shopping
+                                </Link>
+                            </div>
+                        )}
+                    </main>
+                </div>
             </div>
         </>
     );
@@ -301,11 +346,11 @@ export default function WishlistIndex({
     auth,
     wishlistItems: initialItems,
     cartCount = 0,
-    wishlistCount = 0
+    wishlistCount = 0,
 }: WishlistIndexProps) {
     return (
         <FrontendLayout auth={auth} cartCount={cartCount} wishlistCount={wishlistCount}>
-            <WishlistContent initialItems={initialItems} />
+            <WishlistContent initialItems={initialItems} auth={auth} />
         </FrontendLayout>
     );
 }
