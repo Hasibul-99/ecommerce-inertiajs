@@ -15,7 +15,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::withCount('products')
+        $categories = Category::withCount(['products' => fn($q) => $q->where('status', 'published')])
             ->whereNull('parent_id')
             ->get()
             ->map(function ($category) {
@@ -59,10 +59,7 @@ class CategoryController extends Controller
 
         $query = $category->products()
             ->with(['variants', 'reviews'])
-            ->where('status', 'published')
-            ->whereHas('variants', function ($q) {
-                $q->where('stock_quantity', '>', 0);
-            });
+            ->where('status', 'published');
 
         // Price range filter
         if ($request->has('min_price')) {
@@ -107,18 +104,23 @@ class CategoryController extends Controller
 
         // Transform products for frontend
         $products->getCollection()->transform(function ($product) {
-            $totalStock = $product->variants->sum('stock_quantity');
-            $minPrice = $product->variants->min('price_cents');
+            $hasVariants = $product->variants->isNotEmpty();
+            $totalStock = $hasVariants
+                ? $product->variants->sum('stock_quantity')
+                : $product->stock_quantity;
+            $minPrice = $hasVariants
+                ? $product->variants->min('price_cents')
+                : ($product->price_cents ?? $product->base_price_cents);
             $averageRating = $product->reviews()->approved()->avg('rating') ?? 0;
             $reviewsCount = $product->reviews()->approved()->count();
 
             return [
                 'id' => $product->id,
-                'name' => $product->title,
+                'name' => $product->title ?? $product->name,
                 'slug' => $product->slug,
                 'price' => $minPrice ?? $product->base_price_cents,
                 'old_price' => null,
-                'image' => $product->getMedia('images')->first()?->getUrl() ?? null,
+                'image' => $product->getFirstMediaUrl('images') ?: null,
                 'rating' => round($averageRating, 1),
                 'reviews_count' => $reviewsCount,
                 'is_new' => $product->created_at->isAfter(now()->subDays(30)),

@@ -56,9 +56,17 @@ class Category extends Model implements HasMedia
     }
 
     /**
-     * Get the products for the category.
+     * Get the products for the category (via category_id FK).
      */
     public function products()
+    {
+        return $this->hasMany(Product::class, 'category_id');
+    }
+
+    /**
+     * Get products linked via the many-to-many pivot table.
+     */
+    public function productCategories()
     {
         return $this->belongsToMany(Product::class, 'product_categories');
     }
