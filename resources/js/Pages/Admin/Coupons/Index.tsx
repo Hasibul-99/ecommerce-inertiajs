@@ -31,8 +31,14 @@ interface Coupon {
   updated_at: string;
 }
 
+interface PaginatedCoupons {
+  data: Coupon[];
+  links: Record<string, string | null>;
+  meta: Record<string, unknown>;
+}
+
 interface Props extends PageProps {
-  coupons: Coupon[];
+  coupons: PaginatedCoupons | Coupon[];
 }
 
 export default function CouponsIndex({ auth, coupons }: Props) {
@@ -57,7 +63,7 @@ export default function CouponsIndex({ auth, coupons }: Props) {
   });
 
   // Use actual coupons data from the backend
-  const displayCoupons = coupons || [];
+  const displayCoupons: Coupon[] = Array.isArray(coupons) ? coupons : (coupons?.data ?? []);
 
   const handleSearch = () => {
     console.log('Searching for:', searchTerm);

@@ -180,6 +180,14 @@ class Order extends Model
     }
 
     /**
+     * Get the vendor this order belongs to (nullable for multi-vendor orders).
+     */
+    public function vendor()
+    {
+        return $this->belongsTo(Vendor::class);
+    }
+
+    /**
      * Get the vendor earnings for the order.
      */
     public function vendorEarnings()

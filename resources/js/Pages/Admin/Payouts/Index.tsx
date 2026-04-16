@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
+import { PageProps } from '@/types';
 import { FiDollarSign, FiClock, FiCheckCircle, FiXCircle, FiFilter, FiDownload, FiCheck } from 'react-icons/fi';
 
 interface Payout {
@@ -21,7 +22,7 @@ interface Payout {
     requested_by_name: string | null;
 }
 
-interface Props {
+interface Props extends PageProps {
     payouts: { data: Payout[]; links: any; meta: any };
     filters: { status: string; vendor_id?: number; date_from?: string; date_to?: string };
     stats: {
@@ -36,7 +37,7 @@ interface Props {
     };
 }
 
-export default function PayoutsIndex({ payouts, filters, stats }: Props) {
+export default function PayoutsIndex({ auth, payouts, filters, stats }: Props) {
     const [showFilters, setShowFilters] = useState(false);
     const [selectedPayouts, setSelectedPayouts] = useState<number[]>([]);
     const [processing, setProcessing] = useState(false);
@@ -167,7 +168,7 @@ export default function PayoutsIndex({ payouts, filters, stats }: Props) {
     };
 
     return (
-        <AdminLayout>
+        <AdminLayout user={auth.user} header={<h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Payout Management</h2>}>
             <Head title="Payout Management" />
             <div className="py-8">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
