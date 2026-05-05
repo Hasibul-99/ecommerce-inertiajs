@@ -40,12 +40,13 @@ export default function Track({
     wishlistCount = 0
 }: TrackPageProps) {
     const formatDate = (dateString: string) => {
-        return new Date(dateString).toLocaleDateString('en-US', {
+        return new Date(dateString).toLocaleDateString('en-GB', {
             year: 'numeric',
             month: 'long',
             day: 'numeric',
             hour: '2-digit',
             minute: '2-digit',
+            timeZone: 'Asia/Dhaka',
         });
     };
 
