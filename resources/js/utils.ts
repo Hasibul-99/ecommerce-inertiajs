@@ -1,14 +1,13 @@
 /**
- * Format a number as currency
- * @param amount - The amount to format
- * @param currencyCode - The currency code (default: USD)
- * @returns Formatted currency string
+ * Format a number as Bangladeshi Taka (৳)
+ * @param amount - The display amount (already divided by 100 if stored as paisa)
+ * @returns Formatted Taka string e.g. ৳1,250.00
  */
-export const formatCurrency = (amount: number, currencyCode = 'USD'): string => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: currencyCode,
-  }).format(amount);
+export const formatCurrency = (amount: number): string => {
+  return '৳' + amount.toLocaleString('en-BD', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 };
 
 /**
@@ -29,6 +28,7 @@ export const formatDate = (dateString: string, options: Intl.DateTimeFormatOptio
     year: 'numeric',
     month: 'short',
     day: 'numeric',
+    timeZone: 'Asia/Dhaka',
     ...options,
   };
   
@@ -39,7 +39,7 @@ export const formatDate = (dateString: string, options: Intl.DateTimeFormatOptio
     defaultOptions.hour12 = true;
   }
   
-  return new Date(dateString).toLocaleDateString('en-US', defaultOptions);
+  return new Date(dateString).toLocaleDateString('en-GB', defaultOptions);
 };
 
 /**

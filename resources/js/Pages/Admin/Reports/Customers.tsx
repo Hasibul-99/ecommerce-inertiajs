@@ -67,12 +67,12 @@ export default function Customers({ auth, dateRange, report }: Props) {
     };
 
     const formatCurrency = (value: number) => {
-        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
+        return '৳' + value.toLocaleString('en-BD', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     };
 
     // Prepare chart data
     const acquisitionTrendData = {
-        labels: report.acquisition_trend.map((item) => new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
+        labels: report.acquisition_trend.map((item) => new Date(item.date).toLocaleDateString('en-GB', { month: 'short', day: 'numeric', timeZone: 'Asia/Dhaka' })),
         datasets: [
             {
                 label: 'New Customers',

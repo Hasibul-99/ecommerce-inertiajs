@@ -48,7 +48,7 @@ class VendorDailySummaryNotification extends Notification implements ShouldQueue
             ->line('Here is your daily sales summary for ' . now()->subDay()->format('F d, Y'));
 
         if ($orders > 0) {
-            $message->line('**Total Revenue:** $' . $revenue)
+            $message->line('**Total Revenue:** ৳' . $revenue)
                     ->line('**Orders:** ' . $orders)
                     ->line('**Items Sold:** ' . $items);
 

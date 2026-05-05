@@ -76,7 +76,7 @@ export default function Create({ categories, vendors, tags, auth }: Props) {
         compare_at_price_cents: 0,
         cost_cents: 0,
         stock_quantity: 0,
-        currency: 'USD',
+        currency: 'BDT',
         status: 'draft',
         is_active: true,
         is_featured: false,
@@ -239,70 +239,92 @@ export default function Create({ categories, vendors, tags, auth }: Props) {
                                         </CardHeader>
                                         <CardContent className="space-y-4">
                                             <div>
-                                                <Label htmlFor="base_price_cents">Base Price (cents) <span className="text-red-500">*</span></Label>
-                                                <Input
-                                                    id="base_price_cents"
-                                                    type="number"
-                                                    value={data.base_price_cents}
-                                                    onChange={(e) => setData('base_price_cents', parseInt(e.target.value) || 0)}
-                                                    className={errors.base_price_cents ? 'border-red-500' : ''}
-                                                />
+                                                <Label htmlFor="base_price_cents">Base Price (৳) <span className="text-red-500">*</span></Label>
+                                                <div className="relative">
+                                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium">৳</span>
+                                                    <Input
+                                                        id="base_price_cents"
+                                                        type="number"
+                                                        min="0"
+                                                        step="0.01"
+                                                        value={data.base_price_cents / 100 || ''}
+                                                        onChange={(e) => setData('base_price_cents', Math.round(parseFloat(e.target.value) * 100) || 0)}
+                                                        className={'pl-7 ' + (errors.base_price_cents ? 'border-red-500' : '')}
+                                                        placeholder="0.00"
+                                                    />
+                                                </div>
                                                 {errors.base_price_cents && <p className="text-red-500 text-sm mt-1">{errors.base_price_cents}</p>}
                                             </div>
 
                                             <div>
-                                                <Label htmlFor="price_cents">Price (cents)</Label>
-                                                <Input
-                                                    id="price_cents"
-                                                    type="number"
-                                                    min="0"
-                                                    value={data.price_cents}
-                                                    onChange={(e) => setData('price_cents', parseInt(e.target.value) || 0)}
-                                                    className={errors.price_cents ? 'border-red-500' : ''}
-                                                    placeholder="Regular price in cents"
-                                                />
+                                                <Label htmlFor="price_cents">Price (৳)</Label>
+                                                <div className="relative">
+                                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium">৳</span>
+                                                    <Input
+                                                        id="price_cents"
+                                                        type="number"
+                                                        min="0"
+                                                        step="0.01"
+                                                        value={data.price_cents / 100 || ''}
+                                                        onChange={(e) => setData('price_cents', Math.round(parseFloat(e.target.value) * 100) || 0)}
+                                                        className={'pl-7 ' + (errors.price_cents ? 'border-red-500' : '')}
+                                                        placeholder="0.00"
+                                                    />
+                                                </div>
                                                 {errors.price_cents && <p className="text-red-500 text-sm mt-1">{errors.price_cents}</p>}
                                             </div>
 
                                             <div>
-                                                <Label htmlFor="sale_price_cents">Sale Price (cents)</Label>
-                                                <Input
-                                                    id="sale_price_cents"
-                                                    type="number"
-                                                    min="0"
-                                                    value={data.sale_price_cents}
-                                                    onChange={(e) => setData('sale_price_cents', parseInt(e.target.value) || 0)}
-                                                    className={errors.sale_price_cents ? 'border-red-500' : ''}
-                                                    placeholder="Discounted price (optional)"
-                                                />
+                                                <Label htmlFor="sale_price_cents">Sale Price (৳)</Label>
+                                                <div className="relative">
+                                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium">৳</span>
+                                                    <Input
+                                                        id="sale_price_cents"
+                                                        type="number"
+                                                        min="0"
+                                                        step="0.01"
+                                                        value={data.sale_price_cents / 100 || ''}
+                                                        onChange={(e) => setData('sale_price_cents', Math.round(parseFloat(e.target.value) * 100) || 0)}
+                                                        className={'pl-7 ' + (errors.sale_price_cents ? 'border-red-500' : '')}
+                                                        placeholder="0.00 (optional)"
+                                                    />
+                                                </div>
                                                 {errors.sale_price_cents && <p className="text-red-500 text-sm mt-1">{errors.sale_price_cents}</p>}
                                             </div>
 
                                             <div>
-                                                <Label htmlFor="compare_at_price_cents">Compare At Price (cents)</Label>
-                                                <Input
-                                                    id="compare_at_price_cents"
-                                                    type="number"
-                                                    min="0"
-                                                    value={data.compare_at_price_cents}
-                                                    onChange={(e) => setData('compare_at_price_cents', parseInt(e.target.value) || 0)}
-                                                    className={errors.compare_at_price_cents ? 'border-red-500' : ''}
-                                                    placeholder="Original price before discount"
-                                                />
+                                                <Label htmlFor="compare_at_price_cents">Compare At Price (৳)</Label>
+                                                <div className="relative">
+                                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium">৳</span>
+                                                    <Input
+                                                        id="compare_at_price_cents"
+                                                        type="number"
+                                                        min="0"
+                                                        step="0.01"
+                                                        value={data.compare_at_price_cents / 100 || ''}
+                                                        onChange={(e) => setData('compare_at_price_cents', Math.round(parseFloat(e.target.value) * 100) || 0)}
+                                                        className={'pl-7 ' + (errors.compare_at_price_cents ? 'border-red-500' : '')}
+                                                        placeholder="0.00 (original price before discount)"
+                                                    />
+                                                </div>
                                                 {errors.compare_at_price_cents && <p className="text-red-500 text-sm mt-1">{errors.compare_at_price_cents}</p>}
                                             </div>
 
                                             <div>
-                                                <Label htmlFor="cost_cents">Cost Price (cents)</Label>
-                                                <Input
-                                                    id="cost_cents"
-                                                    type="number"
-                                                    min="0"
-                                                    value={data.cost_cents}
-                                                    onChange={(e) => setData('cost_cents', parseInt(e.target.value) || 0)}
-                                                    className={errors.cost_cents ? 'border-red-500' : ''}
-                                                    placeholder="Cost price for margin calculation"
-                                                />
+                                                <Label htmlFor="cost_cents">Cost Price (৳)</Label>
+                                                <div className="relative">
+                                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium">৳</span>
+                                                    <Input
+                                                        id="cost_cents"
+                                                        type="number"
+                                                        min="0"
+                                                        step="0.01"
+                                                        value={data.cost_cents / 100 || ''}
+                                                        onChange={(e) => setData('cost_cents', Math.round(parseFloat(e.target.value) * 100) || 0)}
+                                                        className={'pl-7 ' + (errors.cost_cents ? 'border-red-500' : '')}
+                                                        placeholder="0.00 (for margin calculation)"
+                                                    />
+                                                </div>
                                                 {errors.cost_cents && <p className="text-red-500 text-sm mt-1">{errors.cost_cents}</p>}
                                             </div>
 
@@ -322,17 +344,11 @@ export default function Create({ categories, vendors, tags, auth }: Props) {
                                             </div>
 
                                             <div>
-                                                <Label htmlFor="currency">Currency <span className="text-red-500">*</span></Label>
-                                                <Select value={data.currency} onValueChange={(value) => setData('currency', value)}>
-                                                    <SelectTrigger>
-                                                        <SelectValue />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        <SelectItem value="USD">USD</SelectItem>
-                                                        <SelectItem value="EUR">EUR</SelectItem>
-                                                        <SelectItem value="GBP">GBP</SelectItem>
-                                                    </SelectContent>
-                                                </Select>
+                                                <Label htmlFor="currency">Currency</Label>
+                                                <div className="flex items-center gap-2 px-3 py-2 border border-gray-200 rounded-md bg-gray-50 text-gray-700 text-sm">
+                                                    <span className="font-semibold">৳</span>
+                                                    <span>BDT — Bangladeshi Taka</span>
+                                                </div>
                                             </div>
 
                                             <div>
@@ -445,12 +461,19 @@ export default function Create({ categories, vendors, tags, auth }: Props) {
                                                                 />
                                                             </div>
                                                             <div>
-                                                                <Label>Price (cents) <span className="text-red-500">*</span></Label>
-                                                                <Input
-                                                                    type="number"
-                                                                    value={variant.price_cents}
-                                                                    onChange={(e) => updateVariant(index, 'price_cents', parseInt(e.target.value) || 0)}
-                                                                />
+                                                                <Label>Price (৳) <span className="text-red-500">*</span></Label>
+                                                                <div className="relative">
+                                                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium">৳</span>
+                                                                    <Input
+                                                                        type="number"
+                                                                        min="0"
+                                                                        step="0.01"
+                                                                        value={variant.price_cents / 100 || ''}
+                                                                        onChange={(e) => updateVariant(index, 'price_cents', Math.round(parseFloat(e.target.value) * 100) || 0)}
+                                                                        className="pl-7"
+                                                                        placeholder="0.00"
+                                                                    />
+                                                                </div>
                                                             </div>
                                                             <div>
                                                                 <Label>Inventory Quantity <span className="text-red-500">*</span></Label>
@@ -461,20 +484,34 @@ export default function Create({ categories, vendors, tags, auth }: Props) {
                                                                 />
                                                             </div>
                                                             <div>
-                                                                <Label>Compare Price (cents)</Label>
-                                                                <Input
-                                                                    type="number"
-                                                                    value={variant.compare_at_price_cents || ''}
-                                                                    onChange={(e) => updateVariant(index, 'compare_at_price_cents', parseInt(e.target.value) || undefined)}
-                                                                />
+                                                                <Label>Compare Price (৳)</Label>
+                                                                <div className="relative">
+                                                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium">৳</span>
+                                                                    <Input
+                                                                        type="number"
+                                                                        min="0"
+                                                                        step="0.01"
+                                                                        value={variant.compare_at_price_cents ? variant.compare_at_price_cents / 100 : ''}
+                                                                        onChange={(e) => updateVariant(index, 'compare_at_price_cents', e.target.value ? Math.round(parseFloat(e.target.value) * 100) : undefined)}
+                                                                        className="pl-7"
+                                                                        placeholder="0.00"
+                                                                    />
+                                                                </div>
                                                             </div>
                                                             <div>
-                                                                <Label>Cost (cents)</Label>
-                                                                <Input
-                                                                    type="number"
-                                                                    value={variant.cost_cents || ''}
-                                                                    onChange={(e) => updateVariant(index, 'cost_cents', parseInt(e.target.value) || undefined)}
-                                                                />
+                                                                <Label>Cost (৳)</Label>
+                                                                <div className="relative">
+                                                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium">৳</span>
+                                                                    <Input
+                                                                        type="number"
+                                                                        min="0"
+                                                                        step="0.01"
+                                                                        value={variant.cost_cents ? variant.cost_cents / 100 : ''}
+                                                                        onChange={(e) => updateVariant(index, 'cost_cents', e.target.value ? Math.round(parseFloat(e.target.value) * 100) : undefined)}
+                                                                        className="pl-7"
+                                                                        placeholder="0.00"
+                                                                    />
+                                                                </div>
                                                             </div>
                                                             <div>
                                                                 <Label>SKU</Label>

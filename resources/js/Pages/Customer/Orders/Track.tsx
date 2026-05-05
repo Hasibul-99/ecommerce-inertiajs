@@ -108,7 +108,7 @@ export default function OrderTrack({ auth, order, trackingInfo }: Props) {
                             </div>
                             <p className="text-3xl font-bold text-blue-600">{calculateDeliveryTime()}</p>
                             {trackingInfo.estimated_delivery !== 'Not available' && order.status !== 'delivered' && (
-                                <p className="text-sm text-gray-600 mt-1">{new Date(trackingInfo.estimated_delivery).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</p>
+                                <p className="text-sm text-gray-600 mt-1">{new Date(trackingInfo.estimated_delivery).toLocaleDateString('en-GB', { weekday: 'long', month: 'long', day: 'numeric', timeZone: 'Asia/Dhaka' })}</p>
                             )}
                         </div>
                         <div className="bg-white rounded-lg shadow p-6">

@@ -111,7 +111,7 @@ class SeoController extends Controller
                         'image' => $product->getFirstMediaUrl('images') ?: $defaults['image'],
                         'type' => 'product',
                         'price' => $product->price,
-                        'currency' => 'USD',
+                        'currency' => 'BDT',
                         'availability' => $product->stock_quantity > 0 ? 'in stock' : 'out of stock',
                     ]);
                 }

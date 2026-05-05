@@ -59,7 +59,7 @@ interface FormData {
 }
 
 const formatCents = (cents: number) =>
-    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(cents / 100);
+    '৳' + (cents / 100).toLocaleString('en-BD', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 const inputClass =
     'bg-transparent border-[1px] border-solid border-[#eee] text-[#4b5966] text-[14px] mb-[26px] px-[15px] w-full outline-0 rounded-[5px] h-[50px] focus:border-[#5caf90] transition-colors duration-200';

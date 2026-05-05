@@ -51,7 +51,7 @@ export default function PayoutsIndex({ auth, payouts, filters, stats }: Props) {
     const [cancelReason, setCancelReason] = useState('');
 
     const formatCurrency = (cents: number) => {
-        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(cents / 100);
+        return '৳' + (cents / 100).toLocaleString('en-BD', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     };
 
     const getStatusColor = (status: string) => {
@@ -317,7 +317,7 @@ export default function PayoutsIndex({ auth, payouts, filters, stats }: Props) {
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                                {new Date(payout.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                                {new Date(payout.created_at).toLocaleDateString('en-GB', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'Asia/Dhaka' })}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm">
                                                 <div className="flex gap-2">

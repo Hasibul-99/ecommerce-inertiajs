@@ -54,7 +54,7 @@ class OrderDeliveredNotification extends Notification implements ShouldQueue
             ->greeting('Hello ' . $notifiable->name . '!')
             ->line('Your order has been successfully delivered!')
             ->line('Order #: ' . $this->order->order_number)
-            ->line('Order Total: $' . number_format($this->order->total_cents / 100, 2))
+            ->line('Order Total: ৳' . number_format($this->order->total_cents / 100, 2))
             ->line('We hope you love your purchase!')
             ->action('Rate Your Products', url('/orders/' . $this->order->id))
             ->line('Thank you for choosing us!');

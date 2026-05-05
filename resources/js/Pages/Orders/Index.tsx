@@ -50,17 +50,15 @@ export default function OrdersIndex({
     };
 
     const formatPrice = (priceInCents: number) => {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-        }).format(priceInCents / 100);
+        return '৳' + (priceInCents / 100).toLocaleString('en-BD', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     };
 
     const formatDate = (dateString: string) => {
-        return new Date(dateString).toLocaleDateString('en-US', {
+        return new Date(dateString).toLocaleDateString('en-GB', {
             year: 'numeric',
             month: 'short',
-            day: 'numeric'
+            day: 'numeric',
+            timeZone: 'Asia/Dhaka',
         });
     };
 

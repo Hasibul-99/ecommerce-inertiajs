@@ -151,11 +151,11 @@ class CheckoutController extends Controller
         // Check order amount limits only (address / phone validated on save)
         if ($orderAmountCents < $codService->getMinOrderAmount()) {
             $min = number_format($codService->getMinOrderAmount() / 100, 2);
-            return redirect()->back()->with('error', "COD is only available for orders above $$min.");
+            return redirect()->back()->with('error', "COD is only available for orders above ৳$min.");
         }
         if ($orderAmountCents > $codService->getMaxOrderAmount()) {
             $max = number_format($codService->getMaxOrderAmount() / 100, 2);
-            return redirect()->back()->with('error', "COD is not available for orders above $$max.");
+            return redirect()->back()->with('error', "COD is not available for orders above ৳$max.");
         }
 
         try {

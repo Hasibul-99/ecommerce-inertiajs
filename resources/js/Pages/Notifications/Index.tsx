@@ -90,12 +90,13 @@ export default function Index({ auth, notifications }: Props) {
         if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)} hours ago`;
         if (diffInMinutes < 10080) return `${Math.floor(diffInMinutes / 1440)} days ago`;
 
-        return date.toLocaleDateString('en-US', {
+        return date.toLocaleDateString('en-GB', {
             year: 'numeric',
             month: 'short',
             day: 'numeric',
             hour: '2-digit',
-            minute: '2-digit'
+            minute: '2-digit',
+            timeZone: 'Asia/Dhaka',
         });
     };
 

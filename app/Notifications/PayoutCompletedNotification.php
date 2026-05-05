@@ -33,7 +33,7 @@ class PayoutCompletedNotification extends Notification implements ShouldQueue
             ->greeting('Hello ' . $notifiable->name . '!')
             ->line('Good news! Your payout has been completed.')
             ->line('**Payout ID:** ' . $this->payout->payout_id)
-            ->line('**Amount:** $' . $amount)
+            ->line('**Amount:** ৳' . $amount)
             ->line('**Method:** ' . ucfirst(str_replace('_', ' ', $this->payout->payout_method)))
             ->line('The funds should arrive in your account within 1-3 business days.')
             ->action('View Payout Details', route('vendor.earnings.payout-details', $this->payout->id))

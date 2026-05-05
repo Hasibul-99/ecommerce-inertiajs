@@ -35,7 +35,7 @@ class PayoutFailedNotification extends Notification implements ShouldQueue
             ->greeting('Hello ' . $notifiable->name . ',')
             ->line('Unfortunately, your recent payout request has failed.')
             ->line('**Payout ID:** ' . $this->payout->payout_id)
-            ->line('**Amount:** $' . $amount)
+            ->line('**Amount:** ৳' . $amount)
             ->line('**Reason:** ' . $this->reason)
             ->line('The funds have been returned to your available balance.')
             ->action('View Payout Details', route('vendor.earnings.payout-details', $this->payout->id))

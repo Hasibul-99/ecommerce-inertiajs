@@ -34,7 +34,7 @@ class ProductFactory extends Factory
             'slug' => $slug,
             'description' => fake()->paragraphs(3, true),
             'base_price_cents' => fake()->numberBetween(500, 50000),
-            'currency' => 'USD',
+            'currency' => 'BDT',
             'status' => fake()->randomElement(['draft', 'pending', 'published', 'rejected']),
             'published_at' => fake()->boolean(70) ? fake()->dateTimeBetween('-1 year', 'now') : null,
 

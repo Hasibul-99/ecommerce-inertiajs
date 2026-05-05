@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Head, Link } from '@inertiajs/react';
-import VendorLayout from '@/Layouts/VendorLayout';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { PageProps } from '@/types';
 import { FiDollarSign, FiClock, FiCheckCircle, FiXCircle, FiLoader, FiCalendar, FiCreditCard } from 'react-icons/fi';
 
 interface Payout {
@@ -21,7 +22,7 @@ interface Payout {
     payout_details: any;
 }
 
-interface Props {
+interface Props extends PageProps {
     payouts: { data: Payout[]; links: any; meta: any };
     stats: {
         total_payouts: number;
@@ -31,11 +32,11 @@ interface Props {
     };
 }
 
-export default function PayoutsIndex({ payouts, stats }: Props) {
+export default function PayoutsIndex({ auth, payouts, stats }: Props) {
     const [selectedPayout, setSelectedPayout] = useState<Payout | null>(null);
 
     const formatCurrency = (cents: number) => {
-        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(cents / 100);
+        return '৳' + (cents / 100).toLocaleString('en-BD', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     };
 
     const getStatusIcon = (status: string) => {
@@ -62,10 +63,10 @@ export default function PayoutsIndex({ payouts, stats }: Props) {
 
     const getStatusText = (payout: Payout) => {
         if (payout.status === 'completed' && payout.processed_at) {
-            return `Completed on ${new Date(payout.processed_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+            return `Completed on ${new Date(payout.processed_at).toLocaleDateString('en-GB', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'Asia/Dhaka' })}`;
         }
         if (payout.status === 'cancelled' && payout.cancelled_at) {
-            return `Cancelled on ${new Date(payout.cancelled_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+            return `Cancelled on ${new Date(payout.cancelled_at).toLocaleDateString('en-GB', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'Asia/Dhaka' })}`;
         }
         if (payout.status === 'failed') {
             return 'Failed - Funds returned to balance';
@@ -77,7 +78,7 @@ export default function PayoutsIndex({ payouts, stats }: Props) {
     };
 
     return (
-        <VendorLayout>
+        <AuthenticatedLayout user={auth.user}>
             <Head title="Payout History" />
             <div className="py-8">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -152,13 +153,13 @@ export default function PayoutsIndex({ payouts, stats }: Props) {
                                             <div>
                                                 <p className="text-xs text-gray-500 mb-1">Request Date</p>
                                                 <p className="text-sm font-medium text-gray-900">
-                                                    {new Date(payout.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                                    {new Date(payout.created_at).toLocaleDateString('en-GB', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'Asia/Dhaka' })}
                                                 </p>
                                             </div>
                                             <div>
                                                 <p className="text-xs text-gray-500 mb-1">Period</p>
                                                 <p className="text-sm font-medium text-gray-900">
-                                                    {new Date(payout.period_start).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - {new Date(payout.period_end).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                                                    {new Date(payout.period_start).toLocaleDateString('en-GB', { month: 'short', day: 'numeric', timeZone: 'Asia/Dhaka' })} - {new Date(payout.period_end).toLocaleDateString('en-GB', { month: 'short', day: 'numeric', timeZone: 'Asia/Dhaka' })}
                                                 </p>
                                             </div>
                                             <div>
@@ -338,6 +339,6 @@ export default function PayoutsIndex({ payouts, stats }: Props) {
                     </div>
                 </div>
             )}
-        </VendorLayout>
+        </AuthenticatedLayout>
     );
 }

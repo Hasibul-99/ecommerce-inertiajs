@@ -277,8 +277,8 @@
                     @endif
                 </td>
                 <td class="text-center">{{ $item->quantity }}</td>
-                <td class="text-right">${{ number_format($item->price_at_purchase_cents / 100, 2) }}</td>
-                <td class="text-right"><strong>${{ number_format(($item->price_at_purchase_cents * $item->quantity) / 100, 2) }}</strong></td>
+                <td class="text-right">৳{{ number_format($item->price_at_purchase_cents / 100, 2) }}</td>
+                <td class="text-right"><strong>৳{{ number_format(($item->price_at_purchase_cents * $item->quantity) / 100, 2) }}</strong></td>
                 <td class="text-center">
                     <span class="status-badge status-{{ $item->vendor_status }}">
                         {{ str_replace('_', ' ', $item->vendor_status) }}
@@ -305,15 +305,15 @@
         <table>
             <tr>
                 <td class="label">Subtotal:</td>
-                <td class="amount">${{ number_format($subtotal_cents / 100, 2) }}</td>
+                <td class="amount">৳{{ number_format($subtotal_cents / 100, 2) }}</td>
             </tr>
             <tr>
                 <td class="label">Tax:</td>
-                <td class="amount">${{ number_format($tax_cents / 100, 2) }}</td>
+                <td class="amount">৳{{ number_format($tax_cents / 100, 2) }}</td>
             </tr>
             <tr class="total-row">
                 <td class="label">Total:</td>
-                <td class="amount">${{ number_format($total_cents / 100, 2) }}</td>
+                <td class="amount">৳{{ number_format($total_cents / 100, 2) }}</td>
             </tr>
         </table>
     </div>

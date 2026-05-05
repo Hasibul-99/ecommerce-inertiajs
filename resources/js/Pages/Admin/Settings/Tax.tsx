@@ -148,21 +148,21 @@ export default function Tax({ auth, settings }: Props) {
                                         <div className="space-y-2 text-sm text-blue-700">
                                             <div className="flex justify-between">
                                                 <span>Product Price:</span>
-                                                <span className="font-medium">${example.basePrice.toFixed(2)}</span>
+                                                <span className="font-medium">৳{example.basePrice.toFixed(2)}</span>
                                             </div>
                                             {!formData.tax_included_in_price && (
                                                 <div className="flex justify-between">
                                                     <span>{formData.tax_label} ({formData.tax_rate}%):</span>
-                                                    <span className="font-medium">${example.taxAmount.toFixed(2)}</span>
+                                                    <span className="font-medium">৳{example.taxAmount.toFixed(2)}</span>
                                                 </div>
                                             )}
                                             <div className="flex justify-between pt-2 border-t border-blue-300">
                                                 <span className="font-semibold">Total:</span>
-                                                <span className="font-semibold">${example.totalPrice.toFixed(2)}</span>
+                                                <span className="font-semibold">৳{example.totalPrice.toFixed(2)}</span>
                                             </div>
                                             {formData.tax_included_in_price && (
                                                 <p className="text-xs text-blue-600 mt-2">
-                                                    (Includes {formData.tax_label} of ${example.taxAmount.toFixed(2)})
+                                                    (Includes {formData.tax_label} of ৳{example.taxAmount.toFixed(2)})
                                                 </p>
                                             )}
                                         </div>

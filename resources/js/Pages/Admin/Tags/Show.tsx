@@ -117,7 +117,7 @@ export default function TagsShow({ auth, tag }: Props) {
                   <div>
                     <label className="text-sm font-medium text-gray-500">Created</label>
                     <p className="text-gray-900">
-                      {new Date(tag.created_at).toLocaleDateString('en-US', {
+                      {new Date(tag.created_at).toLocaleDateString('en-GB', { timeZone: 'Asia/Dhaka',
                         year: 'numeric',
                         month: 'long',
                         day: 'numeric',
@@ -130,7 +130,7 @@ export default function TagsShow({ auth, tag }: Props) {
                   <div>
                     <label className="text-sm font-medium text-gray-500">Last Updated</label>
                     <p className="text-gray-900">
-                      {new Date(tag.updated_at).toLocaleDateString('en-US', {
+                      {new Date(tag.updated_at).toLocaleDateString('en-GB', { timeZone: 'Asia/Dhaka',
                         year: 'numeric',
                         month: 'long',
                         day: 'numeric',

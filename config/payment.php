@@ -32,7 +32,7 @@ return [
         'publishable_key' => env('STRIPE_PUBLISHABLE_KEY', ''),
         'secret_key' => env('STRIPE_SECRET_KEY', ''),
         'webhook_secret' => env('STRIPE_WEBHOOK_SECRET', ''),
-        'currency' => env('STRIPE_CURRENCY', 'usd'),
+        'currency' => env('STRIPE_CURRENCY', 'bdt'),
     ],
 
     /*
@@ -53,7 +53,7 @@ return [
         'mode' => env('PAYPAL_MODE', 'sandbox'), // sandbox or live
         'client_id' => env('PAYPAL_CLIENT_ID', ''),
         'client_secret' => env('PAYPAL_CLIENT_SECRET', ''),
-        'currency' => env('PAYPAL_CURRENCY', 'USD'),
+        'currency' => env('PAYPAL_CURRENCY', 'BDT'),
     ],
 
     /*

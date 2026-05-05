@@ -89,12 +89,12 @@ export default function Orders({ auth, dateRange, filters, report, codReport }: 
     };
 
     const formatCurrency = (value: number) => {
-        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
+        return '৳' + value.toLocaleString('en-BD', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     };
 
     // Prepare chart data
     const ordersTrendData = {
-        labels: report.daily_trend.map((item) => new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
+        labels: report.daily_trend.map((item) => new Date(item.date).toLocaleDateString('en-GB', { month: 'short', day: 'numeric', timeZone: 'Asia/Dhaka' })),
         datasets: [
             {
                 label: 'Total Orders',
@@ -152,7 +152,7 @@ export default function Orders({ auth, dateRange, filters, report, codReport }: 
     };
 
     const codComparisonData = {
-        labels: codReport.daily_comparison.map((item) => new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
+        labels: codReport.daily_comparison.map((item) => new Date(item.date).toLocaleDateString('en-GB', { month: 'short', day: 'numeric', timeZone: 'Asia/Dhaka' })),
         datasets: [
             {
                 label: 'COD Orders',

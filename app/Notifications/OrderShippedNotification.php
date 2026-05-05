@@ -63,7 +63,7 @@ class OrderShippedNotification extends Notification implements ShouldQueue
         }
 
         $mailMessage->line('Order #: ' . $this->order->order_number)
-            ->line('Order Total: $' . number_format($this->order->total_cents / 100, 2))
+            ->line('Order Total: ৳' . number_format($this->order->total_cents / 100, 2))
             ->action('Track Your Order', url('/orders/' . $this->order->id))
             ->line('Thank you for shopping with us!');
 

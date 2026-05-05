@@ -33,16 +33,10 @@ export default function ProductCard({ product }: ProductCardProps) {
     const { addToCart, addToWishlist } = useCartWishlist();
 
     const productImage = product.image || product.images?.[0]?.url || '/images/placeholder-product.svg';
-    const formattedPrice = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-    }).format(product.price / 100);
+    const formattedPrice = '৳' + (product.price / 100).toLocaleString('en-BD', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
     const formattedOldPrice = product.old_price
-        ? new Intl.NumberFormat('en-US', {
-              style: 'currency',
-              currency: 'USD',
-          }).format(product.old_price / 100)
+        ? '৳' + (product.old_price / 100).toLocaleString('en-BD', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         : null;
 
     const handleAddToCart = async (e: React.MouseEvent) => {

@@ -106,7 +106,7 @@ class OrderPlacedNotification extends Notification implements ShouldQueue
             }
 
             // Add order details
-            $mailMessage->line('Order Total: $' . number_format($this->order->total_cents / 100, 2))
+            $mailMessage->line('Order Total: ৳' . number_format($this->order->total_cents / 100, 2))
                 ->action('View Order Details', url('/orders/' . $this->order->id))
                 ->line('Thank you for shopping with us!');
 
@@ -125,7 +125,7 @@ class OrderPlacedNotification extends Notification implements ShouldQueue
         return [
             'title' => 'Order Placed',
             'message' => sprintf(
-                'Your order #%s has been placed successfully! Total: $%s',
+                'Your order #%s has been placed successfully! Total: ৳%s',
                 $this->order->order_number,
                 number_format($this->order->total_cents / 100, 2)
             ),

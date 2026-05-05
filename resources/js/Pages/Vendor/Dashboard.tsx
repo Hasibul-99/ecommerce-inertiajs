@@ -140,7 +140,7 @@ export default function Dashboard({
     };
 
     const formatCurrency = (value: number) => {
-        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
+        return '৳' + value.toLocaleString('en-BD', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     };
 
     const getChangeIndicator = (change: number) => {
@@ -207,7 +207,7 @@ export default function Dashboard({
     // Prepare chart data
     const revenueChartData = {
         labels: revenueChart.map((item) =>
-            new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+            new Date(item.date).toLocaleDateString('en-GB', { month: 'short', day: 'numeric', timeZone: 'Asia/Dhaka' })
         ),
         datasets: [
             {

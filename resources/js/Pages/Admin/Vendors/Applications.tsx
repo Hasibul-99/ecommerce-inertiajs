@@ -201,10 +201,11 @@ export default function Applications({ auth, vendors, filters }: Props) {
                             <div>
                               <p className="text-sm text-gray-600">
                                 <span className="font-medium">Applied:</span>{' '}
-                                {new Date(vendor.created_at).toLocaleDateString('en-US', {
+                                {new Date(vendor.created_at).toLocaleDateString('en-GB', {
                                   year: 'numeric',
                                   month: 'short',
                                   day: 'numeric',
+                                  timeZone: 'Asia/Dhaka',
                                 })}
                               </p>
                               <p className="text-sm text-gray-600">

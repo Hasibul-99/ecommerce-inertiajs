@@ -63,7 +63,7 @@ class PaymentFailedNotification extends Notification implements ShouldQueue
             ->greeting('Hello ' . $notifiable->name . '!')
             ->line('We were unable to process the payment for your order.')
             ->line('Order #: ' . $this->order->order_number)
-            ->line('Order Total: $' . number_format($this->order->total_cents / 100, 2));
+            ->line('Order Total: ৳' . number_format($this->order->total_cents / 100, 2));
 
         if ($this->reason) {
             $mailMessage->line('Reason: ' . $this->reason);

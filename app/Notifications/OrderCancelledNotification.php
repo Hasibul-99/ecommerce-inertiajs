@@ -56,7 +56,7 @@ class OrderCancelledNotification extends Notification implements ShouldQueue
             ->line('Order #: ' . $this->order->order_number);
 
         if ($this->order->payment_status === 'paid') {
-            $mailMessage->line('Refund Amount: $' . number_format($this->order->total_cents / 100, 2))
+            $mailMessage->line('Refund Amount: ৳' . number_format($this->order->total_cents / 100, 2))
                 ->line('Your refund will be processed within 5-7 business days to your original payment method.');
         }
 

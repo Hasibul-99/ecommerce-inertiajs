@@ -123,7 +123,7 @@ export default function OrdersIndex({ auth, orders, filters }: Props) {
                                             <div>
                                                 <h3 className="text-lg font-semibold text-gray-900">Order #{order.order_number}</h3>
                                                 <p className="text-sm text-gray-600 mt-1">
-                                                    {new Date(order.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                                                    {new Date(order.created_at).toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'Asia/Dhaka' })}
                                                 </p>
                                             </div>
                                             <div className="flex items-center gap-2 mt-2 md:mt-0">

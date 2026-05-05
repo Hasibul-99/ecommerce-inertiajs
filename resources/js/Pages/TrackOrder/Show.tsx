@@ -138,18 +138,16 @@ export default function Show({ auth, trackingData, trackingToken, cartCount = 0,
     };
 
     const formatCurrency = (cents: number) => {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-        }).format(cents / 100);
+        return '৳' + (cents / 100).toLocaleString('en-BD', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     };
 
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', {
+        return date.toLocaleDateString('en-GB', {
             year: 'numeric',
             month: 'long',
             day: 'numeric',
+            timeZone: 'Asia/Dhaka',
         });
     };
 

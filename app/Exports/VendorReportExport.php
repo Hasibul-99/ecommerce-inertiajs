@@ -26,11 +26,11 @@ class VendorReportExport implements FromCollection, WithHeadings, WithMapping, W
     public function headings(): array
     {
         return match($this->type) {
-            'sales_daily' => ['Date', 'Revenue (USD)', 'Orders Count', 'Items Sold'],
-            'sales_products' => ['Product', 'SKU', 'Units Sold', 'Revenue (USD)', 'Avg Price (USD)'],
-            'products' => ['Product', 'SKU', 'Stock', 'Price (USD)', 'Units Sold', 'Revenue (USD)', 'Status'],
-            'customers' => ['Customer', 'Email', 'Orders Count', 'Total Spent (USD)', 'Avg Order Value (USD)'],
-            'customers_geo' => ['Country', 'Customers', 'Orders', 'Revenue (USD)', 'Avg per Customer (USD)'],
+            'sales_daily' => ['Date', 'Revenue (BDT)', 'Orders Count', 'Items Sold'],
+            'sales_products' => ['Product', 'SKU', 'Units Sold', 'Revenue (BDT)', 'Avg Price (BDT)'],
+            'products' => ['Product', 'SKU', 'Stock', 'Price (BDT)', 'Units Sold', 'Revenue (BDT)', 'Status'],
+            'customers' => ['Customer', 'Email', 'Orders Count', 'Total Spent (BDT)', 'Avg Order Value (BDT)'],
+            'customers_geo' => ['Country', 'Customers', 'Orders', 'Revenue (BDT)', 'Avg per Customer (BDT)'],
             default => ['Data'],
         };
     }

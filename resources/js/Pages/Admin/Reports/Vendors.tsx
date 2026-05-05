@@ -57,7 +57,7 @@ export default function Vendors({ auth, dateRange, report }: Props) {
     };
 
     const formatCurrency = (value: number) => {
-        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
+        return '৳' + value.toLocaleString('en-BD', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     };
 
     // Sort vendors

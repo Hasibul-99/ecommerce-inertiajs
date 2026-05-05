@@ -104,10 +104,7 @@ export default function ProductsIndex({ products, categories, vendors, auth }: P
   };
 
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(price);
+    return '৳' + price.toLocaleString('en-BD', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
 
   const getStatusBadge = (status: string) => {

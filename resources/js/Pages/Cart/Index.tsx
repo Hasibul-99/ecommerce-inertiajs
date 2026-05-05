@@ -47,10 +47,7 @@ export default function CartIndex({
     const [processing, setProcessing] = useState(false);
 
     const formatPrice = (priceInCents: number) => {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-        }).format(priceInCents / 100);
+        return '৳' + (priceInCents / 100).toLocaleString('en-BD', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     };
 
     const updateQuantity = (itemId: number, newQuantity: number) => {

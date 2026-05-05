@@ -20,7 +20,7 @@ interface Props {
 
 export default function CustomerDashboard({ auth, stats, recentOrders, activeOrders, wishlistItems, recentlyViewed, recommendedProducts }: Props) {
     const formatCurrency = (cents: number) => {
-        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(cents / 100);
+        return '৳' + (cents / 100).toLocaleString('en-BD', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     };
 
     const getStatusColor = (status: string) => {

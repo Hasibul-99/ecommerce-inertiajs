@@ -29,8 +29,8 @@ export default function General({ auth, settings }: Props) {
         contact_email: settings.contact_email?.value || '',
         contact_phone: settings.contact_phone?.value || '',
         address: settings.address?.value || '',
-        currency: settings.currency?.value || 'USD',
-        timezone: settings.timezone?.value || 'UTC',
+        currency: settings.currency?.value || 'BDT',
+        timezone: settings.timezone?.value || 'Asia/Dhaka',
     });
 
     const [files, setFiles] = useState<Record<string, File | null>>({
@@ -73,6 +73,7 @@ export default function General({ auth, settings }: Props) {
     };
 
     const currencyOptions = [
+        { value: 'BDT', label: 'Bangladeshi Taka (BDT ৳)' },
         { value: 'USD', label: 'US Dollar (USD)' },
         { value: 'EUR', label: 'Euro (EUR)' },
         { value: 'GBP', label: 'British Pound (GBP)' },
@@ -83,6 +84,7 @@ export default function General({ auth, settings }: Props) {
     ];
 
     const timezoneOptions = [
+        { value: 'Asia/Dhaka', label: 'Dhaka (Asia/Dhaka, UTC+6)' },
         { value: 'UTC', label: 'UTC' },
         { value: 'America/New_York', label: 'Eastern Time (US & Canada)' },
         { value: 'America/Chicago', label: 'Central Time (US & Canada)' },

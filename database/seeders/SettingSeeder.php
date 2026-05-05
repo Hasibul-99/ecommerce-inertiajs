@@ -65,7 +65,7 @@ class SettingSeeder extends Seeder
             [
                 'group' => 'general',
                 'key' => 'currency',
-                'value' => 'USD',
+                'value' => 'BDT',
                 'type' => 'string',
                 'description' => 'Default currency code',
                 'is_public' => true,
@@ -73,7 +73,7 @@ class SettingSeeder extends Seeder
             [
                 'group' => 'general',
                 'key' => 'timezone',
-                'value' => 'UTC',
+                'value' => 'Asia/Dhaka',
                 'type' => 'string',
                 'description' => 'Default timezone',
                 'is_public' => false,

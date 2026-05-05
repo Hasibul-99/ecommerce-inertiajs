@@ -54,7 +54,7 @@ class PayoutProcessedNotification extends Notification implements ShouldQueue
             ->greeting('Hello ' . $notifiable->name . '!')
             ->line('Your payout has been successfully processed.')
             ->line('Reference Number: ' . $this->payout->reference_number)
-            ->line('Payout Amount: $' . number_format($this->payout->amount_cents / 100, 2))
+            ->line('Payout Amount: ৳' . number_format($this->payout->amount_cents / 100, 2))
             ->line('Payment Method: ' . ucfirst($this->payout->payment_method ?? 'Bank Transfer'))
             ->line('The funds should arrive in your account within 3-5 business days.')
             ->action('View Payout Details', url('/vendor/payouts/' . $this->payout->id))

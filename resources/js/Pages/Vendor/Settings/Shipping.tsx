@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Head, useForm } from '@inertiajs/react';
-import VendorLayout from '@/Layouts/VendorLayout';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { PageProps } from '@/types';
 import { FiTruck, FiClock, FiDollarSign, FiCheck, FiX, FiInfo } from 'react-icons/fi';
 
 interface ShippingMethod {
@@ -17,12 +18,12 @@ interface ShippingMethod {
     vendor_config_id: number | null;
 }
 
-interface Props {
+interface Props extends PageProps {
     shippingMethods: ShippingMethod[];
     vendor: any;
 }
 
-export default function Shipping({ shippingMethods, vendor }: Props) {
+export default function Shipping({ auth, shippingMethods, vendor }: Props) {
     const [editingMethod, setEditingMethod] = useState<number | null>(null);
 
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -88,7 +89,7 @@ export default function Shipping({ shippingMethods, vendor }: Props) {
     };
 
     return (
-        <VendorLayout>
+        <AuthenticatedLayout user={auth.user}>
             <Head title="Shipping Settings" />
 
             <div className="py-12">
@@ -272,6 +273,6 @@ export default function Shipping({ shippingMethods, vendor }: Props) {
                     </div>
                 </div>
             </div>
-        </VendorLayout>
+        </AuthenticatedLayout>
     );
 }

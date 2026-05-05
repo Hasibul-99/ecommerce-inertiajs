@@ -164,7 +164,7 @@ export default function CouponsIndex({ auth, coupons }: Props) {
     if (coupon.type === 'percentage') {
       return `${coupon.value}%`;
     }
-    return `$${coupon.value.toFixed(2)}`;
+    return `৳${coupon.value.toFixed(2)}`;
   };
 
   const formatDate = (dateString: string) => {

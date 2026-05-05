@@ -134,10 +134,11 @@ const Show: React.FC<Props> = ({ auth, vendor, productCount, productStats, appro
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+    return new Date(dateString).toLocaleDateString('en-GB', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
+      timeZone: 'Asia/Dhaka',
     });
   };
 

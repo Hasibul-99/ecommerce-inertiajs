@@ -256,7 +256,7 @@ class CypressTestSeeder extends Seeder
                     'description' => $data['description'],
                     'base_price_cents' => (int)($data['price'] * 100),
                     'price_cents' => (int)($data['price'] * 100),
-                    'currency' => 'USD',
+                    'currency' => 'BDT',
                     'stock_quantity' => $data['stock'],
                     'category_id' => $data['category']->id,
                     'status' => 'published',

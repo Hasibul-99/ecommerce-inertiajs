@@ -135,7 +135,7 @@ class ProductController extends Controller
                     'slug' => Str::slug($request->title),
                     'description' => $request->description,
                     'base_price_cents' => $request->base_price_cents,
-                    'currency' => $request->currency ?? 'USD',
+                    'currency' => $request->currency ?? 'BDT',
                     'status' => $request->status ?? 'draft',
                     'published_at' => $request->status === 'published' ? now() : null,
                 ]);
@@ -255,7 +255,7 @@ class ProductController extends Controller
                     'slug' => Str::slug($request->title),
                     'description' => $request->description,
                     'base_price_cents' => $request->base_price_cents,
-                    'currency' => $request->currency ?? 'USD',
+                    'currency' => $request->currency ?? 'BDT',
                     'status' => $request->status,
                     'published_at' => $request->status === 'published' && !$product->published_at ? now() : $product->published_at,
                 ]);

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
-import VendorLayout from '@/Layouts/VendorLayout';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { PageProps } from '@/types';
 import { FiDownload, FiFilter, FiCalendar, FiDollarSign } from 'react-icons/fi';
 
 interface Transaction {
@@ -15,7 +16,7 @@ interface Transaction {
     created_at: string;
 }
 
-interface Props {
+interface Props extends PageProps {
     transactions: { data: Transaction[]; links: any; meta: any };
     filters: { status: string; date_from?: string; date_to?: string };
     stats: {
@@ -26,14 +27,14 @@ interface Props {
     };
 }
 
-export default function TransactionsIndex({ transactions, filters, stats }: Props) {
+export default function TransactionsIndex({ auth, transactions, filters, stats }: Props) {
     const [showFilters, setShowFilters] = useState(false);
     const [statusFilter, setStatusFilter] = useState(filters.status || '');
     const [dateFrom, setDateFrom] = useState(filters.date_from || '');
     const [dateTo, setDateTo] = useState(filters.date_to || '');
 
     const formatCurrency = (cents: number) => {
-        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(cents / 100);
+        return '৳' + (cents / 100).toLocaleString('en-BD', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     };
 
     const getStatusColor = (status: string) => {
@@ -73,7 +74,7 @@ export default function TransactionsIndex({ transactions, filters, stats }: Prop
     };
 
     return (
-        <VendorLayout>
+        <AuthenticatedLayout user={auth.user}>
             <Head title="Earnings Transactions" />
             <div className="py-8">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -170,7 +171,7 @@ export default function TransactionsIndex({ transactions, filters, stats }: Prop
                                                 </Link>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                                {new Date(transaction.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                                {new Date(transaction.created_at).toLocaleDateString('en-GB', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'Asia/Dhaka' })}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-900">
                                                 {formatCurrency(transaction.amount_cents)}
@@ -187,7 +188,7 @@ export default function TransactionsIndex({ transactions, filters, stats }: Prop
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                                {new Date(transaction.available_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                                                {new Date(transaction.available_at).toLocaleDateString('en-GB', { month: 'short', day: 'numeric', timeZone: 'Asia/Dhaka' })}
                                             </td>
                                         </tr>
                                     )) : (
@@ -220,6 +221,6 @@ export default function TransactionsIndex({ transactions, filters, stats }: Prop
                     </div>
                 </div>
             </div>
-        </VendorLayout>
+        </AuthenticatedLayout>
     );
 }

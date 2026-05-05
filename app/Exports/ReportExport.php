@@ -47,9 +47,9 @@ class ReportExport implements FromCollection, WithHeadings, WithMapping, WithTit
         return match($this->type) {
             'sales' => [
                 'Date',
-                'Revenue (USD)',
+                'Revenue (BDT)',
                 'Orders Count',
-                'Average Order Value (USD)',
+                'Average Order Value (BDT)',
             ],
             'orders' => [
                 'Date',
@@ -62,15 +62,15 @@ class ReportExport implements FromCollection, WithHeadings, WithMapping, WithTit
                 'Product ID',
                 'Product Name',
                 'Units Sold',
-                'Revenue (USD)',
+                'Revenue (BDT)',
             ],
             'vendors' => [
                 'Vendor ID',
                 'Vendor Name',
                 'Orders Count',
                 'Products Count',
-                'Revenue (USD)',
-                'Commission (USD)',
+                'Revenue (BDT)',
+                'Commission (BDT)',
                 'Fulfillment Rate (%)',
             ],
             'customers' => [
@@ -78,15 +78,15 @@ class ReportExport implements FromCollection, WithHeadings, WithMapping, WithTit
                 'Customer Name',
                 'Email',
                 'Orders Count',
-                'Total Spent (USD)',
-                'Average Order Value (USD)',
+                'Total Spent (BDT)',
+                'Average Order Value (BDT)',
             ],
             'cod' => [
                 'Date',
                 'COD Orders',
                 'Prepaid Orders',
-                'COD Revenue (USD)',
-                'Prepaid Revenue (USD)',
+                'COD Revenue (BDT)',
+                'Prepaid Revenue (BDT)',
             ],
             default => [],
         };

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->text('description');
             $table->bigInteger('base_price_cents');
-            $table->char('currency', 3)->default('USD');
+            $table->char('currency', 3)->default('BDT');
             $table->enum('status', ['draft', 'pending', 'published', 'rejected'])->default('draft');
             $table->timestamp('published_at')->nullable();
             $table->timestamps();

@@ -15,7 +15,7 @@ class Kernel extends ConsoleKernel
         // Generate COD daily reconciliation report at 11:30 PM every day
         $schedule->command('cod:generate-daily-report --auto-verify')
             ->dailyAt('23:30')
-            ->timezone('UTC')
+            ->timezone('Asia/Dhaka')
             ->onSuccess(function () {
                 \Log::info('COD daily report generated successfully');
             })

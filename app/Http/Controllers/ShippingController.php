@@ -115,7 +115,7 @@ class ShippingController extends Controller
             'success' => true,
             'data' => [
                 'rate_cents' => $rateCents,
-                'rate_formatted' => '$' . number_format($rateCents / 100, 2),
+                'rate_formatted' => '৳' . number_format($rateCents / 100, 2),
                 'shipping_method' => [
                     'id' => $shippingMethod->id,
                     'name' => $shippingMethod->name,
@@ -179,7 +179,7 @@ class ShippingController extends Controller
             'success' => true,
             'data' => [
                 'total_shipping_cents' => $validation['total_shipping_cents'],
-                'total_shipping_formatted' => '$' . number_format($validation['total_shipping_cents'] / 100, 2),
+                'total_shipping_formatted' => '৳' . number_format($validation['total_shipping_cents'] / 100, 2),
             ],
         ]);
     }

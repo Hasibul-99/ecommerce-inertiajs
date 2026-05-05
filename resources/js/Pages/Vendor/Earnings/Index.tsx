@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
-import VendorLayout from '@/Layouts/VendorLayout';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { PageProps } from '@/types';
 import { FiDollarSign, FiClock, FiLock, FiTrendingUp } from 'react-icons/fi';
 
 interface Balance {
@@ -32,7 +33,7 @@ interface Payout {
     processed_at: string | null;
 }
 
-interface Props {
+interface Props extends PageProps {
     balances: Balance;
     earningsData: any;
     recentTransactions: Transaction[];
@@ -41,13 +42,13 @@ interface Props {
     canRequestPayout: boolean;
 }
 
-export default function EarningsIndex({ balances, earningsData, recentTransactions, recentPayouts, minimumPayoutCents, canRequestPayout }: Props) {
+export default function EarningsIndex({ auth, balances, earningsData, recentTransactions, recentPayouts, minimumPayoutCents, canRequestPayout }: Props) {
     const [showPayoutModal, setShowPayoutModal] = useState(false);
     const [payoutAmount, setPayoutAmount] = useState('');
     const [processing, setProcessing] = useState(false);
 
     const formatCurrency = (cents: number) => {
-        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(cents / 100);
+        return '৳' + (cents / 100).toLocaleString('en-BD', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     };
 
     const getStatusColor = (status: string) => {
@@ -84,7 +85,7 @@ export default function EarningsIndex({ balances, earningsData, recentTransactio
     };
 
     return (
-        <VendorLayout>
+        <AuthenticatedLayout user={auth.user}>
             <Head title="Earnings Dashboard" />
             <div className="py-8">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -209,6 +210,6 @@ export default function EarningsIndex({ balances, earningsData, recentTransactio
                     </div>
                 </div>
             )}
-        </VendorLayout>
+        </AuthenticatedLayout>
     );
 }

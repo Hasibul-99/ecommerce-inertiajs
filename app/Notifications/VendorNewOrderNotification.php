@@ -50,7 +50,7 @@ class VendorNewOrderNotification extends Notification implements ShouldQueue
                     ->line('You have received a new order.')
                     ->line('**Order #:** ' . $this->order->order_number)
                     ->line('**Items:** ' . $itemsCount)
-                    ->line('**Total Amount:** $' . $totalAmount)
+                    ->line('**Total Amount:** ৳' . $totalAmount)
                     ->action('View Order Details', route('vendor.orders.show', $this->order->id))
                     ->line('Please process this order as soon as possible.');
     }

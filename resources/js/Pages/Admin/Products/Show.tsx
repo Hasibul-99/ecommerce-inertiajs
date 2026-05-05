@@ -50,11 +50,8 @@ interface Props extends PageProps {
     product: Product;
 }
 
-const formatPrice = (cents: number, currency: string = 'USD') => {
-    return new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: currency,
-    }).format(cents / 100);
+const formatPrice = (cents: number) => {
+    return '৳' + (cents / 100).toLocaleString('en-BD', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 };
 
 const getStatusBadge = (status: string) => {
