@@ -1,7 +1,8 @@
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import FrontendLayout from '@/Layouts/FrontendLayout';
-import { FiShoppingBag, FiUser, FiHeart, FiMapPin, FiGrid } from 'react-icons/fi';
+import { FiShoppingBag, FiUser, FiHeart } from 'react-icons/fi';
 import { PageProps } from '@/types';
+import AccountSidebar from '@/Components/Customer/AccountSidebar';
 
 interface DashboardPageProps extends PageProps {
     cartCount?: number;
@@ -9,15 +10,6 @@ interface DashboardPageProps extends PageProps {
 }
 
 export default function Dashboard({ auth, cartCount = 0, wishlistCount = 0 }: DashboardPageProps) {
-    const { url } = usePage();
-
-    const navLinkClass = (path: string) => {
-        const active = url === path || url.startsWith(path + '?');
-        return `flex items-center gap-3 px-4 py-3 rounded-md transition-colors ${
-            active ? 'bg-grabit-primary text-white' : 'text-grabit-gray hover:bg-grabit-bg-light'
-        }`;
-    };
-
     return (
         <FrontendLayout auth={auth} cartCount={cartCount} wishlistCount={wishlistCount}>
             <Head title="Dashboard" />
@@ -34,43 +26,7 @@ export default function Dashboard({ auth, cartCount = 0, wishlistCount = 0 }: Da
 
             <div className="container mx-auto px-4 py-8">
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-                    {/* Sidebar Navigation */}
-                    <aside className="lg:col-span-1">
-                        <div className="bg-white border border-grabit-border rounded-lg p-6">
-                            <div className="flex items-center gap-3 mb-6 pb-6 border-b border-grabit-border">
-                                <div className="w-12 h-12 bg-grabit-primary rounded-full flex items-center justify-center text-white font-semibold text-lg">
-                                    {auth.user.name.charAt(0).toUpperCase()}
-                                </div>
-                                <div>
-                                    <h3 className="font-medium text-grabit-dark">{auth.user.name}</h3>
-                                    <p className="text-sm text-grabit-gray">{auth.user.email}</p>
-                                </div>
-                            </div>
-
-                            <nav className="space-y-2">
-                                <Link href="/dashboard" className={navLinkClass('/dashboard')}>
-                                    <FiGrid className="w-5 h-5" />
-                                    <span>Dashboard</span>
-                                </Link>
-                                <Link href="/orders" className={navLinkClass('/orders')}>
-                                    <FiShoppingBag className="w-5 h-5" />
-                                    <span>My Orders</span>
-                                </Link>
-                                <Link href="/wishlist" className={navLinkClass('/wishlist')}>
-                                    <FiHeart className="w-5 h-5" />
-                                    <span>Wishlist</span>
-                                </Link>
-                                <Link href="/addresses" className={navLinkClass('/addresses')}>
-                                    <FiMapPin className="w-5 h-5" />
-                                    <span>Addresses</span>
-                                </Link>
-                                <Link href="/profile" className={navLinkClass('/profile')}>
-                                    <FiUser className="w-5 h-5" />
-                                    <span>Account Settings</span>
-                                </Link>
-                            </nav>
-                        </div>
-                    </aside>
+                    <AccountSidebar user={auth.user} />
 
                     {/* Main Content */}
                     <main className="lg:col-span-3">

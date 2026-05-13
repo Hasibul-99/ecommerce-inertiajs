@@ -233,9 +233,8 @@ Route::middleware(['auth', 'verified'])->prefix('customer')->name('customer.')->
         Route::post('/clear-browsing-history', 'clearBrowsingHistory')->name('clear-browsing-history');
     });
 
-    // Address Management
+    // Address Management (index handled by CustomerDashboardController)
     Route::controller(AddressController::class)->prefix('addresses')->name('addresses.')->group(function () {
-        Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('store');
         Route::put('/{address}', 'update')->name('update');
         Route::delete('/{address}', 'destroy')->name('destroy');
