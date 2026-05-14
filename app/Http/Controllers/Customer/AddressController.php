@@ -60,11 +60,6 @@ class AddressController extends Controller
 
             $address = Auth::user()->addresses()->create($validated);
 
-            activity()
-                ->performedOn($address)
-                ->causedBy(Auth::user())
-                ->log('Address created');
-
             DB::commit();
 
             return redirect()->back()->with('success', 'Address added successfully.');
@@ -110,11 +105,6 @@ class AddressController extends Controller
 
             $address->update($validated);
 
-            activity()
-                ->performedOn($address)
-                ->causedBy(Auth::user())
-                ->log('Address updated');
-
             DB::commit();
 
             return redirect()->back()->with('success', 'Address updated successfully.');
@@ -153,11 +143,6 @@ class AddressController extends Controller
                     ?->update(['is_default' => true]);
             }
 
-            activity()
-                ->causedBy(Auth::user())
-                ->withProperties(['address_id' => $address->id])
-                ->log('Address deleted');
-
             DB::commit();
 
             return redirect()->back()->with('success', 'Address deleted successfully.');
@@ -186,11 +171,6 @@ class AddressController extends Controller
 
             // Set this as default
             $address->update(['is_default' => true]);
-
-            activity()
-                ->performedOn($address)
-                ->causedBy(Auth::user())
-                ->log('Address set as default');
 
             DB::commit();
 
