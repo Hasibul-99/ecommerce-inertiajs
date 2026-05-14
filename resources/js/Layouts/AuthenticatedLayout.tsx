@@ -1,7 +1,7 @@
 import { useState, useEffect, PropsWithChildren, ReactNode } from 'react';
 import ApplicationLogo from '@/Components/App/ApplicationLogo';
 import NotificationBell from '@/Components/NotificationBell';
-import { Link, usePage } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import { User } from '@/types';
 import {
     FiHome,
@@ -228,22 +228,13 @@ export default function AuthenticatedLayout({ user, header, children }: PropsWit
                                                     <FiSettings className="w-4 h-4" />
                                                     <span>Notification Settings</span>
                                                 </Link>
-                                                <Link
-                                                    href={route('profile.edit')}
-                                                    className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                                                >
-                                                    <FiSettings className="w-4 h-4" />
-                                                    <span>Settings</span>
-                                                </Link>
-                                                <Link
-                                                    href={route('logout')}
-                                                    method="post"
-                                                    as="button"
+                                                <button
+                                                    onClick={() => router.post(route('logout'))}
                                                     className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                                                 >
                                                     <FiLogOut className="w-4 h-4" />
                                                     <span>Sign Out</span>
-                                                </Link>
+                                                </button>
                                             </div>
                                         </div>
                                     </>
@@ -304,15 +295,13 @@ export default function AuthenticatedLayout({ user, header, children }: PropsWit
                                 <FiSettings className="w-4 h-4" />
                                 <span>Settings</span>
                             </Link>
-                            <Link
-                                href={route('logout')}
-                                method="post"
-                                as="button"
+                            <button
+                                onClick={() => router.post(route('logout'))}
                                 className="flex items-center space-x-3 w-full px-3 py-2 rounded-lg text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                             >
                                 <FiLogOut className="w-4 h-4" />
                                 <span>Sign Out</span>
-                            </Link>
+                            </button>
                         </div>
                     </div>
                 </div>

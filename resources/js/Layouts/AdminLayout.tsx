@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, usePage } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import { Toaster, toast } from 'sonner';
 import NotificationBell from '@/Components/NotificationBell';
 import { User, PageProps } from '@/types/index';
@@ -395,7 +395,7 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
       {/* Main content */}
       <div className={`transition-all duration-300 ${sidebarCollapsed ? 'md:pl-16' : 'md:pl-64'}`}>
         {/* Enhanced Header */}
-        <div className="sticky top-0 z-30 flex h-16 bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+        <div className="sticky top-0 z-50 flex h-16 bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
           {/* Mobile menu button */}
           <button
             onClick={() => setSidebarOpen(true)}
@@ -459,23 +459,14 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
                       <FiUser className="w-4 h-4 mr-3" />
                       Profile
                     </Link>
-                    <Link
-                      href="#"
-                      className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    >
-                      <FiSettings className="w-4 h-4 mr-3" />
-                      Settings
-                    </Link>
                     <div className="border-t border-gray-200 dark:border-gray-700 my-1"></div>
-                    <Link
-                      href={route('logout')}
-                      method="post"
-                      as="button"
+                    <button
+                      onClick={() => router.post(route('logout'))}
                       className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                     >
                       <FiLogOut className="w-4 h-4 mr-3" />
                       Sign out
-                    </Link>
+                    </button>
                   </div>
                 )}
               </div>

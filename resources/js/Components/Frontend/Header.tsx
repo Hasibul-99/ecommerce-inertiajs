@@ -1,4 +1,4 @@
-import { Link } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import { useState } from 'react';
 import { FiHeart, FiShoppingBag, FiUser, FiSearch, FiMenu, FiChevronDown } from 'react-icons/fi';
 import { useCartWishlist } from '@/Contexts/CartWishlistContext';
@@ -119,14 +119,12 @@ export default function Header({ auth }: HeaderProps) {
                                                 >
                                                     Profile
                                                 </Link>
-                                                <Link
-                                                    href="/logout"
-                                                    method="post"
-                                                    as="button"
+                                                <button
+                                                    onClick={() => router.post(route('logout'))}
                                                     className="block w-full text-left px-4 py-2 text-sm text-grabit-gray hover:bg-gray-50 hover:text-grabit-primary"
                                                 >
                                                     Logout
-                                                </Link>
+                                                </button>
                                             </>
                                         ) : (
                                             <>
@@ -271,9 +269,9 @@ export default function Header({ auth }: HeaderProps) {
                                     <Link href="/dashboard" className="text-sm font-medium text-grabit-dark hover:text-grabit-primary">
                                         Dashboard
                                     </Link>
-                                    <Link href="/logout" method="post" as="button" className="text-sm font-medium text-grabit-dark hover:text-grabit-primary text-left">
+                                    <button onClick={() => router.post(route('logout'))} className="text-sm font-medium text-grabit-dark hover:text-grabit-primary text-left">
                                         Logout
-                                    </Link>
+                                    </button>
                                 </>
                             ) : (
                                 <>
