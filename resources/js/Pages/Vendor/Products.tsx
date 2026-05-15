@@ -1,6 +1,6 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { useState } from 'react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import VendorLayout from '@/Layouts/VendorLayout';
 import { FiSearch, FiFilter, FiPlus, FiEdit2, FiTrash2, FiEye } from 'react-icons/fi';
 import { PageProps } from '@/types';
 
@@ -85,7 +85,7 @@ export default function VendorProducts({
     ];
 
     return (
-        <AuthenticatedLayout
+        <VendorLayout
             user={auth.user}
             header={
                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">
@@ -306,6 +306,6 @@ export default function VendorProducts({
                     </div>
                 </div>
             </div>
-        </AuthenticatedLayout>
+        </VendorLayout>
     );
 }

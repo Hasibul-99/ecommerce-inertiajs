@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import VendorLayout from '@/Layouts/VendorLayout';
 import { PageProps } from '@/types';
 import { FiDollarSign, FiClock, FiLock, FiTrendingUp } from 'react-icons/fi';
 
@@ -85,7 +85,7 @@ export default function EarningsIndex({ auth, balances, earningsData, recentTran
     };
 
     return (
-        <AuthenticatedLayout user={auth.user}>
+        <VendorLayout user={auth.user}>
             <Head title="Earnings Dashboard" />
             <div className="py-8">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -210,6 +210,6 @@ export default function EarningsIndex({ auth, balances, earningsData, recentTran
                     </div>
                 </div>
             )}
-        </AuthenticatedLayout>
+        </VendorLayout>
     );
 }

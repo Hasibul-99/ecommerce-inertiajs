@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import VendorLayout from '@/Layouts/VendorLayout';
 import { PageProps } from '@/types';
 import { FiDownload, FiFilter, FiCalendar, FiDollarSign } from 'react-icons/fi';
 
@@ -74,7 +74,7 @@ export default function TransactionsIndex({ auth, transactions, filters, stats }
     };
 
     return (
-        <AuthenticatedLayout user={auth.user}>
+        <VendorLayout user={auth.user}>
             <Head title="Earnings Transactions" />
             <div className="py-8">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -221,6 +221,6 @@ export default function TransactionsIndex({ auth, transactions, filters, stats }
                     </div>
                 </div>
             </div>
-        </AuthenticatedLayout>
+        </VendorLayout>
     );
 }

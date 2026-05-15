@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Head, router } from '@inertiajs/react';
 import { FiDollarSign, FiShoppingCart, FiTrendingUp, FiDownload } from 'react-icons/fi';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import VendorLayout from '@/Layouts/VendorLayout';
 import LineChart from '@/Components/Charts/LineChart';
 import BarChart from '@/Components/Charts/BarChart';
 import DoughnutChart from '@/Components/Charts/DoughnutChart';
@@ -144,7 +144,7 @@ export default function Sales({
     };
 
     return (
-        <AuthenticatedLayout user={auth.user}>
+        <VendorLayout user={auth.user}>
             <Head title="Sales Analytics" />
 
             <div className="min-h-screen bg-gray-50 py-8">
@@ -451,6 +451,6 @@ export default function Sales({
                     </div>
                 </div>
             </div>
-        </AuthenticatedLayout>
+        </VendorLayout>
     );
 }

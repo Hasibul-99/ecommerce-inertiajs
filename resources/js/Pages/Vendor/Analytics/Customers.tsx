@@ -1,7 +1,7 @@
 import React from 'react';
 import { Head } from '@inertiajs/react';
 import { FiUsers, FiRepeat, FiDollarSign, FiGlobe, FiDownload } from 'react-icons/fi';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import VendorLayout from '@/Layouts/VendorLayout';
 import DoughnutChart from '@/Components/Charts/DoughnutChart';
 import { PageProps } from '@/types';
 
@@ -66,7 +66,7 @@ export default function Customers({ auth, vendor, customerInsights }: Props) {
     };
 
     return (
-        <AuthenticatedLayout user={auth.user}>
+        <VendorLayout user={auth.user}>
             <Head title="Customer Analytics" />
 
             <div className="min-h-screen bg-gray-50 py-8">
@@ -342,6 +342,6 @@ export default function Customers({ auth, vendor, customerInsights }: Props) {
                     </div>
                 </div>
             </div>
-        </AuthenticatedLayout>
+        </VendorLayout>
     );
 }

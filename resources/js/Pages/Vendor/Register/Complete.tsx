@@ -1,6 +1,6 @@
 import React from 'react';
 import { Head, Link, router } from '@inertiajs/react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import VendorLayout from '@/Layouts/VendorLayout';
 import { User } from '@/types/index';
 import {
   FiCheck,
@@ -63,7 +63,7 @@ export default function Complete({ auth, vendor }: Props) {
   const isComplete = vendor.business_name && documentCount > 0 && hasBankDetails;
 
   return (
-    <AuthenticatedLayout
+    <VendorLayout
       user={auth.user}
       header={
         <h2 className="font-semibold text-xl text-gray-800 leading-tight">
@@ -330,6 +330,6 @@ export default function Complete({ auth, vendor }: Props) {
           </div>
         </div>
       </div>
-    </AuthenticatedLayout>
+    </VendorLayout>
   );
 }

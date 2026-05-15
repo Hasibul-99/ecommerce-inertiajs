@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Head, useForm } from '@inertiajs/react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import VendorLayout from '@/Layouts/VendorLayout';
 import { PageProps } from '@/types';
 import { FiTruck, FiClock, FiDollarSign, FiCheck, FiX, FiInfo } from 'react-icons/fi';
 
@@ -89,7 +89,7 @@ export default function Shipping({ auth, shippingMethods, vendor }: Props) {
     };
 
     return (
-        <AuthenticatedLayout user={auth.user}>
+        <VendorLayout user={auth.user}>
             <Head title="Shipping Settings" />
 
             <div className="py-12">
@@ -273,6 +273,6 @@ export default function Shipping({ auth, shippingMethods, vendor }: Props) {
                     </div>
                 </div>
             </div>
-        </AuthenticatedLayout>
+        </VendorLayout>
     );
 }

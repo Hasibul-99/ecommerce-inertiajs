@@ -13,7 +13,7 @@ import {
     FiBell,
     FiMail
 } from 'react-icons/fi';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import VendorLayout from '@/Layouts/VendorLayout';
 import LineChart from '@/Components/Charts/LineChart';
 import DoughnutChart from '@/Components/Charts/DoughnutChart';
 import { PageProps } from '@/types';
@@ -241,7 +241,7 @@ export default function Dashboard({
     };
 
     return (
-        <AuthenticatedLayout user={auth.user}>
+        <VendorLayout user={auth.user}>
             <Head title={`${vendor.business_name} - Dashboard`} />
 
             <div className="min-h-screen bg-gray-50 py-8">
@@ -610,6 +610,6 @@ export default function Dashboard({
                     )}
                 </div>
             </div>
-        </AuthenticatedLayout>
+        </VendorLayout>
     );
 }

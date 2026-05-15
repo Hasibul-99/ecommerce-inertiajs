@@ -81,13 +81,13 @@ class VendorAnalyticsService
         $cacheKey = "vendor_{$vendor->id}_product_performance_{$limit}";
 
         return Cache::remember($cacheKey, now()->addMinutes(30), function () use ($vendor, $limit) {
-            return Product::where('vendor_id', $vendor->id)
+            return Product::where('products.vendor_id', $vendor->id)
                 ->select([
                     'products.id',
                     'products.name',
                     'products.sku',
                     'products.price_cents',
-                    'products.stock',
+                    'products.stock_quantity',
                     'products.status',
                     DB::raw('COUNT(DISTINCT order_items.id) as units_sold'),
                     DB::raw('SUM(order_items.price_cents * order_items.quantity) as revenue_cents'),
@@ -98,7 +98,7 @@ class VendorAnalyticsService
                     $join->on('order_items.order_id', '=', 'orders.id')
                         ->whereNotIn('orders.status', ['cancelled', 'failed']);
                 })
-                ->groupBy('products.id', 'products.name', 'products.sku', 'products.price_cents', 'products.stock', 'products.status')
+                ->groupBy('products.id', 'products.name', 'products.sku', 'products.price_cents', 'products.stock_quantity', 'products.status')
                 ->orderByDesc('revenue_cents')
                 ->limit($limit)
                 ->get()
@@ -109,7 +109,7 @@ class VendorAnalyticsService
                         'sku' => $product->sku,
                         'price' => $product->price_cents / 100,
                         'price_cents' => $product->price_cents,
-                        'stock' => $product->stock,
+                        'stock' => $product->stock_quantity,
                         'status' => $product->status,
                         'units_sold' => $product->units_sold ?? 0,
                         'revenue' => ($product->revenue_cents ?? 0) / 100,
@@ -179,7 +179,7 @@ class VendorAnalyticsService
             $pendingShipments = OrderItem::join('orders', 'order_items.order_id', '=', 'orders.id')
                 ->join('products', 'order_items.product_id', '=', 'products.id')
                 ->where('products.vendor_id', $vendor->id)
-                ->whereNull('order_items.vendor_fulfillment_status')
+                ->whereNull('order_items.vendor_status')
                 ->whereIn('orders.status', ['pending', 'processing'])
                 ->count();
 
@@ -529,7 +529,7 @@ class VendorAnalyticsService
                     'products.name as product_name',
                     'products.sku',
                     'products.price_cents',
-                    'products.stock',
+                    'products.stock_quantity',
                     DB::raw('COUNT(DISTINCT product_views.id) as total_views'),
                     DB::raw('COUNT(DISTINCT order_items.order_id) as total_orders'),
                     DB::raw('SUM(order_items.quantity) as units_sold'),
@@ -540,7 +540,7 @@ class VendorAnalyticsService
                         ELSE 0
                     END as conversion_rate')
                 )
-                ->groupBy('products.id', 'products.name', 'products.sku', 'products.price_cents', 'products.stock')
+                ->groupBy('products.id', 'products.name', 'products.sku', 'products.price_cents', 'products.stock_quantity')
                 ->orderByDesc('total_views')
                 ->limit($limit)
                 ->get()
@@ -550,7 +550,7 @@ class VendorAnalyticsService
                         'product_name' => $item->product_name,
                         'sku' => $item->sku,
                         'price' => $item->price_cents / 100,
-                        'stock' => $item->stock,
+                        'stock' => $item->stock_quantity,
                         'total_views' => $item->total_views,
                         'total_orders' => $item->total_orders,
                         'units_sold' => $item->units_sold ?? 0,

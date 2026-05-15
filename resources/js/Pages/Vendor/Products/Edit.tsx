@@ -1,6 +1,6 @@
 import React, { FormEvent, useState, useEffect } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import VendorLayout from '@/Layouts/VendorLayout';
 import { User } from '@/types/index';
 import {
   FiArrowLeft,
@@ -281,7 +281,7 @@ export default function Edit({ auth, product, categories, tags }: Props) {
   ];
 
   return (
-    <AuthenticatedLayout
+    <VendorLayout
       user={auth.user}
       header={
         <div className="flex items-center justify-between">
@@ -745,6 +745,6 @@ export default function Edit({ auth, product, categories, tags }: Props) {
           </form>
         </div>
       </div>
-    </AuthenticatedLayout>
+    </VendorLayout>
   );
 }

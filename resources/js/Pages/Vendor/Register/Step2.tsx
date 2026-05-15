@@ -1,6 +1,6 @@
 import React, { FormEvent, useState } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import VendorLayout from '@/Layouts/VendorLayout';
 import { User } from '@/types/index';
 import { FiArrowRight, FiArrowLeft, FiUpload, FiX, FiFile, FiCheck } from 'react-icons/fi';
 
@@ -98,7 +98,7 @@ export default function Step2({ auth, vendor, documents }: Props) {
   };
 
   return (
-    <AuthenticatedLayout
+    <VendorLayout
       user={auth.user}
       header={
         <h2 className="font-semibold text-xl text-gray-800 leading-tight">
@@ -314,6 +314,6 @@ export default function Step2({ auth, vendor, documents }: Props) {
           </div>
         </div>
       </div>
-    </AuthenticatedLayout>
+    </VendorLayout>
   );
 }

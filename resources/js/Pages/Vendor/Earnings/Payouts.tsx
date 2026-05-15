@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Head, Link } from '@inertiajs/react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import VendorLayout from '@/Layouts/VendorLayout';
 import { PageProps } from '@/types';
 import { FiDollarSign, FiClock, FiCheckCircle, FiXCircle, FiLoader, FiCalendar, FiCreditCard } from 'react-icons/fi';
 
@@ -78,7 +78,7 @@ export default function PayoutsIndex({ auth, payouts, stats }: Props) {
     };
 
     return (
-        <AuthenticatedLayout user={auth.user}>
+        <VendorLayout user={auth.user}>
             <Head title="Payout History" />
             <div className="py-8">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -339,6 +339,6 @@ export default function PayoutsIndex({ auth, payouts, stats }: Props) {
                     </div>
                 </div>
             )}
-        </AuthenticatedLayout>
+        </VendorLayout>
     );
 }

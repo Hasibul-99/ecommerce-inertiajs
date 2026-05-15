@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Head, Link, useForm, router } from '@inertiajs/react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import VendorLayout from '@/Layouts/VendorLayout';
 import { User } from '@/types/index';
 import {
   FiArrowLeft,
@@ -197,7 +197,7 @@ export default function Show({ auth, order }: Props) {
   ];
 
   return (
-    <AuthenticatedLayout
+    <VendorLayout
       user={auth.user}
       header={
         <div className="flex items-center justify-between">
@@ -591,6 +591,6 @@ export default function Show({ auth, order }: Props) {
           </div>
         </div>
       )}
-    </AuthenticatedLayout>
+    </VendorLayout>
   );
 }

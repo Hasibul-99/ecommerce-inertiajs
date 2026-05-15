@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import VendorLayout from '@/Layouts/VendorLayout';
 import { User } from '@/types/index';
 import {
   FiPackage,
@@ -116,7 +116,7 @@ export default function Index({ auth, orders, stats, filters }: Props) {
   };
 
   return (
-    <AuthenticatedLayout
+    <VendorLayout
       user={auth.user}
       header={
         <h2 className="font-semibold text-xl text-gray-800 leading-tight">
@@ -398,6 +398,6 @@ export default function Index({ auth, orders, stats, filters }: Props) {
           </div>
         </div>
       </div>
-    </AuthenticatedLayout>
+    </VendorLayout>
   );
 }

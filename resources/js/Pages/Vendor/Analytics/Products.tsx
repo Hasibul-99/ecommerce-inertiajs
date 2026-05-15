@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Head, router } from '@inertiajs/react';
 import { FiPackage, FiAlertTriangle, FiXCircle, FiCheckCircle, FiDownload, FiEye, FiTrendingUp, FiTrendingDown, FiActivity } from 'react-icons/fi';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import VendorLayout from '@/Layouts/VendorLayout';
 import { PageProps } from '@/types';
 
 interface Product {
@@ -124,7 +124,7 @@ export default function Products({ auth, dateRange, vendor, productPerformance, 
     };
 
     return (
-        <AuthenticatedLayout user={auth.user}>
+        <VendorLayout user={auth.user}>
             <Head title="Product Analytics" />
 
             <div className="min-h-screen bg-gray-50 py-8">
@@ -652,6 +652,6 @@ export default function Products({ auth, dateRange, vendor, productPerformance, 
                     )}
                 </div>
             </div>
-        </AuthenticatedLayout>
+        </VendorLayout>
     );
 }
