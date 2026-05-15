@@ -15,7 +15,7 @@ class ShippingController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth', 'role:admin']);
+        $this->middleware(['auth', 'role:admin|super-admin']);
     }
 
     // ============ ZONES ============

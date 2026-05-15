@@ -47,6 +47,7 @@ interface MenuItem {
   href?: string;
   icon: React.ComponentType<any>;
   badge?: string;
+  permission?: string;
   children?: MenuItem[];
 }
 
@@ -189,6 +190,13 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
     );
   };
 
+  const { auth } = props as unknown as { auth: { permissions: string[]; roles: string[] } };
+  const isSuperAdmin = auth.roles?.includes('super-admin');
+  const can = (permission?: string) => {
+    if (!permission || isSuperAdmin) return true;
+    return auth.permissions?.includes(permission) ?? false;
+  };
+
   const menuGroups = {
     main: {
       title: 'Main',
@@ -197,13 +205,14 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
         {
           name: 'Reports & Analytics',
           icon: FiBarChart,
+          permission: 'view reports',
           children: [
-            { name: 'Overview', href: route('admin.reports.dashboard'), icon: FiHome },
-            { name: 'Sales', href: route('admin.reports.sales'), icon: FiDollarSign },
-            { name: 'Orders', href: route('admin.reports.orders'), icon: FiShoppingCart },
-            { name: 'Products', href: route('admin.reports.products'), icon: FiPackage },
-            { name: 'Vendors', href: route('admin.reports.vendors'), icon: FiTruck },
-            { name: 'Customers', href: route('admin.reports.customers'), icon: FiUsers },
+            { name: 'Overview',   href: route('admin.reports.dashboard'), icon: FiHome,         permission: 'view reports' },
+            { name: 'Sales',      href: route('admin.reports.sales'),     icon: FiDollarSign,   permission: 'view reports' },
+            { name: 'Orders',     href: route('admin.reports.orders'),    icon: FiShoppingCart, permission: 'view reports' },
+            { name: 'Products',   href: route('admin.reports.products'),  icon: FiPackage,      permission: 'view reports' },
+            { name: 'Vendors',    href: route('admin.reports.vendors'),   icon: FiTruck,        permission: 'view reports' },
+            { name: 'Customers',  href: route('admin.reports.customers'), icon: FiUsers,        permission: 'view reports' },
           ]
         },
       ]
@@ -211,35 +220,35 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
     ecommerce: {
       title: 'E-Commerce',
       items: [
-        { name: 'Orders', href: route('admin.orders.index'), icon: FiShoppingCart },
-        { name: 'Products', href: route('admin.products.index'), icon: FiShoppingBag },
-        { name: 'Product Variants', href: route('admin.product-variants.index'), icon: FiPackage },
-        { name: 'Categories', href: route('admin.categories.index'), icon: FiGrid },
-        { name: 'Tags', href: route('admin.tags.index'), icon: FiTag },
-        { name: 'Coupons', href: route('admin.coupons.index'), icon: FiGift },
-        { name: 'Hero Slides', href: route('admin.hero-slides.index'), icon: FiImage },
+        { name: 'Orders',           href: route('admin.orders.index'),           icon: FiShoppingCart, permission: 'view orders'     },
+        { name: 'Products',         href: route('admin.products.index'),         icon: FiShoppingBag,  permission: 'view products'   },
+        { name: 'Product Variants', href: route('admin.product-variants.index'), icon: FiPackage,      permission: 'view products'   },
+        { name: 'Categories',       href: route('admin.categories.index'),       icon: FiGrid,         permission: 'view categories' },
+        { name: 'Tags',             href: route('admin.tags.index'),             icon: FiTag,          permission: 'view categories' },
+        { name: 'Coupons',          href: route('admin.coupons.index'),          icon: FiGift,         permission: 'view coupons'    },
+        { name: 'Hero Slides',      href: route('admin.hero-slides.index'),      icon: FiImage,        permission: 'edit settings'   },
       ]
     },
     users: {
       title: 'User Management',
       items: [
-        { name: 'Users', href: route('admin.users.index'), icon: FiUsers },
-        { name: 'Vendors', href: route('admin.vendors.index'), icon: FiTruck },
-        { name: 'Roles & Permissions', href: route('admin.roles.index'), icon: FiShield },
+        { name: 'Users',              href: route('admin.users.index'),   icon: FiUsers,  permission: 'view users'   },
+        { name: 'Vendors',            href: route('admin.vendors.index'), icon: FiTruck,  permission: 'view vendors' },
+        { name: 'Roles & Permissions',href: route('admin.roles.index'),   icon: FiShield, permission: 'assign roles' },
       ]
     },
     finance: {
       title: 'Finance',
       items: [
-        { name: 'Payouts', href: route('admin.payouts.index'), icon: FiDollarSign },
-        { name: 'COD Reconciliation', href: route('admin.cod-reconciliation.index'), icon: FiCreditCard },
+        { name: 'Payouts',            href: route('admin.payouts.index'),           icon: FiDollarSign, permission: 'export reports' },
+        { name: 'COD Reconciliation', href: route('admin.cod-reconciliation.index'),icon: FiCreditCard, permission: 'view orders'    },
       ]
     },
     communications: {
       title: 'Communications',
       items: [
-        { name: 'Email Templates', href: route('admin.email-templates.index'), icon: FiMessageSquare },
-        { name: 'Notifications', href: route('admin.notifications.index'), icon: FiBell },
+        { name: 'Email Templates', href: route('admin.email-templates.index'), icon: FiMessageSquare, permission: 'edit settings' },
+        { name: 'Notifications',   href: route('admin.notifications.index'),   icon: FiBell,          permission: 'edit settings' },
       ]
     },
     system: {
@@ -248,16 +257,17 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
         {
           name: 'Settings',
           icon: FiSettings,
+          permission: 'view settings',
           children: [
-            { name: 'General', href: route('admin.settings.general'), icon: FiSettings },
-            { name: 'Payment', href: route('admin.settings.payment'), icon: FiCreditCard },
-            { name: 'Shipping', href: route('admin.settings.shipping'), icon: FiTruck },
-            { name: 'Email', href: route('admin.settings.email'), icon: FiMessageSquare },
-            { name: 'Vendor', href: route('admin.settings.vendor'), icon: FiShoppingBag },
-            { name: 'Tax', href: route('admin.settings.tax'), icon: FiFileText },
+            { name: 'General',  href: route('admin.settings.general'),  icon: FiSettings,     permission: 'view settings' },
+            { name: 'Payment',  href: route('admin.settings.payment'),  icon: FiCreditCard,   permission: 'edit settings' },
+            { name: 'Shipping', href: route('admin.settings.shipping'), icon: FiTruck,        permission: 'edit settings' },
+            { name: 'Email',    href: route('admin.settings.email'),    icon: FiMessageSquare,permission: 'edit settings' },
+            { name: 'Vendor',   href: route('admin.settings.vendor'),   icon: FiShoppingBag,  permission: 'edit settings' },
+            { name: 'Tax',      href: route('admin.settings.tax'),      icon: FiFileText,     permission: 'edit settings' },
           ]
         },
-        { name: 'Activity Logs', href: route('admin.activity-logs.index'), icon: FiActivity },
+        { name: 'Activity Logs', href: route('admin.activity-logs.index'), icon: FiActivity, permission: 'view reports' },
       ]
     }
   };
@@ -265,16 +275,23 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
   const renderMenuGroup = (groupKey: string, group: any) => {
     const isExpanded = expandedGroups.includes(groupKey);
 
+    const visibleItems = group.items.filter((item: MenuItem) => {
+      if (!can(item.permission)) return false;
+      if (item.children) {
+        item.children = item.children.filter((child: MenuItem) => can(child.permission));
+        return item.children.length > 0;
+      }
+      return true;
+    });
+
+    if (visibleItems.length === 0) return null;
+
     if (sidebarCollapsed) {
       return (
         <div key={groupKey} className="space-y-1">
-          {group.items.map((item: MenuItem) => {
-            const hasChildren = item.children && item.children.length > 0;
-            if (hasChildren) {
-              return <MenuItemLink key={item.name} item={item} sidebarCollapsed={sidebarCollapsed} />;
-            }
-            return <MenuItemLink key={item.name} item={item} sidebarCollapsed={sidebarCollapsed} />;
-          })}
+          {visibleItems.map((item: MenuItem) => (
+            <MenuItemLink key={item.name} item={item} sidebarCollapsed={sidebarCollapsed} />
+          ))}
         </div>
       );
     }
@@ -294,7 +311,7 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
         </button>
         {isExpanded && (
           <div className="space-y-1">
-            {group.items.map((item: MenuItem) => {
+            {visibleItems.map((item: MenuItem) => {
               const hasChildren = item.children && item.children.length > 0;
               if (hasChildren) {
                 return <MenuItemWithChildren key={item.name} item={item} sidebarCollapsed={sidebarCollapsed} />;
