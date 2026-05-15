@@ -171,7 +171,7 @@ export default function NotificationBell({
                                 <div
                                     key={notification.id}
                                     className={`p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer ${
-                                        !notification.read_at ? 'bg-blue-50' : ''
+                                        !notification.read_at ? 'bg-brand-50' : ''
                                     }`}
                                     onClick={() => {
                                         if (!notification.read_at) {
@@ -195,7 +195,7 @@ export default function NotificationBell({
                                             </p>
                                         </div>
                                         {!notification.read_at && (
-                                            <span className="ml-2 w-2 h-2 bg-blue-600 rounded-full"></span>
+                                            <span className="ml-2 w-2 h-2 bg-brand-600 rounded-full"></span>
                                         )}
                                     </div>
                                 </div>

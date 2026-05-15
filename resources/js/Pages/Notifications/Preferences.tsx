@@ -107,11 +107,11 @@ export default function Preferences({ auth, preferences }: Props) {
                                     </div>
 
                                     {/* Information Box */}
-                                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                    <div className="bg-brand-50 border border-brand-200 rounded-lg p-4">
                                         <div className="flex">
                                             <div className="flex-shrink-0">
                                                 <svg
-                                                    className="h-5 w-5 text-blue-400"
+                                                    className="h-5 w-5 text-brand-400"
                                                     fill="currentColor"
                                                     viewBox="0 0 20 20"
                                                 >
@@ -123,10 +123,10 @@ export default function Preferences({ auth, preferences }: Props) {
                                                 </svg>
                                             </div>
                                             <div className="ml-3">
-                                                <h3 className="text-sm font-medium text-blue-800">
+                                                <h3 className="text-sm font-medium text-brand-800">
                                                     About Notification Channels
                                                 </h3>
-                                                <div className="mt-2 text-sm text-blue-700">
+                                                <div className="mt-2 text-sm text-brand-700">
                                                     <ul className="list-disc list-inside space-y-1">
                                                         <li>
                                                             <strong>Email:</strong> Receive notifications via email to your registered email address

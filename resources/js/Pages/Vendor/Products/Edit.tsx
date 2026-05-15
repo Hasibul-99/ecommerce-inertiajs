@@ -314,7 +314,7 @@ export default function Edit({ auth, product, categories, tags }: Props) {
                         onClick={() => setActiveTab(tab.id)}
                         className={`flex-1 py-4 px-6 text-center border-b-2 font-medium text-sm ${
                           activeTab === tab.id
-                            ? 'border-blue-500 text-blue-600'
+                            ? 'border-brand-500 text-brand-600'
                             : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                         }`}
                       >
@@ -338,7 +338,7 @@ export default function Edit({ auth, product, categories, tags }: Props) {
                         type="text"
                         value={data.title}
                         onChange={(e) => setData('title', e.target.value)}
-                        className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"
                         placeholder="e.g., Wireless Bluetooth Headphones"
                         required
                       />
@@ -352,7 +352,7 @@ export default function Edit({ auth, product, categories, tags }: Props) {
                       <select
                         value={data.category_id}
                         onChange={(e) => setData('category_id', e.target.value)}
-                        className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"
                         required
                       >
                         <option value="">Select a category</option>
@@ -373,7 +373,7 @@ export default function Edit({ auth, product, categories, tags }: Props) {
                         value={data.description}
                         onChange={(e) => setData('description', e.target.value)}
                         rows={6}
-                        className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"
                         placeholder="Detailed product description (minimum 20 characters)"
                         required
                       />
@@ -406,7 +406,7 @@ export default function Edit({ auth, product, categories, tags }: Props) {
                           min="0"
                           value={data.base_price_cents / 100}
                           onChange={(e) => setData('base_price_cents', Math.round(parseFloat(e.target.value) * 100))}
-                          className="pl-7 w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                          className="pl-7 w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"
                           placeholder="0.00"
                           required
                         />
@@ -425,7 +425,7 @@ export default function Edit({ auth, product, categories, tags }: Props) {
                           min="0"
                           value={data.stock_quantity}
                           onChange={(e) => setData('stock_quantity', parseInt(e.target.value))}
-                          className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                          className="w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"
                           placeholder="0"
                         />
                         <p className="mt-1 text-sm text-gray-500">
@@ -439,7 +439,7 @@ export default function Edit({ auth, product, categories, tags }: Props) {
                       <select
                         value={data.status}
                         onChange={(e) => setData('status', e.target.value)}
-                        className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"
                       >
                         <option value="draft">Draft</option>
                         <option value="published">Published</option>
@@ -480,7 +480,7 @@ export default function Edit({ auth, product, categories, tags }: Props) {
                                     <FiX className="w-4 h-4" />
                                   </button>
                                   {index === 0 && (
-                                    <span className="absolute bottom-1 left-1 bg-blue-500 text-white text-xs px-2 py-1 rounded">
+                                    <span className="absolute bottom-1 left-1 bg-brand-500 text-white text-xs px-2 py-1 rounded">
                                       Primary
                                     </span>
                                   )}
@@ -545,8 +545,8 @@ export default function Edit({ auth, product, categories, tags }: Props) {
                 {/* Variants Tab */}
                 {activeTab === 'variants' && (
                   <div className="space-y-6">
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                      <p className="text-sm text-blue-800">
+                    <div className="bg-brand-50 border border-brand-200 rounded-lg p-4">
+                      <p className="text-sm text-brand-800">
                         Modify variant options to regenerate combinations. Existing variant data will be preserved where
                         possible.
                       </p>
@@ -573,7 +573,7 @@ export default function Edit({ auth, product, categories, tags }: Props) {
                               type="text"
                               value={option.name}
                               onChange={(e) => updateVariantOption(index, 'name', e.target.value)}
-                              className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                              className="w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"
                               placeholder="e.g., Size, Color"
                             />
                           </div>
@@ -595,7 +595,7 @@ export default function Edit({ auth, product, categories, tags }: Props) {
                                     .filter(Boolean)
                                 )
                               }
-                              className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                              className="w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"
                               placeholder="e.g., S, M, L, XL"
                             />
                           </div>
@@ -606,7 +606,7 @@ export default function Edit({ auth, product, categories, tags }: Props) {
                     <button
                       type="button"
                       onClick={addVariantOption}
-                      className="w-full py-3 border-2 border-dashed border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:border-blue-500 hover:text-blue-600 transition"
+                      className="w-full py-3 border-2 border-dashed border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:border-brand-500 hover:text-brand-600 transition"
                     >
                       <FiPlus className="inline-block mr-2" />
                       Add Variant Option
@@ -640,7 +640,7 @@ export default function Edit({ auth, product, categories, tags }: Props) {
                                     type="text"
                                     value={variant.sku}
                                     onChange={(e) => updateVariant(index, 'sku', e.target.value)}
-                                    className="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                    className="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"
                                     placeholder="Optional"
                                   />
                                 </div>
@@ -655,7 +655,7 @@ export default function Edit({ auth, product, categories, tags }: Props) {
                                     onChange={(e) =>
                                       updateVariant(index, 'price_cents', Math.round(parseFloat(e.target.value) * 100))
                                     }
-                                    className="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                    className="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"
                                     required
                                   />
                                 </div>
@@ -667,7 +667,7 @@ export default function Edit({ auth, product, categories, tags }: Props) {
                                     min="0"
                                     value={variant.stock_quantity}
                                     onChange={(e) => updateVariant(index, 'stock_quantity', parseInt(e.target.value))}
-                                    className="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                    className="w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"
                                     required
                                   />
                                 </div>
@@ -695,7 +695,7 @@ export default function Edit({ auth, product, categories, tags }: Props) {
                             onClick={() => toggleTag(tag.id)}
                             className={`px-3 py-1 rounded-full text-sm font-medium transition ${
                               selectedTags.includes(tag.id)
-                                ? 'bg-blue-600 text-white'
+                                ? 'bg-brand-600 text-white'
                                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                             }`}
                           >
@@ -708,7 +708,7 @@ export default function Edit({ auth, product, categories, tags }: Props) {
                     <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
                       <h4 className="text-sm font-medium text-gray-900 mb-2">SEO Preview</h4>
                       <div className="space-y-2">
-                        <p className="text-blue-600 text-lg font-medium">{data.title || 'Product Title'}</p>
+                        <p className="text-brand-600 text-lg font-medium">{data.title || 'Product Title'}</p>
                         <p className="text-sm text-green-700">/{product.slug}</p>
                         <p className="text-sm text-gray-600">
                           {data.description.slice(0, 160) || 'Product description will appear here...'}
@@ -734,7 +734,7 @@ export default function Edit({ auth, product, categories, tags }: Props) {
                   <button
                     type="submit"
                     disabled={processing}
-                    className="inline-flex items-center px-6 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 disabled:opacity-50"
+                    className="inline-flex items-center px-6 py-2 bg-brand-600 text-white rounded-md text-sm font-medium hover:bg-brand-700 disabled:opacity-50"
                   >
                     <FiSave className="mr-2" />
                     {processing ? 'Saving...' : 'Save Changes'}

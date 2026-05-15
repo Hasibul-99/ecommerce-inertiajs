@@ -92,7 +92,7 @@ export default function Create() {
                                     id="title"
                                     value={data.title}
                                     onChange={(e) => setData('title', e.target.value)}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                                     placeholder="Fresh Groceries Delivered"
                                 />
                                 {errors.title && (
@@ -113,7 +113,7 @@ export default function Create() {
                                     id="subtitle"
                                     value={data.subtitle}
                                     onChange={(e) => setData('subtitle', e.target.value)}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                                     placeholder="To Your Doorstep"
                                 />
                                 {errors.subtitle && (
@@ -134,7 +134,7 @@ export default function Create() {
                                     value={data.description}
                                     onChange={(e) => setData('description', e.target.value)}
                                     rows={3}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                                     placeholder="Get the freshest groceries delivered to your home..."
                                 />
                                 {errors.description && (
@@ -155,7 +155,7 @@ export default function Create() {
                                     id="button_text"
                                     value={data.button_text}
                                     onChange={(e) => setData('button_text', e.target.value)}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                                     placeholder="Shop Now"
                                 />
                                 {errors.button_text && (
@@ -176,7 +176,7 @@ export default function Create() {
                                     id="button_link"
                                     value={data.button_link}
                                     onChange={(e) => setData('button_link', e.target.value)}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                                     placeholder="/products"
                                 />
                                 {errors.button_link && (
@@ -197,7 +197,7 @@ export default function Create() {
                                     id="image"
                                     accept="image/*"
                                     onChange={handleImageChange}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                                 />
                                 {errors.image && (
                                     <p className="mt-1 text-sm text-red-600">{errors.image}</p>
@@ -233,7 +233,7 @@ export default function Create() {
                                     value={data.order}
                                     onChange={(e) => setData('order', parseInt(e.target.value))}
                                     min="0"
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                                     placeholder="0"
                                 />
                                 {errors.order && (
@@ -251,7 +251,7 @@ export default function Create() {
                                     id="is_active"
                                     checked={data.is_active}
                                     onChange={(e) => setData('is_active', e.target.checked)}
-                                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                                    className="h-4 w-4 text-brand-600 focus:ring-brand-500 border-gray-300 rounded"
                                 />
                                 <label htmlFor="is_active" className="ml-2 block text-sm text-gray-700">
                                     Active (show this slide on the homepage)

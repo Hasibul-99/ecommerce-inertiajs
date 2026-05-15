@@ -149,7 +149,7 @@ export default function Customers({ auth, dateRange, report }: Props) {
                             </button>
                             <button
                                 onClick={() => handleExport('xlsx')}
-                                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
+                                className="flex items-center gap-2 px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 font-medium"
                             >
                                 <FiDownload size={18} />
                                 Export Excel
@@ -166,7 +166,7 @@ export default function Customers({ auth, dateRange, report }: Props) {
                                     type="date"
                                     value={from}
                                     onChange={(e) => setFrom(e.target.value)}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                                 />
                             </div>
                             <div className="flex-1 min-w-[200px]">
@@ -175,12 +175,12 @@ export default function Customers({ auth, dateRange, report }: Props) {
                                     type="date"
                                     value={to}
                                     onChange={(e) => setTo(e.target.value)}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                                 />
                             </div>
                             <button
                                 onClick={handleDateChange}
-                                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
+                                className="px-6 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 font-medium"
                             >
                                 Apply
                             </button>
@@ -196,8 +196,8 @@ export default function Customers({ auth, dateRange, report }: Props) {
                                     <p className="text-2xl font-bold text-gray-900 mt-2">{report.total_customers.toLocaleString()}</p>
                                     <p className="text-sm text-gray-500 mt-1">Registered users</p>
                                 </div>
-                                <div className="p-3 bg-blue-100 rounded-lg">
-                                    <FiUsers className="text-blue-600" size={24} />
+                                <div className="p-3 bg-brand-100 rounded-lg">
+                                    <FiUsers className="text-brand-600" size={24} />
                                 </div>
                             </div>
                         </div>

@@ -62,7 +62,7 @@ export default function ProgressTracker({ currentStatus, progressPercentage }: P
                      style={{ marginLeft: '2.5rem', marginRight: '2.5rem' }}>
                     {/* Animated Progress Bar Fill */}
                     <div
-                        className="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full transition-all duration-1000 ease-out"
+                        className="h-full bg-gradient-to-r from-brand-500 to-brand-600 rounded-full transition-all duration-1000 ease-out"
                         style={{ width: `${progressPercentage}%` }}
                     />
                 </div>
@@ -84,9 +84,9 @@ export default function ProgressTracker({ currentStatus, progressPercentage }: P
                                 <div
                                     className={`w-12 h-12 rounded-full flex items-center justify-center mb-3 transition-all duration-300 ${
                                         isCompleted
-                                            ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg'
+                                            ? 'bg-gradient-to-br from-brand-500 to-brand-600 text-white shadow-lg'
                                             : 'bg-white border-2 border-gray-300 text-gray-400'
-                                    } ${isCurrent ? 'ring-4 ring-blue-200 animate-pulse' : ''}`}
+                                    } ${isCurrent ? 'ring-4 ring-brand-200 animate-pulse' : ''}`}
                                 >
                                     <Icon className="w-6 h-6" />
                                 </div>
@@ -101,7 +101,7 @@ export default function ProgressTracker({ currentStatus, progressPercentage }: P
                                 {/* Active Indicator */}
                                 {isCurrent && (
                                     <div className="mt-2">
-                                        <span className="inline-block px-3 py-1 text-xs font-semibold bg-blue-100 text-blue-700 rounded-full">
+                                        <span className="inline-block px-3 py-1 text-xs font-semibold bg-brand-100 text-brand-700 rounded-full">
                                             Current
                                         </span>
                                     </div>
@@ -115,7 +115,7 @@ export default function ProgressTracker({ currentStatus, progressPercentage }: P
             {/* Progress Percentage */}
             <div className="text-center">
                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-full">
-                    <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></div>
+                    <div className="w-2 h-2 bg-brand-600 rounded-full animate-pulse"></div>
                     <span className="text-sm font-medium text-gray-700">
                         {progressPercentage}% Complete
                     </span>

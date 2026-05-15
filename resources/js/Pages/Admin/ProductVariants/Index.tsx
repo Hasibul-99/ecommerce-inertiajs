@@ -354,7 +354,7 @@ export default function ProductVariantsIndex({ variants, products, filters, auth
                                             </TableCell>
                                             <TableCell>
                                                 {variant.is_default ? (
-                                                    <Badge className="bg-blue-100 text-blue-800">Default</Badge>
+                                                    <Badge className="bg-brand-100 text-brand-800">Default</Badge>
                                                 ) : (
                                                     <span className="text-gray-500">-</span>
                                                 )}

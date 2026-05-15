@@ -42,7 +42,7 @@ export default function Show({ auth, activityLog }: Props) {
       case 'created':
         return <Badge className="bg-green-100 text-green-800 hover:bg-green-100">Created</Badge>;
       case 'updated':
-        return <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">Updated</Badge>;
+        return <Badge className="bg-brand-100 text-brand-800 hover:bg-brand-100">Updated</Badge>;
       case 'deleted':
         return <Badge className="bg-red-100 text-red-800 hover:bg-red-100">Deleted</Badge>;
       case 'restored':

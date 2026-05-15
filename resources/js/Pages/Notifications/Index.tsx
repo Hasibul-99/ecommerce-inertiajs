@@ -175,7 +175,7 @@ export default function Index({ auth, notifications }: Props) {
                                     <div
                                         key={notification.id}
                                         className={`p-6 hover:bg-gray-50 cursor-pointer ${
-                                            !notification.read_at ? 'bg-blue-50' : ''
+                                            !notification.read_at ? 'bg-brand-50' : ''
                                         }`}
                                         onClick={() => {
                                             if (!notification.read_at) {
@@ -201,7 +201,7 @@ export default function Index({ auth, notifications }: Props) {
                                                         </p>
                                                     </div>
                                                     {!notification.read_at && (
-                                                        <span className="ml-4 w-3 h-3 bg-blue-600 rounded-full flex-shrink-0"></span>
+                                                        <span className="ml-4 w-3 h-3 bg-brand-600 rounded-full flex-shrink-0"></span>
                                                     )}
                                                 </div>
                                                 {notification.data.action_url && (

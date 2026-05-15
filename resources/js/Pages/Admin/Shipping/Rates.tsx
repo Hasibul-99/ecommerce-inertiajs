@@ -186,7 +186,7 @@ export default function Rates({ rates, zones, methods, filters }: Props) {
                                     reset();
                                     setShowModal(true);
                                 }}
-                                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                                className="flex items-center gap-2 px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 transition-colors"
                             >
                                 <FiPlus /> Create Rate
                             </button>
@@ -206,7 +206,7 @@ export default function Rates({ rates, zones, methods, filters }: Props) {
                                         preserveState: true,
                                         preserveScroll: true,
                                     })}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                                 >
                                     <option value="">All Zones</option>
                                     {zones.map((zone) => (
@@ -227,7 +227,7 @@ export default function Rates({ rates, zones, methods, filters }: Props) {
                                         preserveState: true,
                                         preserveScroll: true,
                                     })}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                                 >
                                     <option value="">All Methods</option>
                                     {methods.map((method) => (
@@ -299,7 +299,7 @@ export default function Rates({ rates, zones, methods, filters }: Props) {
                                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                                 <button
                                                     onClick={() => handleEdit(rate)}
-                                                    className="text-blue-600 hover:text-blue-900 mr-3"
+                                                    className="text-brand-600 hover:text-brand-900 mr-3"
                                                 >
                                                     <FiEdit2 className="inline" />
                                                 </button>
@@ -357,7 +357,7 @@ export default function Rates({ rates, zones, methods, filters }: Props) {
                                         <select
                                             value={data.shipping_zone_id}
                                             onChange={(e) => setData('shipping_zone_id', e.target.value)}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                                             required
                                         >
                                             <option value="">Select Zone</option>
@@ -377,7 +377,7 @@ export default function Rates({ rates, zones, methods, filters }: Props) {
                                         <select
                                             value={data.shipping_method_id}
                                             onChange={(e) => setData('shipping_method_id', e.target.value)}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                                             required
                                         >
                                             <option value="">Select Method</option>
@@ -403,7 +403,7 @@ export default function Rates({ rates, zones, methods, filters }: Props) {
                                                 min="0"
                                                 value={data.min_weight}
                                                 onChange={(e) => setData('min_weight', parseInt(e.target.value))}
-                                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                                                 required
                                             />
                                         </div>
@@ -417,7 +417,7 @@ export default function Rates({ rates, zones, methods, filters }: Props) {
                                                 value={data.max_weight}
                                                 onChange={(e) => setData('max_weight', e.target.value)}
                                                 placeholder="No limit"
-                                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                                             />
                                         </div>
                                     </div>
@@ -435,7 +435,7 @@ export default function Rates({ rates, zones, methods, filters }: Props) {
                                                 min="0"
                                                 value={data.min_order_cents}
                                                 onChange={(e) => setData('min_order_cents', parseInt(e.target.value))}
-                                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                                                 required
                                             />
                                         </div>
@@ -449,7 +449,7 @@ export default function Rates({ rates, zones, methods, filters }: Props) {
                                                 value={data.max_order_cents}
                                                 onChange={(e) => setData('max_order_cents', e.target.value)}
                                                 placeholder="No limit"
-                                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                                             />
                                         </div>
                                     </div>
@@ -465,7 +465,7 @@ export default function Rates({ rates, zones, methods, filters }: Props) {
                                             min="0"
                                             value={data.rate_cents}
                                             onChange={(e) => setData('rate_cents', parseInt(e.target.value))}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                                             required
                                         />
                                         <p className="mt-1 text-xs text-gray-500">
@@ -483,7 +483,7 @@ export default function Rates({ rates, zones, methods, filters }: Props) {
                                             value={data.free_shipping_threshold_cents}
                                             onChange={(e) => setData('free_shipping_threshold_cents', e.target.value)}
                                             placeholder="Optional"
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                                         />
                                         {data.free_shipping_threshold_cents && (
                                             <p className="mt-1 text-xs text-gray-500">
@@ -508,7 +508,7 @@ export default function Rates({ rates, zones, methods, filters }: Props) {
                                     <button
                                         type="submit"
                                         disabled={processing}
-                                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                                        className="px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 disabled:opacity-50"
                                     >
                                         {processing ? 'Saving...' : editingRate ? 'Update' : 'Create'}
                                     </button>
@@ -538,11 +538,11 @@ export default function Rates({ rates, zones, methods, filters }: Props) {
                             </div>
 
                             <form onSubmit={handleImport} className="space-y-4">
-                                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                                    <p className="text-sm text-blue-800">
+                                <div className="bg-brand-50 border border-brand-200 rounded-lg p-4">
+                                    <p className="text-sm text-brand-800">
                                         <strong>CSV Format:</strong> min_weight, max_weight, min_order_cents, max_order_cents, rate_cents, free_shipping_threshold_cents
                                     </p>
-                                    <p className="text-sm text-blue-800 mt-2">
+                                    <p className="text-sm text-brand-800 mt-2">
                                         Example: 0,1000,0,5000,500,10000
                                     </p>
                                 </div>
@@ -555,7 +555,7 @@ export default function Rates({ rates, zones, methods, filters }: Props) {
                                         <select
                                             value={importForm.data.shipping_zone_id}
                                             onChange={(e) => importForm.setData('shipping_zone_id', e.target.value)}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                                             required
                                         >
                                             <option value="">Select Zone</option>
@@ -574,7 +574,7 @@ export default function Rates({ rates, zones, methods, filters }: Props) {
                                         <select
                                             value={importForm.data.shipping_method_id}
                                             onChange={(e) => importForm.setData('shipping_method_id', e.target.value)}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                                             required
                                         >
                                             <option value="">Select Method</option>
@@ -595,7 +595,7 @@ export default function Rates({ rates, zones, methods, filters }: Props) {
                                         type="file"
                                         accept=".csv,.txt"
                                         onChange={(e) => importForm.setData('file', e.target.files?.[0] || null)}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                                         required
                                     />
                                 </div>
@@ -614,7 +614,7 @@ export default function Rates({ rates, zones, methods, filters }: Props) {
                                     <button
                                         type="submit"
                                         disabled={importForm.processing}
-                                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                                        className="px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 disabled:opacity-50"
                                     >
                                         {importForm.processing ? 'Importing...' : 'Import'}
                                     </button>

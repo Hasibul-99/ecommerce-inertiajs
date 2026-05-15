@@ -161,11 +161,11 @@ export default function Show({ auth, trackingData, trackingToken, cartCount = 0,
             <div className="bg-gray-50 border-b border-gray-200 py-4">
                 <div className="container mx-auto px-4">
                     <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <Link href="/" className="hover:text-blue-600 transition-colors">
+                        <Link href="/" className="hover:text-brand-600 transition-colors">
                             Home
                         </Link>
                         <FiChevronRight className="w-4 h-4" />
-                        <Link href={route('track-order.index')} className="hover:text-blue-600 transition-colors">
+                        <Link href={route('track-order.index')} className="hover:text-brand-600 transition-colors">
                             Track Order
                         </Link>
                         <FiChevronRight className="w-4 h-4" />
@@ -220,7 +220,7 @@ export default function Show({ auth, trackingData, trackingToken, cartCount = 0,
 
                     {/* Subscribe Form */}
                     {showSubscribeForm && (
-                        <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-6">
+                        <div className="mt-4 bg-brand-50 border border-brand-200 rounded-lg p-6">
                             <h3 className="font-semibold text-gray-900 mb-4">
                                 Subscribe to Tracking Updates
                             </h3>
@@ -234,7 +234,7 @@ export default function Show({ auth, trackingData, trackingToken, cartCount = 0,
                                             type="email"
                                             value={subscribeForm.data.email}
                                             onChange={(e) => subscribeForm.setData('email', e.target.value)}
-                                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                                             placeholder="your@email.com"
                                             required
                                         />
@@ -247,7 +247,7 @@ export default function Show({ auth, trackingData, trackingToken, cartCount = 0,
                                             type="tel"
                                             value={subscribeForm.data.phone}
                                             onChange={(e) => subscribeForm.setData('phone', e.target.value)}
-                                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                                             placeholder="+1 (555) 000-0000"
                                         />
                                     </div>
@@ -258,7 +258,7 @@ export default function Show({ auth, trackingData, trackingToken, cartCount = 0,
                                             type="checkbox"
                                             checked={subscribeForm.data.email_enabled}
                                             onChange={(e) => subscribeForm.setData('email_enabled', e.target.checked)}
-                                            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                            className="rounded border-gray-300 text-brand-600 focus:ring-brand-500"
                                         />
                                         <span className="text-sm text-gray-700">Email notifications</span>
                                     </label>
@@ -267,7 +267,7 @@ export default function Show({ auth, trackingData, trackingToken, cartCount = 0,
                                             type="checkbox"
                                             checked={subscribeForm.data.sms_enabled}
                                             onChange={(e) => subscribeForm.setData('sms_enabled', e.target.checked)}
-                                            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                            className="rounded border-gray-300 text-brand-600 focus:ring-brand-500"
                                         />
                                         <span className="text-sm text-gray-700">SMS notifications</span>
                                     </label>
@@ -275,7 +275,7 @@ export default function Show({ auth, trackingData, trackingToken, cartCount = 0,
                                 <Button
                                     type="submit"
                                     disabled={subscribeForm.processing}
-                                    className="bg-blue-600 hover:bg-blue-700 text-white"
+                                    className="bg-brand-600 hover:bg-brand-700 text-white"
                                 >
                                     {subscribeForm.processing ? 'Subscribing...' : 'Subscribe to Updates'}
                                 </Button>
@@ -306,7 +306,7 @@ export default function Show({ auth, trackingData, trackingToken, cartCount = 0,
                         {trackingData.shipments.length > 0 && (
                             <div>
                                 <h2 className="text-2xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                                    <FiPackage className="text-blue-600" />
+                                    <FiPackage className="text-brand-600" />
                                     Shipments ({trackingData.shipments.length})
                                 </h2>
                                 <div className="space-y-4">
@@ -357,7 +357,7 @@ export default function Show({ auth, trackingData, trackingToken, cartCount = 0,
                         {trackingData.shipping_address && (
                             <div className="bg-white rounded-lg border border-gray-200 p-6">
                                 <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                                    <FiMapPin className="text-blue-600" />
+                                    <FiMapPin className="text-brand-600" />
                                     Shipping Address
                                 </h3>
                                 <address className="text-gray-700 not-italic text-sm space-y-1">
@@ -375,18 +375,18 @@ export default function Show({ auth, trackingData, trackingToken, cartCount = 0,
                         )}
 
                         {/* Quick Actions */}
-                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                        <div className="bg-brand-50 border border-brand-200 rounded-lg p-6">
                             <h3 className="font-semibold text-gray-900 mb-4">Need Help?</h3>
                             <div className="space-y-3">
                                 <Link
                                     href="/contact-us"
-                                    className="block text-sm text-blue-600 hover:text-blue-700 hover:underline"
+                                    className="block text-sm text-brand-600 hover:text-brand-700 hover:underline"
                                 >
                                     Contact Customer Support
                                 </Link>
                                 <button
                                     onClick={copyTrackingLink}
-                                    className="block text-sm text-blue-600 hover:text-blue-700 hover:underline flex items-center gap-2"
+                                    className="block text-sm text-brand-600 hover:text-brand-700 hover:underline flex items-center gap-2"
                                 >
                                     <FiCopy className="w-4 h-4" />
                                     Copy Tracking Link
@@ -394,7 +394,7 @@ export default function Show({ auth, trackingData, trackingToken, cartCount = 0,
                                 {auth.user && (
                                     <Link
                                         href={`/orders/${trackingData.order.id}`}
-                                        className="block text-sm text-blue-600 hover:text-blue-700 hover:underline"
+                                        className="block text-sm text-brand-600 hover:text-brand-700 hover:underline"
                                     >
                                         View Full Order Details
                                     </Link>
@@ -410,7 +410,7 @@ export default function Show({ auth, trackingData, trackingToken, cartCount = 0,
                                         type="checkbox"
                                         checked={autoRefresh}
                                         onChange={(e) => setAutoRefresh(e.target.checked)}
-                                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                        className="rounded border-gray-300 text-brand-600 focus:ring-brand-500"
                                     />
                                     <div className="flex-1">
                                         <span className="text-sm font-medium text-gray-900 block">

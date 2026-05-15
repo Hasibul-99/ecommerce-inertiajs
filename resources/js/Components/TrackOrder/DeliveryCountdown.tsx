@@ -117,13 +117,13 @@ export default function DeliveryCountdown({ estimatedDelivery, isDelivered, deli
     const progress = 100 - Math.min(100, (timeLeft.days / 7) * 100);
 
     return (
-        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg border-2 border-blue-200 p-6">
+        <div className="bg-gradient-to-br from-brand-50 to-indigo-50 rounded-lg border-2 border-brand-200 p-6">
             {/* Estimated Delivery Date */}
             <div className="text-center mb-6">
-                <p className="text-sm font-medium text-blue-700 uppercase tracking-wide mb-1">
+                <p className="text-sm font-medium text-brand-700 uppercase tracking-wide mb-1">
                     Estimated Delivery
                 </p>
-                <p className="text-xl font-bold text-blue-900">
+                <p className="text-xl font-bold text-brand-900">
                     {formatDate(estimatedDelivery)}
                 </p>
             </div>
@@ -131,7 +131,7 @@ export default function DeliveryCountdown({ estimatedDelivery, isDelivered, deli
             {/* Countdown Display */}
             <div className="grid grid-cols-4 gap-3 mb-6">
                 <div className="bg-white rounded-lg p-3 text-center shadow-sm">
-                    <div className="text-3xl font-bold text-blue-600">
+                    <div className="text-3xl font-bold text-brand-600">
                         {timeLeft.days}
                     </div>
                     <div className="text-xs text-gray-600 mt-1 uppercase tracking-wide">
@@ -139,7 +139,7 @@ export default function DeliveryCountdown({ estimatedDelivery, isDelivered, deli
                     </div>
                 </div>
                 <div className="bg-white rounded-lg p-3 text-center shadow-sm">
-                    <div className="text-3xl font-bold text-blue-600">
+                    <div className="text-3xl font-bold text-brand-600">
                         {timeLeft.hours.toString().padStart(2, '0')}
                     </div>
                     <div className="text-xs text-gray-600 mt-1 uppercase tracking-wide">
@@ -147,7 +147,7 @@ export default function DeliveryCountdown({ estimatedDelivery, isDelivered, deli
                     </div>
                 </div>
                 <div className="bg-white rounded-lg p-3 text-center shadow-sm">
-                    <div className="text-3xl font-bold text-blue-600">
+                    <div className="text-3xl font-bold text-brand-600">
                         {timeLeft.minutes.toString().padStart(2, '0')}
                     </div>
                     <div className="text-xs text-gray-600 mt-1 uppercase tracking-wide">
@@ -155,7 +155,7 @@ export default function DeliveryCountdown({ estimatedDelivery, isDelivered, deli
                     </div>
                 </div>
                 <div className="bg-white rounded-lg p-3 text-center shadow-sm">
-                    <div className="text-3xl font-bold text-blue-600">
+                    <div className="text-3xl font-bold text-brand-600">
                         {timeLeft.seconds.toString().padStart(2, '0')}
                     </div>
                     <div className="text-xs text-gray-600 mt-1 uppercase tracking-wide">
@@ -193,7 +193,7 @@ export default function DeliveryCountdown({ estimatedDelivery, isDelivered, deli
                     </svg>
                     <div className="absolute inset-0 flex items-center justify-center">
                         <div className="text-center">
-                            <div className="text-2xl font-bold text-blue-600">
+                            <div className="text-2xl font-bold text-brand-600">
                                 {Math.round(progress)}%
                             </div>
                             <div className="text-xs text-gray-600">Complete</div>
@@ -203,7 +203,7 @@ export default function DeliveryCountdown({ estimatedDelivery, isDelivered, deli
             </div>
 
             {/* Time Remaining Text */}
-            <p className="text-center text-sm text-blue-700">
+            <p className="text-center text-sm text-brand-700">
                 {timeLeft.days > 0 && `${timeLeft.days} day${timeLeft.days > 1 ? 's' : ''} `}
                 {timeLeft.hours > 0 && `${timeLeft.hours} hour${timeLeft.hours > 1 ? 's' : ''} `}
                 remaining

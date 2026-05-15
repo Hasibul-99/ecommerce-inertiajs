@@ -116,7 +116,7 @@ export default function Zones({ zones, filters }: Props) {
                                 reset();
                                 setShowModal(true);
                             }}
-                            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                            className="flex items-center gap-2 px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 transition-colors"
                         >
                             <FiPlus /> Create Zone
                         </button>
@@ -132,7 +132,7 @@ export default function Zones({ zones, filters }: Props) {
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                     placeholder="Search zones..."
-                                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                                 />
                             </div>
                             <select
@@ -141,7 +141,7 @@ export default function Zones({ zones, filters }: Props) {
                                     preserveState: true,
                                     preserveScroll: true,
                                 })}
-                                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                             >
                                 <option value="all">All Status</option>
                                 <option value="active">Active</option>
@@ -183,7 +183,7 @@ export default function Zones({ zones, filters }: Props) {
                                     <tr key={zone.id} className="hover:bg-gray-50">
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="flex items-center">
-                                                <FiGlobe className="text-blue-600 mr-2" />
+                                                <FiGlobe className="text-brand-600 mr-2" />
                                                 <div className="text-sm font-medium text-gray-900">{zone.name}</div>
                                             </div>
                                         </td>
@@ -193,7 +193,7 @@ export default function Zones({ zones, filters }: Props) {
                                                     zone.countries.slice(0, 3).map((country) => (
                                                         <span
                                                             key={country}
-                                                            className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                                                            className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-brand-100 text-brand-800"
                                                         >
                                                             {country}
                                                         </span>
@@ -225,7 +225,7 @@ export default function Zones({ zones, filters }: Props) {
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                             <button
                                                 onClick={() => handleEdit(zone)}
-                                                className="text-blue-600 hover:text-blue-900 mr-3"
+                                                className="text-brand-600 hover:text-brand-900 mr-3"
                                             >
                                                 <FiEdit2 className="inline" />
                                             </button>
@@ -289,7 +289,7 @@ export default function Zones({ zones, filters }: Props) {
                                         type="text"
                                         value={data.name}
                                         onChange={(e) => setData('name', e.target.value)}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                                         required
                                     />
                                     {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
@@ -303,13 +303,13 @@ export default function Zones({ zones, filters }: Props) {
                                         {data.countries.map((country) => (
                                             <span
                                                 key={country}
-                                                className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800"
+                                                className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-brand-100 text-brand-800"
                                             >
                                                 {country}
                                                 <button
                                                     type="button"
                                                     onClick={() => handleRemoveCountry(country)}
-                                                    className="ml-2 text-blue-600 hover:text-blue-800"
+                                                    className="ml-2 text-brand-600 hover:text-brand-800"
                                                 >
                                                     <FiX size={14} />
                                                 </button>
@@ -319,7 +319,7 @@ export default function Zones({ zones, filters }: Props) {
                                     <button
                                         type="button"
                                         onClick={handleAddCountry}
-                                        className="text-sm text-blue-600 hover:text-blue-800"
+                                        className="text-sm text-brand-600 hover:text-brand-800"
                                     >
                                         + Add Country
                                     </button>
@@ -332,7 +332,7 @@ export default function Zones({ zones, filters }: Props) {
                                     <select
                                         value={data.status}
                                         onChange={(e) => setData('status', e.target.value as 'active' | 'inactive')}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                                     >
                                         <option value="active">Active</option>
                                         <option value="inactive">Inactive</option>
@@ -354,7 +354,7 @@ export default function Zones({ zones, filters }: Props) {
                                     <button
                                         type="submit"
                                         disabled={processing}
-                                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                                        className="px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 disabled:opacity-50"
                                     >
                                         {processing ? 'Saving...' : editingZone ? 'Update' : 'Create'}
                                     </button>

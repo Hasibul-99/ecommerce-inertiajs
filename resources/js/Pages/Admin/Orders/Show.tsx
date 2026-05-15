@@ -98,7 +98,7 @@ export default function Show({ auth, order, workflowState, activityLogs = [], de
   const getStatusBadgeClass = (status: string) => {
     const statusMap: Record<string, string> = {
       pending: 'bg-yellow-100 text-yellow-800',
-      confirmed: 'bg-blue-100 text-blue-800',
+      confirmed: 'bg-brand-100 text-brand-800',
       processing: 'bg-indigo-100 text-indigo-800',
       out_for_delivery: 'bg-purple-100 text-purple-800',
       delivered: 'bg-green-100 text-green-800',
@@ -177,7 +177,7 @@ export default function Show({ auth, order, workflowState, activityLogs = [], de
           {actions.includes('confirm') && (
             <button
               onClick={() => setShowConfirmDialog(true)}
-              className="inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+              className="inline-flex items-center justify-center px-4 py-2 bg-brand-600 text-white rounded-md hover:bg-brand-700 transition"
             >
               <FiCheckCircle className="mr-2" /> Confirm Order
             </button>
@@ -252,7 +252,7 @@ export default function Show({ auth, order, workflowState, activityLogs = [], de
             <div key={status.id} className="flex gap-4">
               <div className="flex flex-col items-center">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                  index === 0 ? 'bg-blue-500' : 'bg-gray-300'
+                  index === 0 ? 'bg-brand-500' : 'bg-gray-300'
                 }`}>
                   <FiClock className="w-4 h-4 text-white" />
                 </div>
@@ -405,35 +405,35 @@ export default function Show({ auth, order, workflowState, activityLogs = [], de
 
           {/* COD Information (if applicable) */}
           {order.payment_method === 'cod' && (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
-              <h4 className="font-medium text-blue-900 mb-4">COD Payment Information</h4>
+            <div className="bg-brand-50 border border-brand-200 rounded-lg p-6 mb-6">
+              <h4 className="font-medium text-brand-900 mb-4">COD Payment Information</h4>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <span className="text-sm text-blue-700">Amount to Collect:</span>
-                  <p className="font-bold text-lg text-blue-900">{formatCurrency(order.total_cents / 100)}</p>
+                  <span className="text-sm text-brand-700">Amount to Collect:</span>
+                  <p className="font-bold text-lg text-brand-900">{formatCurrency(order.total_cents / 100)}</p>
                 </div>
                 {order.cod_amount_collected && (
                   <div>
-                    <span className="text-sm text-blue-700">Amount Collected:</span>
+                    <span className="text-sm text-brand-700">Amount Collected:</span>
                     <p className="font-bold text-lg text-green-600">{formatCurrency(order.cod_amount_collected / 100)}</p>
                   </div>
                 )}
                 {order.cod_collected_at && (
                   <div>
-                    <span className="text-sm text-blue-700">Collected At:</span>
-                    <p className="font-medium text-blue-900">{formatDate(order.cod_collected_at)}</p>
+                    <span className="text-sm text-brand-700">Collected At:</span>
+                    <p className="font-medium text-brand-900">{formatDate(order.cod_collected_at)}</p>
                   </div>
                 )}
                 {order.codCollector && (
                   <div>
-                    <span className="text-sm text-blue-700">Collected By:</span>
-                    <p className="font-medium text-blue-900">{order.codCollector.name}</p>
+                    <span className="text-sm text-brand-700">Collected By:</span>
+                    <p className="font-medium text-brand-900">{order.codCollector.name}</p>
                   </div>
                 )}
                 {order.deliveryPerson && (
                   <div>
-                    <span className="text-sm text-blue-700">Delivery Person:</span>
-                    <p className="font-medium text-blue-900">{order.deliveryPerson.name}</p>
+                    <span className="text-sm text-brand-700">Delivery Person:</span>
+                    <p className="font-medium text-brand-900">{order.deliveryPerson.name}</p>
                   </div>
                 )}
                 {order.cod_verification_required && (
@@ -548,7 +548,7 @@ export default function Show({ auth, order, workflowState, activityLogs = [], de
                   <button
                     onClick={handleConfirmOrder}
                     disabled={confirmProcessing}
-                    className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50"
+                    className="flex-1 bg-brand-600 text-white px-4 py-2 rounded-md hover:bg-brand-700 disabled:opacity-50"
                   >
                     Confirm Order
                   </button>

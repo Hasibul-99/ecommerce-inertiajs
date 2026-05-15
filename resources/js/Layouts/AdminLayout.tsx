@@ -73,7 +73,7 @@ const MenuItemWithChildren = ({
         <Icon className="flex-shrink-0 w-5 h-5 mr-3 text-gray-500 dark:text-gray-400" />
         <span className="flex-1 text-left">{item.name}</span>
         {item.badge && (
-          <span className="mr-2 px-2 py-0.5 text-xs font-medium rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+          <span className="mr-2 px-2 py-0.5 text-xs font-medium rounded-full bg-brand-100 text-brand-800 dark:bg-brand-900 dark:text-brand-200">
             {item.badge}
           </span>
         )}
@@ -121,7 +121,7 @@ const MenuItemLink = ({
         group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200
         ${isChild ? 'ml-6 pl-8' : ''}
         ${isActive
-          ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/25'
+          ? 'bg-gradient-to-r from-brand-500 to-brand-600 text-white shadow-lg shadow-brand-500/25'
           : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white'
         }
         ${sidebarCollapsed && !isChild ? 'justify-center px-2' : ''}
@@ -135,7 +135,7 @@ const MenuItemLink = ({
             <span className={`ml-2 px-2 py-0.5 text-xs font-medium rounded-full ${
               isActive
                 ? 'bg-white/20 text-white'
-                : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
+                : 'bg-brand-100 text-brand-800 dark:bg-brand-900 dark:text-brand-200'
             }`}>
               {item.badge}
             </span>
@@ -320,10 +320,10 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
       <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 shadow-xl transform transition-transform duration-300 ease-in-out md:hidden ${
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
-        <div className="flex items-center justify-between h-16 px-6 bg-gradient-to-r from-blue-600 to-blue-700">
+        <div className="flex items-center justify-between h-16 px-6 bg-gradient-to-r from-brand-600 to-brand-700">
           <div className="flex items-center">
             <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center mr-3">
-              <FiGrid className="w-5 h-5 text-blue-600" />
+              <FiGrid className="w-5 h-5 text-brand-600" />
             </div>
             <span className="text-xl font-bold text-white">AdminHub</span>
           </div>
@@ -347,10 +347,10 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
       }`}>
         <div className="flex flex-col flex-1 min-h-0 bg-white dark:bg-gray-800 shadow-xl border-r border-gray-200 dark:border-gray-700">
           {/* Logo */}
-          <div className="flex items-center h-16 px-6 bg-gradient-to-r from-blue-600 to-blue-700">
+          <div className="flex items-center h-16 px-6 bg-gradient-to-r from-brand-600 to-brand-700">
             <div className="flex items-center">
               <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
-                <FiGrid className="w-5 h-5 text-blue-600" />
+                <FiGrid className="w-5 h-5 text-brand-600" />
               </div>
               {!sidebarCollapsed && (
                 <span className="ml-3 text-xl font-bold text-white">AdminHub</span>
@@ -375,7 +375,7 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
           {!sidebarCollapsed && (
             <div className="p-4 border-t border-gray-200 dark:border-gray-700">
               <div className="flex items-center p-3 rounded-lg bg-gray-50 dark:bg-gray-700">
-                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                <div className="w-8 h-8 bg-gradient-to-r from-brand-500 to-purple-600 rounded-full flex items-center justify-center">
                   <FiUser className="w-4 h-4 text-white" />
                 </div>
                 <div className="ml-3 flex-1 min-w-0">
@@ -399,7 +399,7 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
           {/* Mobile menu button */}
           <button
             onClick={() => setSidebarOpen(true)}
-            className="px-4 text-gray-500 dark:text-gray-400 border-r border-gray-200 dark:border-gray-700 md:hidden hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+            className="px-4 text-gray-500 dark:text-gray-400 border-r border-gray-200 dark:border-gray-700 md:hidden hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500"
           >
             <FiMenu className="w-6 h-6" />
           </button>
@@ -419,7 +419,7 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
                   <input
                     type="text"
                     placeholder="Search..."
-                    className="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:text-white"
+                    className="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent dark:text-white"
                   />
                 </div>
               </div>
@@ -441,7 +441,7 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
                   onClick={() => setShowUserMenu(!showUserMenu)}
                   className="flex items-center p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
                 >
-                  <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mr-2">
+                  <div className="w-8 h-8 bg-gradient-to-r from-brand-500 to-purple-600 rounded-full flex items-center justify-center mr-2">
                     <FiUser className="w-4 h-4 text-white" />
                   </div>
                   <span className="hidden sm:block text-sm font-medium text-gray-700 dark:text-gray-300 mr-1">

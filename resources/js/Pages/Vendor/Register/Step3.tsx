@@ -51,18 +51,18 @@ export default function Step3({ auth, vendor }: Props) {
           {/* Progress Bar */}
           <div className="mb-8">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-blue-600">Step 3: Bank Details</span>
+              <span className="text-sm font-medium text-brand-600">Step 3: Bank Details</span>
               <span className="text-sm text-gray-500">99% Complete</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
-              <div className="bg-blue-600 h-2 rounded-full" style={{ width: '99%' }}></div>
+              <div className="bg-brand-600 h-2 rounded-full" style={{ width: '99%' }}></div>
             </div>
           </div>
 
           <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div className="p-6 border-b border-gray-200">
               <div className="flex items-start space-x-3">
-                <FiLock className="w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5" />
+                <FiLock className="w-6 h-6 text-brand-600 flex-shrink-0 mt-0.5" />
                 <div>
                   <h3 className="text-lg font-medium text-gray-900">Bank Account Information</h3>
                   <p className="mt-1 text-sm text-gray-600">
@@ -74,14 +74,14 @@ export default function Step3({ auth, vendor }: Props) {
 
             <form onSubmit={submit} className="p-6 space-y-6">
               {/* Security Notice */}
-              <div className="rounded-md bg-blue-50 border border-blue-200 p-4">
+              <div className="rounded-md bg-brand-50 border border-brand-200 p-4">
                 <div className="flex">
-                  <FiLock className="h-5 w-5 text-blue-400 flex-shrink-0" />
+                  <FiLock className="h-5 w-5 text-brand-400 flex-shrink-0" />
                   <div className="ml-3">
-                    <h3 className="text-sm font-medium text-blue-800">
+                    <h3 className="text-sm font-medium text-brand-800">
                       Your information is secure
                     </h3>
-                    <div className="mt-2 text-sm text-blue-700">
+                    <div className="mt-2 text-sm text-brand-700">
                       <p>
                         We use bank-level encryption to protect your financial information. Your account details
                         are never shared with third parties and are only used for processing payouts.
@@ -101,7 +101,7 @@ export default function Step3({ auth, vendor }: Props) {
                   type="text"
                   value={data.bank_name}
                   onChange={(e) => setData('bank_name', e.target.value)}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"
                   placeholder="e.g., Chase Bank, Bank of America"
                   required
                 />
@@ -118,7 +118,7 @@ export default function Step3({ auth, vendor }: Props) {
                   type="text"
                   value={data.bank_account_name}
                   onChange={(e) => setData('bank_account_name', e.target.value)}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"
                   placeholder="Name as it appears on bank account"
                   required
                 />
@@ -138,7 +138,7 @@ export default function Step3({ auth, vendor }: Props) {
                   type="text"
                   value={data.bank_account_number}
                   onChange={(e) => setData('bank_account_number', e.target.value)}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 font-mono"
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500 font-mono"
                   placeholder="XXXXXXXXXXXX"
                   required
                 />
@@ -155,7 +155,7 @@ export default function Step3({ auth, vendor }: Props) {
                   type="text"
                   value={data.bank_routing_number}
                   onChange={(e) => setData('bank_routing_number', e.target.value)}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 font-mono"
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500 font-mono"
                   placeholder="XXXXXXXXX"
                   required
                 />
@@ -175,7 +175,7 @@ export default function Step3({ auth, vendor }: Props) {
                   type="text"
                   value={data.bank_swift_code}
                   onChange={(e) => setData('bank_swift_code', e.target.value)}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 font-mono"
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500 font-mono"
                   placeholder="AAAABBCCXXX"
                 />
                 <p className="mt-1 text-xs text-gray-500">
@@ -214,7 +214,7 @@ export default function Step3({ auth, vendor }: Props) {
                 <button
                   type="submit"
                   disabled={processing}
-                  className="inline-flex items-center px-6 py-3 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 disabled:opacity-50"
+                  className="inline-flex items-center px-6 py-3 bg-brand-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-brand-700 focus:bg-brand-700 active:bg-brand-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 disabled:opacity-50"
                 >
                   {processing ? 'Saving...' : 'Continue to Review'}
                   <FiArrowRight className="ml-2 w-4 h-4" />
@@ -228,7 +228,7 @@ export default function Step3({ auth, vendor }: Props) {
             <h4 className="text-sm font-medium text-gray-900 mb-2">Need Help?</h4>
             <p className="text-sm text-gray-600">
               If you have questions about providing your bank information, please{' '}
-              <Link href={route('contact')} className="text-blue-600 hover:text-blue-800">
+              <Link href={route('contact')} className="text-brand-600 hover:text-brand-800">
                 contact our support team
               </Link>
               . We're here to help you get set up successfully.

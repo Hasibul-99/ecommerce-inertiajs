@@ -42,7 +42,7 @@ export default function PayoutsIndex({ auth, payouts, stats }: Props) {
     const getStatusIcon = (status: string) => {
         switch (status) {
             case 'pending': return <FiClock className="text-yellow-600" />;
-            case 'processing': return <FiLoader className="text-blue-600" />;
+            case 'processing': return <FiLoader className="text-brand-600" />;
             case 'completed': return <FiCheckCircle className="text-green-600" />;
             case 'failed': return <FiXCircle className="text-red-600" />;
             case 'cancelled': return <FiXCircle className="text-gray-600" />;
@@ -53,7 +53,7 @@ export default function PayoutsIndex({ auth, payouts, stats }: Props) {
     const getStatusColor = (status: string) => {
         const colors: Record<string, string> = {
             pending: 'bg-yellow-100 text-yellow-800 border-yellow-300',
-            processing: 'bg-blue-100 text-blue-800 border-blue-300',
+            processing: 'bg-brand-100 text-brand-800 border-brand-300',
             completed: 'bg-green-100 text-green-800 border-green-300',
             failed: 'bg-red-100 text-red-800 border-red-300',
             cancelled: 'bg-gray-100 text-gray-800 border-gray-300',
@@ -88,7 +88,7 @@ export default function PayoutsIndex({ auth, payouts, stats }: Props) {
                                 <h1 className="text-3xl font-bold text-gray-900">Payout History</h1>
                                 <p className="text-gray-600 mt-1">Track all your payout requests and their status</p>
                             </div>
-                            <Link href="/vendor/earnings" className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                            <Link href="/vendor/earnings" className="px-4 py-2 bg-brand-600 text-white rounded-md hover:bg-brand-700">
                                 Back to Dashboard
                             </Link>
                         </div>
@@ -97,7 +97,7 @@ export default function PayoutsIndex({ auth, payouts, stats }: Props) {
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
                         <div className="bg-white rounded-lg shadow p-6">
                             <div className="flex items-center gap-3 mb-2">
-                                <FiDollarSign className="text-2xl text-blue-600" />
+                                <FiDollarSign className="text-2xl text-brand-600" />
                                 <p className="text-sm text-gray-600">Total Payouts</p>
                             </div>
                             <p className="text-2xl font-bold text-gray-900">{stats.total_payouts}</p>
@@ -142,7 +142,7 @@ export default function PayoutsIndex({ auth, payouts, stats }: Props) {
                                                 <p className="text-sm text-gray-600">{getStatusText(payout)}</p>
                                             </div>
                                             <div className="text-right">
-                                                <p className="text-2xl font-bold text-blue-600">{formatCurrency(payout.net_amount_cents)}</p>
+                                                <p className="text-2xl font-bold text-brand-600">{formatCurrency(payout.net_amount_cents)}</p>
                                                 <p className="text-xs text-gray-500 mt-1">
                                                     {formatCurrency(payout.amount_cents)} - {formatCurrency(payout.processing_fee_cents)} fee
                                                 </p>
@@ -181,7 +181,7 @@ export default function PayoutsIndex({ auth, payouts, stats }: Props) {
                                         )}
 
                                         <div className="mt-4">
-                                            <button onClick={() => setSelectedPayout(payout)} className="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                                            <button onClick={() => setSelectedPayout(payout)} className="text-brand-600 hover:text-brand-700 text-sm font-medium">
                                                 View Details →
                                             </button>
                                         </div>
@@ -199,7 +199,7 @@ export default function PayoutsIndex({ auth, payouts, stats }: Props) {
                                             {payouts.links.map((link: any, index: number) => {
                                                 const baseClasses = 'px-3 py-2 rounded border text-sm';
                                                 const activeClasses = link.active
-                                                    ? 'bg-blue-600 text-white border-blue-600'
+                                                    ? 'bg-brand-600 text-white border-brand-600'
                                                     : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50';
                                                 const disabledClasses = !link.url
                                                     ? 'opacity-50 cursor-not-allowed'
@@ -226,7 +226,7 @@ export default function PayoutsIndex({ auth, payouts, stats }: Props) {
                             <FiDollarSign className="text-6xl text-gray-400 mx-auto mb-4" />
                             <h3 className="text-xl font-semibold text-gray-900 mb-2">No payouts yet</h3>
                             <p className="text-gray-600 mb-6">Your payout requests will appear here once you start requesting withdrawals</p>
-                            <Link href="/vendor/earnings" className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                            <Link href="/vendor/earnings" className="px-6 py-3 bg-brand-600 text-white rounded-md hover:bg-brand-700">
                                 Go to Earnings Dashboard
                             </Link>
                         </div>
@@ -259,9 +259,9 @@ export default function PayoutsIndex({ auth, payouts, stats }: Props) {
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-4">
-                                    <div className="p-4 bg-blue-50 rounded-lg">
+                                    <div className="p-4 bg-brand-50 rounded-lg">
                                         <p className="text-sm text-gray-600 mb-1">Requested Amount</p>
-                                        <p className="text-xl font-bold text-blue-600">{formatCurrency(selectedPayout.amount_cents)}</p>
+                                        <p className="text-xl font-bold text-brand-600">{formatCurrency(selectedPayout.amount_cents)}</p>
                                     </div>
                                     <div className="p-4 bg-green-50 rounded-lg">
                                         <p className="text-sm text-gray-600 mb-1">Net Amount (After Fees)</p>

@@ -227,7 +227,7 @@ export default function RichTextEditor({
             Link.configure({
                 openOnClick: false,
                 HTMLAttributes: {
-                    class: 'text-blue-600 underline hover:text-blue-800',
+                    class: 'text-brand-600 underline hover:text-brand-800',
                 },
             }),
             TextAlign.configure({

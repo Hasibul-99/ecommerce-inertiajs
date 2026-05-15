@@ -95,7 +95,7 @@ export default function Show({ auth, product }: Props) {
                                 </div>
                                 <div className="flex space-x-2">
                                     <Link href={route('admin.products.edit', product.id)}>
-                                        <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                                        <Button className="bg-brand-600 hover:bg-brand-700 text-white">
                                             <Edit className="w-4 h-4 mr-2" />
                                             Edit
                                         </Button>

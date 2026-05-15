@@ -106,14 +106,14 @@ export default function AdminDashboard({ auth, stats, pendingVendors, pendingPay
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
           {/* Enhanced Statistics Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+            <Card className="bg-gradient-to-br from-brand-50 to-brand-100 border-brand-200">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-blue-700">Total GMV</CardTitle>
-                <FiDollarSign className="h-4 w-4 text-blue-600" />
+                <CardTitle className="text-sm font-medium text-brand-700">Total GMV</CardTitle>
+                <FiDollarSign className="h-4 w-4 text-brand-600" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-blue-900">{formatCurrency(stats.totalGmv)}</div>
-                <p className="text-xs text-blue-600 flex items-center gap-1 mt-1">
+                <div className="text-2xl font-bold text-brand-900">{formatCurrency(stats.totalGmv)}</div>
+                <p className="text-xs text-brand-600 flex items-center gap-1 mt-1">
                   <FiTrendingUp className="h-3 w-3" />
                   +{stats.monthlyGrowth || 12}% from last month
                 </p>

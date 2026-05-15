@@ -96,7 +96,7 @@ export default function FileInput({
                     <label
                         htmlFor={name}
                         className={`flex items-center justify-center px-4 py-3 border-2 border-dashed rounded-lg cursor-pointer transition-colors ${
-                            error ? 'border-red-500' : 'border-gray-300 hover:border-blue-500'
+                            error ? 'border-red-500' : 'border-gray-300 hover:border-brand-500'
                         } ${previewUrl ? 'bg-gray-50' : 'bg-white'}`}
                     >
                         <div className="text-center">
@@ -111,7 +111,7 @@ export default function FileInput({
                                 <>
                                     <FiUpload className="mx-auto h-8 w-8 text-gray-400" />
                                     <p className="mt-2 text-sm text-gray-600">
-                                        <span className="text-blue-600 hover:text-blue-700">Upload a file</span>
+                                        <span className="text-brand-600 hover:text-brand-700">Upload a file</span>
                                         {' '}or drag and drop
                                     </p>
                                     <p className="text-xs text-gray-500 mt-1">

@@ -146,12 +146,12 @@ export default function Applications({ auth, vendors, filters }: Props) {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                    className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                    className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:ring-brand-500 focus:border-brand-500"
                   />
                 </div>
                 <button
                   onClick={handleSearch}
-                  className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                  className="px-6 py-2 bg-brand-600 text-white rounded-md hover:bg-brand-700 transition-colors"
                 >
                   Search
                 </button>
@@ -288,7 +288,7 @@ export default function Applications({ auth, vendors, filters }: Props) {
                           href={link.url || '#'}
                           className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
                             link.active
-                              ? 'z-10 bg-blue-50 border-blue-500 text-blue-600'
+                              ? 'z-10 bg-brand-50 border-brand-500 text-brand-600'
                               : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
                           } ${index === 0 ? 'rounded-l-md' : ''} ${
                             index === (vendors.links?.length || 0) - 1 ? 'rounded-r-md' : ''

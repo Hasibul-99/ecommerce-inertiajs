@@ -19,11 +19,11 @@ export default function Error403({ message }: Props) {
         <>
             <Head title="403 – Access Denied" />
 
-            <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-blue-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-900 flex items-center justify-center p-4">
+            <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-brand-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-900 flex items-center justify-center p-4">
 
                 {/* Subtle background pattern */}
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                    <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-100 dark:bg-blue-900/10 rounded-full blur-3xl opacity-60" />
+                    <div className="absolute -top-40 -right-40 w-80 h-80 bg-brand-100 dark:bg-brand-900/10 rounded-full blur-3xl opacity-60" />
                     <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-red-100 dark:bg-red-900/10 rounded-full blur-3xl opacity-60" />
                 </div>
 
@@ -94,7 +94,7 @@ export default function Error403({ message }: Props) {
                             </Button>
                             <Button
                                 onClick={() => router.visit(route('dashboard'))}
-                                className="w-full sm:w-auto gap-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white shadow-md shadow-blue-200 dark:shadow-none"
+                                className="w-full sm:w-auto gap-2 bg-brand-600 hover:bg-brand-700 dark:bg-brand-600 dark:hover:bg-brand-700 text-white shadow-md shadow-brand-200 dark:shadow-none"
                             >
                                 <FiHome className="w-4 h-4" />
                                 Go to Dashboard
@@ -104,7 +104,7 @@ export default function Error403({ message }: Props) {
                         {/* Footer */}
                         <p className="mt-6 text-xs text-gray-400 dark:text-gray-600">
                             If you believe this is a mistake, please{' '}
-                            <span className="text-blue-500 dark:text-blue-400 cursor-pointer hover:underline">
+                            <span className="text-brand-500 dark:text-brand-400 cursor-pointer hover:underline">
                                 contact your administrator
                             </span>
                             .

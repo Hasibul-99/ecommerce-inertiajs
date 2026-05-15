@@ -110,7 +110,7 @@ export default function Methods({ methods, filters }: Props) {
             case 'overnight':
                 return 'bg-red-100 text-red-800';
             case 'standard':
-                return 'bg-blue-100 text-blue-800';
+                return 'bg-brand-100 text-brand-800';
             case 'free':
                 return 'bg-green-100 text-green-800';
             case 'pickup':
@@ -140,7 +140,7 @@ export default function Methods({ methods, filters }: Props) {
                                 reset();
                                 setShowModal(true);
                             }}
-                            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                            className="flex items-center gap-2 px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 transition-colors"
                         >
                             <FiPlus /> Create Method
                         </button>
@@ -156,7 +156,7 @@ export default function Methods({ methods, filters }: Props) {
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                     placeholder="Search methods..."
-                                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                                 />
                             </div>
                             <select
@@ -165,7 +165,7 @@ export default function Methods({ methods, filters }: Props) {
                                     preserveState: true,
                                     preserveScroll: true,
                                 })}
-                                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                             >
                                 <option value="all">All Types</option>
                                 <option value="standard">Standard</option>
@@ -180,7 +180,7 @@ export default function Methods({ methods, filters }: Props) {
                                     preserveState: true,
                                     preserveScroll: true,
                                 })}
-                                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                             >
                                 <option value="all">All Status</option>
                                 <option value="active">Active</option>
@@ -228,7 +228,7 @@ export default function Methods({ methods, filters }: Props) {
                                     <tr key={method.id} className="hover:bg-gray-50">
                                         <td className="px-6 py-4">
                                             <div className="flex items-center">
-                                                <FiTruck className="text-blue-600 mr-3" />
+                                                <FiTruck className="text-brand-600 mr-3" />
                                                 <div>
                                                     <div className="text-sm font-medium text-gray-900">{method.name}</div>
                                                     {method.description && (
@@ -267,7 +267,7 @@ export default function Methods({ methods, filters }: Props) {
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                             <button
                                                 onClick={() => handleEdit(method)}
-                                                className="text-blue-600 hover:text-blue-900 mr-3"
+                                                className="text-brand-600 hover:text-brand-900 mr-3"
                                             >
                                                 <FiEdit2 className="inline" />
                                             </button>
@@ -325,7 +325,7 @@ export default function Methods({ methods, filters }: Props) {
                                         value={data.name}
                                         onChange={(e) => setData('name', e.target.value)}
                                         placeholder="e.g., Standard Shipping"
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                                         required
                                     />
                                     {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
@@ -340,7 +340,7 @@ export default function Methods({ methods, filters }: Props) {
                                         onChange={(e) => setData('description', e.target.value)}
                                         placeholder="Brief description of this shipping method"
                                         rows={3}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                                     />
                                 </div>
 
@@ -354,7 +354,7 @@ export default function Methods({ methods, filters }: Props) {
                                             value={data.carrier}
                                             onChange={(e) => setData('carrier', e.target.value)}
                                             placeholder="e.g., USPS, FedEx, UPS"
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                                         />
                                     </div>
 
@@ -365,7 +365,7 @@ export default function Methods({ methods, filters }: Props) {
                                         <select
                                             value={data.type}
                                             onChange={(e) => setData('type', e.target.value as any)}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                                         >
                                             <option value="standard">Standard</option>
                                             <option value="express">Express</option>
@@ -386,7 +386,7 @@ export default function Methods({ methods, filters }: Props) {
                                             min="1"
                                             value={data.estimated_days_min}
                                             onChange={(e) => setData('estimated_days_min', parseInt(e.target.value))}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                                             required
                                         />
                                     </div>
@@ -400,7 +400,7 @@ export default function Methods({ methods, filters }: Props) {
                                             min="1"
                                             value={data.estimated_days_max}
                                             onChange={(e) => setData('estimated_days_max', parseInt(e.target.value))}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                                             required
                                         />
                                     </div>
@@ -413,7 +413,7 @@ export default function Methods({ methods, filters }: Props) {
                                     <select
                                         value={data.status}
                                         onChange={(e) => setData('status', e.target.value as 'active' | 'inactive')}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                                     >
                                         <option value="active">Active</option>
                                         <option value="inactive">Inactive</option>
@@ -435,7 +435,7 @@ export default function Methods({ methods, filters }: Props) {
                                     <button
                                         type="submit"
                                         disabled={processing}
-                                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                                        className="px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 disabled:opacity-50"
                                     >
                                         {processing ? 'Saving...' : editingMethod ? 'Update' : 'Create'}
                                     </button>

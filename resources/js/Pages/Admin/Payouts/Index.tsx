@@ -57,7 +57,7 @@ export default function PayoutsIndex({ auth, payouts, filters, stats }: Props) {
     const getStatusColor = (status: string) => {
         const colors: Record<string, string> = {
             pending: 'bg-yellow-100 text-yellow-800',
-            processing: 'bg-blue-100 text-blue-800',
+            processing: 'bg-brand-100 text-brand-800',
             completed: 'bg-green-100 text-green-800',
             failed: 'bg-red-100 text-red-800',
             cancelled: 'bg-gray-100 text-gray-800',
@@ -194,7 +194,7 @@ export default function PayoutsIndex({ auth, payouts, filters, stats }: Props) {
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                                    <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500">
                                         <option value="">All Statuses</option>
                                         <option value="pending">Pending</option>
                                         <option value="processing">Processing</option>
@@ -205,15 +205,15 @@ export default function PayoutsIndex({ auth, payouts, filters, stats }: Props) {
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">From Date</label>
-                                    <input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                                    <input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500" />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">To Date</label>
-                                    <input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                                    <input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500" />
                                 </div>
                             </div>
                             <div className="flex gap-3">
-                                <button onClick={handleApplyFilters} className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                                <button onClick={handleApplyFilters} className="px-4 py-2 bg-brand-600 text-white rounded-md hover:bg-brand-700">
                                     Apply Filters
                                 </button>
                                 <button onClick={handleClearFilters} className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">
@@ -234,11 +234,11 @@ export default function PayoutsIndex({ auth, payouts, filters, stats }: Props) {
                         </div>
                         <div className="bg-white rounded-lg shadow p-6">
                             <div className="flex items-center gap-3 mb-2">
-                                <FiDollarSign className="text-2xl text-blue-600" />
+                                <FiDollarSign className="text-2xl text-brand-600" />
                                 <p className="text-sm text-gray-600">Processing</p>
                             </div>
                             <p className="text-2xl font-bold text-gray-900">{stats.processing_count}</p>
-                            <p className="text-sm text-blue-600 mt-1">{formatCurrency(stats.processing_amount_cents)}</p>
+                            <p className="text-sm text-brand-600 mt-1">{formatCurrency(stats.processing_amount_cents)}</p>
                         </div>
                         <div className="bg-white rounded-lg shadow p-6">
                             <div className="flex items-center gap-3 mb-2">
@@ -259,11 +259,11 @@ export default function PayoutsIndex({ auth, payouts, filters, stats }: Props) {
                     </div>
 
                     {selectedPayouts.length > 0 && (
-                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 flex items-center justify-between">
-                            <p className="text-sm text-blue-800">
+                        <div className="bg-brand-50 border border-brand-200 rounded-lg p-4 mb-6 flex items-center justify-between">
+                            <p className="text-sm text-brand-800">
                                 <span className="font-semibold">{selectedPayouts.length}</span> payout(s) selected
                             </p>
-                            <button onClick={handleBulkProcess} disabled={processing} className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2">
+                            <button onClick={handleBulkProcess} disabled={processing} className="px-4 py-2 bg-brand-600 text-white rounded-md hover:bg-brand-700 disabled:opacity-50 flex items-center gap-2">
                                 <FiCheckCircle /> Process Selected
                             </button>
                         </div>
@@ -295,7 +295,7 @@ export default function PayoutsIndex({ auth, payouts, filters, stats }: Props) {
                                                 )}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                <Link href={`/admin/payouts/${payout.id}`} className="text-blue-600 hover:text-blue-700 font-medium">
+                                                <Link href={`/admin/payouts/${payout.id}`} className="text-brand-600 hover:text-brand-700 font-medium">
                                                     {payout.payout_id}
                                                 </Link>
                                             </td>
@@ -332,11 +332,11 @@ export default function PayoutsIndex({ auth, payouts, filters, stats }: Props) {
                                                         </>
                                                     )}
                                                     {payout.status === 'failed' && (
-                                                        <button onClick={() => handleRetry(payout)} disabled={processing} className="text-blue-600 hover:text-blue-700 font-medium">
+                                                        <button onClick={() => handleRetry(payout)} disabled={processing} className="text-brand-600 hover:text-brand-700 font-medium">
                                                             Retry
                                                         </button>
                                                     )}
-                                                    <Link href={`/admin/payouts/${payout.id}`} className="text-blue-600 hover:text-blue-700 font-medium">
+                                                    <Link href={`/admin/payouts/${payout.id}`} className="text-brand-600 hover:text-brand-700 font-medium">
                                                         View
                                                     </Link>
                                                 </div>
@@ -362,7 +362,7 @@ export default function PayoutsIndex({ auth, payouts, filters, stats }: Props) {
                                     </div>
                                     <div className="flex gap-2">
                                         {payouts.links.map((link: any, index: number) => (
-                                            <button key={index} disabled={!link.url} onClick={() => link.url && router.get(link.url)} dangerouslySetInnerHTML={{ __html: link.label }} className={'px-3 py-2 rounded border text-sm ' + (link.active ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50') + ' ' + (!link.url ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer')} />
+                                            <button key={index} disabled={!link.url} onClick={() => link.url && router.get(link.url)} dangerouslySetInnerHTML={{ __html: link.label }} className={'px-3 py-2 rounded border text-sm ' + (link.active ? 'bg-brand-600 text-white border-brand-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50') + ' ' + (!link.url ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer')} />
                                         ))}
                                     </div>
                                 </div>
@@ -390,7 +390,7 @@ export default function PayoutsIndex({ auth, payouts, filters, stats }: Props) {
                             </div>
                             <div className="mb-4">
                                 <label className="block text-sm font-medium text-gray-700 mb-2">Transaction Details</label>
-                                <textarea value={transactionDetails} onChange={(e) => setTransactionDetails(e.target.value)} placeholder="Enter transaction reference, confirmation number, etc." rows={4} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                                <textarea value={transactionDetails} onChange={(e) => setTransactionDetails(e.target.value)} placeholder="Enter transaction reference, confirmation number, etc." rows={4} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500" />
                             </div>
                         </div>
                         <div className="p-6 border-t border-gray-200 flex gap-3">
@@ -423,7 +423,7 @@ export default function PayoutsIndex({ auth, payouts, filters, stats }: Props) {
                             </div>
                             <div className="mb-4">
                                 <label className="block text-sm font-medium text-gray-700 mb-2">Cancellation Reason</label>
-                                <textarea value={cancelReason} onChange={(e) => setCancelReason(e.target.value)} placeholder="Explain why this payout is being cancelled" rows={4} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                                <textarea value={cancelReason} onChange={(e) => setCancelReason(e.target.value)} placeholder="Explain why this payout is being cancelled" rows={4} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500" />
                             </div>
                             <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-md">
                                 <p className="text-sm text-yellow-800">The payout amount will be returned to the vendor's available balance.</p>

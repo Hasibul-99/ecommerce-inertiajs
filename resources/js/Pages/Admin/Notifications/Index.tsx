@@ -84,7 +84,7 @@ export default function Index({ auth, notificationTypes }: Props) {
                                     >
                                         <div className="flex justify-between items-start mb-2">
                                             <h4 className="font-medium text-gray-900">{type.name}</h4>
-                                            <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                                            <span className="text-xs bg-brand-100 text-brand-800 px-2 py-1 rounded">
                                                 {type.recipients}
                                             </span>
                                         </div>

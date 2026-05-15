@@ -42,7 +42,7 @@ export default function TransactionsIndex({ auth, transactions, filters, stats }
             available: 'bg-green-100 text-green-800',
             pending: 'bg-yellow-100 text-yellow-800',
             withheld: 'bg-red-100 text-red-800',
-            paid: 'bg-blue-100 text-blue-800',
+            paid: 'bg-brand-100 text-brand-800',
             processing: 'bg-purple-100 text-purple-800',
         };
         return colors[status] || 'bg-gray-100 text-gray-800';
@@ -100,7 +100,7 @@ export default function TransactionsIndex({ auth, transactions, filters, stats }
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                                    <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500">
                                         <option value="">All Statuses</option>
                                         <option value="available">Available</option>
                                         <option value="pending">Pending</option>
@@ -111,15 +111,15 @@ export default function TransactionsIndex({ auth, transactions, filters, stats }
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">From Date</label>
-                                    <input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                                    <input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500" />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">To Date</label>
-                                    <input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                                    <input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500" />
                                 </div>
                             </div>
                             <div className="flex gap-3">
-                                <button onClick={handleApplyFilters} className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                                <button onClick={handleApplyFilters} className="px-4 py-2 bg-brand-600 text-white rounded-md hover:bg-brand-700">
                                     Apply Filters
                                 </button>
                                 <button onClick={handleClearFilters} className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">
@@ -136,7 +136,7 @@ export default function TransactionsIndex({ auth, transactions, filters, stats }
                         </div>
                         <div className="bg-white rounded-lg shadow p-6">
                             <p className="text-sm text-gray-600">Gross Earnings</p>
-                            <p className="text-2xl font-bold text-blue-600 mt-1">{formatCurrency(stats.total_gross_cents)}</p>
+                            <p className="text-2xl font-bold text-brand-600 mt-1">{formatCurrency(stats.total_gross_cents)}</p>
                         </div>
                         <div className="bg-white rounded-lg shadow p-6">
                             <p className="text-sm text-gray-600">Total Commission</p>
@@ -166,7 +166,7 @@ export default function TransactionsIndex({ auth, transactions, filters, stats }
                                     {transactions.data.length > 0 ? transactions.data.map((transaction) => (
                                         <tr key={transaction.id} className="hover:bg-gray-50">
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                <Link href={`/vendor/orders/${transaction.order_id}`} className="text-blue-600 hover:text-blue-700 font-medium">
+                                                <Link href={`/vendor/orders/${transaction.order_id}`} className="text-brand-600 hover:text-brand-700 font-medium">
                                                     #{transaction.order_number}
                                                 </Link>
                                             </td>
@@ -212,7 +212,7 @@ export default function TransactionsIndex({ auth, transactions, filters, stats }
                                     </div>
                                     <div className="flex gap-2">
                                         {transactions.links.map((link: any, index: number) => (
-                                            <button key={index} disabled={!link.url} onClick={() => link.url && router.get(link.url)} dangerouslySetInnerHTML={{ __html: link.label }} className={'px-3 py-2 rounded border text-sm ' + (link.active ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50') + ' ' + (!link.url ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer')} />
+                                            <button key={index} disabled={!link.url} onClick={() => link.url && router.get(link.url)} dangerouslySetInnerHTML={{ __html: link.label }} className={'px-3 py-2 rounded border text-sm ' + (link.active ? 'bg-brand-600 text-white border-brand-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50') + ' ' + (!link.url ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer')} />
                                         ))}
                                     </div>
                                 </div>

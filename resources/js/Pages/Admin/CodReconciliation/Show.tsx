@@ -59,7 +59,7 @@ export default function Show({ auth, reconciliation, orders }: CodReconciliation
       pending: { class: 'bg-yellow-100 text-yellow-800', icon: FiAlertTriangle },
       verified: { class: 'bg-green-100 text-green-800', icon: FiCheckCircle },
       disputed: { class: 'bg-red-100 text-red-800', icon: FiAlertTriangle },
-      resolved: { class: 'bg-blue-100 text-blue-800', icon: FiCheckCircle },
+      resolved: { class: 'bg-brand-100 text-brand-800', icon: FiCheckCircle },
     };
 
     const config = statusMap[status] || statusMap.pending;
@@ -166,7 +166,7 @@ export default function Show({ auth, reconciliation, orders }: CodReconciliation
                     {formatCurrency(reconciliation.total_cod_amount_cents / 100)}
                   </p>
                 </div>
-                <FiDollarSign className="w-10 h-10 text-blue-400" />
+                <FiDollarSign className="w-10 h-10 text-brand-400" />
               </div>
             </div>
 

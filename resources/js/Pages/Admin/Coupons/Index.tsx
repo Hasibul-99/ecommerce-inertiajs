@@ -241,7 +241,7 @@ export default function CouponsIndex({ auth, coupons }: Props) {
                   <div className="space-y-2">
                     <Label>Description</Label>
                     <textarea 
-                      className="w-full min-h-[80px] px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full min-h-[80px] px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500"
                       placeholder="Enter coupon description"
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -324,8 +324,8 @@ export default function CouponsIndex({ auth, coupons }: Props) {
             <Card>
               <CardContent className="p-6">
                 <div className="flex items-center">
-                  <div className="p-2 bg-blue-100 rounded-lg">
-                    <FiTag className="w-6 h-6 text-blue-600" />
+                  <div className="p-2 bg-brand-100 rounded-lg">
+                    <FiTag className="w-6 h-6 text-brand-600" />
                   </div>
                   <div className="ml-4">
                     <p className="text-sm font-medium text-gray-600">Total Coupons</p>
@@ -506,7 +506,7 @@ export default function CouponsIndex({ auth, coupons }: Props) {
                               {coupon.usage_limit && (
                                 <div className="w-full bg-gray-200 rounded-full h-2">
                                   <div
-                                    className="bg-blue-600 h-2 rounded-full"
+                                    className="bg-brand-600 h-2 rounded-full"
                                     style={{ width: `${getUsagePercentage(coupon.used_count, coupon.usage_limit)}%` }}
                                   ></div>
                                 </div>

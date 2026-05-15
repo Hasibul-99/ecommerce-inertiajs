@@ -141,11 +141,11 @@ export default function Tax({ auth, settings }: Props) {
                                     <div className="border-t border-gray-200 pt-6" />
 
                                     {/* Example Calculation */}
-                                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                                        <h3 className="text-sm font-medium text-blue-800 mb-3">
+                                    <div className="bg-brand-50 border border-brand-200 rounded-lg p-4">
+                                        <h3 className="text-sm font-medium text-brand-800 mb-3">
                                             Example Tax Calculation
                                         </h3>
-                                        <div className="space-y-2 text-sm text-blue-700">
+                                        <div className="space-y-2 text-sm text-brand-700">
                                             <div className="flex justify-between">
                                                 <span>Product Price:</span>
                                                 <span className="font-medium">৳{example.basePrice.toFixed(2)}</span>
@@ -156,12 +156,12 @@ export default function Tax({ auth, settings }: Props) {
                                                     <span className="font-medium">৳{example.taxAmount.toFixed(2)}</span>
                                                 </div>
                                             )}
-                                            <div className="flex justify-between pt-2 border-t border-blue-300">
+                                            <div className="flex justify-between pt-2 border-t border-brand-300">
                                                 <span className="font-semibold">Total:</span>
                                                 <span className="font-semibold">৳{example.totalPrice.toFixed(2)}</span>
                                             </div>
                                             {formData.tax_included_in_price && (
-                                                <p className="text-xs text-blue-600 mt-2">
+                                                <p className="text-xs text-brand-600 mt-2">
                                                     (Includes {formData.tax_label} of ৳{example.taxAmount.toFixed(2)})
                                                 </p>
                                             )}
@@ -229,7 +229,7 @@ export default function Tax({ auth, settings }: Props) {
                             <button
                                 type="submit"
                                 disabled={processing}
-                                className="flex items-center px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="flex items-center px-6 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <FiSave className="mr-2" />
                                 {processing ? 'Saving...' : 'Save Changes'}

@@ -68,9 +68,9 @@ export default function TrackingIndex({ trackingNumber: initialTrackingNumber, s
             case 'delivered':
                 return <FiCheckCircle className="text-green-600" size={24} />;
             case 'out_for_delivery':
-                return <FiTruck className="text-blue-600" size={24} />;
+                return <FiTruck className="text-brand-600" size={24} />;
             case 'in_transit':
-                return <FiPackage className="text-blue-600" size={24} />;
+                return <FiPackage className="text-brand-600" size={24} />;
             case 'exception':
                 return <FiAlertCircle className="text-red-600" size={24} />;
             default:
@@ -83,9 +83,9 @@ export default function TrackingIndex({ trackingNumber: initialTrackingNumber, s
             case 'delivered':
                 return 'bg-green-100 text-green-800 border-green-200';
             case 'out_for_delivery':
-                return 'bg-blue-100 text-blue-800 border-blue-200';
+                return 'bg-brand-100 text-brand-800 border-brand-200';
             case 'in_transit':
-                return 'bg-blue-100 text-blue-800 border-blue-200';
+                return 'bg-brand-100 text-brand-800 border-brand-200';
             case 'exception':
                 return 'bg-red-100 text-red-800 border-red-200';
             default:
@@ -109,13 +109,13 @@ export default function TrackingIndex({ trackingNumber: initialTrackingNumber, s
                                     value={trackingNumber}
                                     onChange={(e) => setTrackingNumber(e.target.value)}
                                     placeholder="Enter tracking number"
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                                 />
                             </div>
                             <button
                                 type="submit"
                                 disabled={loading || !trackingNumber.trim()}
-                                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 font-medium"
+                                className="px-6 py-3 bg-brand-600 text-white rounded-lg hover:bg-brand-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 font-medium"
                             >
                                 <FiSearch size={20} />
                                 {loading ? 'Searching...' : 'Track'}
@@ -151,7 +151,7 @@ export default function TrackingIndex({ trackingNumber: initialTrackingNumber, s
                                             href={trackingUrl}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="flex items-center gap-2 px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                            className="flex items-center gap-2 px-4 py-2 text-brand-600 hover:bg-brand-50 rounded-lg transition-colors"
                                         >
                                             <span className="text-sm font-medium">View on {shipment.carrier_name}</span>
                                             <FiExternalLink size={16} />
@@ -203,7 +203,7 @@ export default function TrackingIndex({ trackingNumber: initialTrackingNumber, s
                                                     <div
                                                         className={
                                                             'w-3 h-3 rounded-full ' +
-                                                            (index === 0 ? 'bg-blue-600' : 'bg-gray-300')
+                                                            (index === 0 ? 'bg-brand-600' : 'bg-gray-300')
                                                         }
                                                     />
                                                     {index < shipment.events.length - 1 && (

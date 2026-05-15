@@ -54,7 +54,7 @@ export default function Index({ auth, orders, filters }: OrdersIndexProps) {
       case 'pending':
         return 'bg-yellow-100 text-yellow-800';
       case 'processing':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-brand-100 text-brand-800';
       case 'shipped':
         return 'bg-indigo-100 text-indigo-800';
       case 'delivered':

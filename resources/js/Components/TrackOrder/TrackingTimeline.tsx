@@ -79,7 +79,7 @@ export default function TrackingTimeline({ events }: TrackingTimelineProps) {
     return (
         <div className="bg-white rounded-lg border border-gray-200 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
-                <FiClock className="text-blue-600" />
+                <FiClock className="text-brand-600" />
                 Tracking History
             </h2>
 
@@ -91,10 +91,10 @@ export default function TrackingTimeline({ events }: TrackingTimelineProps) {
 
                     const colorClasses = {
                         blue: {
-                            bg: 'bg-blue-100',
-                            text: 'text-blue-600',
-                            border: 'border-blue-300',
-                            ring: 'ring-blue-200',
+                            bg: 'bg-brand-100',
+                            text: 'text-brand-600',
+                            border: 'border-brand-300',
+                            ring: 'ring-brand-200',
                         },
                         green: {
                             bg: 'bg-green-100',
@@ -149,7 +149,7 @@ export default function TrackingTimeline({ events }: TrackingTimelineProps) {
                                 {/* Event Details */}
                                 <div className="flex-1 pb-6">
                                     <div className={`${
-                                        index === 0 ? 'bg-blue-50 border border-blue-100 rounded-lg p-4' : ''
+                                        index === 0 ? 'bg-brand-50 border border-brand-100 rounded-lg p-4' : ''
                                     }`}>
                                         {/* Status & Time */}
                                         <div className="flex items-start justify-between gap-4 mb-2">
@@ -160,7 +160,7 @@ export default function TrackingTimeline({ events }: TrackingTimelineProps) {
                                                     {event.message}
                                                 </h3>
                                                 {index === 0 && relative && (
-                                                    <p className="text-sm text-blue-600 font-medium mt-1">
+                                                    <p className="text-sm text-brand-600 font-medium mt-1">
                                                         {relative}
                                                     </p>
                                                 )}

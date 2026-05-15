@@ -90,7 +90,7 @@ export default function Index({ auth, activityLogs, filters, eventTypes }: Props
       case 'created':
         return <span className="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">Created</span>;
       case 'updated':
-        return <span className="px-2 py-1 text-xs font-semibold text-blue-800 bg-blue-100 rounded-full">Updated</span>;
+        return <span className="px-2 py-1 text-xs font-semibold text-brand-800 bg-brand-100 rounded-full">Updated</span>;
       case 'deleted':
         return <span className="px-2 py-1 text-xs font-semibold text-red-800 bg-red-100 rounded-full">Deleted</span>;
       case 'restored':
@@ -122,8 +122,8 @@ export default function Index({ auth, activityLogs, filters, eventTypes }: Props
                     <p className="text-sm font-medium text-gray-600">Total Activities</p>
                     <p className="text-2xl font-bold text-gray-900">{activityLogs.data?.length || 0}</p>
                   </div>
-                  <div className="p-3 bg-blue-100 rounded-full">
-                    <FiActivity className="w-6 h-6 text-blue-600" />
+                  <div className="p-3 bg-brand-100 rounded-full">
+                    <FiActivity className="w-6 h-6 text-brand-600" />
                   </div>
                 </div>
               </CardContent>

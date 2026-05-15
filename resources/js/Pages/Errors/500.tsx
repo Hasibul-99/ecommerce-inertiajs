@@ -83,7 +83,7 @@ export default function Error500({ message }: Props) {
                             </Button>
                             <Button
                                 onClick={() => router.visit(route('dashboard'))}
-                                className="w-full sm:w-auto gap-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white shadow-md shadow-blue-200 dark:shadow-none"
+                                className="w-full sm:w-auto gap-2 bg-brand-600 hover:bg-brand-700 dark:bg-brand-600 dark:hover:bg-brand-700 text-white shadow-md shadow-brand-200 dark:shadow-none"
                             >
                                 <FiHome className="w-4 h-4" />
                                 Dashboard
@@ -92,7 +92,7 @@ export default function Error500({ message }: Props) {
 
                         <p className="mt-6 text-xs text-gray-400 dark:text-gray-600">
                             If this keeps happening, please{' '}
-                            <span className="text-blue-500 dark:text-blue-400 cursor-pointer hover:underline">
+                            <span className="text-brand-500 dark:text-brand-400 cursor-pointer hover:underline">
                                 contact support
                             </span>
                             .

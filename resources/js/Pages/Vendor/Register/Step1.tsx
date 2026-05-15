@@ -103,11 +103,11 @@ export default function Step1({ auth, vendor }: Props) {
           {/* Progress Bar */}
           <div className="mb-8">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-blue-600">Step 1: Business Information</span>
+              <span className="text-sm font-medium text-brand-600">Step 1: Business Information</span>
               <span className="text-sm text-gray-500">33% Complete</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
-              <div className="bg-blue-600 h-2 rounded-full" style={{ width: '33%' }}></div>
+              <div className="bg-brand-600 h-2 rounded-full" style={{ width: '33%' }}></div>
             </div>
           </div>
 
@@ -213,7 +213,7 @@ export default function Step1({ auth, vendor }: Props) {
                   type="text"
                   value={data.business_name}
                   onChange={(e) => setData('business_name', e.target.value)}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"
                   required
                 />
                 {errors.business_name && <p className="mt-1 text-sm text-red-600">{errors.business_name}</p>}
@@ -228,7 +228,7 @@ export default function Step1({ auth, vendor }: Props) {
                   id="business_type"
                   value={data.business_type}
                   onChange={(e) => setData('business_type', e.target.value)}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"
                   required
                 >
                   <option value="">Select business type</option>
@@ -250,7 +250,7 @@ export default function Step1({ auth, vendor }: Props) {
                   value={data.description}
                   onChange={(e) => setData('description', e.target.value)}
                   rows={4}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"
                   placeholder="Describe your business, products, and services (minimum 50 characters)"
                   required
                 />
@@ -269,7 +269,7 @@ export default function Step1({ auth, vendor }: Props) {
                     type="text"
                     value={data.tax_id}
                     onChange={(e) => setData('tax_id', e.target.value)}
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"
                     required
                   />
                   {errors.tax_id && <p className="mt-1 text-sm text-red-600">{errors.tax_id}</p>}
@@ -284,7 +284,7 @@ export default function Step1({ auth, vendor }: Props) {
                     type="tel"
                     value={data.phone}
                     onChange={(e) => setData('phone', e.target.value)}
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"
                     required
                   />
                   {errors.phone && <p className="mt-1 text-sm text-red-600">{errors.phone}</p>}
@@ -301,7 +301,7 @@ export default function Step1({ auth, vendor }: Props) {
                   type="url"
                   value={data.website}
                   onChange={(e) => setData('website', e.target.value)}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"
                   placeholder="https://www.example.com"
                 />
                 {errors.website && <p className="mt-1 text-sm text-red-600">{errors.website}</p>}
@@ -320,7 +320,7 @@ export default function Step1({ auth, vendor }: Props) {
                     type="text"
                     value={data.address_line1}
                     onChange={(e) => setData('address_line1', e.target.value)}
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"
                     required
                   />
                   {errors.address_line1 && <p className="mt-1 text-sm text-red-600">{errors.address_line1}</p>}
@@ -335,7 +335,7 @@ export default function Step1({ auth, vendor }: Props) {
                     type="text"
                     value={data.address_line2}
                     onChange={(e) => setData('address_line2', e.target.value)}
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"
                   />
                 </div>
 
@@ -349,7 +349,7 @@ export default function Step1({ auth, vendor }: Props) {
                       type="text"
                       value={data.city}
                       onChange={(e) => setData('city', e.target.value)}
-                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"
                       required
                     />
                     {errors.city && <p className="mt-1 text-sm text-red-600">{errors.city}</p>}
@@ -364,7 +364,7 @@ export default function Step1({ auth, vendor }: Props) {
                       type="text"
                       value={data.state}
                       onChange={(e) => setData('state', e.target.value)}
-                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"
                       required
                     />
                     {errors.state && <p className="mt-1 text-sm text-red-600">{errors.state}</p>}
@@ -379,7 +379,7 @@ export default function Step1({ auth, vendor }: Props) {
                       type="text"
                       value={data.postal_code}
                       onChange={(e) => setData('postal_code', e.target.value)}
-                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"
                       required
                     />
                     {errors.postal_code && <p className="mt-1 text-sm text-red-600">{errors.postal_code}</p>}
@@ -395,7 +395,7 @@ export default function Step1({ auth, vendor }: Props) {
                     type="text"
                     value={data.country}
                     onChange={(e) => setData('country', e.target.value)}
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"
                     required
                   />
                   {errors.country && <p className="mt-1 text-sm text-red-600">{errors.country}</p>}
@@ -413,7 +413,7 @@ export default function Step1({ auth, vendor }: Props) {
                 <button
                   type="submit"
                   disabled={processing}
-                  className="inline-flex items-center px-6 py-3 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 disabled:opacity-50"
+                  className="inline-flex items-center px-6 py-3 bg-brand-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-brand-700 focus:bg-brand-700 active:bg-brand-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 disabled:opacity-50"
                 >
                   {processing ? 'Saving...' : 'Continue to Documents'}
                   <FiArrowRight className="ml-2 w-4 h-4" />

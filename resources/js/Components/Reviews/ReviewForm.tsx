@@ -167,7 +167,7 @@ export default function ReviewForm({ productId, productSlug, canReview, editingR
                     onChange={(e) => setData('title', e.target.value)}
                     placeholder="Summarize your experience"
                     maxLength={255}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500"
                 />
                 {errors.title && <p className="mt-1 text-sm text-red-600">{errors.title}</p>}
             </div>
@@ -184,7 +184,7 @@ export default function ReviewForm({ productId, productSlug, canReview, editingR
                     placeholder="Share your experience with this product..."
                     rows={5}
                     maxLength={2000}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500"
                 />
                 <p className="mt-1 text-sm text-gray-500">{data.comment.length}/2000 characters</p>
                 {errors.comment && <p className="mt-1 text-sm text-red-600">{errors.comment}</p>}
@@ -202,7 +202,7 @@ export default function ReviewForm({ productId, productSlug, canReview, editingR
                     placeholder="List the positive aspects..."
                     rows={3}
                     maxLength={1000}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500"
                 />
                 {errors.pros && <p className="mt-1 text-sm text-red-600">{errors.pros}</p>}
             </div>
@@ -219,7 +219,7 @@ export default function ReviewForm({ productId, productSlug, canReview, editingR
                     placeholder="List areas for improvement..."
                     rows={3}
                     maxLength={1000}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500"
                 />
                 {errors.cons && <p className="mt-1 text-sm text-red-600">{errors.cons}</p>}
             </div>
@@ -249,7 +249,7 @@ export default function ReviewForm({ productId, productSlug, canReview, editingR
                     ))}
 
                     {data.images.length < 5 && (
-                        <label className="w-24 h-24 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-blue-500 transition-colors">
+                        <label className="w-24 h-24 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-brand-500 transition-colors">
                             <FiImage className="text-gray-400 mb-1" size={24} />
                             <span className="text-xs text-gray-500">Add Photo</span>
                             <input
@@ -288,7 +288,7 @@ export default function ReviewForm({ productId, productSlug, canReview, editingR
                 <button
                     type="submit"
                     disabled={processing || data.rating === 0}
-                    className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-6 py-2 bg-brand-600 text-white rounded-md hover:bg-brand-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     {processing ? (isEditing ? 'Saving...' : 'Submitting...') : (isEditing ? 'Save Changes' : 'Submit Review')}
                 </button>

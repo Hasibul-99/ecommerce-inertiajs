@@ -271,8 +271,8 @@ const Create: React.FC<Props> = ({ auth }) => {
             {/* Description Card */}
             <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
               <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/60 flex items-center gap-3">
-                <div className="p-2 bg-blue-100 rounded-lg">
-                  <FiFileText className="w-4 h-4 text-blue-600" />
+                <div className="p-2 bg-brand-100 rounded-lg">
+                  <FiFileText className="w-4 h-4 text-brand-600" />
                 </div>
                 <div>
                   <h3 className="text-sm font-semibold text-gray-900">Description</h3>

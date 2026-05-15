@@ -148,11 +148,11 @@ export default function Shipping({ auth, settings }: Props) {
                             <div className="border-t border-gray-200 pt-6" />
 
                             {/* Info Section */}
-                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                                <h3 className="text-sm font-medium text-blue-800 mb-2">
+                            <div className="bg-brand-50 border border-brand-200 rounded-lg p-4">
+                                <h3 className="text-sm font-medium text-brand-800 mb-2">
                                     Shipping Configuration Summary
                                 </h3>
-                                <ul className="text-sm text-blue-700 space-y-1">
+                                <ul className="text-sm text-brand-700 space-y-1">
                                     <li>
                                         <strong>Default Carrier:</strong>{' '}
                                         {carrierOptions.find(c => c.value === formData.default_carrier)?.label || 'Not set'}
@@ -190,7 +190,7 @@ export default function Shipping({ auth, settings }: Props) {
                             <button
                                 type="submit"
                                 disabled={processing}
-                                className="flex items-center px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="flex items-center px-6 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <FiSave className="mr-2" />
                                 {processing ? 'Saving...' : 'Save Changes'}

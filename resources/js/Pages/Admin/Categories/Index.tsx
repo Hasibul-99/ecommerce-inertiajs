@@ -198,8 +198,8 @@ export default function CategoriesIndex({ auth, categories, filters }: Props) {
                     <p className="text-sm font-medium text-gray-600">Total Categories</p>
                     <p className="text-2xl font-bold text-gray-900">{categories.meta?.total || 0}</p>
                   </div>
-                  <div className="p-3 bg-blue-100 rounded-full">
-                    <FiPackage className="w-6 h-6 text-blue-600" />
+                  <div className="p-3 bg-brand-100 rounded-full">
+                    <FiPackage className="w-6 h-6 text-brand-600" />
                   </div>
                 </div>
               </CardContent>

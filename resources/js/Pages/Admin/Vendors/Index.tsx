@@ -118,7 +118,7 @@ export default function VendorsIndex({ auth, vendors, filters }: Props) {
             </div>
             <Link
               href={route('admin.vendors.create')}
-              className="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150"
+              className="inline-flex items-center px-4 py-2 bg-brand-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-brand-700 focus:bg-brand-700 active:bg-brand-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150"
             >
               <FiPlus className="w-4 h-4 mr-2" />
               Add Vendor
@@ -138,7 +138,7 @@ export default function VendorsIndex({ auth, vendors, filters }: Props) {
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                      className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                      className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:ring-brand-500 focus:border-brand-500"
                     />
                   </div>
                 </div>
@@ -146,7 +146,7 @@ export default function VendorsIndex({ auth, vendors, filters }: Props) {
                   <select
                     value={selectedStatus}
                     onChange={(e) => setSelectedStatus(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-brand-500 focus:border-brand-500"
                   >
                     <option value="">All Status</option>
                     <option value="pending">Pending</option>
@@ -231,7 +231,7 @@ export default function VendorsIndex({ auth, vendors, filters }: Props) {
                         <div className="flex items-center justify-end space-x-2">
                           <Link
                             href={route('admin.vendors.show', vendor.id)}
-                            className="text-blue-600 hover:text-blue-900"
+                            className="text-brand-600 hover:text-brand-900"
                             title="View"
                           >
                             <FiEye className="w-4 h-4" />
@@ -334,7 +334,7 @@ export default function VendorsIndex({ auth, vendors, filters }: Props) {
                 <div className="mt-6">
                   <Link
                     href={route('admin.vendors.create')}
-                    className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-brand-600 hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500"
                   >
                     <FiPlus className="w-4 h-4 mr-2" />
                     Add Vendor

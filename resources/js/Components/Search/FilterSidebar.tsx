@@ -209,7 +209,7 @@ export default function FilterSidebar({
                     <FiFilter className="text-gray-600" />
                     <h2 className="text-lg font-semibold text-gray-900">Filters</h2>
                     {getActiveFilterCount() > 0 && (
-                        <span className="px-2 py-0.5 text-xs bg-blue-600 text-white rounded-full">
+                        <span className="px-2 py-0.5 text-xs bg-brand-600 text-white rounded-full">
                             {getActiveFilterCount()}
                         </span>
                     )}
@@ -223,12 +223,12 @@ export default function FilterSidebar({
 
             {/* Active Filters Summary */}
             {getActiveFilterCount() > 0 && (
-                <div className="p-4 bg-blue-50 border-b border-gray-200">
+                <div className="p-4 bg-brand-50 border-b border-gray-200">
                     <div className="flex items-center justify-between mb-2">
                         <span className="text-sm font-medium text-gray-900">Active Filters</span>
                         <button
                             onClick={clearAllFilters}
-                            className="text-xs text-blue-600 hover:text-blue-700 font-medium"
+                            className="text-xs text-brand-600 hover:text-brand-700 font-medium"
                         >
                             Clear All
                         </button>
@@ -240,7 +240,7 @@ export default function FilterSidebar({
                                 <button
                                     key={`cat-${catId}`}
                                     onClick={() => toggleArrayFilter('categories', catId)}
-                                    className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-white border border-blue-300 text-blue-700 rounded-full hover:bg-blue-50"
+                                    className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-white border border-brand-300 text-brand-700 rounded-full hover:bg-brand-50"
                                 >
                                     {category.name}
                                     <FiX className="text-xs" />
@@ -253,7 +253,7 @@ export default function FilterSidebar({
                                 <button
                                     key={`vendor-${vendorId}`}
                                     onClick={() => toggleArrayFilter('vendors', vendorId)}
-                                    className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-white border border-blue-300 text-blue-700 rounded-full hover:bg-blue-50"
+                                    className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-white border border-brand-300 text-brand-700 rounded-full hover:bg-brand-50"
                                 >
                                     {vendor.name}
                                     <FiX className="text-xs" />
@@ -268,7 +268,7 @@ export default function FilterSidebar({
                                     updateFilter('price_min', null);
                                     updateFilter('price_max', null);
                                 }}
-                                className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-white border border-blue-300 text-blue-700 rounded-full hover:bg-blue-50"
+                                className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-white border border-brand-300 text-brand-700 rounded-full hover:bg-brand-50"
                             >
                                 {activeFilters.price_min && formatPrice(activeFilters.price_min)} - {activeFilters.price_max && formatPrice(activeFilters.price_max)}
                                 <FiX className="text-xs" />
@@ -277,7 +277,7 @@ export default function FilterSidebar({
                         {activeFilters.rating && (
                             <button
                                 onClick={() => updateFilter('rating', null)}
-                                className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-white border border-blue-300 text-blue-700 rounded-full hover:bg-blue-50"
+                                className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-white border border-brand-300 text-brand-700 rounded-full hover:bg-brand-50"
                             >
                                 {activeFilters.rating}+ Stars
                                 <FiX className="text-xs" />
@@ -299,7 +299,7 @@ export default function FilterSidebar({
                                         type="checkbox"
                                         checked={activeFilters.categories?.includes(category.id) || false}
                                         onChange={() => toggleArrayFilter('categories', category.id)}
-                                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                        className="rounded border-gray-300 text-brand-600 focus:ring-brand-500"
                                     />
                                     <span className="text-sm text-gray-700 group-hover:text-gray-900 flex-1">
                                         {category.name}
@@ -320,7 +320,7 @@ export default function FilterSidebar({
                                 placeholder="Min"
                                 value={localPriceMin}
                                 onChange={(e) => setLocalPriceMin(e.target.value)}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
                             />
                             <span className="text-gray-500">-</span>
                             <input
@@ -328,12 +328,12 @@ export default function FilterSidebar({
                                 placeholder="Max"
                                 value={localPriceMax}
                                 onChange={(e) => setLocalPriceMax(e.target.value)}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
                             />
                         </div>
                         <button
                             onClick={handlePriceFilter}
-                            className="w-full px-4 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700"
+                            className="w-full px-4 py-2 bg-brand-600 text-white rounded-md text-sm hover:bg-brand-700"
                         >
                             Apply
                         </button>
@@ -354,7 +354,7 @@ export default function FilterSidebar({
                                         name="rating"
                                         checked={activeFilters.rating === rating.value}
                                         onChange={() => updateFilter('rating', rating.value)}
-                                        className="border-gray-300 text-blue-600 focus:ring-blue-500"
+                                        className="border-gray-300 text-brand-600 focus:ring-brand-500"
                                     />
                                     <span className="text-sm text-gray-700 group-hover:text-gray-900 flex-1">
                                         {rating.label}
@@ -365,7 +365,7 @@ export default function FilterSidebar({
                             {activeFilters.rating && (
                                 <button
                                     onClick={() => updateFilter('rating', null)}
-                                    className="text-xs text-blue-600 hover:text-blue-700"
+                                    className="text-xs text-brand-600 hover:text-brand-700"
                                 >
                                     Clear rating filter
                                 </button>
@@ -384,7 +384,7 @@ export default function FilterSidebar({
                                         type="checkbox"
                                         checked={activeFilters.vendors?.includes(vendor.id) || false}
                                         onChange={() => toggleArrayFilter('vendors', vendor.id)}
-                                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                        className="rounded border-gray-300 text-brand-600 focus:ring-brand-500"
                                     />
                                     <span className="text-sm text-gray-700 group-hover:text-gray-900 flex-1">
                                         {vendor.name}
@@ -407,8 +407,8 @@ export default function FilterSidebar({
                                     className={
                                         'px-3 py-1 text-xs rounded-full border transition-colors ' +
                                         (activeFilters.tags?.includes(tag.id)
-                                            ? 'bg-blue-600 text-white border-blue-600'
-                                            : 'bg-white text-gray-700 border-gray-300 hover:border-blue-500')
+                                            ? 'bg-brand-600 text-white border-brand-600'
+                                            : 'bg-white text-gray-700 border-gray-300 hover:border-brand-500')
                                     }
                                 >
                                     {tag.name}
@@ -426,7 +426,7 @@ export default function FilterSidebar({
                                 type="checkbox"
                                 checked={activeFilters.in_stock || false}
                                 onChange={(e) => updateFilter('in_stock', e.target.checked || null)}
-                                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                className="rounded border-gray-300 text-brand-600 focus:ring-brand-500"
                             />
                             <span className="text-sm text-gray-700 group-hover:text-gray-900">In Stock Only</span>
                         </label>
@@ -435,7 +435,7 @@ export default function FilterSidebar({
                                 type="checkbox"
                                 checked={activeFilters.on_sale || false}
                                 onChange={(e) => updateFilter('on_sale', e.target.checked || null)}
-                                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                className="rounded border-gray-300 text-brand-600 focus:ring-brand-500"
                             />
                             <span className="text-sm text-gray-700 group-hover:text-gray-900">On Sale</span>
                         </label>
@@ -444,7 +444,7 @@ export default function FilterSidebar({
                                 type="checkbox"
                                 checked={activeFilters.featured || false}
                                 onChange={(e) => updateFilter('featured', e.target.checked || null)}
-                                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                className="rounded border-gray-300 text-brand-600 focus:ring-brand-500"
                             />
                             <span className="text-sm text-gray-700 group-hover:text-gray-900">Featured Products</span>
                         </label>
@@ -458,7 +458,7 @@ export default function FilterSidebar({
                             {attribute.values.map((value) => (
                                 <button
                                     key={value}
-                                    className="px-3 py-1 text-xs bg-white border border-gray-300 text-gray-700 rounded-full hover:border-blue-500"
+                                    className="px-3 py-1 text-xs bg-white border border-gray-300 text-gray-700 rounded-full hover:border-brand-500"
                                 >
                                     {value}
                                 </button>

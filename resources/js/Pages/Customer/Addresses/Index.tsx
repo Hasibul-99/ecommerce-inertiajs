@@ -214,7 +214,7 @@ export default function AddressesIndex({
                                             <button
                                                 onClick={() => openEditModal(address)}
                                                 disabled={processing}
-                                                className="flex-1 px-3 py-2 text-xs font-medium bg-blue-50 text-blue-700 rounded hover:bg-blue-100 flex items-center justify-center gap-1 disabled:opacity-50 transition-colors"
+                                                className="flex-1 px-3 py-2 text-xs font-medium bg-brand-50 text-brand-700 rounded hover:bg-brand-100 flex items-center justify-center gap-1 disabled:opacity-50 transition-colors"
                                             >
                                                 <FiEdit2 className="w-3 h-3" />
                                                 Edit

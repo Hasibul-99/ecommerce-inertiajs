@@ -152,7 +152,7 @@ export default function Show({ auth, order }: Props) {
   const getStatusBadge = (status: string) => {
     const statusMap: Record<string, { class: string; label: string }> = {
       pending: { class: 'bg-gray-100 text-gray-800', label: 'Pending' },
-      confirmed: { class: 'bg-blue-100 text-blue-800', label: 'Confirmed' },
+      confirmed: { class: 'bg-brand-100 text-brand-800', label: 'Confirmed' },
       processing: { class: 'bg-yellow-100 text-yellow-800', label: 'Processing' },
       ready_to_ship: { class: 'bg-purple-100 text-purple-800', label: 'Ready to Ship' },
       shipped: { class: 'bg-green-100 text-green-800', label: 'Shipped' },
@@ -207,7 +207,7 @@ export default function Show({ auth, order }: Props) {
           <div className="flex gap-3">
             <a
               href={route('vendor.orders.packing-slip', order.id)}
-              className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+              className="inline-flex items-center px-4 py-2 bg-brand-600 text-white rounded-md hover:bg-brand-700 transition"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -234,7 +234,7 @@ export default function Show({ auth, order }: Props) {
             {/* Customer Info */}
             <div className="bg-white rounded-lg shadow p-6">
               <div className="flex items-center mb-4">
-                <FiUser className="w-5 h-5 text-blue-600 mr-2" />
+                <FiUser className="w-5 h-5 text-brand-600 mr-2" />
                 <h3 className="text-lg font-semibold text-gray-900">Customer Information</h3>
               </div>
               <div className="space-y-2">
@@ -252,7 +252,7 @@ export default function Show({ auth, order }: Props) {
             {/* Shipping Address */}
             <div className="bg-white rounded-lg shadow p-6">
               <div className="flex items-center mb-4">
-                <FiMapPin className="w-5 h-5 text-blue-600 mr-2" />
+                <FiMapPin className="w-5 h-5 text-brand-600 mr-2" />
                 <h3 className="text-lg font-semibold text-gray-900">Shipping Address</h3>
               </div>
               <div className="text-sm text-gray-900">
@@ -268,7 +268,7 @@ export default function Show({ auth, order }: Props) {
             {/* Order Status */}
             <div className="bg-white rounded-lg shadow p-6">
               <div className="flex items-center mb-4">
-                <FiCreditCard className="w-5 h-5 text-blue-600 mr-2" />
+                <FiCreditCard className="w-5 h-5 text-brand-600 mr-2" />
                 <h3 className="text-lg font-semibold text-gray-900">Order Status</h3>
               </div>
               <div className="space-y-3">
@@ -294,11 +294,11 @@ export default function Show({ auth, order }: Props) {
 
           {/* Bulk Shipping Actions */}
           {order.items.some((item) => item.can_ship) && (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div className="bg-brand-50 border border-brand-200 rounded-lg p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h4 className="text-sm font-medium text-blue-900">Add Shipping Information</h4>
-                  <p className="text-sm text-blue-700">
+                  <h4 className="text-sm font-medium text-brand-900">Add Shipping Information</h4>
+                  <p className="text-sm text-brand-700">
                     {selectedItemIds.length > 0
                       ? `${selectedItemIds.length} item(s) selected`
                       : 'Select items to add shipping information'}
@@ -307,7 +307,7 @@ export default function Show({ auth, order }: Props) {
                 <button
                   onClick={() => setShowShippingModal(true)}
                   disabled={selectedItemIds.length === 0}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                  className="px-4 py-2 bg-brand-600 text-white rounded-md hover:bg-brand-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
                 >
                   Add Tracking
                 </button>
@@ -320,7 +320,7 @@ export default function Show({ auth, order }: Props) {
             <div className="p-6 border-b border-gray-200">
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <FiPackage className="w-5 h-5 text-blue-600 mr-2" />
+                  <FiPackage className="w-5 h-5 text-brand-600 mr-2" />
                   <h3 className="text-lg font-semibold text-gray-900">Your Items ({order.items.length})</h3>
                 </div>
               </div>
@@ -348,7 +348,7 @@ export default function Show({ auth, order }: Props) {
                             setSelectedItemIds([]);
                           }
                         }}
-                        className="rounded border-gray-300 text-blue-600"
+                        className="rounded border-gray-300 text-brand-600"
                       />
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Product</th>
@@ -370,7 +370,7 @@ export default function Show({ auth, order }: Props) {
                             type="checkbox"
                             checked={selectedItemIds.includes(item.id)}
                             onChange={() => toggleItemSelection(item.id)}
-                            className="rounded border-gray-300 text-blue-600"
+                            className="rounded border-gray-300 text-brand-600"
                           />
                         )}
                       </td>
@@ -410,7 +410,7 @@ export default function Show({ auth, order }: Props) {
                                   setEditingItemId(item.id);
                                   setStatusData('status', item.vendor_status);
                                 }}
-                                className="text-blue-600 hover:text-blue-900"
+                                className="text-brand-600 hover:text-brand-900"
                               >
                                 <FiEdit className="w-4 h-4" />
                               </button>
@@ -460,14 +460,14 @@ export default function Show({ auth, order }: Props) {
           {/* Order Timeline */}
           <div className="bg-white rounded-lg shadow p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-              <FiClock className="w-5 h-5 text-blue-600 mr-2" />
+              <FiClock className="w-5 h-5 text-brand-600 mr-2" />
               Order Timeline
             </h3>
             <div className="space-y-3">
               <div className="flex items-start">
                 <div className="flex-shrink-0">
-                  <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
-                    <FiCheckCircle className="h-5 w-5 text-blue-600" />
+                  <div className="h-8 w-8 rounded-full bg-brand-100 flex items-center justify-center">
+                    <FiCheckCircle className="h-5 w-5 text-brand-600" />
                   </div>
                 </div>
                 <div className="ml-4">
@@ -527,7 +527,7 @@ export default function Show({ auth, order }: Props) {
                 <select
                   value={shippingData.carrier}
                   onChange={(e) => setShippingData('carrier', e.target.value)}
-                  className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"
                   required
                 >
                   <option value="">Select carrier</option>
@@ -547,7 +547,7 @@ export default function Show({ auth, order }: Props) {
                   type="text"
                   value={shippingData.tracking_number}
                   onChange={(e) => setShippingData('tracking_number', e.target.value)}
-                  className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"
                   placeholder="Enter tracking number"
                   required
                 />
@@ -559,12 +559,12 @@ export default function Show({ auth, order }: Props) {
                   type="date"
                   value={shippingData.estimated_delivery_date}
                   onChange={(e) => setShippingData('estimated_delivery_date', e.target.value)}
-                  className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"
                 />
               </div>
 
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                <p className="text-sm text-blue-800">
+              <div className="bg-brand-50 border border-brand-200 rounded-lg p-3">
+                <p className="text-sm text-brand-800">
                   This will mark {selectedItemIds.length} item(s) as shipped and notify the customer.
                 </p>
               </div>
@@ -582,7 +582,7 @@ export default function Show({ auth, order }: Props) {
                 disabled={
                   shippingProcessing || !shippingData.carrier || !shippingData.tracking_number
                 }
-                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 disabled:opacity-50"
+                className="flex-1 px-4 py-2 bg-brand-600 text-white rounded-md text-sm font-medium hover:bg-brand-700 disabled:opacity-50"
               >
                 <FiSave className="inline-block mr-2" />
                 {shippingProcessing ? 'Saving...' : 'Add Tracking'}

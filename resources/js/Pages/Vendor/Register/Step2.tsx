@@ -113,11 +113,11 @@ export default function Step2({ auth, vendor, documents }: Props) {
           {/* Progress Bar */}
           <div className="mb-8">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-blue-600">Step 2: Upload Documents</span>
+              <span className="text-sm font-medium text-brand-600">Step 2: Upload Documents</span>
               <span className="text-sm text-gray-500">66% Complete</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
-              <div className="bg-blue-600 h-2 rounded-full" style={{ width: '66%' }}></div>
+              <div className="bg-brand-600 h-2 rounded-full" style={{ width: '66%' }}></div>
             </div>
           </div>
 
@@ -194,7 +194,7 @@ export default function Step2({ auth, vendor, documents }: Props) {
                       <select
                         value={upload.type}
                         onChange={(e) => handleTypeChange(index, e.target.value)}
-                        className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"
                         required
                       >
                         <option value="">Select document type</option>
@@ -266,7 +266,7 @@ export default function Step2({ auth, vendor, documents }: Props) {
               <button
                 type="button"
                 onClick={addDocumentField}
-                className="w-full py-3 px-4 border-2 border-dashed border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:border-blue-500 hover:text-blue-600 transition-colors"
+                className="w-full py-3 px-4 border-2 border-dashed border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:border-brand-500 hover:text-brand-600 transition-colors"
               >
                 + Add Another Document
               </button>
@@ -279,11 +279,11 @@ export default function Step2({ auth, vendor, documents }: Props) {
               )}
 
               {/* Information Box */}
-              <div className="rounded-md bg-blue-50 p-4">
-                <h4 className="text-sm font-medium text-blue-900 mb-2">
+              <div className="rounded-md bg-brand-50 p-4">
+                <h4 className="text-sm font-medium text-brand-900 mb-2">
                   Document Requirements:
                 </h4>
-                <ul className="text-sm text-blue-700 space-y-1 list-disc list-inside">
+                <ul className="text-sm text-brand-700 space-y-1 list-disc list-inside">
                   <li>At least one document is required (Business License recommended)</li>
                   <li>Documents must be clear and readable</li>
                   <li>Accepted formats: PDF, PNG, JPG</li>
@@ -304,7 +304,7 @@ export default function Step2({ auth, vendor, documents }: Props) {
                 <button
                   type="submit"
                   disabled={processing || documentUploads.every((doc) => !doc.file)}
-                  className="inline-flex items-center px-6 py-3 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 disabled:opacity-50"
+                  className="inline-flex items-center px-6 py-3 bg-brand-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-brand-700 focus:bg-brand-700 active:bg-brand-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 disabled:opacity-50"
                 >
                   {processing ? 'Uploading...' : 'Continue to Bank Details'}
                   <FiArrowRight className="ml-2 w-4 h-4" />

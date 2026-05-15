@@ -54,7 +54,7 @@ export default function Index({ auth, cartCount = 0, wishlistCount = 0 }: TrackO
             <Head title="Track Your Order" />
 
             {/* Hero Section with Gradient */}
-            <div className="relative bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 text-white py-20">
+            <div className="relative bg-gradient-to-br from-brand-600 via-brand-700 to-indigo-800 text-white py-20">
                 <div className="absolute inset-0 bg-black opacity-10"></div>
                 <div className="relative container mx-auto px-4">
                     <div className="max-w-3xl mx-auto text-center">
@@ -64,7 +64,7 @@ export default function Index({ auth, cartCount = 0, wishlistCount = 0 }: TrackO
                         <h1 className="text-4xl md:text-5xl font-bold mb-4">
                             Track Your Order
                         </h1>
-                        <p className="text-xl text-blue-100 mb-8">
+                        <p className="text-xl text-brand-100 mb-8">
                             Enter your order details below to check the status and location of your shipment
                         </p>
                     </div>
@@ -81,7 +81,7 @@ export default function Index({ auth, cartCount = 0, wishlistCount = 0 }: TrackO
                                 onClick={() => setSearchType('order_email')}
                                 className={`flex-1 py-4 px-6 text-center font-medium transition-colors ${
                                     searchType === 'order_email'
-                                        ? 'bg-blue-600 text-white'
+                                        ? 'bg-brand-600 text-white'
                                         : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
                                 }`}
                             >
@@ -94,7 +94,7 @@ export default function Index({ auth, cartCount = 0, wishlistCount = 0 }: TrackO
                                 onClick={() => setSearchType('tracking_number')}
                                 className={`flex-1 py-4 px-6 text-center font-medium transition-colors ${
                                     searchType === 'tracking_number'
-                                        ? 'bg-blue-600 text-white'
+                                        ? 'bg-brand-600 text-white'
                                         : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
                                 }`}
                             >
@@ -129,7 +129,7 @@ export default function Index({ auth, cartCount = 0, wishlistCount = 0 }: TrackO
                                                     type="text"
                                                     value={orderEmailForm.data.order_number}
                                                     onChange={(e) => orderEmailForm.setData('order_number', e.target.value)}
-                                                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                                                     placeholder="e.g., ORD-123456"
                                                     required
                                                 />
@@ -151,7 +151,7 @@ export default function Index({ auth, cartCount = 0, wishlistCount = 0 }: TrackO
                                                     type="email"
                                                     value={orderEmailForm.data.email}
                                                     onChange={(e) => orderEmailForm.setData('email', e.target.value)}
-                                                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                                                     placeholder="your@email.com"
                                                     required
                                                 />
@@ -164,7 +164,7 @@ export default function Index({ auth, cartCount = 0, wishlistCount = 0 }: TrackO
                                         <Button
                                             type="submit"
                                             disabled={orderEmailForm.processing}
-                                            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 text-lg font-semibold"
+                                            className="w-full bg-brand-600 hover:bg-brand-700 text-white py-3 text-lg font-semibold"
                                         >
                                             {orderEmailForm.processing ? (
                                                 <span className="flex items-center justify-center gap-2">
@@ -198,7 +198,7 @@ export default function Index({ auth, cartCount = 0, wishlistCount = 0 }: TrackO
                                                     type="text"
                                                     value={trackingNumberForm.data.tracking_number}
                                                     onChange={(e) => trackingNumberForm.setData('tracking_number', e.target.value)}
-                                                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                                                     placeholder="e.g., 1Z9999999999999999"
                                                     required
                                                 />
@@ -211,7 +211,7 @@ export default function Index({ auth, cartCount = 0, wishlistCount = 0 }: TrackO
                                         <Button
                                             type="submit"
                                             disabled={trackingNumberForm.processing}
-                                            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 text-lg font-semibold"
+                                            className="w-full bg-brand-600 hover:bg-brand-700 text-white py-3 text-lg font-semibold"
                                         >
                                             {trackingNumberForm.processing ? (
                                                 <span className="flex items-center justify-center gap-2">
@@ -232,9 +232,9 @@ export default function Index({ auth, cartCount = 0, wishlistCount = 0 }: TrackO
                     </div>
 
                     {/* How to Find Your Tracking Info */}
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                    <div className="bg-brand-50 border border-brand-200 rounded-lg p-6">
                         <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                            <FiMapPin className="text-blue-600" />
+                            <FiMapPin className="text-brand-600" />
                             How to Find Your Tracking Information
                         </h3>
                         <div className="space-y-3 text-gray-700">
@@ -265,8 +265,8 @@ export default function Index({ auth, cartCount = 0, wishlistCount = 0 }: TrackO
                     {/* Features */}
                     <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div className="text-center p-6 bg-white rounded-lg shadow">
-                            <div className="inline-flex items-center justify-center w-14 h-14 bg-blue-100 rounded-full mb-4">
-                                <FiTruck className="w-7 h-7 text-blue-600" />
+                            <div className="inline-flex items-center justify-center w-14 h-14 bg-brand-100 rounded-full mb-4">
+                                <FiTruck className="w-7 h-7 text-brand-600" />
                             </div>
                             <h3 className="font-semibold text-gray-900 mb-2">Real-time Updates</h3>
                             <p className="text-sm text-gray-600">

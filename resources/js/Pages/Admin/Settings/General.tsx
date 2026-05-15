@@ -234,7 +234,7 @@ export default function General({ auth, settings }: Props) {
                             <button
                                 type="submit"
                                 disabled={processing}
-                                className="flex items-center px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="flex items-center px-6 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <FiSave className="mr-2" />
                                 {processing ? 'Saving...' : 'Save Changes'}

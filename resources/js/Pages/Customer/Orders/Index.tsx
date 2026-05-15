@@ -33,7 +33,7 @@ export default function OrdersIndex({ auth, orders, filters }: Props) {
     const getStatusColor = (status: string) => {
         const colors: Record<string, string> = {
             pending: 'bg-yellow-100 text-yellow-800',
-            processing: 'bg-blue-100 text-blue-800',
+            processing: 'bg-brand-100 text-brand-800',
             shipped: 'bg-purple-100 text-purple-800',
             delivered: 'bg-green-100 text-green-800',
             cancelled: 'bg-red-100 text-red-800',
@@ -77,9 +77,9 @@ export default function OrdersIndex({ auth, orders, filters }: Props) {
                         <form onSubmit={handleSearch} className="flex flex-col md:flex-row gap-4">
                             <div className="flex-1 relative">
                                 <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                                <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search by order number..." className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                                <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search by order number..." className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500" />
                             </div>
-                            <button type="submit" className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                            <button type="submit" className="px-6 py-2 bg-brand-600 text-white rounded-md hover:bg-brand-700">
                                 Search
                             </button>
                             <button type="button" onClick={() => setShowFilters(!showFilters)} className="px-6 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 flex items-center gap-2">
@@ -92,7 +92,7 @@ export default function OrdersIndex({ auth, orders, filters }: Props) {
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                                        <select value={filters.status || 'all'} onChange={(e) => handleFilterChange('status', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        <select value={filters.status || 'all'} onChange={(e) => handleFilterChange('status', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500">
                                             <option value="">All Statuses</option>
                                             <option value="pending">Pending</option>
                                             <option value="processing">Processing</option>
@@ -103,11 +103,11 @@ export default function OrdersIndex({ auth, orders, filters }: Props) {
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-2">From Date</label>
-                                        <input type="date" value={filters.date_from || ''} onChange={(e) => handleFilterChange('date_from', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                                        <input type="date" value={filters.date_from || ''} onChange={(e) => handleFilterChange('date_from', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500" />
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-2">To Date</label>
-                                        <input type="date" value={filters.date_to || ''} onChange={(e) => handleFilterChange('date_to', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                                        <input type="date" value={filters.date_to || ''} onChange={(e) => handleFilterChange('date_to', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500" />
                                     </div>
                                 </div>
                             </div>
@@ -152,7 +152,7 @@ export default function OrdersIndex({ auth, orders, filters }: Props) {
                                         </div>
 
                                         <div className="flex flex-wrap gap-2">
-                                            <Link href={`/orders/${order.id}`} className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm">
+                                            <Link href={`/orders/${order.id}`} className="px-4 py-2 bg-brand-600 text-white rounded-md hover:bg-brand-700 text-sm">
                                                 View Details
                                             </Link>
                                             <Link href={`/orders/${order.id}/track`} className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 text-sm flex items-center gap-2">
@@ -175,7 +175,7 @@ export default function OrdersIndex({ auth, orders, filters }: Props) {
                                 <div className="mt-6 flex justify-center">
                                     <div className="flex gap-2">
                                         {orders.links.map((link: any, index: number) => (
-                                            <button key={index} disabled={!link.url} onClick={() => link.url && router.get(link.url)} dangerouslySetInnerHTML={{ __html: link.label }} className={'px-3 py-2 rounded border ' + (link.active ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50') + ' ' + (!link.url ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer')} />
+                                            <button key={index} disabled={!link.url} onClick={() => link.url && router.get(link.url)} dangerouslySetInnerHTML={{ __html: link.label }} className={'px-3 py-2 rounded border ' + (link.active ? 'bg-brand-600 text-white border-brand-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50') + ' ' + (!link.url ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer')} />
                                         ))}
                                     </div>
                                 </div>
@@ -186,7 +186,7 @@ export default function OrdersIndex({ auth, orders, filters }: Props) {
                             <FiPackage className="text-6xl text-gray-400 mx-auto mb-4" />
                             <h3 className="text-xl font-semibold text-gray-900 mb-2">No orders found</h3>
                             <p className="text-gray-600 mb-6">You haven't placed any orders yet</p>
-                            <Link href="/products" className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                            <Link href="/products" className="px-6 py-3 bg-brand-600 text-white rounded-md hover:bg-brand-700">
                                 Start Shopping
                             </Link>
                         </div>

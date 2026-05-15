@@ -20,7 +20,7 @@ export default function AboutUs({
       title: 'Free Shipping',
       description: 'Free shipping on all orders over $200',
       icon: FiTruck,
-      color: 'bg-blue-50 text-blue-600'
+      color: 'bg-brand-50 text-brand-600'
     },
     {
       id: 2,
@@ -188,8 +188,8 @@ export default function AboutUs({
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="text-center">
-            <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
-              <FiAward className="w-10 h-10 text-blue-600" />
+            <div className="w-20 h-20 bg-brand-50 rounded-full flex items-center justify-center mx-auto mb-4">
+              <FiAward className="w-10 h-10 text-brand-600" />
             </div>
             <h3 className="text-xl font-semibold text-grabit-dark mb-2">Quality</h3>
             <p className="text-grabit-gray">

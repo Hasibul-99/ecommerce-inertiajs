@@ -54,9 +54,23 @@ export default {
                 heading: ["Manrope", "sans-serif"],
             },
             colors: {
+                // Brand color scale based on rgb(90, 172, 141) = #5aac8d
+                brand: {
+                    50:  '#ebfaf4',
+                    100: '#d0f1e4',
+                    200: '#9fdfc7',
+                    300: '#76cbaa',
+                    400: '#66bd9c',
+                    500: '#5aac8d', // rgb(90, 172, 141)
+                    600: '#4a9377',
+                    700: '#318163',
+                    800: '#24664d',
+                    900: '#0d593c',
+                    950: '#0f2f22',
+                },
                 // Grabit Design System Colors
                 grabit: {
-                    primary: "#5caf90",
+                    primary: "#5aac8d", // rgb(90, 172, 141) — matches brand-500
                     "primary-dark": "#4a9377",
                     dark: "#4b5966",
                     "dark-secondary": "#1d2235",

@@ -107,7 +107,7 @@ export default function Index({ auth, orders, stats, filters }: Props) {
       return { class: 'bg-green-100 text-green-800', label: 'Shipped', icon: FiTruck };
     }
     if (statuses.includes('ready_to_ship')) {
-      return { class: 'bg-blue-100 text-blue-800', label: 'Ready to Ship', icon: FiBox };
+      return { class: 'bg-brand-100 text-brand-800', label: 'Ready to Ship', icon: FiBox };
     }
     if (statuses.includes('processing') || statuses.includes('confirmed')) {
       return { class: 'bg-yellow-100 text-yellow-800', label: 'Processing', icon: FiClock };
@@ -136,7 +136,7 @@ export default function Index({ auth, orders, stats, filters }: Props) {
                   <p className="text-sm text-gray-600">Total Orders</p>
                   <p className="text-2xl font-bold text-gray-900 mt-1">{stats.total_orders}</p>
                 </div>
-                <FiPackage className="w-10 h-10 text-blue-500" />
+                <FiPackage className="w-10 h-10 text-brand-500" />
               </div>
             </div>
 
@@ -164,9 +164,9 @@ export default function Index({ auth, orders, stats, filters }: Props) {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600">Shipped</p>
-                  <p className="text-2xl font-bold text-blue-600 mt-1">{stats.shipped}</p>
+                  <p className="text-2xl font-bold text-brand-600 mt-1">{stats.shipped}</p>
                 </div>
-                <FiTruck className="w-10 h-10 text-blue-500" />
+                <FiTruck className="w-10 h-10 text-brand-500" />
               </div>
             </div>
 
@@ -193,7 +193,7 @@ export default function Index({ auth, orders, stats, filters }: Props) {
                     value={filterData.search}
                     onChange={(e) => setFilterData({ ...filterData, search: e.target.value })}
                     onKeyPress={(e) => e.key === 'Enter' && handleFilter()}
-                    className="pl-10 w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    className="pl-10 w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"
                   />
                 </div>
               </div>
@@ -202,7 +202,7 @@ export default function Index({ auth, orders, stats, filters }: Props) {
                 <select
                   value={filterData.status}
                   onChange={(e) => setFilterData({ ...filterData, status: e.target.value })}
-                  className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"
                 >
                   <option value="">All Status</option>
                   <option value="pending">Pending</option>
@@ -219,7 +219,7 @@ export default function Index({ auth, orders, stats, filters }: Props) {
                   type="date"
                   value={filterData.date_from}
                   onChange={(e) => setFilterData({ ...filterData, date_from: e.target.value })}
-                  className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"
                   placeholder="From Date"
                 />
               </div>
@@ -229,7 +229,7 @@ export default function Index({ auth, orders, stats, filters }: Props) {
                   type="date"
                   value={filterData.date_to}
                   onChange={(e) => setFilterData({ ...filterData, date_to: e.target.value })}
-                  className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"
                   placeholder="To Date"
                 />
               </div>
@@ -238,7 +238,7 @@ export default function Index({ auth, orders, stats, filters }: Props) {
             <div className="flex gap-2 mt-4">
               <button
                 onClick={handleFilter}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+                className="px-4 py-2 bg-brand-600 text-white rounded-md hover:bg-brand-700 transition"
               >
                 Apply Filters
               </button>
@@ -296,7 +296,7 @@ export default function Index({ auth, orders, stats, filters }: Props) {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <Link
                           href={route('vendor.orders.show', order.id)}
-                          className="text-blue-600 hover:text-blue-900 font-medium"
+                          className="text-brand-600 hover:text-brand-900 font-medium"
                         >
                           {order.order_number}
                         </Link>
@@ -325,7 +325,7 @@ export default function Index({ auth, orders, stats, filters }: Props) {
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <Link
                           href={route('vendor.orders.show', order.id)}
-                          className="text-blue-600 hover:text-blue-900 inline-flex items-center"
+                          className="text-brand-600 hover:text-brand-900 inline-flex items-center"
                         >
                           <FiEye className="w-4 h-4 mr-1" />
                           View
@@ -383,7 +383,7 @@ export default function Index({ auth, orders, stats, filters }: Props) {
                             href={link.url || '#'}
                             className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
                               link.active
-                                ? 'z-10 bg-blue-50 border-blue-500 text-blue-600'
+                                ? 'z-10 bg-brand-50 border-brand-500 text-brand-600'
                                 : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
                             } ${!link.url ? 'cursor-not-allowed opacity-50' : ''}`}
                             dangerouslySetInnerHTML={{ __html: link.label }}

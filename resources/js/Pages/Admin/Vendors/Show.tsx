@@ -335,7 +335,7 @@ const Show: React.FC<Props> = ({ auth, vendor, productCount, productStats, appro
               <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div className="p-6 border-b border-gray-200">
                   <h3 className="text-lg font-medium text-gray-900 flex items-center">
-                    <FiFileText className="w-5 h-5 text-blue-600 mr-2" />
+                    <FiFileText className="w-5 h-5 text-brand-600 mr-2" />
                     Uploaded Documents ({documents.length})
                   </h3>
                 </div>

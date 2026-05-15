@@ -143,8 +143,8 @@ export default function Track({
 
                             <div className="space-y-4">
                                 <div className="flex items-start gap-3">
-                                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                                        <FiTruck className="w-5 h-5 text-blue-600" />
+                                    <div className="w-10 h-10 bg-brand-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <FiTruck className="w-5 h-5 text-brand-600" />
                                     </div>
                                     <div className="flex-1">
                                         <p className="text-sm text-grabit-gray mb-1">Tracking Number</p>
@@ -232,7 +232,7 @@ export default function Track({
                     </div>
 
                     {/* Help Section */}
-                    <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
+                    <div className="mt-8 bg-brand-50 border border-brand-200 rounded-lg p-6">
                         <h3 className="text-lg font-semibold text-grabit-dark mb-2">Need Help?</h3>
                         <p className="text-grabit-gray mb-4">
                             If you have any questions about your order or delivery, please contact our customer support team.

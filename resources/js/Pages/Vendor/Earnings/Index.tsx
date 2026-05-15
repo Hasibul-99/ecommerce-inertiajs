@@ -56,7 +56,7 @@ export default function EarningsIndex({ auth, balances, earningsData, recentTran
             available: 'bg-green-100 text-green-800',
             pending: 'bg-yellow-100 text-yellow-800',
             withheld: 'bg-red-100 text-red-800',
-            processing: 'bg-blue-100 text-blue-800',
+            processing: 'bg-brand-100 text-brand-800',
             completed: 'bg-green-100 text-green-800',
             failed: 'bg-red-100 text-red-800',
         };
@@ -95,7 +95,7 @@ export default function EarningsIndex({ auth, balances, earningsData, recentTran
                             <p className="text-gray-600 mt-1">Track your earnings and manage payouts</p>
                         </div>
                         {canRequestPayout && (
-                            <button onClick={() => setShowPayoutModal(true)} className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center gap-2">
+                            <button onClick={() => setShowPayoutModal(true)} className="px-4 py-2 bg-brand-600 text-white rounded-md hover:bg-brand-700 flex items-center gap-2">
                                 <FiDollarSign /> Request Payout
                             </button>
                         )}
@@ -132,9 +132,9 @@ export default function EarningsIndex({ auth, balances, earningsData, recentTran
                             <div className="flex items-center justify-between">
                                 <div>
                                     <p className="text-sm text-gray-600">Total Earnings</p>
-                                    <p className="text-2xl font-bold text-blue-600 mt-1">{formatCurrency(balances.total_cents)}</p>
+                                    <p className="text-2xl font-bold text-brand-600 mt-1">{formatCurrency(balances.total_cents)}</p>
                                 </div>
-                                <div className="p-3 bg-blue-100 rounded-full"><FiTrendingUp className="text-2xl text-blue-600" /></div>
+                                <div className="p-3 bg-brand-100 rounded-full"><FiTrendingUp className="text-2xl text-brand-600" /></div>
                             </div>
                         </div>
                     </div>
@@ -143,7 +143,7 @@ export default function EarningsIndex({ auth, balances, earningsData, recentTran
                             <div className="p-6 border-b border-gray-200">
                                 <div className="flex justify-between items-center">
                                     <h2 className="text-xl font-semibold">Recent Transactions</h2>
-                                    <Link href="/vendor/earnings/transactions" className="text-blue-600 hover:text-blue-700 text-sm">View All</Link>
+                                    <Link href="/vendor/earnings/transactions" className="text-brand-600 hover:text-brand-700 text-sm">View All</Link>
                                 </div>
                             </div>
                             <div className="divide-y divide-gray-200">
@@ -167,7 +167,7 @@ export default function EarningsIndex({ auth, balances, earningsData, recentTran
                             <div className="p-6 border-b border-gray-200">
                                 <div className="flex justify-between items-center">
                                     <h2 className="text-xl font-semibold">Recent Payouts</h2>
-                                    <Link href="/vendor/earnings/payouts" className="text-blue-600 hover:text-blue-700 text-sm">View All</Link>
+                                    <Link href="/vendor/earnings/payouts" className="text-brand-600 hover:text-brand-700 text-sm">View All</Link>
                                 </div>
                             </div>
                             <div className="divide-y divide-gray-200">
@@ -179,7 +179,7 @@ export default function EarningsIndex({ auth, balances, earningsData, recentTran
                                                 <p className="text-sm text-gray-600 mt-1">{new Date(payout.created_at).toLocaleDateString()}</p>
                                             </div>
                                             <div className="text-right">
-                                                <p className="font-semibold text-blue-600">{formatCurrency(payout.net_amount_cents)}</p>
+                                                <p className="font-semibold text-brand-600">{formatCurrency(payout.net_amount_cents)}</p>
                                                 <span className={'inline-block px-2 py-1 text-xs rounded-full mt-1 ' + getStatusColor(payout.status)}>{payout.status}</span>
                                             </div>
                                         </div>
@@ -200,11 +200,11 @@ export default function EarningsIndex({ auth, balances, earningsData, recentTran
                         </div>
                         <div className="mb-4">
                             <label className="block text-sm font-medium text-gray-700 mb-2">Payout Amount (USD)</label>
-                            <input type="number" step="0.01" min={minimumPayoutCents / 100} max={balances.available_cents / 100} value={payoutAmount} onChange={(e) => setPayoutAmount(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder={'Minimum: ' + formatCurrency(minimumPayoutCents)} />
+                            <input type="number" step="0.01" min={minimumPayoutCents / 100} max={balances.available_cents / 100} value={payoutAmount} onChange={(e) => setPayoutAmount(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500" placeholder={'Minimum: ' + formatCurrency(minimumPayoutCents)} />
                             <p className="text-xs text-gray-500 mt-1">Minimum payout: {formatCurrency(minimumPayoutCents)}</p>
                         </div>
                         <div className="flex gap-3">
-                            <button onClick={handleRequestPayout} disabled={processing} className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50">{processing ? 'Processing...' : 'Request Payout'}</button>
+                            <button onClick={handleRequestPayout} disabled={processing} className="flex-1 px-4 py-2 bg-brand-600 text-white rounded-md hover:bg-brand-700 disabled:opacity-50">{processing ? 'Processing...' : 'Request Payout'}</button>
                             <button onClick={() => setShowPayoutModal(false)} disabled={processing} className="flex-1 px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">Cancel</button>
                         </div>
                     </div>

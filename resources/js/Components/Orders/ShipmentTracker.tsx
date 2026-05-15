@@ -35,9 +35,9 @@ export default function ShipmentTracker({ shipment, trackingUrl, compact = false
             case 'delivered':
                 return <FiCheckCircle className="text-green-600" size={20} />;
             case 'out_for_delivery':
-                return <FiTruck className="text-blue-600" size={20} />;
+                return <FiTruck className="text-brand-600" size={20} />;
             case 'in_transit':
-                return <FiPackage className="text-blue-600" size={20} />;
+                return <FiPackage className="text-brand-600" size={20} />;
             case 'exception':
                 return <FiAlertCircle className="text-red-600" size={20} />;
             default:
@@ -50,9 +50,9 @@ export default function ShipmentTracker({ shipment, trackingUrl, compact = false
             case 'delivered':
                 return 'bg-green-100 text-green-800 border-green-200';
             case 'out_for_delivery':
-                return 'bg-blue-100 text-blue-800 border-blue-200';
+                return 'bg-brand-100 text-brand-800 border-brand-200';
             case 'in_transit':
-                return 'bg-blue-100 text-blue-800 border-blue-200';
+                return 'bg-brand-100 text-brand-800 border-brand-200';
             case 'exception':
                 return 'bg-red-100 text-red-800 border-red-200';
             default:
@@ -74,7 +74,7 @@ export default function ShipmentTracker({ shipment, trackingUrl, compact = false
                             href={trackingUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-blue-600 hover:text-blue-700 text-sm flex items-center gap-1"
+                            className="text-brand-600 hover:text-brand-700 text-sm flex items-center gap-1"
                         >
                             Track
                             <FiExternalLink size={14} />
@@ -137,7 +137,7 @@ export default function ShipmentTracker({ shipment, trackingUrl, compact = false
                             href={trackingUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2 px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                            className="flex items-center gap-2 px-4 py-2 text-brand-600 hover:bg-brand-50 rounded-lg transition-colors"
                         >
                             <span className="text-sm font-medium">Track on {shipment.carrier_name}</span>
                             <FiExternalLink size={16} />
@@ -175,7 +175,7 @@ export default function ShipmentTracker({ shipment, trackingUrl, compact = false
                                 {/* Timeline Indicator */}
                                 <div className="flex flex-col items-center">
                                     <div
-                                        className={'w-2.5 h-2.5 rounded-full ' + (index === 0 ? 'bg-blue-600' : 'bg-gray-300')}
+                                        className={'w-2.5 h-2.5 rounded-full ' + (index === 0 ? 'bg-brand-600' : 'bg-gray-300')}
                                     />
                                     {index < shipment.events.length - 1 && (
                                         <div className="w-0.5 flex-1 bg-gray-300 mt-1" style={{ minHeight: '30px' }} />

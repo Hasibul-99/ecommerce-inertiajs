@@ -54,7 +54,7 @@ export default function OrderTrack({ auth, order, trackingInfo }: Props) {
     const getStatusColor = (status: string) => {
         const colors: Record<string, string> = {
             pending: 'bg-yellow-100 text-yellow-800 border-yellow-300',
-            processing: 'bg-blue-100 text-blue-800 border-blue-300',
+            processing: 'bg-brand-100 text-brand-800 border-brand-300',
             shipped: 'bg-purple-100 text-purple-800 border-purple-300',
             delivered: 'bg-green-100 text-green-800 border-green-300',
         };
@@ -93,7 +93,7 @@ export default function OrderTrack({ auth, order, trackingInfo }: Props) {
             <div className="py-8">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="mb-8">
-                        <Link href="/customer/orders" className="text-blue-600 hover:text-blue-700 mb-2 inline-block">
+                        <Link href="/customer/orders" className="text-brand-600 hover:text-brand-700 mb-2 inline-block">
                             ← Back to Orders
                         </Link>
                         <h1 className="text-3xl font-bold text-gray-900">Track Order</h1>
@@ -103,10 +103,10 @@ export default function OrderTrack({ auth, order, trackingInfo }: Props) {
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
                         <div className="bg-white rounded-lg shadow p-6">
                             <div className="flex items-center gap-3 mb-2">
-                                <FiTruck className="text-2xl text-blue-600" />
+                                <FiTruck className="text-2xl text-brand-600" />
                                 <h3 className="font-semibold text-gray-900">Estimated Delivery</h3>
                             </div>
-                            <p className="text-3xl font-bold text-blue-600">{calculateDeliveryTime()}</p>
+                            <p className="text-3xl font-bold text-brand-600">{calculateDeliveryTime()}</p>
                             {trackingInfo.estimated_delivery !== 'Not available' && order.status !== 'delivered' && (
                                 <p className="text-sm text-gray-600 mt-1">{new Date(trackingInfo.estimated_delivery).toLocaleDateString('en-GB', { weekday: 'long', month: 'long', day: 'numeric', timeZone: 'Asia/Dhaka' })}</p>
                             )}
@@ -133,12 +133,12 @@ export default function OrderTrack({ auth, order, trackingInfo }: Props) {
                         <h2 className="text-xl font-semibold mb-8">Order Progress</h2>
                         <div className="relative">
                             <div className="absolute top-6 left-0 right-0 h-1 bg-gray-200">
-                                <div className={'h-full bg-blue-600 transition-all duration-500'} style={{ width: `${(currentIndex / (orderStatuses.length - 1)) * 100}%` }}></div>
+                                <div className={'h-full bg-brand-600 transition-all duration-500'} style={{ width: `${(currentIndex / (orderStatuses.length - 1)) * 100}%` }}></div>
                             </div>
                             <div className="relative flex justify-between">
                                 {orderStatuses.map((statusItem, index) => (
                                     <div key={statusItem.status} className="flex flex-col items-center">
-                                        <div className={'w-12 h-12 rounded-full flex items-center justify-center border-4 transition-all duration-300 ' + (index <= currentIndex ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-400 border-gray-200')}>
+                                        <div className={'w-12 h-12 rounded-full flex items-center justify-center border-4 transition-all duration-300 ' + (index <= currentIndex ? 'bg-brand-600 text-white border-brand-600' : 'bg-white text-gray-400 border-gray-200')}>
                                             {statusItem.icon}
                                         </div>
                                         <p className={'mt-3 text-sm font-medium text-center ' + (index <= currentIndex ? 'text-gray-900' : 'text-gray-400')}>
@@ -163,7 +163,7 @@ export default function OrderTrack({ auth, order, trackingInfo }: Props) {
                                                 <p className="text-sm text-gray-600">Vendor: {item.vendor_name}</p>
                                             )}
                                             {item.tracking_number && (
-                                                <p className="text-sm text-blue-600 mt-2">
+                                                <p className="text-sm text-brand-600 mt-2">
                                                     Track: {item.tracking_number} ({item.carrier})
                                                 </p>
                                             )}
@@ -184,7 +184,7 @@ export default function OrderTrack({ auth, order, trackingInfo }: Props) {
                                 {trackingInfo.events.map((event, index) => (
                                     <div key={index} className="flex gap-4">
                                         <div className="flex flex-col items-center">
-                                            <div className="w-3 h-3 bg-blue-600 rounded-full"></div>
+                                            <div className="w-3 h-3 bg-brand-600 rounded-full"></div>
                                             {index < trackingInfo.events.length - 1 && (
                                                 <div className="w-0.5 h-full bg-gray-300 my-1"></div>
                                             )}
@@ -223,9 +223,9 @@ export default function OrderTrack({ auth, order, trackingInfo }: Props) {
                             <div className="space-y-4">
                                 <p className="text-gray-600">If you have any questions about your order, feel free to contact us.</p>
                                 <div className="flex flex-col gap-3">
-                                    <a href="mailto:support@example.com" className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition">
-                                        <FiMail className="text-blue-600" />
-                                        <span className="text-blue-600 font-medium">Email Support</span>
+                                    <a href="mailto:support@example.com" className="flex items-center gap-3 p-3 bg-brand-50 rounded-lg hover:bg-brand-100 transition">
+                                        <FiMail className="text-brand-600" />
+                                        <span className="text-brand-600 font-medium">Email Support</span>
                                     </a>
                                     <a href="tel:+1234567890" className="flex items-center gap-3 p-3 bg-green-50 rounded-lg hover:bg-green-100 transition">
                                         <FiPhone className="text-green-600" />

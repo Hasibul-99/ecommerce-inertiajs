@@ -527,7 +527,7 @@ export default function Edit({ product, categories, vendors, tags, auth }: Props
                                                     <Label className="text-base font-semibold mb-3 block">Current Images</Label>
                                                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                                                         {existingImages.map((image) => (
-                                                            <div key={image.id} className="relative group rounded-lg overflow-hidden border border-gray-200 hover:border-blue-500 transition-all">
+                                                            <div key={image.id} className="relative group rounded-lg overflow-hidden border border-gray-200 hover:border-brand-500 transition-all">
                                                                 <div className="aspect-square bg-gray-100">
                                                                     <img
                                                                         src={image.url}
@@ -564,7 +564,7 @@ export default function Edit({ product, categories, vendors, tags, auth }: Props
                                                     <Label className="text-base font-semibold mb-3 block">New Images to Upload</Label>
                                                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                                                         {imagePreviewUrls.map((url, index) => (
-                                                            <div key={index} className="relative group rounded-lg overflow-hidden border-2 border-dashed border-blue-500">
+                                                            <div key={index} className="relative group rounded-lg overflow-hidden border-2 border-dashed border-brand-500">
                                                                 <div className="aspect-square bg-gray-100">
                                                                     <img
                                                                         src={url}
@@ -582,7 +582,7 @@ export default function Edit({ product, categories, vendors, tags, auth }: Props
                                                                     </button>
                                                                 </div>
                                                                 <div className="absolute top-2 right-2">
-                                                                    <span className="bg-blue-600 text-white text-xs px-2 py-1 rounded-full">New</span>
+                                                                    <span className="bg-brand-600 text-white text-xs px-2 py-1 rounded-full">New</span>
                                                                 </div>
                                                             </div>
                                                         ))}
@@ -595,7 +595,7 @@ export default function Edit({ product, categories, vendors, tags, auth }: Props
                                                 <Label className="text-base font-semibold mb-3 block">
                                                     {existingImages.length > 0 || imagePreviewUrls.length > 0 ? 'Add More Images' : 'Upload Images'}
                                                 </Label>
-                                                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-500 transition-colors">
+                                                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-brand-500 transition-colors">
                                                     <input
                                                         type="file"
                                                         id="product-images"
@@ -608,8 +608,8 @@ export default function Edit({ product, categories, vendors, tags, auth }: Props
                                                         htmlFor="product-images"
                                                         className="cursor-pointer flex flex-col items-center space-y-3"
                                                     >
-                                                        <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
-                                                            <Upload className="w-8 h-8 text-blue-600" />
+                                                        <div className="w-16 h-16 bg-brand-100 rounded-full flex items-center justify-center">
+                                                            <Upload className="w-8 h-8 text-brand-600" />
                                                         </div>
                                                         <div>
                                                             <p className="text-lg font-medium text-gray-700">
@@ -621,7 +621,7 @@ export default function Edit({ product, categories, vendors, tags, auth }: Props
                                                         </div>
                                                         <Button
                                                             type="button"
-                                                            className="bg-blue-600 hover:bg-blue-700 text-white"
+                                                            className="bg-brand-600 hover:bg-brand-700 text-white"
                                                             onClick={(e) => {
                                                                 e.preventDefault();
                                                                 document.getElementById('product-images')?.click();
@@ -649,12 +649,12 @@ export default function Edit({ product, categories, vendors, tags, auth }: Props
                                             )}
 
                                             {/* Info */}
-                                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                            <div className="bg-brand-50 border border-brand-200 rounded-lg p-4">
                                                 <div className="flex items-start space-x-3">
-                                                    <ImageIcon className="w-5 h-5 text-blue-600 mt-0.5" />
-                                                    <div className="text-sm text-blue-800">
+                                                    <ImageIcon className="w-5 h-5 text-brand-600 mt-0.5" />
+                                                    <div className="text-sm text-brand-800">
                                                         <p className="font-medium mb-1">Image Guidelines:</p>
-                                                        <ul className="list-disc list-inside space-y-1 text-blue-700">
+                                                        <ul className="list-disc list-inside space-y-1 text-brand-700">
                                                             <li>Use high-quality images (at least 1000x1000px recommended)</li>
                                                             <li>First image will be used as the product thumbnail</li>
                                                             <li>Maximum file size: 5MB per image</li>
@@ -671,7 +671,7 @@ export default function Edit({ product, categories, vendors, tags, auth }: Props
                                     <CardHeader>
                                         <div className="flex justify-between items-center">
                                             <CardTitle>Product Variants</CardTitle>
-                                            <Button type="button" onClick={addVariant} className="bg-blue-600 hover:bg-blue-700 text-white">
+                                            <Button type="button" onClick={addVariant} className="bg-brand-600 hover:bg-brand-700 text-white">
                                                 <Plus className="w-4 h-4 mr-2" />
                                                 Add Variant
                                             </Button>

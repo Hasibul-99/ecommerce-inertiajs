@@ -42,7 +42,7 @@ export default function ShipmentCard({ shipment }: ShipmentCardProps) {
     const getStatusBadgeColor = (status: string) => {
         const statusLower = status.toLowerCase();
         if (statusLower.includes('delivered')) return 'bg-green-100 text-green-700 border-green-200';
-        if (statusLower.includes('transit') || statusLower.includes('shipped')) return 'bg-blue-100 text-blue-700 border-blue-200';
+        if (statusLower.includes('transit') || statusLower.includes('shipped')) return 'bg-brand-100 text-brand-700 border-brand-200';
         if (statusLower.includes('exception') || statusLower.includes('failed')) return 'bg-red-100 text-red-700 border-red-200';
         if (statusLower.includes('pending')) return 'bg-yellow-100 text-yellow-700 border-yellow-200';
         return 'bg-gray-100 text-gray-700 border-gray-200';
@@ -64,8 +64,8 @@ export default function ShipmentCard({ shipment }: ShipmentCardProps) {
             <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <FiTruck className="w-5 h-5 text-blue-600" />
+                        <div className="w-10 h-10 bg-brand-100 rounded-lg flex items-center justify-center">
+                            <FiTruck className="w-5 h-5 text-brand-600" />
                         </div>
                         <div>
                             <h3 className="font-semibold text-gray-900">
@@ -132,13 +132,13 @@ export default function ShipmentCard({ shipment }: ShipmentCardProps) {
                         <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
                             Delivery Progress
                         </label>
-                        <span className="text-xs font-semibold text-blue-600">
+                        <span className="text-xs font-semibold text-brand-600">
                             {shipment.progress_percentage}%
                         </span>
                     </div>
                     <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
                         <div
-                            className="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full transition-all duration-500"
+                            className="h-full bg-gradient-to-r from-brand-500 to-brand-600 rounded-full transition-all duration-500"
                             style={{ width: `${shipment.progress_percentage}%` }}
                         />
                     </div>
@@ -183,7 +183,7 @@ export default function ShipmentCard({ shipment }: ShipmentCardProps) {
                             href={shipment.carrier_tracking_url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+                            className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg font-medium transition-colors"
                         >
                             <FiExternalLink className="w-4 h-4" />
                             Track with {shipment.carrier}

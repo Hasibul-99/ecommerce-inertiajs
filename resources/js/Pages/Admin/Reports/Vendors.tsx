@@ -152,7 +152,7 @@ export default function Vendors({ auth, dateRange, report }: Props) {
                             </button>
                             <button
                                 onClick={() => handleExport('xlsx')}
-                                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
+                                className="flex items-center gap-2 px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 font-medium"
                             >
                                 <FiDownload size={18} />
                                 Export Excel
@@ -169,7 +169,7 @@ export default function Vendors({ auth, dateRange, report }: Props) {
                                     type="date"
                                     value={from}
                                     onChange={(e) => setFrom(e.target.value)}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                                 />
                             </div>
                             <div className="flex-1 min-w-[200px]">
@@ -178,12 +178,12 @@ export default function Vendors({ auth, dateRange, report }: Props) {
                                     type="date"
                                     value={to}
                                     onChange={(e) => setTo(e.target.value)}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                                 />
                             </div>
                             <button
                                 onClick={handleDateChange}
-                                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
+                                className="px-6 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 font-medium"
                             >
                                 Apply
                             </button>
@@ -199,8 +199,8 @@ export default function Vendors({ auth, dateRange, report }: Props) {
                                     <p className="text-2xl font-bold text-gray-900 mt-2">{report.total_vendors}</p>
                                     <p className="text-sm text-gray-500 mt-1">{report.active_vendors} active</p>
                                 </div>
-                                <div className="p-3 bg-blue-100 rounded-lg">
-                                    <FiShoppingBag className="text-blue-600" size={24} />
+                                <div className="p-3 bg-brand-100 rounded-lg">
+                                    <FiShoppingBag className="text-brand-600" size={24} />
                                 </div>
                             </div>
                         </div>
@@ -284,7 +284,7 @@ export default function Vendors({ auth, dateRange, report }: Props) {
                                         <th className="text-right py-3 px-4 text-sm font-semibold text-gray-700">
                                             <button
                                                 onClick={() => handleSort('orders')}
-                                                className="hover:text-blue-600 flex items-center gap-1 ml-auto"
+                                                className="hover:text-brand-600 flex items-center gap-1 ml-auto"
                                             >
                                                 Orders {getSortIcon('orders')}
                                             </button>
@@ -293,7 +293,7 @@ export default function Vendors({ auth, dateRange, report }: Props) {
                                         <th className="text-right py-3 px-4 text-sm font-semibold text-gray-700">
                                             <button
                                                 onClick={() => handleSort('revenue')}
-                                                className="hover:text-blue-600 flex items-center gap-1 ml-auto"
+                                                className="hover:text-brand-600 flex items-center gap-1 ml-auto"
                                             >
                                                 Revenue {getSortIcon('revenue')}
                                             </button>
@@ -302,7 +302,7 @@ export default function Vendors({ auth, dateRange, report }: Props) {
                                         <th className="text-right py-3 px-4 text-sm font-semibold text-gray-700">
                                             <button
                                                 onClick={() => handleSort('fulfillment')}
-                                                className="hover:text-blue-600 flex items-center gap-1 ml-auto"
+                                                className="hover:text-brand-600 flex items-center gap-1 ml-auto"
                                             >
                                                 Fulfillment {getSortIcon('fulfillment')}
                                             </button>
@@ -330,7 +330,7 @@ export default function Vendors({ auth, dateRange, report }: Props) {
                                                     </span>
                                                     <div className="w-16 bg-gray-200 rounded-full h-2">
                                                         <div
-                                                            className="bg-blue-600 h-2 rounded-full"
+                                                            className="bg-brand-600 h-2 rounded-full"
                                                             style={{ width: `${vendor.fulfillment_rate}%` }}
                                                         />
                                                     </div>

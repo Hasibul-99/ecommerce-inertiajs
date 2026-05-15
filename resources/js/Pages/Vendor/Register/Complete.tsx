@@ -131,12 +131,12 @@ export default function Complete({ auth, vendor }: Props) {
           <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div className="p-6 border-b border-gray-200 flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <FiFileText className="w-5 h-5 text-blue-600" />
+                <FiFileText className="w-5 h-5 text-brand-600" />
                 <h3 className="text-lg font-medium text-gray-900">Business Information</h3>
               </div>
               <Link
                 href={route('vendor.register.step1')}
-                className="text-sm text-blue-600 hover:text-blue-800 inline-flex items-center"
+                className="text-sm text-brand-600 hover:text-brand-800 inline-flex items-center"
               >
                 <FiEdit className="w-4 h-4 mr-1" />
                 Edit
@@ -189,7 +189,7 @@ export default function Complete({ auth, vendor }: Props) {
           <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div className="p-6 border-b border-gray-200 flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <FiFileText className="w-5 h-5 text-blue-600" />
+                <FiFileText className="w-5 h-5 text-brand-600" />
                 <h3 className="text-lg font-medium text-gray-900">
                   Uploaded Documents
                   <span className="ml-2 text-sm text-gray-500">({documentCount})</span>
@@ -197,7 +197,7 @@ export default function Complete({ auth, vendor }: Props) {
               </div>
               <Link
                 href={route('vendor.register.step2')}
-                className="text-sm text-blue-600 hover:text-blue-800 inline-flex items-center"
+                className="text-sm text-brand-600 hover:text-brand-800 inline-flex items-center"
               >
                 <FiEdit className="w-4 h-4 mr-1" />
                 Edit
@@ -237,12 +237,12 @@ export default function Complete({ auth, vendor }: Props) {
           <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div className="p-6 border-b border-gray-200 flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <FiDollarSign className="w-5 h-5 text-blue-600" />
+                <FiDollarSign className="w-5 h-5 text-brand-600" />
                 <h3 className="text-lg font-medium text-gray-900">Bank Details</h3>
               </div>
               <Link
                 href={route('vendor.register.step3')}
-                className="text-sm text-blue-600 hover:text-blue-800 inline-flex items-center"
+                className="text-sm text-brand-600 hover:text-brand-800 inline-flex items-center"
               >
                 <FiEdit className="w-4 h-4 mr-1" />
                 Edit
@@ -269,32 +269,32 @@ export default function Complete({ auth, vendor }: Props) {
           </div>
 
           {/* What Happens Next */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-            <h3 className="text-base font-medium text-blue-900 flex items-center mb-4">
+          <div className="bg-brand-50 border border-brand-200 rounded-lg p-6">
+            <h3 className="text-base font-medium text-brand-900 flex items-center mb-4">
               <FiMail className="w-5 h-5 mr-2" />
               What Happens Next?
             </h3>
-            <div className="space-y-3 text-sm text-blue-800">
+            <div className="space-y-3 text-sm text-brand-800">
               <div className="flex items-start space-x-3">
-                <span className="flex-shrink-0 w-6 h-6 bg-blue-200 rounded-full flex items-center justify-center text-xs font-medium">
+                <span className="flex-shrink-0 w-6 h-6 bg-brand-200 rounded-full flex items-center justify-center text-xs font-medium">
                   1
                 </span>
                 <p>Your application will be reviewed by our team (typically within 1-2 business days)</p>
               </div>
               <div className="flex items-start space-x-3">
-                <span className="flex-shrink-0 w-6 h-6 bg-blue-200 rounded-full flex items-center justify-center text-xs font-medium">
+                <span className="flex-shrink-0 w-6 h-6 bg-brand-200 rounded-full flex items-center justify-center text-xs font-medium">
                   2
                 </span>
                 <p>We'll verify your business documents and information</p>
               </div>
               <div className="flex items-start space-x-3">
-                <span className="flex-shrink-0 w-6 h-6 bg-blue-200 rounded-full flex items-center justify-center text-xs font-medium">
+                <span className="flex-shrink-0 w-6 h-6 bg-brand-200 rounded-full flex items-center justify-center text-xs font-medium">
                   3
                 </span>
                 <p>You'll receive an email notification with the approval status</p>
               </div>
               <div className="flex items-start space-x-3">
-                <span className="flex-shrink-0 w-6 h-6 bg-blue-200 rounded-full flex items-center justify-center text-xs font-medium">
+                <span className="flex-shrink-0 w-6 h-6 bg-brand-200 rounded-full flex items-center justify-center text-xs font-medium">
                   4
                 </span>
                 <p>Once approved, you can start adding products and accepting orders!</p>

@@ -235,15 +235,15 @@ export default function RolesIndex({ auth, roles, permissions, filters }: Props)
 
           {/* Enhanced Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+            <Card className="bg-gradient-to-br from-brand-50 to-brand-100 border-brand-200">
               <CardContent className="p-6">
                 <div className="flex items-center">
-                  <div className="p-2 bg-blue-100 rounded-lg">
-                    <FiShield className="w-6 h-6 text-blue-600" />
+                  <div className="p-2 bg-brand-100 rounded-lg">
+                    <FiShield className="w-6 h-6 text-brand-600" />
                   </div>
                   <div className="ml-4">
-                    <p className="text-sm font-medium text-blue-700">Total Roles</p>
-                    <p className="text-2xl font-bold text-blue-900">{displayRoles.length}</p>
+                    <p className="text-sm font-medium text-brand-700">Total Roles</p>
+                    <p className="text-2xl font-bold text-brand-900">{displayRoles.length}</p>
                   </div>
                 </div>
               </CardContent>
@@ -354,8 +354,8 @@ export default function RolesIndex({ auth, roles, permissions, filters }: Props)
                         <TableRow key={role.id}>
                           <TableCell>
                             <div className="flex items-center space-x-3">
-                              <div className="p-2 bg-blue-100 rounded-md">
-                                <FiShield className="w-4 h-4 text-blue-600" />
+                              <div className="p-2 bg-brand-100 rounded-md">
+                                <FiShield className="w-4 h-4 text-brand-600" />
                               </div>
                               <div>
                                 <div className="font-medium text-gray-900">{role.name}</div>

@@ -190,7 +190,7 @@ export default function Index({ auth, products, categories, filters, stats }: Pr
           <h2 className="font-semibold text-xl text-gray-800 leading-tight">My Products</h2>
           <Link
             href={route('vendor.products.create')}
-            className="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 transition"
+            className="inline-flex items-center px-4 py-2 bg-brand-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-brand-700 transition"
           >
             <FiPlus className="mr-2" />
             Add Product
@@ -210,7 +210,7 @@ export default function Index({ auth, products, categories, filters, stats }: Pr
                   <p className="text-sm text-gray-600">Total Products</p>
                   <p className="text-2xl font-bold text-gray-900 mt-1">{stats.total}</p>
                 </div>
-                <FiPackage className="w-10 h-10 text-blue-500" />
+                <FiPackage className="w-10 h-10 text-brand-500" />
               </div>
             </div>
 
@@ -257,7 +257,7 @@ export default function Index({ auth, products, categories, filters, stats }: Pr
                     value={filterData.search}
                     onChange={(e) => setFilterData({ ...filterData, search: e.target.value })}
                     onKeyPress={(e) => e.key === 'Enter' && handleFilter()}
-                    className="pl-10 w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    className="pl-10 w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"
                   />
                 </div>
               </div>
@@ -266,7 +266,7 @@ export default function Index({ auth, products, categories, filters, stats }: Pr
                 <select
                   value={filterData.status}
                   onChange={(e) => setFilterData({ ...filterData, status: e.target.value })}
-                  className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"
                 >
                   <option value="">All Status</option>
                   <option value="published">Published</option>
@@ -279,7 +279,7 @@ export default function Index({ auth, products, categories, filters, stats }: Pr
                 <select
                   value={filterData.category}
                   onChange={(e) => setFilterData({ ...filterData, category: e.target.value })}
-                  className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full border-gray-300 rounded-md shadow-sm focus:ring-brand-500 focus:border-brand-500"
                 >
                   <option value="">All Categories</option>
                   {categories.map((cat) => (
@@ -293,7 +293,7 @@ export default function Index({ auth, products, categories, filters, stats }: Pr
               <div className="flex gap-2">
                 <button
                   onClick={handleFilter}
-                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+                  className="flex-1 px-4 py-2 bg-brand-600 text-white rounded-md hover:bg-brand-700 transition"
                 >
                   Apply
                 </button>
@@ -309,9 +309,9 @@ export default function Index({ auth, products, categories, filters, stats }: Pr
 
           {/* Bulk Actions */}
           {selectedProducts.length > 0 && (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div className="bg-brand-50 border border-brand-200 rounded-lg p-4">
               <div className="flex items-center justify-between">
-                <p className="text-sm text-blue-800">
+                <p className="text-sm text-brand-800">
                   {selectedProducts.length} product{selectedProducts.length > 1 ? 's' : ''} selected
                 </p>
                 <div className="flex gap-2">
@@ -348,7 +348,7 @@ export default function Index({ auth, products, categories, filters, stats }: Pr
                       type="checkbox"
                       checked={selectedProducts.length === products.data.length && products.data.length > 0}
                       onChange={handleSelectAll}
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      className="rounded border-gray-300 text-brand-600 focus:ring-brand-500"
                     />
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -379,7 +379,7 @@ export default function Index({ auth, products, categories, filters, stats }: Pr
                         type="checkbox"
                         checked={selectedProducts.includes(product.id)}
                         onChange={() => handleSelectProduct(product.id)}
-                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                        className="rounded border-gray-300 text-brand-600 focus:ring-brand-500"
                       />
                     </td>
                     <td className="px-6 py-4">
@@ -436,7 +436,7 @@ export default function Index({ auth, products, categories, filters, stats }: Pr
                         </button>
                         <Link
                           href={route('vendor.products.edit', product.id)}
-                          className="text-blue-600 hover:text-blue-900"
+                          className="text-brand-600 hover:text-brand-900"
                         >
                           <FiEdit className="w-4 h-4" />
                         </Link>
@@ -466,7 +466,7 @@ export default function Index({ auth, products, categories, filters, stats }: Pr
                       <div className="mt-6">
                         <Link
                           href={route('vendor.products.create')}
-                          className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+                          className="inline-flex items-center px-4 py-2 bg-brand-600 text-white rounded-md hover:bg-brand-700 transition"
                         >
                           <FiPlus className="mr-2" />
                           New Product
@@ -512,7 +512,7 @@ export default function Index({ auth, products, categories, filters, stats }: Pr
                             href={link.url || '#'}
                             className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
                               link.active
-                                ? 'z-10 bg-blue-50 border-blue-500 text-blue-600'
+                                ? 'z-10 bg-brand-50 border-brand-500 text-brand-600'
                                 : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
                             } ${!link.url ? 'cursor-not-allowed opacity-50' : ''}`}
                             dangerouslySetInnerHTML={{ __html: link.label }}

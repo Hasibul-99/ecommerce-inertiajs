@@ -207,7 +207,7 @@ export default function SearchBar({
     const getSuggestionIcon = (type: string) => {
         switch (type) {
             case 'product':
-                return <FiPackage className="text-blue-600" />;
+                return <FiPackage className="text-brand-600" />;
             case 'category':
                 return <FiTag className="text-purple-600" />;
             case 'vendor':
@@ -233,7 +233,7 @@ export default function SearchBar({
                     onFocus={() => setShowDropdown(true)}
                     onKeyDown={handleKeyDown}
                     placeholder={placeholder}
-                    className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                 />
                 <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                 {query && (
@@ -268,7 +268,7 @@ export default function SearchBar({
                                         <p className="text-xs text-gray-500 capitalize">{suggestion.type}</p>
                                     </div>
                                     {suggestion.price && (
-                                        <span className="text-sm font-semibold text-blue-600">{formatPrice(suggestion.price)}</span>
+                                        <span className="text-sm font-semibold text-brand-600">{formatPrice(suggestion.price)}</span>
                                     )}
                                 </button>
                             ))}

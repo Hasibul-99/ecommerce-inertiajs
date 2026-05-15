@@ -115,7 +115,7 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
     const roleName = userRoles && userRoles.length > 0 ? userRoles[0].name : 'user';
     const variants = {
       'super-admin': 'bg-purple-100 text-purple-800',
-      'admin': 'bg-blue-100 text-blue-800',
+      'admin': 'bg-brand-100 text-brand-800',
       'editor': 'bg-yellow-100 text-yellow-800',
       'user': 'bg-gray-100 text-gray-800'
     };
@@ -345,15 +345,15 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
 
           {/* Enhanced Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+            <Card className="bg-gradient-to-br from-brand-50 to-brand-100 border-brand-200">
               <CardContent className="p-6">
                 <div className="flex items-center">
-                  <div className="p-2 bg-blue-100 rounded-lg">
-                    <FiUsers className="w-6 h-6 text-blue-600" />
+                  <div className="p-2 bg-brand-100 rounded-lg">
+                    <FiUsers className="w-6 h-6 text-brand-600" />
                   </div>
                   <div className="ml-4">
-                    <p className="text-sm font-medium text-blue-700">Total Users</p>
-                    <p className="text-2xl font-bold text-blue-900">{displayUsers.length}</p>
+                    <p className="text-sm font-medium text-brand-700">Total Users</p>
+                    <p className="text-2xl font-bold text-brand-900">{displayUsers.length}</p>
                   </div>
                 </div>
               </CardContent>
@@ -501,8 +501,8 @@ export default function UsersIndex({ auth, users, roles, filters }: Props) {
                         <TableRow key={user.id}>
                           <TableCell>
                             <div className="flex items-center space-x-3">
-                              <div className="p-2 bg-blue-100 rounded-full">
-                                <FiUsers className="w-4 h-4 text-blue-600" />
+                              <div className="p-2 bg-brand-100 rounded-full">
+                                <FiUsers className="w-4 h-4 text-brand-600" />
                               </div>
                               <div>
                                 <div className="font-medium text-gray-900">{user.name}</div>

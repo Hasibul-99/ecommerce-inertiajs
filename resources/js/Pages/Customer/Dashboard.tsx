@@ -26,7 +26,7 @@ export default function CustomerDashboard({ auth, stats, recentOrders, activeOrd
     const getStatusColor = (status: string) => {
         const colors: Record<string, string> = {
             pending: 'bg-yellow-100 text-yellow-800',
-            processing: 'bg-blue-100 text-blue-800',
+            processing: 'bg-brand-100 text-brand-800',
             shipped: 'bg-purple-100 text-purple-800',
             delivered: 'bg-green-100 text-green-800',
             cancelled: 'bg-red-100 text-red-800',
@@ -47,7 +47,7 @@ export default function CustomerDashboard({ auth, stats, recentOrders, activeOrd
                         <div className="bg-white rounded-lg shadow p-6">
                             <div className="flex items-center justify-between">
                                 <div><p className="text-sm text-gray-600">Total Orders</p><p className="text-2xl font-bold text-gray-900 mt-1">{stats.total_orders}</p></div>
-                                <div className="p-3 bg-blue-100 rounded-full"><FiShoppingBag className="text-2xl text-blue-600" /></div>
+                                <div className="p-3 bg-brand-100 rounded-full"><FiShoppingBag className="text-2xl text-brand-600" /></div>
                             </div>
                         </div>
                         <div className="bg-white rounded-lg shadow p-6">
@@ -94,7 +94,7 @@ export default function CustomerDashboard({ auth, stats, recentOrders, activeOrd
                         <div className="bg-white rounded-lg shadow">
                             <div className="p-6 border-b border-gray-200 flex justify-between items-center">
                                 <h2 className="text-xl font-semibold">Recent Orders</h2>
-                                <Link href="/customer/orders" className="text-blue-600 hover:text-blue-700 text-sm">View All</Link>
+                                <Link href="/customer/orders" className="text-brand-600 hover:text-brand-700 text-sm">View All</Link>
                             </div>
                             <div className="divide-y divide-gray-200">
                                 {recentOrders.length > 0 ? recentOrders.map((order) => (
@@ -116,7 +116,7 @@ export default function CustomerDashboard({ auth, stats, recentOrders, activeOrd
                         <div className="bg-white rounded-lg shadow">
                             <div className="p-6 border-b border-gray-200 flex justify-between items-center">
                                 <h2 className="text-xl font-semibold">Wishlist</h2>
-                                <Link href="/customer/wishlist" className="text-blue-600 hover:text-blue-700 text-sm">View All</Link>
+                                <Link href="/customer/wishlist" className="text-brand-600 hover:text-brand-700 text-sm">View All</Link>
                             </div>
                             <div className="p-6">
                                 {wishlistItems.length > 0 ? (
@@ -125,7 +125,7 @@ export default function CustomerDashboard({ auth, stats, recentOrders, activeOrd
                                             <Link key={item.id} href={'/product/' + item.product.id} className="border rounded-lg p-3 hover:shadow-md transition">
                                                 <img src={item.product.image_url || '/placeholder.png'} alt={item.product.title} className="w-full h-32 object-cover rounded mb-2" />
                                                 <p className="text-sm font-medium text-gray-900 truncate">{item.product.title}</p>
-                                                <p className="text-sm text-blue-600 mt-1">{formatCurrency(item.product.price_cents)}</p>
+                                                <p className="text-sm text-brand-600 mt-1">{formatCurrency(item.product.price_cents)}</p>
                                             </Link>
                                         ))}
                                     </div>
@@ -142,7 +142,7 @@ export default function CustomerDashboard({ auth, stats, recentOrders, activeOrd
                                         <Link key={product.id} href={'/product/' + product.id} className="border rounded-lg p-3 hover:shadow-md transition">
                                             <img src={product.image_url || '/placeholder.png'} alt={product.title} className="w-full h-32 object-cover rounded mb-2" />
                                             <p className="text-sm font-medium text-gray-900 truncate">{product.title}</p>
-                                            <p className="text-sm text-blue-600 mt-1">{formatCurrency(product.price_cents)}</p>
+                                            <p className="text-sm text-brand-600 mt-1">{formatCurrency(product.price_cents)}</p>
                                         </Link>
                                     ))}
                                 </div>

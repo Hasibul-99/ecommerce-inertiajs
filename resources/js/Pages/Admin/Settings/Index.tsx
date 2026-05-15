@@ -65,9 +65,9 @@ export default function Index({ auth, groups }: Props) {
     const getColorClasses = (color: string) => {
         const colors: Record<string, { bg: string; icon: string; hover: string }> = {
             blue: {
-                bg: 'bg-blue-100',
-                icon: 'text-blue-600',
-                hover: 'hover:bg-blue-50',
+                bg: 'bg-brand-100',
+                icon: 'text-brand-600',
+                hover: 'hover:bg-brand-50',
             },
             green: {
                 bg: 'bg-green-100',
@@ -153,16 +153,16 @@ export default function Index({ auth, groups }: Props) {
                     </div>
 
                     {/* Info Section */}
-                    <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
+                    <div className="mt-8 bg-brand-50 border border-brand-200 rounded-lg p-6">
                         <div className="flex">
                             <div className="flex-shrink-0">
-                                <FiSettings className="text-blue-600" size={24} />
+                                <FiSettings className="text-brand-600" size={24} />
                             </div>
                             <div className="ml-3">
-                                <h3 className="text-sm font-medium text-blue-800">
+                                <h3 className="text-sm font-medium text-brand-800">
                                     Configuration Tips
                                 </h3>
-                                <div className="mt-2 text-sm text-blue-700">
+                                <div className="mt-2 text-sm text-brand-700">
                                     <ul className="list-disc list-inside space-y-1">
                                         <li>Settings are cached for performance - changes take effect immediately</li>
                                         <li>Some settings may require application restart to apply fully</li>

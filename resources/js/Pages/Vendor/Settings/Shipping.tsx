@@ -103,9 +103,9 @@ export default function Shipping({ auth, shippingMethods, vendor }: Props) {
                     </div>
 
                     {/* Info Box */}
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 flex items-start gap-3">
-                        <FiInfo className="text-blue-600 flex-shrink-0 mt-0.5" />
-                        <div className="text-sm text-blue-800">
+                    <div className="bg-brand-50 border border-brand-200 rounded-lg p-4 mb-6 flex items-start gap-3">
+                        <FiInfo className="text-brand-600 flex-shrink-0 mt-0.5" />
+                        <div className="text-sm text-brand-800">
                             <p className="font-medium">About Shipping Configuration</p>
                             <p className="mt-1">
                                 Enable shipping methods for your products. You can set custom rates or use platform rates.
@@ -165,7 +165,7 @@ export default function Shipping({ auth, shippingMethods, vendor }: Props) {
                                                 <button
                                                     type="button"
                                                     onClick={() => handleToggle(method.id)}
-                                                    className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                                                    className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 ${
                                                         isEnabled ? 'bg-green-600' : 'bg-gray-200'
                                                     }`}
                                                 >
@@ -194,7 +194,7 @@ export default function Shipping({ auth, shippingMethods, vendor }: Props) {
                                                                 value={methodData?.custom_rate_cents ? (methodData.custom_rate_cents / 100).toFixed(2) : ''}
                                                                 onChange={(e) => handleCustomRateChange(method.id, e.target.value)}
                                                                 placeholder="Use platform rate"
-                                                                className="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                                className="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                                                             />
                                                         </div>
                                                         <p className="mt-1 text-xs text-gray-500">
@@ -213,7 +213,7 @@ export default function Shipping({ auth, shippingMethods, vendor }: Props) {
                                                             max="30"
                                                             value={methodData?.handling_time_days || 2}
                                                             onChange={(e) => handleHandlingTimeChange(method.id, parseInt(e.target.value))}
-                                                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                                                         />
                                                         <p className="mt-1 text-xs text-gray-500">
                                                             Time needed to prepare and ship the order
@@ -246,7 +246,7 @@ export default function Shipping({ auth, shippingMethods, vendor }: Props) {
                             <button
                                 type="submit"
                                 disabled={processing}
-                                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                                className="px-6 py-3 bg-brand-600 text-white rounded-lg hover:bg-brand-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
                             >
                                 {processing ? 'Saving...' : 'Save Shipping Settings'}
                             </button>

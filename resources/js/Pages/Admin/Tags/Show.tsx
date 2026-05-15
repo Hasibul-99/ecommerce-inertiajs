@@ -71,7 +71,7 @@ export default function TagsShow({ auth, tag }: Props) {
               </Link>
               <Link
                 href={route('admin.tags.edit', tag.id)}
-                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-brand-600 text-white rounded-md hover:bg-brand-700 transition-colors"
               >
                 <FiEdit className="h-4 w-4" />
                 Edit
@@ -175,7 +175,7 @@ export default function TagsShow({ auth, tag }: Props) {
                           <div className="flex items-center gap-2">
                             <Link
                               href={route('admin.products.show', product.id)}
-                              className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                              className="text-brand-600 hover:text-brand-800 text-sm font-medium"
                             >
                               View Product
                             </Link>
@@ -189,7 +189,7 @@ export default function TagsShow({ auth, tag }: Props) {
                       <p className="text-gray-500">No products associated with this tag yet.</p>
                       <Link
                         href={route('admin.products.index')}
-                        className="text-blue-600 hover:text-blue-800 text-sm font-medium mt-2 inline-block"
+                        className="text-brand-600 hover:text-brand-800 text-sm font-medium mt-2 inline-block"
                       >
                         Browse Products
                       </Link>

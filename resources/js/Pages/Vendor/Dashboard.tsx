@@ -171,7 +171,7 @@ export default function Dashboard({
     const getStatusColor = (status: string) => {
         const colors: Record<string, string> = {
             pending: 'bg-yellow-100 text-yellow-800',
-            processing: 'bg-blue-100 text-blue-800',
+            processing: 'bg-brand-100 text-brand-800',
             shipped: 'bg-purple-100 text-purple-800',
             delivered: 'bg-green-100 text-green-800',
             cancelled: 'bg-red-100 text-red-800',
@@ -185,8 +185,8 @@ export default function Dashboard({
             return {
                 title: `New Order #${notification.data.order_number}`,
                 message: `${notification.data.items_count} items - $${(notification.data.total_cents / 100).toFixed(2)}`,
-                icon: <FiShoppingCart className="text-blue-600" size={20} />,
-                bgColor: 'bg-blue-50',
+                icon: <FiShoppingCart className="text-brand-600" size={20} />,
+                bgColor: 'bg-brand-50',
             };
         } else if (notification.type === 'VendorDailySummaryNotification') {
             return {
@@ -271,7 +271,7 @@ export default function Dashboard({
                                         <div
                                             key={notification.id}
                                             className={`flex items-start gap-4 p-4 rounded-lg ${notif.bgColor} ${
-                                                !notification.read_at ? 'border-l-4 border-blue-500' : ''
+                                                !notification.read_at ? 'border-l-4 border-brand-500' : ''
                                             }`}
                                         >
                                             <div className="flex-shrink-0 mt-1">{notif.icon}</div>
@@ -304,7 +304,7 @@ export default function Dashboard({
                                     type="date"
                                     value={from}
                                     onChange={(e) => setFrom(e.target.value)}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                                 />
                             </div>
                             <div className="flex-1 min-w-[200px]">
@@ -315,12 +315,12 @@ export default function Dashboard({
                                     type="date"
                                     value={to}
                                     onChange={(e) => setTo(e.target.value)}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                                 />
                             </div>
                             <button
                                 onClick={handleDateChange}
-                                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
+                                className="px-6 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 font-medium"
                             >
                                 Apply
                             </button>
@@ -350,8 +350,8 @@ export default function Dashboard({
                         {/* Orders Count */}
                         <div className="bg-white rounded-lg shadow-sm p-6">
                             <div className="flex items-center justify-between mb-4">
-                                <div className="p-3 bg-blue-100 rounded-lg">
-                                    <FiShoppingCart className="text-blue-600" size={24} />
+                                <div className="p-3 bg-brand-100 rounded-lg">
+                                    <FiShoppingCart className="text-brand-600" size={24} />
                                 </div>
                                 {getChangeIndicator(salesSummary.comparison.orders_change)}
                             </div>
@@ -465,7 +465,7 @@ export default function Dashboard({
                                 <h2 className="text-xl font-bold text-gray-900">Top Selling Products</h2>
                                 <a
                                     href={route('vendor.analytics.products')}
-                                    className="text-sm text-blue-600 hover:text-blue-700 flex items-center"
+                                    className="text-sm text-brand-600 hover:text-brand-700 flex items-center"
                                 >
                                     View All
                                     <FiExternalLink className="ml-1" size={14} />
@@ -514,7 +514,7 @@ export default function Dashboard({
                                 <h2 className="text-xl font-bold text-gray-900">Recent Orders</h2>
                                 <a
                                     href={route('vendor.orders.index')}
-                                    className="text-sm text-blue-600 hover:text-blue-700 flex items-center"
+                                    className="text-sm text-brand-600 hover:text-brand-700 flex items-center"
                                 >
                                     View All
                                     <FiExternalLink className="ml-1" size={14} />

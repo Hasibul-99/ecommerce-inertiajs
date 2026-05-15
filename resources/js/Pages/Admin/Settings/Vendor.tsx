@@ -107,8 +107,8 @@ export default function Vendor({ auth, settings }: Props) {
                                 required
                             />
 
-                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                                <p className="text-sm text-blue-800">
+                            <div className="bg-brand-50 border border-brand-200 rounded-lg p-4">
+                                <p className="text-sm text-brand-800">
                                     <strong>Note:</strong> The commission rate is the percentage of each sale
                                     that the platform retains. For example, with a 10% commission rate on a $100 sale,
                                     the platform earns $10 and the vendor receives $90.
@@ -236,7 +236,7 @@ export default function Vendor({ auth, settings }: Props) {
                             <button
                                 type="submit"
                                 disabled={processing}
-                                className="flex items-center px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="flex items-center px-6 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <FiSave className="mr-2" />
                                 {processing ? 'Saving...' : 'Save Changes'}

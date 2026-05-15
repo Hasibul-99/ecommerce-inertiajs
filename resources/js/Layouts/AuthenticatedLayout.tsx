@@ -88,12 +88,12 @@ export default function AuthenticatedLayout({ user, header, children }: PropsWit
                             {/* Logo */}
                             <Link href="/" className="flex items-center space-x-3 group">
                                 <div className="relative">
-                                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg blur opacity-30 group-hover:opacity-50 transition-opacity"></div>
-                                    <div className="relative bg-gradient-to-r from-blue-500 to-purple-600 p-2 rounded-lg">
+                                    <div className="absolute inset-0 bg-gradient-to-r from-brand-500 to-purple-600 rounded-lg blur opacity-30 group-hover:opacity-50 transition-opacity"></div>
+                                    <div className="relative bg-gradient-to-r from-brand-500 to-purple-600 p-2 rounded-lg">
                                         <ApplicationLogo className="block h-6 w-6 text-white" />
                                     </div>
                                 </div>
-                                <span className="hidden sm:block text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                                <span className="hidden sm:block text-xl font-bold bg-gradient-to-r from-brand-600 to-purple-600 bg-clip-text text-transparent">
                                     GrabIt
                                 </span>
                             </Link>
@@ -109,7 +109,7 @@ export default function AuthenticatedLayout({ user, header, children }: PropsWit
                                             href={route(link.href)}
                                             className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                                                 active
-                                                    ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg shadow-blue-500/25'
+                                                    ? 'bg-gradient-to-r from-brand-500 to-purple-600 text-white shadow-lg shadow-brand-500/25'
                                                     : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                                             }`}
                                         >
@@ -130,7 +130,7 @@ export default function AuthenticatedLayout({ user, header, children }: PropsWit
                                     <input
                                         type="text"
                                         placeholder="Search..."
-                                        className="pl-10 pr-4 py-2 w-64 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:text-white transition-all"
+                                        className="pl-10 pr-4 py-2 w-64 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent dark:text-white transition-all"
                                     />
                                 </div>
                             </div>
@@ -150,7 +150,7 @@ export default function AuthenticatedLayout({ user, header, children }: PropsWit
                                 className="relative p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
                             >
                                 <FiShoppingBag className="w-5 h-5" />
-                                <span className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-blue-500 to-purple-600 text-white text-xs flex items-center justify-center rounded-full">
+                                <span className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-brand-500 to-purple-600 text-white text-xs flex items-center justify-center rounded-full">
                                     0
                                 </span>
                             </Link>
@@ -166,7 +166,7 @@ export default function AuthenticatedLayout({ user, header, children }: PropsWit
                                     onClick={() => setShowUserMenu(!showUserMenu)}
                                     className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                                 >
-                                    <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                                    <div className="w-8 h-8 bg-gradient-to-r from-brand-500 to-purple-600 rounded-full flex items-center justify-center">
                                         <FiUser className="w-4 h-4 text-white" />
                                     </div>
                                     <div className="hidden lg:block text-left">
@@ -264,7 +264,7 @@ export default function AuthenticatedLayout({ user, header, children }: PropsWit
                                     href={route(link.href)}
                                     className={`flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
                                         active
-                                            ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white'
+                                            ? 'bg-gradient-to-r from-brand-500 to-purple-600 text-white'
                                             : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                                     }`}
                                 >
@@ -278,7 +278,7 @@ export default function AuthenticatedLayout({ user, header, children }: PropsWit
                     {/* Mobile User Section */}
                     <div className="pt-4 pb-3 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
                         <div className="px-4 flex items-center space-x-3">
-                            <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                            <div className="w-10 h-10 bg-gradient-to-r from-brand-500 to-purple-600 rounded-full flex items-center justify-center">
                                 <FiUser className="w-5 h-5 text-white" />
                             </div>
                             <div>
@@ -329,7 +329,7 @@ export default function AuthenticatedLayout({ user, header, children }: PropsWit
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                         <div>
                             <div className="flex items-center space-x-2 mb-4">
-                                <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-2 rounded-lg">
+                                <div className="bg-gradient-to-r from-brand-500 to-purple-600 p-2 rounded-lg">
                                     <ApplicationLogo className="h-6 w-6 text-white" />
                                 </div>
                                 <span className="text-xl font-bold text-white">GrabIt</span>

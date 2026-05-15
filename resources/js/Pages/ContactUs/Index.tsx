@@ -48,7 +48,7 @@ export default function ContactUs({
       icon: FiMapPin,
       title: 'Visit Us',
       content: '123 Main Street, Anytown, CA 12345',
-      color: 'bg-blue-50 text-blue-600'
+      color: 'bg-brand-50 text-brand-600'
     },
     {
       id: 2,

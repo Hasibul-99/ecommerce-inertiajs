@@ -178,7 +178,7 @@ export default function Index({ auth, slides }: Props) {
                                                     <div className="flex items-center gap-2">
                                                         <button
                                                             onClick={() => handleToggleStatus(slide.id)}
-                                                            className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                                            className="p-2 text-gray-600 hover:text-brand-600 hover:bg-brand-50 rounded-lg transition-colors"
                                                             title={
                                                                 slide.is_active
                                                                     ? 'Deactivate'
@@ -194,7 +194,7 @@ export default function Index({ auth, slides }: Props) {
 
                                                         <Link
                                                             href={route('admin.hero-slides.edit', slide.id)}
-                                                            className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                                            className="p-2 text-gray-600 hover:text-brand-600 hover:bg-brand-50 rounded-lg transition-colors"
                                                         >
                                                             <FiEdit2 className="w-5 h-5" />
                                                         </Link>
@@ -217,8 +217,8 @@ export default function Index({ auth, slides }: Props) {
                     )}
 
                     {/* Info Note */}
-                    <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
-                        <p className="text-sm text-blue-800">
+                    <div className="mt-6 bg-brand-50 border border-brand-200 rounded-lg p-4">
+                        <p className="text-sm text-brand-800">
                             <strong>Note:</strong> Hero slides are displayed on the homepage in the order
                             specified. Active slides will automatically rotate every 5 seconds. Make sure to
                             upload high-quality images (recommended size: 1920x500px).

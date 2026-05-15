@@ -84,7 +84,7 @@ export default function CreateShipment({ order, shipping_address, carriers }: Pr
                                 {/* Carrier Selection */}
                                 <div className="bg-white rounded-lg shadow-sm p-6">
                                     <div className="flex items-center gap-2 mb-4">
-                                        <FiTruck className="text-blue-600" />
+                                        <FiTruck className="text-brand-600" />
                                         <h2 className="text-xl font-bold text-gray-900">Carrier Information</h2>
                                     </div>
 
@@ -96,7 +96,7 @@ export default function CreateShipment({ order, shipping_address, carriers }: Pr
                                             <select
                                                 value={data.shipping_carrier}
                                                 onChange={(e) => setData('shipping_carrier', e.target.value)}
-                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                                             >
                                                 {carriers.map((carrier) => (
                                                     <option key={carrier.value} value={carrier.value}>
@@ -116,7 +116,7 @@ export default function CreateShipment({ order, shipping_address, carriers }: Pr
                                             <select
                                                 value={data.shipping_method}
                                                 onChange={(e) => setData('shipping_method', e.target.value)}
-                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                                             >
                                                 <option value="standard">Standard</option>
                                                 <option value="express">Express</option>
@@ -140,7 +140,7 @@ export default function CreateShipment({ order, shipping_address, carriers }: Pr
                                                 value={data.tracking_number}
                                                 onChange={(e) => setData('tracking_number', e.target.value)}
                                                 placeholder="Enter tracking number"
-                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                                             />
                                             {errors.tracking_number && (
                                                 <p className="mt-1 text-sm text-red-600">{errors.tracking_number}</p>
@@ -152,7 +152,7 @@ export default function CreateShipment({ order, shipping_address, carriers }: Pr
                                 {/* Package Details */}
                                 <div className="bg-white rounded-lg shadow-sm p-6">
                                     <div className="flex items-center gap-2 mb-4">
-                                        <FiPackage className="text-blue-600" />
+                                        <FiPackage className="text-brand-600" />
                                         <h2 className="text-xl font-bold text-gray-900">Package Details</h2>
                                     </div>
 
@@ -166,7 +166,7 @@ export default function CreateShipment({ order, shipping_address, carriers }: Pr
                                                 value={data.weight}
                                                 onChange={(e) => setData('weight', parseInt(e.target.value) || 0)}
                                                 min="1"
-                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                                             />
                                             {errors.weight && <p className="mt-1 text-sm text-red-600">{errors.weight}</p>}
                                         </div>
@@ -175,7 +175,7 @@ export default function CreateShipment({ order, shipping_address, carriers }: Pr
                                             <button
                                                 type="button"
                                                 onClick={() => setShowDimensions(!showDimensions)}
-                                                className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                                                className="text-sm text-brand-600 hover:text-brand-700 font-medium"
                                             >
                                                 {showDimensions ? 'Hide' : 'Add'} Dimensions (Optional)
                                             </button>
@@ -197,7 +197,7 @@ export default function CreateShipment({ order, shipping_address, carriers }: Pr
                                                             }
                                                             min="0"
                                                             step="0.1"
-                                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                                                         />
                                                     </div>
                                                     <div>
@@ -215,7 +215,7 @@ export default function CreateShipment({ order, shipping_address, carriers }: Pr
                                                             }
                                                             min="0"
                                                             step="0.1"
-                                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                                                         />
                                                     </div>
                                                     <div>
@@ -233,7 +233,7 @@ export default function CreateShipment({ order, shipping_address, carriers }: Pr
                                                             }
                                                             min="0"
                                                             step="0.1"
-                                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                                                         />
                                                     </div>
                                                 </div>
@@ -245,7 +245,7 @@ export default function CreateShipment({ order, shipping_address, carriers }: Pr
                                 {/* Costs & Dates */}
                                 <div className="bg-white rounded-lg shadow-sm p-6">
                                     <div className="flex items-center gap-2 mb-4">
-                                        <FiDollarSign className="text-blue-600" />
+                                        <FiDollarSign className="text-brand-600" />
                                         <h2 className="text-xl font-bold text-gray-900">Costs & Scheduling</h2>
                                     </div>
 
@@ -262,7 +262,7 @@ export default function CreateShipment({ order, shipping_address, carriers }: Pr
                                                 }
                                                 min="0"
                                                 step="0.01"
-                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                                             />
                                             {errors.shipping_cost_cents && (
                                                 <p className="mt-1 text-sm text-red-600">{errors.shipping_cost_cents}</p>
@@ -273,7 +273,7 @@ export default function CreateShipment({ order, shipping_address, carriers }: Pr
                                             <button
                                                 type="button"
                                                 onClick={() => setShowInsurance(!showInsurance)}
-                                                className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                                                className="text-sm text-brand-600 hover:text-brand-700 font-medium"
                                             >
                                                 {showInsurance ? 'Remove' : 'Add'} Insurance (Optional)
                                             </button>
@@ -294,7 +294,7 @@ export default function CreateShipment({ order, shipping_address, carriers }: Pr
                                                         }
                                                         min="0"
                                                         step="0.01"
-                                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                                                     />
                                                 </div>
                                             )}
@@ -311,7 +311,7 @@ export default function CreateShipment({ order, shipping_address, carriers }: Pr
                                                 type="datetime-local"
                                                 value={data.pickup_scheduled_at}
                                                 onChange={(e) => setData('pickup_scheduled_at', e.target.value)}
-                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                                             />
                                             {errors.pickup_scheduled_at && (
                                                 <p className="mt-1 text-sm text-red-600">{errors.pickup_scheduled_at}</p>
@@ -325,7 +325,7 @@ export default function CreateShipment({ order, shipping_address, carriers }: Pr
                                     <button
                                         type="submit"
                                         disabled={processing}
-                                        className="flex-1 px-6 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="flex-1 px-6 py-3 bg-brand-600 text-white font-bold rounded-lg hover:bg-brand-700 disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         {processing ? 'Creating...' : 'Create Shipment'}
                                     </button>

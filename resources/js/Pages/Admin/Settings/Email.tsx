@@ -197,11 +197,11 @@ export default function Email({ auth, settings }: Props) {
                             <div className="border-t border-gray-200 pt-6" />
 
                             {/* Test Email Section */}
-                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                                <h3 className="text-sm font-medium text-blue-800 mb-3">
+                            <div className="bg-brand-50 border border-brand-200 rounded-lg p-4">
+                                <h3 className="text-sm font-medium text-brand-800 mb-3">
                                     Test Email Configuration
                                 </h3>
-                                <p className="text-sm text-blue-700 mb-4">
+                                <p className="text-sm text-brand-700 mb-4">
                                     Send a test email to verify your SMTP configuration is working correctly.
                                     Make sure to save your settings before testing.
                                 </p>
@@ -211,13 +211,13 @@ export default function Email({ auth, settings }: Props) {
                                         value={testEmail}
                                         onChange={(e) => setTestEmail(e.target.value)}
                                         placeholder="recipient@example.com"
-                                        className="flex-1 px-4 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="flex-1 px-4 py-2 border border-brand-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                                     />
                                     <button
                                         type="button"
                                         onClick={handleTestEmail}
                                         disabled={testingEmail}
-                                        className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="flex items-center px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         <FiSend className="mr-2" />
                                         {testingEmail ? 'Sending...' : 'Send Test'}
@@ -250,7 +250,7 @@ export default function Email({ auth, settings }: Props) {
                             <button
                                 type="submit"
                                 disabled={processing}
-                                className="flex items-center px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="flex items-center px-6 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <FiSave className="mr-2" />
                                 {processing ? 'Saving...' : 'Save Changes'}
