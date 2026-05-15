@@ -553,7 +553,7 @@ In-app notifications for:
 
 | Role | Email | Password |
 |------|-------|----------|
-| Super Admin | `admin@yourdomain.com` | `password123!` |
+| Super Admin | `superadmin@admin.com` | `password123!` |
 
 To customize, set in `.env` before seeding:
 ```env
