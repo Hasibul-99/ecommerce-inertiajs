@@ -93,7 +93,7 @@ export default function Show({ auth, order }: Props) {
   const handleStatusUpdate = (itemId: number, newStatus: string) => {
     if (confirm(`Are you sure you want to update the status to "${newStatus}"?`)) {
       router.post(
-        route('vendor.orders.update-item-status', itemId),
+        route('vendor.orders.items.update-status', itemId),
         {
           status: newStatus,
           notes: statusData.notes,

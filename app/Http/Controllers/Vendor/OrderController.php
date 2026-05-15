@@ -225,15 +225,6 @@ class OrderController extends Controller
                 $data
             );
 
-            activity()
-                ->performedOn($orderItem)
-                ->causedBy(Auth::user())
-                ->withProperties([
-                    'status' => $request->status,
-                    'notes' => $request->notes,
-                ])
-                ->log('Vendor updated order item status');
-
             return redirect()->back()->with('success', 'Order item status updated successfully.');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
